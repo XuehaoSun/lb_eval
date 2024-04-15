@@ -1,0 +1,28 @@
+parameters:
+  - name: modelContainerName
+    type: string
+    default: "model_eval"
+  - name: scriptsPath
+    type: string
+    default: "ITREX"
+
+steps:
+  - template: docker-template.yml
+
+  - script: |
+      docker exec ${{ parameters.modelContainerName }} \
+        bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash env_setup.sh"
+    displayName: Env setup
+
+  - script: |
+      docker exec ${{ parameters.modelContainerName }} \
+        bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash eval.sh"
+    displayName: Eval
+
+  - task: Bash@3
+    condition: always()
+    inputs:
+      targetType: "inline"
+      script: |
+        docker exec ${{ parameters.modelContainerName }} bash -c "rm -fr /lb_eval/* && rm -fr /lb_eval/.* || true"
+    displayName: "Docker clean up"

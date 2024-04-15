@@ -1,0 +1,66 @@
+parameters:
+  - name: repoName
+    type: string
+    default: "lb_eval"
+  - name: repoTag
+    type: string
+    default: "py310"
+  - name: dockerFileName
+    type: string
+    default: "Dockerfile"
+  - name: containerName
+    type: string
+    default: "model_eval"
+  - name: repo
+    type: string
+    default: "https://github.com/intel-sandbox/lb_eval"
+
+steps:
+  - task: Bash@3
+    inputs:
+      targetType: "inline"
+      script: |
+        docker ps -a
+        if [[ $(docker ps -a | grep -i '${{ parameters.containerName }}'$) ]]; then
+            docker start $(docker ps -aq)
+            echo "remove left files through container ..."
+            docker exec ${{ parameters.containerName }} bash -c "ls -a /lb_eval && rm -fr /lb_eval/* && rm -fr /lb_eval/.* && ls -a /lb_eval  || true"
+        fi
+    displayName: "Docker workspace clean up"
+
+  - script: |
+      rm -fr ${BUILD_SOURCESDIRECTORY} || sudo rm -fr ${BUILD_SOURCESDIRECTORY} || true
+      echo y | docker system prune
+    displayName: "Clean workspace"
+
+  - checkout: self
+    clean: true
+    displayName: "Checkout out Repo"
+
+  - script: |
+      if [[ ! $(docker images | grep -i ${{ parameters.repoName }}:${{ parameters.repoTag }}) ]]; then
+        docker build -f ${BUILD_SOURCESDIRECTORY}/evaluation/ITREX/cpu/${{parameters.dockerFileName}} -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
+      fi
+      docker images | grep -i ${{ parameters.repoName }}
+      if [[ $? -ne 0 ]]; then
+        echo "NO Such Repo"
+        exit 1
+      fi
+    displayName: "Build develop docker image"
+
+  - script: |
+      docker stop $(docker ps -aq)
+      docker rm -vf ${{ parameters.containerName }} || true
+      env | sort
+    displayName: "Clean docker container"
+
+  - ${{ if ne(parameters.containerName, '') }}:
+      - task: Bash@3
+        inputs:
+          targetType: "inline"
+          script: |
+            docker run -dit --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
+            -v ${BUILD_SOURCESDIRECTORY}:/lb_eval ${{ parameters.repoName }}:${{ parameters.repoTag }}
+            echo "Show the container list after docker run ... "
+            docker ps -a
+        displayName: "Docker run - ${{ parameters.containerName }} Container"
