@@ -19,6 +19,7 @@ git clone https://github.com/intel/intel-extension-for-transformers.git /intel-e
 shell_path=/intel-extension-for-transformers/examples/huggingface/pytorch/text-generation/quantization/run_generation.py
 
 git clone https://github.com/XuehaoSun/lb_eval.git /lb_eval_backup
+git checkout ${GITHUB_REF##*/}
 cd /lb_eval_backup
 git config --global user.email "xuehao.sun@intel.com"
 git config --global user.name "Sun, Xuehao"

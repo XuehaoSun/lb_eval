@@ -26,12 +26,14 @@ stages:
             echo "Scripts: $(scripts)"
         - bash: |
             git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
+            git checkout ${GITHUB_REF##*/}
             cd lb_eval_backup
             echo "Waiting" > status.txt
             git config --global user.email "xuehao.sun@intel.com"
             git config --global user.name "Sun,Xuehao"
             git remote set-url origin https://XuehaoSun:$(TOKEN)@github.com/XuehaoSun/lb_eval.git
             git add . && git commit -m "Update status" && git push
+            rm -rf lb_eval_backup
 
   - stage: Eval
     displayName: Evaluation
