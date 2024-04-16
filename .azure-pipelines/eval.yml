@@ -24,14 +24,12 @@ stages:
         - bash: |
             echo "Hardware: $(hardware)"
             echo "Scripts: $(scripts)"
-      - job:
-        steps:
         - bash: |
-            git clone https://github.com/XuehaoSun/lb_eval.git
-            cd lb_eval
+            git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
+            cd lb_eval_backup
             echo "Waiting" > status.txt
             git config --global user.email "xuehao.sun@intel.com"
-            git config --global user.name "Sun, Xuehao"
+            git config --global user.name "Sun,Xuehao"
             git remote set-url origin https://XuehaoSun:$(TOKEN)@github.com/XuehaoSun/lb_eval.git
             git add . && git commit -m "Update status" && git push
 
