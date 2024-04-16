@@ -17,12 +17,16 @@ stages:
       - job: CheckHardware
         steps:
         - bash: |
-            echo "##vso[task.setvariable variable=hardware;]$(sed -n '1p' eval.txt)"
-            echo "##vso[task.setvariable variable=scripts;]$(sed -n '2p' eval.txt)"
+            echo "##vso[task.setvariable variable=hardware;isOutput=true]$(sed -n '1p' eval.txt)"
+            echo "##vso[task.setvariable variable=scripts;isOutput=true]$(sed -n '2p' eval.txt)"
+            echo "$(hardware) $(scripts)"
           name: setVarFromJsonFileValue
 
   - stage: Eval
     displayName: Evaluation
+    variables:
+      hardware: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.hardware']]
+      scripts: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.scripts']]
     pool: $(hardware)
     dependsOn: [CheckHardware]
     jobs:
