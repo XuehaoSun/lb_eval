@@ -18,12 +18,12 @@ stages:
       - job: CheckHardware
         steps:
         - bash: |
-            echo "##vso[task.setvariable variable=hardware;isOutput=true]$(sed -n '1p' eval.txt)"
-            echo "##vso[task.setvariable variable=scripts;isOutput=true]$(sed -n '2p' eval.txt)"
+            echo "##vso[task.setvariable variable=hardware;isOutput=true]$(grep "hardware" requests/*/*.json | cut -d'"' -f4)"
+            echo "##vso[task.setvariable variable=scripts;isOutput=true]$(grep "scripts" requests/*/*.json | cut -d'"' -f4)"
           name: setVarFromJsonFileValue
         - bash: |
-            echo "Hardware: $(hardware)"
-            echo "Scripts: $(scripts)"
+            echo "Hardware: $(setVarFromJsonFileValue.hardware)"
+            echo "Scripts: $(setVarFromJsonFileValue.scripts)"
         - bash: |
             git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
             git checkout ${GITHUB_REF##*/}
@@ -47,4 +47,4 @@ stages:
         steps:
           - template: template/model-template.yml
             parameters:
-              scriptsPath: "$(scripts)"
+              scriptsPath: "$(scripts)/$(hardware)"
