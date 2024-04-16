@@ -17,7 +17,7 @@ stages:
       - job: CheckHardware
         steps:
         - bash: |
-            sudo apt install -y jq
+            apt install -y jq
             echo "##vso[task.setvariable variable=hardware;]$(jq .hardware eval.json)"
             echo "##vso[task.setvariable variable=scripts;]$(jq .scripts eval.json)"
           name: setVarFromJsonFileValue
