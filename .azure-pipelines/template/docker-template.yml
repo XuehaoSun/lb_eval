@@ -14,6 +14,9 @@ parameters:
   - name: repo
     type: string
     default: "https://github.com/intel-sandbox/lb_eval"
+  - name: scriptsPath
+    type: string
+    default: "ITREX"
 
 steps:
   - task: Bash@3
@@ -39,11 +42,12 @@ steps:
 
   - script: |
       if [[ ! $(docker images | grep -i ${{ parameters.repoName }}:${{ parameters.repoTag }}) ]]; then
-        docker build -f ${BUILD_SOURCESDIRECTORY}/evaluation/ITREX/cpu/${{parameters.dockerFileName}} -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
+        cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{parameters.scriptsPath}}
+        docker build -f ${{parameters.dockerFileName}} -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
       fi
       docker images | grep -i ${{ parameters.repoName }}
       if [[ $? -ne 0 ]]; then
-        echo "NO Such Repo"
+        echo "NO Such Docker Image"
         exit 1
       fi
     displayName: "Build develop docker image"
