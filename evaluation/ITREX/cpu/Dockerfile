@@ -24,7 +24,7 @@ RUN ln -sf $(which python3) /usr/bin/python
 
 RUN pip --no-cache-dir install --upgrade pip
 RUN pip install --no-cache-dir setuptools==69.5.1 wheel
-RUN pip list
+
 COPY requirements.txt /tmp/
 RUN pip install --requirement /tmp/requirements.txt
 RUN pip list
