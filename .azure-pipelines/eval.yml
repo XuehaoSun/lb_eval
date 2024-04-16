@@ -9,7 +9,8 @@ trigger:
     exclude:
       - evaluation
 
-pool: "ICX-16C"
+pool:
+  vmImage: "ubuntu-latest"
 
 stages:
   - stage: CheckHardware
@@ -23,6 +24,14 @@ stages:
         - bash: |
             echo "Hardware: $(hardware)"
             echo "Scripts: $(scripts)"
+      - job:
+        steps:
+        - bash: |
+            git clone https://github.com/XuehaoSun/lb_eval.git
+            cd lb_eval
+            echo "Waiting" > status.txt
+            git remote set-url origin https://XuehaoSun:$(TOKEN)@github.com/XuehaoSun/lb_eval.git
+            git add . && git commit -m "Update status" && git push
 
   - stage: Eval
     displayName: Evaluation
