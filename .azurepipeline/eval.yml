@@ -1,6 +1,4 @@
 trigger:
-  autoCancel: true
-  drafts: false
   branches:
     include:
       - main
@@ -16,17 +14,19 @@ pool: MODEL_PERF_TEST_TF
 stages:
   - stage: CheckHardware
     jobs:
-      - bash: |
-          echo "##vso[task.setvariable variable=hardware;]$(jq .hardware xxxx.json)"
-          echo "##vso[task.setvariable variable=scripts;]$(jq .scripts xxxx.json)"
-        name: setVarFromJsonFileValue
+      - job: CheckHardware
+        steps:
+        - bash: |
+            echo "##vso[task.setvariable variable=hardware;]$(jq .hardware xxxx.json)"
+            echo "##vso[task.setvariable variable=scripts;]$(jq .scripts xxxx.json)"
+          name: setVarFromJsonFileValue
 
   - stage: Eval
     displayName: Evaluation
     pool: $(hardware)
     dependsOn: [CheckHardware]
     jobs:
-      - job:
+      - job: Eval
         steps:
           - template: template/model-template.yml
             parameters:
