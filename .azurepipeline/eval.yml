@@ -9,7 +9,7 @@ trigger:
     exclude:
       - evaluation
 
-pool: MODEL_PERF_TEST_TF
+pool: "ubuntu-latest"
 
 stages:
   - stage: CheckHardware
@@ -17,8 +17,8 @@ stages:
       - job: CheckHardware
         steps:
         - bash: |
-            echo "##vso[task.setvariable variable=hardware;]$(jq .hardware xxxx.json)"
-            echo "##vso[task.setvariable variable=scripts;]$(jq .scripts xxxx.json)"
+            echo "##vso[task.setvariable variable=hardware;]$(jq .hardware eval.json)"
+            echo "##vso[task.setvariable variable=scripts;]$(jq .scripts eval.json)"
           name: setVarFromJsonFileValue
 
   - stage: Eval
