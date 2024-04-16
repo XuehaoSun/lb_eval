@@ -20,6 +20,8 @@ shell_path=/intel-extension-for-transformers/examples/huggingface/pytorch/text-g
 
 git clone https://github.com/XuehaoSun/lb_eval.git /lb_eval_backup
 cd /lb_eval_backup
+git config --global user.email "xuehao.sun@intel.com"
+git config --global user.name "Sun, Xuehao"
 echo "Running" > status.txt
 git remote set-url origin https://XuehaoSun:$(TOKEN)@github.com/XuehaoSun/lb_eval.git
 git add . && git commit -m "Update status" && git push
