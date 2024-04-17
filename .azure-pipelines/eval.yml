@@ -42,16 +42,9 @@ stages:
             echo "Scripts: $(setVarFromJsonFileValue.scripts)"
             echo "Agent Pool: $(setVarFromJsonFileValue.agent_pool)"
             echo "Request Json: $(setVarFromJsonFileValue.request_json)"
-        - task: Bash@3
-          inputs:
-            filePath: .azure-pipelines/scripts/git_update.sh
-          name: gitUpdate
-          env:
-            repoURL: $(Build.Repository.Uri)
-            requestJson: $(setVarFromJsonFileValue.request_json)
-            commitMessage: "Status update from Azure DevOps"
+        - template: template/git-status-template.yml
+          parameters:
             status: "Waiting"
-            TOKEN: $(TOKEN)
 
 
   - stage: Eval
@@ -65,6 +58,12 @@ stages:
     jobs:
       - job: Eval
         steps:
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Running"
           - template: template/model-template.yml
             parameters:
               scriptsPath: "$(scripts)/$(hardware)"
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Finished"
