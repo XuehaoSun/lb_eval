@@ -16,7 +16,7 @@ for i in "$@"; do
 done
 
 cd /lb_eval/evaluation/ITREX/cpu
-params=$(python /lb_eval/evaluation/parse_config.py $config_name)
+params=$(python /lb_eval/evaluation/parse_config.py /lb_eval/requests/$config_name)
 cmd="python -u run_generation.py --trust_remote_code $params"
 ${cmd}
 
