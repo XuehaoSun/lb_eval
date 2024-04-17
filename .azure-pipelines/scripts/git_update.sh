@@ -4,7 +4,7 @@ set -x
 git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
 cd lb_eval_backup
 git checkout main
-cd lb_eval_backup/status
+cd status
 sed -i "s/\"status\":.*/\"status\": \"${status}\"/g" ${requestJson}
 
 git config --global user.email "xuehao.sun@intel.com"
