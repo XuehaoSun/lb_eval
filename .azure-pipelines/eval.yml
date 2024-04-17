@@ -22,11 +22,11 @@ stages:
             request_json=$(find . -name *.json)
             hardware=$(grep "hardware" ${request_json} | cut -d'"' -f4)
             scripts=$(grep "scripts" ${request_json} | cut -d'"' -f4)
-            if [ ${hardware} = 'cpu' ]then; 
+            if [[ ${hardware} = 'cpu' ]]; then 
                 agent_pool='test'
-            elif [ ${hardware} = 'gaudi2' ]then; 
+            elif [[ ${hardware} = 'gaudi2' ]]; then
                 agent_pool='gaudi2'
-            elif [ ${hardware} = 'gpu' ]then; 
+            elif [[ ${hardware} = 'gpu' ]]; then
                 agent_pool='gpu'
             else
                 echo "Hardware not supported"
