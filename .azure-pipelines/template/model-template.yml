@@ -20,6 +20,10 @@ steps:
         bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash run_eval.sh --config_name=${{ parameters.requestJson }}"
     displayName: Eval
 
+  - template: git-status-template.yml
+    parameters:
+      status: "Finished"
+
   - task: Bash@3
     condition: always()
     inputs:
