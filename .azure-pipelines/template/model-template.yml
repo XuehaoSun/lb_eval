@@ -13,7 +13,7 @@ steps:
 
   - script: |
       docker exec ${{ parameters.modelContainerName }} \
-        bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash run_eval.sh"
+        bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash run_eval.sh --config_name=$(setVarFromJsonFileValue.request_json)"
     displayName: Eval
 
   - task: Bash@3
