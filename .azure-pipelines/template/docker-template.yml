@@ -38,7 +38,7 @@ steps:
   - script: |
       if [[ ! $(docker images | grep -i ${{ parameters.repoName }}:${{ parameters.repoTag }}) ]]; then
         cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{parameters.scriptsPath}}
-        docker build -f ${{parameters.dockerFileName}} -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
+        docker build -f ${{parameters.dockerFileName}} --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${http_proxy} -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
       fi
       docker images | grep -i ${{ parameters.repoName }}
       if [[ $? -ne 0 ]]; then
@@ -59,6 +59,7 @@ steps:
           targetType: "inline"
           script: |
             docker run -dit --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
+            -e http_proxy=$http_proxy -e https_proxy=$http_proxy \
             -v ${BUILD_SOURCESDIRECTORY}:/lb_eval ${{ parameters.repoName }}:${{ parameters.repoTag }}
             echo "Show the container list after docker run ... "
             docker ps -a
