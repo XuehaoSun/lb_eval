@@ -23,11 +23,11 @@ stages:
             hardware=$(grep "hardware" ${request_json} | cut -d'"' -f4)
             scripts=$(grep "scripts" ${request_json} | cut -d'"' -f4)
             if [[ ${hardware} = 'cpu' ]]; then 
-                agent_pool='test'
+                agent_pool='LB_CPU'
             elif [[ ${hardware} = 'gaudi2' ]]; then
-                agent_pool='gaudi2'
+                agent_pool='LB_GAUDI'
             elif [[ ${hardware} = 'gpu' ]]; then
-                agent_pool='gpu'
+                agent_pool='LB_GPU'
             else
                 echo "Hardware not supported"
                 exit 1
