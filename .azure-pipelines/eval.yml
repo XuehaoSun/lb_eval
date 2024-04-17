@@ -18,29 +18,49 @@ stages:
       - job: CheckHardware
         steps:
         - bash: |
-            echo "##vso[task.setvariable variable=hardware;isOutput=true]$(grep "hardware" requests/*/*.json | cut -d'"' -f4)"
-            echo "##vso[task.setvariable variable=scripts;isOutput=true]$(grep "scripts" requests/*/*.json | cut -d'"' -f4)"
+            cd requests
+            request_json=$(find . -name *.json)
+            hardware=$(grep "hardware" ${request_json} | cut -d'"' -f4)
+            scripts=$(grep "scripts" ${request_json} | cut -d'"' -f4)
+            if [ ${hardware} = 'cpu' ]then; 
+                agent_pool='test'
+            elif [ ${hardware} = 'gaudi2' ]then; 
+                agent_pool='gaudi2'
+            elif [ ${hardware} = 'gpu' ]then; 
+                agent_pool='gpu'
+            else
+                echo "Hardware not supported"
+                exit 1
+            fi
+            echo "##vso[task.setvariable variable=hardware;isOutput=true]${hardware}"
+            echo "##vso[task.setvariable variable=scripts;isOutput=true]${scripts}"
+            echo "##vso[task.setvariable variable=agent_pool;isOutput=true]${agent_pool}"
+            echo "##vso[task.setvariable variable=request_json;isOutput=true]${request_json}"
           name: setVarFromJsonFileValue
         - bash: |
             echo "Hardware: $(setVarFromJsonFileValue.hardware)"
             echo "Scripts: $(setVarFromJsonFileValue.scripts)"
-        - bash: |
-            git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
-            git checkout ${GITHUB_REF##*/}
-            cd lb_eval_backup
-            echo "Waiting" > status.txt
-            git config --global user.email "xuehao.sun@intel.com"
-            git config --global user.name "Sun,Xuehao"
-            git remote set-url origin https://XuehaoSun:$(TOKEN)@github.com/XuehaoSun/lb_eval.git
-            git add . && git commit -m "Update status" && git push
-            rm -rf lb_eval_backup
+            echo "Agent Pool: $(setVarFromJsonFileValue.agent_pool)"
+            echo "Request Json: $(setVarFromJsonFileValue.request_json)"
+        - task: Bash@3
+          inputs:
+            filePath: ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts/git_update.sh
+          name: gitUpdate
+          env:
+            repoURL: $(Build.Repository.Uri)
+            requestJson: $(setVarFromJsonFileValue.request_json)
+            commitMessage: "Status update from Azure DevOps"
+            status: "Waiting"
+            TOKEN: $(TOKEN)
+
 
   - stage: Eval
     displayName: Evaluation
     variables:
       hardware: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.hardware']]
       scripts: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.scripts']]
-    pool: $(hardware)
+      agent_pool: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.agent_pool']]
+    pool: $(agent_pool)
     dependsOn: [CheckHardware]
     jobs:
       - job: Eval
