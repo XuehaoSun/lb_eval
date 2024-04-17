@@ -2,6 +2,9 @@ parameters:
   - name: status
     type: string
     default: "Waiting"
+  - name: requestJson
+    type: string
+    default: ""
 
 steps:
   - task: Bash@3
@@ -10,7 +13,7 @@ steps:
     name: gitUpdateStatus${{ parameters.status }}
     env:
       repoURL: $(Build.Repository.Uri)
-      requestJson: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.request_json']]
+      requestJson: ${{ parameters.requestJson }}
       commitMessage: "Status update from Azure DevOps"
       status: ${{ parameters.status }}
       TOKEN: $(TOKEN)
