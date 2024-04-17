@@ -1,7 +1,12 @@
 parameters:
   - name: status
     type: string
-    default: "Waiting"
+    default: ""
+
+  - name: results
+    type: string
+    default: ""
+
   - name: requestJson
     type: string
     default: ""
@@ -12,8 +17,7 @@ steps:
       filePath: .azure-pipelines/scripts/git_update.sh
     name: gitUpdateStatus${{ parameters.status }}
     env:
-      repoURL: $(Build.Repository.Uri)
       requestJson: ${{ parameters.requestJson }}
-      commitMessage: "Status update from Azure DevOps"
+      commitMessage: "Commit from Azure DevOps for ${{ parameters.status }}${{ parameters.results }}"
       status: ${{ parameters.status }}
       TOKEN: $(TOKEN)
