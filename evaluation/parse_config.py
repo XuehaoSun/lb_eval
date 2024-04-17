@@ -10,7 +10,7 @@ def json_to_command_line(json_data):
         command_line.append(f"--bits 4")
 
     command_line.append(f"--woq_algo {json_data['quant_type']}")
-    command_line.append(f"--dtype {json_data['weight_dtype']}")
+    command_line.append(f"--weight_dtype {json_data['weight_dtype']}")
     command_line.append(f"--model {json_data['model']}")
     return command_line
 
