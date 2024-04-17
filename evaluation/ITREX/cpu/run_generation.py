@@ -131,7 +131,7 @@ for task in results["results"]:
     rename_versions[name] = version
 final_results.update({"results": rename_results, "versions": rename_versions})
 
-dumped = json.dumps(final_results, indent=2)
+# dumped = json.dumps(final_results, indent=2)
 
 
 user_name = ""
@@ -140,9 +140,9 @@ if "/" in request_json["model"]:
     user_name = request_json["model"].split("/")[0]
     model_path = request_json["model"].split("/")[1]
 
-result_path = f"results_{model_path}_{end_time}.json"
+result_path = f"results_{end_time}.json"
 
 print("Creating results file")
 
 with open(result_path, "w") as f:
-    f.write(json.dumps(dumped, indent=4))
+    f.write(json.dumps(final_results, indent=4))
