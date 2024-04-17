@@ -5,6 +5,10 @@ parameters:
   - name: scriptsPath
     type: string
     default: "ITREX/cpu"
+  - name: requestJson
+    type: string
+    default: ""
+
 
 steps:
   - template: docker-template.yml
@@ -13,7 +17,7 @@ steps:
 
   - script: |
       docker exec ${{ parameters.modelContainerName }} \
-        bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash run_eval.sh --config_name=$(setVarFromJsonFileValue.request_json)"
+        bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash run_eval.sh --config_name=${{ parameters.requestJson }}"
     displayName: Eval
 
   - task: Bash@3

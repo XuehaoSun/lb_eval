@@ -53,6 +53,7 @@ stages:
       hardware: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.hardware']]
       scripts: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.scripts']]
       agent_pool: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.agent_pool']]
+      request_json: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.request_json']]
     pool: $(agent_pool)
     dependsOn: [CheckHardware]
     jobs:
@@ -74,6 +75,7 @@ stages:
           - template: template/model-template.yml
             parameters:
               scriptsPath: "$(scripts)/$(hardware)"
+              requestJson: "$(request_json)"
           - template: template/git-status-template.yml
             parameters:
               status: "Finished"
