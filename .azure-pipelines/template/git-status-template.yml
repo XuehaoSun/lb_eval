@@ -7,7 +7,7 @@ steps:
   - task: Bash@3
     inputs:
       filePath: .azure-pipelines/scripts/git_update.sh
-    name: gitUpdateStatus
+    name: gitUpdateStatus${{ parameters.status }}
     env:
       repoURL: $(Build.Repository.Uri)
       requestJson: $(setVarFromJsonFileValue.request_json)
