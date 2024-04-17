@@ -58,6 +58,19 @@ stages:
     jobs:
       - job: Eval
         steps:
+          - script: |
+              rm -fr ${BUILD_SOURCESDIRECTORY} || sudo rm -fr ${BUILD_SOURCESDIRECTORY} || true
+              echo y | docker system prune
+            displayName: "Clean workspace"
+
+          - checkout: self
+            clean: true
+            displayName: "Checkout out Repo"
+
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Running"
+
           - template: template/model-template.yml
             parameters:
               scriptsPath: "$(scripts)/$(hardware)"

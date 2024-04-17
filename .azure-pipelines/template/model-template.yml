@@ -11,10 +11,6 @@ steps:
     parameters:
       scriptsPath: ${{ parameters.scriptsPath}}
 
-  - template: git-status-template.yml
-    parameters:
-      status: "Running"
-
   - script: |
       docker exec ${{ parameters.modelContainerName }} \
         bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash run_eval.sh"
