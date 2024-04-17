@@ -2,14 +2,15 @@
 set -x
 
 git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
+cd lb_eval_backup
 git checkout main
 cd lb_eval_backup/status
 sed -i "s/\"status\":.*/\"status\": \"${status}\"/g" ${requestJson}
 
 git config --global user.email "xuehao.sun@intel.com"
 git config --global user.name "Sun,Xuehao"
-git remote set-url origin https://XuehaoSun:$(TOKEN)@github.com/XuehaoSun/lb_eval.git
-git add . && git commit -m ${commitMessage}
+git remote set-url origin https://XuehaoSun:"${TOKEN}"@github.com/XuehaoSun/lb_eval.git
+git add . && git commit -m "${commitMessage}"
 
 # retry 3 times in case of parallel push conflict
 n=0
