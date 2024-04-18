@@ -6,23 +6,7 @@ import json
 import torch
 import logging
 from transformers import AutoConfig, AutoTokenizer
-from intel_extension_for_transformers.transformers import (
-    AutoModelForCausalLM,
-    AutoModel,
-)
-from transformers.utils import check_min_version
-from intel_extension_for_transformers.transformers.utils import str2bool
-from optimum.intel.generation.modeling import TSModelForCausalLM
-from intel_extension_for_transformers.transformers import (
-    MixedPrecisionConfig,
-    SmoothQuantConfig,
-    BitsAndBytesConfig,
-    RtnConfig,
-    AwqConfig,
-    TeqConfig,
-    GPTQConfig,
-    AutoRoundConfig,
-)
+from transformers import AutoModelForCausalLM, AutoModel
 
 from config import eval_batch_size, tasks_shots_map, rename_tasks_map, results_template
 import copy
@@ -68,8 +52,9 @@ user_model = AutoModelForCausalLM.from_pretrained(
         request_json["model"],
         config=config,
         trust_remote_code=True,
-        use_neural_speed=args.use_neural_speed
+        device_map="auto"
         )
+
 
 from intel_extension_for_transformers.transformers.llm.evaluation.lm_eval import evaluate
 pretrained = ',pretrained=' + request_json["model"]
@@ -78,17 +63,6 @@ eval_args = "tokenizer=" + request_json["model"] + ",dtype=" + request_json["com
                 commit_hash + ",trust_remote_code=" + str(True)
 if user_model is None:
     eval_args += pretrained
-"""
-if args.use_neural_speed:
-    eval_args += pretrained
-    q_conf = user_model.config.quantization_config
-    if isinstance(q_conf, dict):
-        q_algo = q_conf.get("quant_method", None)
-    else:
-        q_algo = q_conf.quant_method.value
-    if q_algo.upper() in ["AWQ", "GPTQ", "AUTOROUND"]:
-        eval_args += ",use_gptq=True"
-"""
 eval_tasks = []
 eval_shots = []
 for each in tasks_shots_map:
