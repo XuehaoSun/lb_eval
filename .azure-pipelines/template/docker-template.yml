@@ -17,6 +17,9 @@ parameters:
   - name: scriptsPath
     type: string
     default: "ITREX/cpu"
+  - name: hardware
+    type: string
+    default: "cpu"
 
 steps:
   - task: Bash@3
@@ -53,7 +56,7 @@ steps:
       env | sort
     displayName: "Clean docker container"
 
-  - ${{ if ne(parameters.containerName, '') }}:
+  - ${{ if eq(parameters.hardware, 'cpu') }}:
       - task: Bash@3
         inputs:
           targetType: "inline"
@@ -63,4 +66,17 @@ steps:
             -v ${BUILD_SOURCESDIRECTORY}:/lb_eval ${{ parameters.repoName }}:${{ parameters.repoTag }}
             echo "Show the container list after docker run ... "
             docker ps -a
-        displayName: "Docker run - ${{ parameters.containerName }} Container"
+        displayName: "Docker run - ${{ parameters.hardware }} - ${{ parameters.containerName }} Container"
+
+  - ${{ if eq(parameters.hardware, 'gpu') }}:
+      - task: Bash@3
+        inputs:
+          targetType: "inline"
+          script: |
+            docker run -dit  --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
+            --runtime=nvidia --gpus all \
+            -e http_proxy=$http_proxy -e https_proxy=$http_proxy \
+            -v ${BUILD_SOURCESDIRECTORY}:/lb_eval ${{ parameters.repoName }}:${{ parameters.repoTag }}
+            echo "Show the container list after docker run ... "
+            docker ps -a
+        displayName: "Docker run - ${{ parameters.hardware }} - ${{ parameters.containerName }} Container"
