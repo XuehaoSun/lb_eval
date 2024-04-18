@@ -75,6 +75,7 @@ results = evaluate(
         user_model=user_model,
         batch_size=args.batch_size,
         tasks=eval_tasks,
+        device="cuda",
         model_format="neural_speed" if args.use_neural_speed else "torch",
     )
 
