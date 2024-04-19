@@ -95,12 +95,27 @@ for each in tasks_shots_map:
     eval_tasks.append(each)
     eval_shots.append(tasks_shots_map[each])
 
+import fnmatch
+from lm_eval import tasks
+# Returns a list containing all values of the source_list that
+# match at least one of the patterns
+def pattern_match(patterns, source_list):
+    task_names = set()
+    for pattern in patterns:
+        for matching in fnmatch.filter(source_list, pattern):
+            task_names.add(matching)
+    return list(task_names)
+
+task_names = pattern_match(eval_tasks, tasks.ALL_TASKS)
+
+print(f"Selected Tasks: {task_names}")
+
 results = evaluate(
         model="hf-causal",
         model_args=eval_args,
         user_model=user_model,
         batch_size=args.batch_size,
-        tasks=eval_tasks,
+        tasks=task_names,
         model_format="neural_speed" if args.use_neural_speed else "torch",
     )
 

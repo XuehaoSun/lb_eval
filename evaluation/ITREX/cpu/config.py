@@ -3,11 +3,18 @@ EVAL_SCRIPT = "evaluation/eval_normal.sh"
 tasks_shots_map = {"winogrande": 0,
         "arc_easy": 0,
         "arc_challenge": 0,
-        "truthfulqa_mc":0}
+        "truthfulqa_mc":0,
+        "hellaswag": 0,
+        "hendrycksTest-*": 0,
+        "lambada_openai": 0,
+        "piqa": 0,
+        "openbookqa": 0,
+        "boolq": 0}
 
 rename_tasks_map = {"arc_easy": "arc:easy",
         "arc_challenge": "arc:challenge",
-        "truthfulqa_mc": "truthfulqa:mc"}
+        "truthfulqa_mc": "truthfulqa:mc",
+        "lambada_openai": "lambada:openai"}
 
 eval_batch_size=56
 result_path="llm_evaluation_results.json"
@@ -15,7 +22,7 @@ result_path="llm_evaluation_results.json"
 
 results_template = {
   "config_general": {
-    "lighteval_sha": "1.14", # itrex version
+    "lighteval_sha": "1.4", # itrex version
     "num_few_shot_default": None,
     "num_fewshot_seeds": None,
     "override_batch_size": None,
