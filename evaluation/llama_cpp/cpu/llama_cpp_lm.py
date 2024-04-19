@@ -43,9 +43,17 @@ class WrapperGGUFLM(LM):
         self.model = Llama.from_pretrained(
                 repo_id=gguf_model,
                 filename=ftype,
-                verbose=True,
                 logits_all=True,
-                n_ctx=2048)
+                n_ctx=2048,
+                n_threads=16,
+                use_mlock=True,
+                n_threads_batch=24,
+                mul_mat_q=True,
+                offload_kqv=True,
+                last_n_tokens_size=64,
+                cache=False,
+                cache_type='ram',
+                verbose=True,)
 
         self.logprobs = 10
         self.temperature = 0.0
