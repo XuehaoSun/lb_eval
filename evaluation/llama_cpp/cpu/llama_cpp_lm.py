@@ -44,7 +44,8 @@ class WrapperGGUFLM(LM):
                 repo_id=gguf_model,
                 filename=ftype,
                 verbose=True,
-                logits_all=True)
+                logits_all=True,
+                n_ctx=2048)
 
         self.logprobs = 10
         self.temperature = 0.0
