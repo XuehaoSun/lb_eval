@@ -5,24 +5,6 @@ import time
 import json
 import torch
 import logging
-from transformers import AutoConfig, AutoTokenizer
-from intel_extension_for_transformers.transformers import (
-    AutoModelForCausalLM,
-    AutoModel,
-)
-from transformers.utils import check_min_version
-from intel_extension_for_transformers.transformers.utils import str2bool
-from optimum.intel.generation.modeling import TSModelForCausalLM
-from intel_extension_for_transformers.transformers import (
-    MixedPrecisionConfig,
-    SmoothQuantConfig,
-    BitsAndBytesConfig,
-    RtnConfig,
-    AwqConfig,
-    TeqConfig,
-    GPTQConfig,
-    AutoRoundConfig,
-)
 
 from config import eval_batch_size, tasks_shots_map, rename_tasks_map, results_template
 import copy
@@ -42,53 +24,30 @@ with open(args.request_file) as f:
 
 print(request_json)
 
-config = AutoConfig.from_pretrained(
-    request_json["model"],
-    use_cache=True,  # to use kv cache.
-    trust_remote_code=True,
-)
+from llama_cpp_lm import WrapperGGUFLM
 
-# chatglm
-if config.model_type == "chatglm":
-    AutoModelForCausalLM = AutoModel
-# tokenizer
-if config.model_type == "llama":
-    from transformers import LlamaTokenizer
-
-    tokenizer = LlamaTokenizer.from_pretrained(request_json["model"])
-else:
-    tokenizer = AutoTokenizer.from_pretrained(
-        request_json["model"], trust_remote_code=True
-    )
-
-if request_json["quant_type"] == "GPTQ" and request_json["hardware"] == "cpu":
-    config.quantization_config["disable_exllama"] = True
-
-user_model = AutoModelForCausalLM.from_pretrained(
-        request_json["model"],
-        config=config,
-        trust_remote_code=True,
-        use_neural_speed=args.use_neural_speed
-        )
-
-from intel_extension_for_transformers.transformers.llm.evaluation.lm_eval import evaluate
-pretrained = ',pretrained=' + request_json["model"]
+pretrained = 'gguf_model=' + request_json["model"] + ",ftype=" + request_json["gguf_ftype"]
 commit_hash = request_json["revision"]
-eval_args = "tokenizer=" + request_json["model"] + ",dtype=" + request_json["compute_dtype"] +",_commit_hash=" + \
-                commit_hash + ",trust_remote_code=" + str(True)
-if user_model is None:
-    eval_args += pretrained
+model_args = pretrained + ",dtype=" + request_json["compute_dtype"] +",_commit_hash=" + commit_hash
+
+print(f"Initializing {request_json['model']} model, with arguments: {model_args}")
+gguf_lm = WrapperGGUFLM.create_from_arg_string(
+        model_args,
+        {
+            "batch_size": 1, # llama.cpp only support bs=1
+            "max_batch_size": 1,
+            "device": request_json["hardware"],
+            })
+
 """
-if args.use_neural_speed:
-    eval_args += pretrained
-    q_conf = user_model.config.quantization_config
-    if isinstance(q_conf, dict):
-        q_algo = q_conf.get("quant_method", None)
-    else:
-        q_algo = q_conf.quant_method.value
-    if q_algo.upper() in ["AWQ", "GPTQ", "AUTOROUND"]:
-        eval_args += ",use_gptq=True"
+data = {'prompt': 'Sarah was a much better surgeon than Maria so Sarah always got the easier cases.', 'suffix': None, 'max_tokens': 1, 'temperature': 0.0, 'top_p': 0.95, 'min_p': 0.05, 'echo': True, 'stop': None, 'stream': False, 'logprobs': 10, 'presence_penalty': 0.0, 'frequency_penalty': 0.0, 'logit_bias': None, 'seed': None, 'model': None, 'top_k': 40, 'repeat_penalty': 1.1, 'mirostat_mode': 0, 'mirostat_tau': 5.0, 'mirostat_eta': 0.1, 'grammar': None}
+
+print(gguf_lm.model(**data))
 """
+
+from lm_eval.evaluator import simple_evaluate
+
+
 eval_tasks = []
 eval_shots = []
 for each in tasks_shots_map:
@@ -97,6 +56,10 @@ for each in tasks_shots_map:
 
 import fnmatch
 from lm_eval import tasks
+from lm_eval.tasks import TaskManager
+
+task_manager = TaskManager("INFO")
+
 # Returns a list containing all values of the source_list that
 # match at least one of the patterns
 def pattern_match(patterns, source_list):
@@ -106,18 +69,18 @@ def pattern_match(patterns, source_list):
             task_names.add(matching)
     return list(task_names)
 
-task_names = pattern_match(eval_tasks, tasks.ALL_TASKS)
+task_names = pattern_match(eval_tasks, task_manager.all_tasks)
 
 print(f"Selected Tasks: {task_names}")
 
-results = evaluate(
-        model="hf-causal",
-        model_args=eval_args,
-        user_model=user_model,
-        batch_size=args.batch_size,
-        tasks=task_names,
-        model_format="neural_speed" if args.use_neural_speed else "torch",
-    )
+results = simple_evaluate(
+    gguf_lm,
+    model_args=model_args,
+    tasks=task_names,
+    batch_size=1,
+    device=request_json["hardware"],
+    write_out=True,
+)
 
 end_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d-%H-%M-%S')
 
@@ -130,7 +93,9 @@ final_results["config_general"]["model_dtype"] = request_json["precision"]
 final_results["config_general"]["model_size"] = request_json["params"]
 
 final_results["task_info"] = request_json
-final_results["quantization_config"] = config.quantization_config
+quantization_config = {"quant_method": request_json["quant_type"],
+        "ftype": request_json["gguf_ftype"],}
+final_results["quantization_config"] = quantization_config
 
 rename_results = {}
 rename_versions = {}
