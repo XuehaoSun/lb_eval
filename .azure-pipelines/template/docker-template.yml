@@ -62,7 +62,7 @@ steps:
           targetType: "inline"
           script: |
             docker run -dit --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
-            -e http_proxy=$(http_proxy) -e https_proxy=$(http_proxy) \
+            -e http_proxy=$(cpu_proxy) -e https_proxy=$(cpu_proxy) \
             -v ${BUILD_SOURCESDIRECTORY}:/lb_eval ${{ parameters.repoName }}:${{ parameters.repoTag }}
             echo "Show the container list after docker run ... "
             docker ps -a
