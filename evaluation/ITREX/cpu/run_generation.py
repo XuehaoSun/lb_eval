@@ -140,7 +140,10 @@ for task in results["results"]:
     if task in rename_tasks_map:
         name = f"harness|{rename_tasks_map[task]}|{tasks_shots_map[task]}"
     else:
-        name = f"harness|{task}|{tasks_shots_map[task]}"
+        if task.startswith("hendrycksTest"):
+            name = f"harness|{task}|{tasks_shots_map[hendrycksTest-*]}"
+        else:
+            name = f"harness|{task}|{tasks_shots_map[task]}"
 
     rename_results[name] = result
     rename_versions[name] = version
