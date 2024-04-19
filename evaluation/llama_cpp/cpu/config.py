@@ -15,8 +15,8 @@ tasks_shots_map = {"winogrande": 0,
 
 tasks_shots_map = {"winogrande": 0,
         "arc_challenge": 0,
-        "truthfulqa_mc":0,
-        "mmlu": 0,
+        "arc_easy": 0,
+        "truthfulqa_mc2":0,
         "piqa": 0,}
 
 rename_tasks_map = {"arc_easy": "arc:easy",
