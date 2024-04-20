@@ -24,7 +24,7 @@ git add . && git commit -m "${commitMessage}"
 n=0
 until [ "$n" -ge 3 ]
 do
-  git pull && git push && break
+  git pull --rebase origin main && git push && break
   n=$((n+1))
   sleep 3
 done
