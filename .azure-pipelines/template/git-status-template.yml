@@ -3,21 +3,18 @@ parameters:
     type: string
     default: ""
 
-  - name: results
-    type: string
-    default: ""
-
   - name: requestJson
     type: string
     default: ""
 
 steps:
   - task: Bash@3
+    condition: always()
     inputs:
       filePath: .azure-pipelines/scripts/git_update.sh
     name: gitUpdateStatus${{ parameters.status }}
     env:
       requestJson: ${{ parameters.requestJson }}
-      commitMessage: "Commit from Azure DevOps for ${{ parameters.status }}${{ parameters.results }}"
+      commitMessage: "Commit from Azure DevOps update Status ${{ parameters.status }}"
       status: ${{ parameters.status }}
       TOKEN: $(TOKEN)
