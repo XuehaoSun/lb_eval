@@ -1,6 +1,7 @@
 #!/bin/bash
 set -x
 
+workspace=$(pwd)
 git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
 cd lb_eval_backup
 git checkout main
@@ -29,4 +30,4 @@ do
   sleep 3
 done
 
-rm -rf lb_eval_backup
+rm -rf ${workspace}/lb_eval_backup
