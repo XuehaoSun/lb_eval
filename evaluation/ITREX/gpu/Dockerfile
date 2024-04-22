@@ -1,7 +1,5 @@
-ARG UBUNTU_VER=22.04
-FROM ubuntu:${UBUNTU_VER} as devel
+FROM nvidia/cuda:12.4.1-devel-ubuntu22.04 as devel
 
-# See http://bugs.python.org/issue19846
 ENV LANG C.UTF-8
 
 RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
