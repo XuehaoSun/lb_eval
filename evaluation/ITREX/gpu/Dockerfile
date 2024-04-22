@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.4.1-devel-ubuntu22.04 as devel
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04 as devel
 
 ENV LANG C.UTF-8
 
