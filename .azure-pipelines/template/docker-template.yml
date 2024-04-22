@@ -62,7 +62,9 @@ steps:
         if [ "${{ parameters.hardware }}" == "cpu" ]; then
           docker run -dit --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
             -e http_proxy=$(cpu_proxy) -e https_proxy=$(cpu_proxy) \
-            -v ${BUILD_SOURCESDIRECTORY}:/lb_eval ${{ parameters.repoName }}:${{ parameters.repoTag }}
+            -v ${BUILD_SOURCESDIRECTORY}:/lb_eval \
+            -v /home/sdp/.cache/huggingface:/dataset \
+            ${{ parameters.repoName }}:${{ parameters.repoTag }}
         elif [ "${{ parameters.hardware }}" == "gpu" ]; then
           docker run -dit  --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
               --runtime=nvidia --gpus all \
