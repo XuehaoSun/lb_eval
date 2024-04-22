@@ -51,6 +51,7 @@ config = AutoConfig.from_pretrained(
 # chatglm
 if config.model_type == "chatglm":
     AutoModelForCausalLM = AutoModel
+"""
 # tokenizer
 if config.model_type == "llama":
     from transformers import LlamaTokenizer
@@ -60,6 +61,7 @@ else:
     tokenizer = AutoTokenizer.from_pretrained(
         request_json["model"], trust_remote_code=True
     )
+"""
 
 if request_json["quant_type"] == "GPTQ" and request_json["hardware"] == "cpu":
     config.quantization_config["disable_exllama"] = True
