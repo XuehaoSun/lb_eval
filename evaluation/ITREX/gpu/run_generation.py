@@ -64,7 +64,7 @@ results = simple_evaluate(
     "hf",
     model_args=model_args,
     tasks=task_names,
-    batch_size=1,
+    batch_size=2,
     device=request_json["hardware"],
     write_out=True,
 )
