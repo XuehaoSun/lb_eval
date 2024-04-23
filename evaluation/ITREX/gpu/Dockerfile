@@ -21,7 +21,7 @@ RUN pip --no-cache-dir install --upgrade pip
 RUN pip install --no-cache-dir setuptools==69.5.1 wheel
 
 COPY requirements.txt /tmp/
-RUN pip install --requirement /tmp/requirements.txt
+RUN pip install --requirement /tmp/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip list
 
 WORKDIR /
