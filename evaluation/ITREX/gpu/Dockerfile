@@ -10,12 +10,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     autoconf \
     build-essential \
     git \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
     numactl \
     time \
     wget \
-    bc \
     vim
 
 RUN ln -sf $(which python3) /usr/bin/python
