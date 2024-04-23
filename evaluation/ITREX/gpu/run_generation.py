@@ -26,58 +26,48 @@ with open(args.request_file) as f:
 
 print(request_json)
 
-config = AutoConfig.from_pretrained(
-    request_json["model"],
-    use_cache=True,  # to use kv cache.
-    trust_remote_code=True,
-)
-
-# chatglm
-if config.model_type == "chatglm":
-    AutoModelForCausalLM = AutoModel
-# tokenizer
-if config.model_type == "llama":
-    from transformers import LlamaTokenizer
-
-    tokenizer = LlamaTokenizer.from_pretrained(request_json["model"])
-else:
-    tokenizer = AutoTokenizer.from_pretrained(
-        request_json["model"], trust_remote_code=True
-    )
-
-if request_json["quant_type"] == "GPTQ" and request_json["hardware"] == "cpu":
-    config.quantization_config["disable_exllama"] = True
-
-user_model = AutoModelForCausalLM.from_pretrained(
-        request_json["model"],
-        config=config,
-        trust_remote_code=True,
-        device_map="auto"
-        )
 
 
-from intel_extension_for_transformers.transformers.llm.evaluation.lm_eval import evaluate
-pretrained = ',pretrained=' + request_json["model"]
+pretrained = 'pretrained=' + request_json["model"]
 commit_hash = request_json["revision"]
-eval_args = "tokenizer=" + request_json["model"] + ",dtype=" + request_json["compute_dtype"] +",_commit_hash=" + \
-                commit_hash + ",trust_remote_code=" + str(True)
-if user_model is None:
-    eval_args += pretrained
+model_args = pretrained + ",dtype=" + request_json["compute_dtype"] +",_commit_hash=" + commit_hash
+
+from lm_eval.evaluator import simple_evaluate
+
+
 eval_tasks = []
 eval_shots = []
 for each in tasks_shots_map:
     eval_tasks.append(each)
     eval_shots.append(tasks_shots_map[each])
 
-results = evaluate(
-        model="hf-causal",
-        model_args=eval_args,
-        user_model=user_model,
-        batch_size=args.batch_size,
-        tasks=eval_tasks,
-        device="cuda",
-        model_format="neural_speed" if args.use_neural_speed else "torch",
-    )
+import fnmatch
+from lm_eval import tasks
+from lm_eval.tasks import TaskManager
+
+task_manager = TaskManager("INFO")
+
+# Returns a list containing all values of the source_list that
+# match at least one of the patterns
+def pattern_match(patterns, source_list):
+    task_names = set()
+    for pattern in patterns:
+        for matching in fnmatch.filter(source_list, pattern):
+            task_names.add(matching)
+    return list(task_names)
+
+task_names = pattern_match(eval_tasks, task_manager.all_tasks)
+
+print(f"Selected Tasks: {task_names}")
+
+results = simple_evaluate(
+    "hf",
+    model_args=model_args,
+    tasks=task_names,
+    batch_size=1,
+    device=request_json["hardware"],
+    write_out=True,
+)
 
 end_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d-%H-%M-%S')
 
@@ -90,7 +80,9 @@ final_results["config_general"]["model_dtype"] = request_json["precision"]
 final_results["config_general"]["model_size"] = request_json["params"]
 
 final_results["task_info"] = request_json
-final_results["quantization_config"] = config.quantization_config
+quantization_config = {"quant_method": request_json["quant_type"],
+        "ftype": request_json["gguf_ftype"],}
+final_results["quantization_config"] = quantization_config
 
 rename_results = {}
 rename_versions = {}
@@ -100,7 +92,10 @@ for task in results["results"]:
     if task in rename_tasks_map:
         name = f"harness|{rename_tasks_map[task]}|{tasks_shots_map[task]}"
     else:
-        name = f"harness|{task}|{tasks_shots_map[task]}"
+        if task.startswith("hendrycksTest"):
+            name = f"harness|{task}|{tasks_shots_map['hendrycksTest-*']}"
+        else:
+            name = f"harness|{task}|{tasks_shots_map[task]}"
 
     rename_results[name] = result
     rename_versions[name] = version
