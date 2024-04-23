@@ -60,7 +60,7 @@ task_names = pattern_match(eval_tasks, task_manager.all_tasks)
 
 print(f"Selected Tasks: {task_names}")
 
-results = simple_evaluate(
+eval_results = simple_evaluate(
     "hf",
     model_args=model_args,
     tasks=task_names,
@@ -68,6 +68,16 @@ results = simple_evaluate(
     device=request_json["hardware"],
     write_out=True,
 )
+
+
+results = {}
+results["results"] = eval_results["results"]
+results["versions"] = eval_results["versions"]
+results["n-shot"] = eval_results["n-shot"]
+results["date"] = eval_results["date"]
+results["config"] = eval_results["config"]
+print(results)
+
 
 end_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d-%H-%M-%S')
 
@@ -99,9 +109,9 @@ for task in results["results"]:
 
     rename_results[name] = result
     rename_versions[name] = version
-final_results.update({"results": rename_results, "versions": rename_versions})
 
-# dumped = json.dumps(final_results, indent=2)
+final_results.update({"results": rename_results, "versions": rename_versions,
+    "n-shot": results["n-shot"], "date": results["date"], "config": results["config"]})
 
 
 user_name = ""
