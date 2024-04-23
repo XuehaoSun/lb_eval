@@ -3,9 +3,6 @@ FROM nvidia/cuda:11.6.1-cudnn8-devel-ubuntu20.04 as devel
 ENV LANG C.UTF-8
 
 RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
-    python3.10 python3.10-venv python3.10-dev \
-    python3-pip \
-    python3-distutils \
     autoconf \
     build-essential \
     git \
@@ -13,6 +10,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     time \
     wget \
     vim
+
+RUN apt-get install -y --no-install-recommends --fix-missing \
+    python3.10 \
+    python3-pip \
+    python3-dev \
+    python3-distutils
 
 RUN ln -sf $(which python3) /usr/bin/python
 
