@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xe
+export TOKENIZERS_PARALLELISM=false
 
 PATTERN='[-a-zA-Z0-9_]*='
 

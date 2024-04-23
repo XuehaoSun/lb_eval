@@ -98,7 +98,7 @@ rename_results = {}
 rename_versions = {}
 for task in results["results"]:
     result = results["results"][task]
-    version = results["versions"][task]
+    version = results["versions"].get(task, None)
     if task in rename_tasks_map:
         name = f"harness|{rename_tasks_map[task]}|{tasks_shots_map[task]}"
     else:

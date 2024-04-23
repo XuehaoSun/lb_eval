@@ -1,6 +1,8 @@
 #!/bin/bash
 set -xe
 
+export TOKENIZERS_PARALLELISM=false
+
 PATTERN='[-a-zA-Z0-9_]*='
 
 for i in "$@"; do
