@@ -96,7 +96,7 @@ print(f"Selected Tasks: {task_names}")
 
 from intel_extension_for_transformers.transformers.llm.evaluation.lm_eval.evaluator import simple_evaluate
 
-results = simple_evaluate(
+eval_results = simple_evaluate(
         model="hf",
         model_args=eval_args,
         user_model=user_model,
@@ -105,6 +105,15 @@ results = simple_evaluate(
         device="cpu",
         tokenizer=tokenizer
     )
+
+
+results = {}
+results["results"] = eval_results["results"]
+results["versions"] = eval_results["versions"]
+results["n-shot"] = eval_results["n-shot"]
+results["date"] = eval_results["date"]
+results["config"] = eval_results["config"]
+print(results)
 
 
 end_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d-%H-%M-%S')
@@ -135,9 +144,9 @@ for task in results["results"]:
 
     rename_results[name] = result
     rename_versions[name] = version
-final_results.update({"results": rename_results, "versions": rename_versions})
 
-# dumped = json.dumps(final_results, indent=2)
+final_results.update({"results": rename_results, "versions": rename_versions,
+    "n-shot": results["n-shot"], "date": results["date"], "config": results["config"]})
 
 
 user_name = ""
