@@ -6,10 +6,7 @@ import json
 import torch
 import logging
 from transformers import AutoConfig, AutoTokenizer
-from intel_extension_for_transformers.transformers import (
-    AutoModelForCausalLM,
-    AutoModel,
-)
+from transformers import AutoModelForCausalLM, AutoModel
 from transformers.utils import check_min_version
 from intel_extension_for_transformers.transformers.utils import str2bool
 from optimum.intel.generation.modeling import TSModelForCausalLM
@@ -48,29 +45,18 @@ config = AutoConfig.from_pretrained(
     trust_remote_code=True,
 )
 
-# chatglm
-if config.model_type == "chatglm":
-    AutoModelForCausalLM = AutoModel
-"""
 # tokenizer
-if config.model_type == "llama":
-    from transformers import LlamaTokenizer
-
-    tokenizer = LlamaTokenizer.from_pretrained(request_json["model"])
-else:
-    tokenizer = AutoTokenizer.from_pretrained(
+tokenizer = AutoTokenizer.from_pretrained(
         request_json["model"], trust_remote_code=True
     )
-"""
 
 if request_json["quant_type"] == "GPTQ" and request_json["hardware"] == "cpu":
-    config.quantization_config["disable_exllama"] = True
+    config.quantization_config["use_exllama"] = False
 
 user_model = AutoModelForCausalLM.from_pretrained(
         request_json["model"],
         config=config,
         trust_remote_code=True,
-        use_neural_speed=args.use_neural_speed
         )
 
 from intel_extension_for_transformers.transformers.llm.evaluation.lm_eval import evaluate
@@ -78,27 +64,23 @@ pretrained = ',pretrained=' + request_json["model"]
 commit_hash = request_json["revision"]
 eval_args = "tokenizer=" + request_json["model"] + ",dtype=" + request_json["compute_dtype"] +",_commit_hash=" + \
                 commit_hash + ",trust_remote_code=" + str(True)
+
 if user_model is None:
     eval_args += pretrained
-"""
-if args.use_neural_speed:
-    eval_args += pretrained
-    q_conf = user_model.config.quantization_config
-    if isinstance(q_conf, dict):
-        q_algo = q_conf.get("quant_method", None)
-    else:
-        q_algo = q_conf.quant_method.value
-    if q_algo.upper() in ["AWQ", "GPTQ", "AUTOROUND"]:
-        eval_args += ",use_gptq=True"
-"""
+
 eval_tasks = []
 eval_shots = []
 for each in tasks_shots_map:
     eval_tasks.append(each)
     eval_shots.append(tasks_shots_map[each])
 
+
 import fnmatch
 from lm_eval import tasks
+from lm_eval.tasks import TaskManager
+
+task_manager = TaskManager("INFO")
+
 # Returns a list containing all values of the source_list that
 # match at least one of the patterns
 def pattern_match(patterns, source_list):
@@ -108,18 +90,22 @@ def pattern_match(patterns, source_list):
             task_names.add(matching)
     return list(task_names)
 
-task_names = pattern_match(eval_tasks, tasks.ALL_TASKS)
+task_names = pattern_match(eval_tasks, task_manager.all_tasks)
 
 print(f"Selected Tasks: {task_names}")
 
-results = evaluate(
-        model="hf-causal",
+from intel_extension_for_transformers.transformers.llm.evaluation.lm_eval.evaluator import simple_evaluate
+
+results = simple_evaluate(
+        model="hf",
         model_args=eval_args,
         user_model=user_model,
         batch_size=args.batch_size,
         tasks=task_names,
-        model_format="neural_speed" if args.use_neural_speed else "torch",
+        device="cpu",
+        tokenizer=tokenizer
     )
+
 
 end_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d-%H-%M-%S')
 
