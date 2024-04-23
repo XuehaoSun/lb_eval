@@ -2,11 +2,11 @@ FROM nvidia/cuda:11.6.1-cudnn8-devel-ubuntu20.04 as devel
 
 ENV LANG C.UTF-8
 
-RUN apt-get install -y --no-install-recommends --fix-missing \
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     python3.10 \
     python3-pip
 
-RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+RUN apt-get install -y --no-install-recommends --fix-missing \
     autoconf \
     git \
     time \
