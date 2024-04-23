@@ -3,9 +3,10 @@ EVAL_SCRIPT = "evaluation/eval_normal.sh"
 tasks_shots_map = {"winogrande": 0,
         "arc_easy": 0,
         "arc_challenge": 0,
-        "truthfulqa_mc":0,
+        "truthfulqa_mc2": 0,
+        "truthfulqa_mc1": 0,
         "hellaswag": 0,
-        "hendrycksTest-*": 0,
+        "mmlu": 0,
         "lambada_openai": 0,
         "piqa": 0,
         "openbookqa": 0,
@@ -15,6 +16,8 @@ tasks_shots_map = {"winogrande": 0,
 rename_tasks_map = {"arc_easy": "arc:easy",
         "arc_challenge": "arc:challenge",
         "truthfulqa_mc": "truthfulqa:mc",
+        "truthfulqa_mc2": "truthfulqa:mc2",
+        "truthfulqa_mc1": "truthfulqa:mc1",
         "lambada_openai": "lambada:openai"}
 
 eval_batch_size=56
