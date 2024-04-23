@@ -21,6 +21,7 @@ RUN pip --no-cache-dir install --upgrade pip
 RUN pip install --no-cache-dir setuptools==69.5.1 wheel
 
 COPY requirements.txt /tmp/
+RUN pip install torch==2.2.1 --index-url https://download.pytorch.org/whl/cu118
 RUN pip install --requirement /tmp/requirements.txt -i  https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip list
 

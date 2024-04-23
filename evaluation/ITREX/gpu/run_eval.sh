@@ -16,10 +16,9 @@ for i in "$@"; do
 done
 
 cd /lb_eval/evaluation/ITREX/gpu
-# params=$(python /lb_eval/evaluation/parse_config.py /lb_eval/requests/$config_name)
-# cmd="python -u run_generation.py --trust_remote_code $params"
+
+export http_proxy=http://child-jf.intel.com:912
+export https_proxy=http://child-jf.intel.com:912
+
 cmd="python run_generation.py --request-file /lb_eval/requests/$config_name"
 eval ${cmd}
-
-# update results
-# todo
