@@ -102,8 +102,8 @@ for task in results["results"]:
     if task in rename_tasks_map:
         name = f"harness|{rename_tasks_map[task]}|{tasks_shots_map[task]}"
     else:
-        if task.startswith("hendrycksTest"):
-            name = f"harness|{task}|{tasks_shots_map['hendrycksTest-*']}"
+        if task.startswith("mmlu"):
+            name = f"harness|{task}|{tasks_shots_map['mmlu']}"
         else:
             name = f"harness|{task}|{tasks_shots_map[task]}"
 
