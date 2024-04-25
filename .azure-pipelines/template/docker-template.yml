@@ -40,7 +40,11 @@ steps:
   - script: |
       if [[ ! $(docker images | grep -i ${{ parameters.repoName }}:${{ parameters.repoTag }}) ]]; then
         cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{parameters.scriptsPath}}
-        docker build -f ${{parameters.dockerFileName}} --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${http_proxy} -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
+        if [ "${{ parameters.hardware }}" == "cpu" ]; then
+          docker build -f ${{parameters.dockerFileName}} --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${http_proxy} -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
+        elif [ "${{ parameters.hardware }}" == "gpu" ]; then
+          docker build -f ${{parameters.dockerFileName}} --build-arg http_proxy=$(gpu_proxy) --build-arg https_proxy=$(gpu_proxy) -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
+        fi
       fi
       docker images | grep -i ${{ parameters.repoName }}
       if [[ $? -ne 0 ]]; then
@@ -68,7 +72,7 @@ steps:
         elif [ "${{ parameters.hardware }}" == "gpu" ]; then
           docker run -dit  --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
               --runtime=nvidia --gpus all \
-              -e http_proxy=$http_proxy -e https_proxy=$http_proxy \
+              -e http_proxy=$(gpu_proxy) -e https_proxy=$(gpu_proxy) \
               -v ${BUILD_SOURCESDIRECTORY}:/lb_eval ${{ parameters.repoName }}:${{ parameters.repoTag }}
         else
           echo "Hardware ${{ parameters.hardware }} not supported"
