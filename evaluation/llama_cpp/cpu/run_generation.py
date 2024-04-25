@@ -73,7 +73,7 @@ task_names = pattern_match(eval_tasks, task_manager.all_tasks)
 
 print(f"Selected Tasks: {task_names}")
 
-results = simple_evaluate(
+eval_results = simple_evaluate(
     gguf_lm,
     model_args=model_args,
     tasks=task_names,
