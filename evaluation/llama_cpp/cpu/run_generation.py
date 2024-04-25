@@ -82,6 +82,15 @@ results = simple_evaluate(
     write_out=True,
 )
 
+results = {}
+results["results"] = eval_results["results"]
+results["versions"] = eval_results["versions"]
+results["n-shot"] = eval_results["n-shot"]
+results["date"] = eval_results["date"]
+results["config"] = eval_results["config"]
+print(results)
+
+
 end_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d-%H-%M-%S')
 
 final_results = copy.deepcopy(results_template)
@@ -101,20 +110,20 @@ rename_results = {}
 rename_versions = {}
 for task in results["results"]:
     result = results["results"][task]
-    version = results["versions"][task]
+    version = results["versions"].get(task, None)
     if task in rename_tasks_map:
         name = f"harness|{rename_tasks_map[task]}|{tasks_shots_map[task]}"
     else:
-        if task.startswith("hendrycksTest"):
-            name = f"harness|{task}|{tasks_shots_map['hendrycksTest-*']}"
+        if task.startswith("mmlu"):
+            name = f"harness|{task}|{tasks_shots_map['mmlu']}"
         else:
             name = f"harness|{task}|{tasks_shots_map[task]}"
 
     rename_results[name] = result
     rename_versions[name] = version
-final_results.update({"results": rename_results, "versions": rename_versions})
 
-# dumped = json.dumps(final_results, indent=2)
+final_results.update({"results": rename_results, "versions": rename_versions,
+    "n-shot": results["n-shot"], "date": results["date"], "config": results["config"]})
 
 
 user_name = ""
