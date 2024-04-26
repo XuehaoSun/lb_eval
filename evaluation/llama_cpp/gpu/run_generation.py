@@ -78,7 +78,7 @@ eval_results = simple_evaluate(
     model_args=model_args,
     tasks=task_names,
     batch_size=1,
-    device=request_json["hardware"],
+    device="cuda",
     write_out=True,
 )
 
