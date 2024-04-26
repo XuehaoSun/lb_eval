@@ -22,7 +22,9 @@ cd /lb_eval/evaluation/ITREX/gpu
 export http_proxy=http://child-jf.intel.com:912
 export https_proxy=http://child-jf.intel.com:912
 
-cmd="python -m pip install optimum==1.19.1 auto-gptq==0.7.1"
+cmd="python -m pip install optimum==1.19.1"
+eval ${cmd}
+cmd="python -m pip install --no-cache-dir auto-gptq==0.7.1 --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/"
 eval ${cmd}
 
 cmd="python run_generation.py --request-file /lb_eval/requests/$config_name"
