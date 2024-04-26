@@ -43,7 +43,8 @@ steps:
         if [ "${{ parameters.hardware }}" == "cpu" ]; then
           docker build -f ${{parameters.dockerFileName}} --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${http_proxy} -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
         elif [ "${{ parameters.hardware }}" == "gpu" ]; then
-          docker build -f ${{parameters.dockerFileName}} --build-arg http_proxy=$(gpu_proxy) --build-arg https_proxy=$(gpu_proxy) -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
+          echo "Reuse local docker image for GPU ..."
+          # docker build -f ${{parameters.dockerFileName}} --build-arg http_proxy=$(gpu_proxy) --build-arg https_proxy=$(gpu_proxy) -t ${{ parameters.repoName }}:${{ parameters.repoTag }} .
         fi
       fi
       docker images | grep -i ${{ parameters.repoName }}
