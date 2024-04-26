@@ -44,6 +44,10 @@ ENV LLAMA_CUBLAS=1
 # Install llama-cpp-python (build with cuda)
 RUN CMAKE_ARGS="-DLLAMA_CUBLAS=on" pip install llama-cpp-python
 
+COPY requirements.txt /tmp/
+RUN pip install --requirement /tmp/requirements.txt -i  https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip list
+
 # Run the server
 # CMD python3 -m llama_cpp.server
 WORKDIR /
