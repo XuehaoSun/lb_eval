@@ -84,7 +84,7 @@ class CustomLlamaCpp(Llama):
         model_name: str = model if model is not None else self.model_path
 
         if "qwen" in model_name.lower():
-            prompt_tokens = [self.token_bos()] + [self.token_bos()]
+            prompt_tokens = [self.token_bos()] + prompt_tokens
 
         # NOTE: This likely doesn't work correctly for the first token in the prompt
         # because of the extra space added to the start of the prompt_tokens
