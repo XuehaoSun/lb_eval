@@ -32,9 +32,12 @@ ENV PATH /opt/conda/bin:$PATH
 SHELL ["/bin/bash", "--login", "-c"]
 
 # RUN conda init bash
+COPY requirements.txt /tmp/
 
 RUN conda activate base && pip install --upgrade pip pytest cmake scikit-build setuptools fastapi uvicorn sse-starlette pydantic-settings starlette-context && \
-    pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/cu118
+    pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/cu118 && \
+    pip install --requirement /tmp/requirements.txt -i  https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip list
 
 # setting build related env vars
 ENV CUDA_DOCKER_ARCH=all
