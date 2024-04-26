@@ -58,16 +58,20 @@ def pattern_match(patterns, source_list):
 
 task_names = pattern_match(eval_tasks, task_manager.all_tasks)
 
+if request_json["model_params"] < 7:
+    batch_size = 8
+else:
+    batch_size = 4
+
 print(f"Selected Tasks: {task_names}")
 
 eval_results = simple_evaluate(
     "hf",
     model_args=model_args,
     tasks=task_names,
-    batch_size=2,
+    batch_size=batch_size,
     device="cuda",
     write_out=True,
-    limit=20
 )
 
 
