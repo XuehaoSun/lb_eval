@@ -13,7 +13,7 @@ tasks_shots_map = {"winogrande": 0,
         "openbookqa": 0,
         "boolq": 0}
 """
-tasks_shots_map = {"winogrande": 0,}
+tasks_shots_map = {"winogrande": 0}
 
 rename_tasks_map = {"arc_easy": "arc:easy",
         "arc_challenge": "arc:challenge",
