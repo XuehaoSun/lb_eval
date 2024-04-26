@@ -83,6 +83,7 @@ eval_results = simple_evaluate(
     batch_size=1,
     device="cuda",
     write_out=True,
+    limit=20
 )
 
 results = {}
