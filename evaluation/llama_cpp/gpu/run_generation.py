@@ -102,8 +102,10 @@ final_results["config_general"]["start_time"] = request_json["job_start_time"]
 final_results["config_general"]["end_time"] = end_time
 final_results["config_general"]["model_name"] = request_json["model"]
 final_results["config_general"]["model_dtype"] = request_json["precision"]
-final_results["config_general"]["model_size"] = model_size
-final_results["config_general"]["model_params"] = model_params
+final_results["config_general"]["model_size"] = model_size / 1e9
+final_results["config_general"]["model_params"] = model_params / 1e9
+final_results["config_general"]["quant_type"] = "llama.cpp"
+final_results["config_general"]["precision"] = "4bit"
 
 final_results["task_info"] = request_json
 quantization_config = {"quant_method": request_json["quant_type"],
