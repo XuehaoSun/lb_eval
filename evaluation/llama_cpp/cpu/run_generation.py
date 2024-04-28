@@ -39,6 +39,9 @@ gguf_lm = WrapperGGUFLM.create_from_arg_string(
             "device": request_json["hardware"],
             })
 
+model_size = gguf_lm.model._model.size()
+model_params = gguf_lm.model._model.n_params()
+
 """
 data = {'prompt': 'Sarah was a much better surgeon than Maria so Sarah always got the easier cases.', 'suffix': None, 'max_tokens': 1, 'temperature': 0.0, 'top_p': 0.95, 'min_p': 0.05, 'echo': True, 'stop': None, 'stream': False, 'logprobs': 10, 'presence_penalty': 0.0, 'frequency_penalty': 0.0, 'logit_bias': None, 'seed': None, 'model': None, 'top_k': 40, 'repeat_penalty': 1.1, 'mirostat_mode': 0, 'mirostat_tau': 5.0, 'mirostat_eta': 0.1, 'grammar': None}
 
@@ -78,7 +81,7 @@ eval_results = simple_evaluate(
     model_args=model_args,
     tasks=task_names,
     batch_size=1,
-    device=request_json["hardware"],
+    device="cuda",
     write_out=True,
 )
 
@@ -99,7 +102,10 @@ final_results["config_general"]["start_time"] = request_json["job_start_time"]
 final_results["config_general"]["end_time"] = end_time
 final_results["config_general"]["model_name"] = request_json["model"]
 final_results["config_general"]["model_dtype"] = request_json["precision"]
-final_results["config_general"]["model_size"] = request_json["params"]
+final_results["config_general"]["model_size"] = model_size / 1e9
+final_results["config_general"]["model_params"] = model_params / 1e9
+final_results["config_general"]["quant_type"] = "llama.cpp"
+final_results["config_general"]["precision"] = "4bit"
 
 final_results["task_info"] = request_json
 quantization_config = {"quant_method": request_json["quant_type"],
