@@ -15,7 +15,29 @@ from llama_cpp.llama_types import *
 import uuid
 
 from typing import Iterator, List, Optional, Union, Dict
+from typing import Literal, Tuple
 import numpy as np
+from lm_eval.models.utils import (
+    Collator,
+    clear_torch_cache,
+    get_dtype,
+    pad_and_concat,
+    stop_sequences_criteria,
+)
+import ctypes
+
+def _token_to_piece(model, token: int, special: bool = False) -> str:
+    assert model.model is not None
+    result = (ctypes.c_char * 8)(0)
+    n_tokens = llama_cpp.llama_token_to_piece(model.model, token, result, len(result), special)
+    if n_tokens < 0:
+        result = (ctypes.c_char * -n_tokens)(0)
+        check = llama_cpp.llama_token_to_piece(model.model, token, result, len(result), special)
+        if check != -n_tokens:
+            raise RuntimeError(f"Failed to get piece: token={token}")
+    else:
+        result = result[:n_tokens]
+    return bytes(result)
 
 def topk_numpy(arr, k, dim):
     idx = np.argpartition(-arr, kth=k, axis=dim)
@@ -28,6 +50,17 @@ def topk_numpy(arr, k, dim):
 
 
 class CustomLlamaCpp(Llama):
+    def detokenize_bpe(
+        self, tokens: List[int], prev_tokens: Optional[List[int]] = None
+    ) -> bytes:
+
+        assert self._model is not None
+        result = b""
+        for token in tokens:
+            piece = _token_to_piece(self._model, token)
+            result += piece
+        return result
+
     def _create_completion(
         self,
         prompt: Union[str, List[int]],
@@ -582,7 +615,10 @@ class WrapperGGUFLM(LM):
                 last_n_tokens_size=64,
                 cache=False,
                 cache_type='ram',
-                verbose=True,)
+                verbose=False,)
+        
+        if "qwen" in self.model.metadata["general.architecture"]:
+            self.model.detokenize = self.model.detokenize_bpe
 
         self.logprobs = 10
         self.temperature = 0.0
