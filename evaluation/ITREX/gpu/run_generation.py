@@ -28,7 +28,7 @@ print(request_json)
 
 
 
-pretrained = 'pretrained=' + request_json["model"]
+pretrained = 'pretrained=' + request_json["model"] + ",trust_remote_code=True"
 commit_hash = request_json["revision"]
 model_args = pretrained + ",dtype=" + request_json["compute_dtype"] +",_commit_hash=" + commit_hash
 
