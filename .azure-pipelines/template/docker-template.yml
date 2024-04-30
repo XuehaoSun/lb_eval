@@ -74,7 +74,9 @@ steps:
           docker run -dit  --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
               --runtime=nvidia --gpus all \
               -e http_proxy=$(gpu_proxy) -e https_proxy=$(gpu_proxy) \
-              -v ${BUILD_SOURCESDIRECTORY}:/lb_eval ${{ parameters.repoName }}:${{ parameters.repoTag }}
+              -v ${BUILD_SOURCESDIRECTORY}:/lb_eval \
+              -v /home_backup/lkk/autorounds:/dataset \
+              ${{ parameters.repoName }}:${{ parameters.repoTag }}
         else
           echo "Hardware ${{ parameters.hardware }} not supported"
           exit 1
