@@ -1,6 +1,5 @@
 EVAL_SCRIPT = "evaluation/eval_normal.sh"
 
-"""
 tasks_shots_map = {"winogrande": 0,
         "arc_easy": 0,
         "arc_challenge": 0,
@@ -8,17 +7,6 @@ tasks_shots_map = {"winogrande": 0,
         "truthfulqa_mc1": 0,
         "hellaswag": 0,
         "mmlu": 0,
-        "lambada_openai": 0,
-        "piqa": 0,
-        "openbookqa": 0,
-        "boolq": 0}
-"""
-
-tasks_shots_map = {"winogrande": 0,
-        "arc_easy": 0,
-        "arc_challenge": 0,
-        "truthfulqa_mc2": 0,
-        "truthfulqa_mc1": 0,
         "lambada_openai": 0,
         "piqa": 0,
         "openbookqa": 0,
