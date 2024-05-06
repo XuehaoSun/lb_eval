@@ -60,8 +60,10 @@ task_names = pattern_match(eval_tasks, task_manager.all_tasks)
 
 if request_json["model_params"] < 7:
     batch_size = 4
-else:
+elif request_json["model_params"] < 10:
     batch_size = 2
+else:
+    batch_size = 1
 
 print(f"Selected Tasks: {task_names}")
 
