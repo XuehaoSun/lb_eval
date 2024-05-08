@@ -27,11 +27,11 @@ with open(args.request_file) as f:
 print(request_json)
 
 try:
-    config = AutoConfig.from_pretrained(
+    model_config = AutoConfig.from_pretrained(
             request_json["model"], revision=request_json["revision"], trust_remote_code=True
         )
 except:
-    config = AutoConfig.from_pretrained(
+    model_config = AutoConfig.from_pretrained(
             request_json["model"], revision=request_json["revision"]
         )
 
