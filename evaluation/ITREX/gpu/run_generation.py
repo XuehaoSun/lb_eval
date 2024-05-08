@@ -26,7 +26,16 @@ with open(args.request_file) as f:
 
 print(request_json)
 
+try:
+    config = AutoConfig.from_pretrained(
+            request_json["model"], revision=request_json["revision"], trust_remote_code=True
+        )
+except:
+    config = AutoConfig.from_pretrained(
+            request_json["model"], revision=request_json["revision"]
+        )
 
+quantization_config = getattr(model_config, 'quantization_config', None)
 
 pretrained = 'pretrained=' + request_json["model"] + ",trust_remote_code=True"
 commit_hash = request_json["revision"]
@@ -101,7 +110,8 @@ final_results["config_general"]["precision"] = request_json["precision"]
 
 
 final_results["task_info"] = request_json
-quantization_config = {"quant_method": request_json["quant_type"],
+if quantization_config is None:
+    quantization_config = {"quant_method": request_json["quant_type"],
         "ftype": request_json["gguf_ftype"],}
 final_results["quantization_config"] = quantization_config
 
