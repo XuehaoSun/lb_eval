@@ -98,7 +98,7 @@ def get_model_parameters_memory(model_info: ModelInfo):
     return None, None
 
 from huggingface_hub import HfApi
-API = HfApi(token="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")
+API = HfApi(token="")
 
 import os
 
