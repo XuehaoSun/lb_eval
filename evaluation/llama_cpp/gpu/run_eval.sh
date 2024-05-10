@@ -15,6 +15,8 @@ for i in "$@"; do
     esac
 done
 
+export CUDA_VISIBLE_DEVICES=0
+
 cd /lb_eval/evaluation/llama_cpp/gpu
 # params=$(python /lb_eval/evaluation/parse_config.py /lb_eval/requests/$config_name)
 # cmd="python -u run_generation.py --trust_remote_code $params"
