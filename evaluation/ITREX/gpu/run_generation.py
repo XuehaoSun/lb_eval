@@ -26,18 +26,20 @@ with open(args.request_file) as f:
 
 print(request_json)
 
+trust_remote_code = True
 try:
     model_config = AutoConfig.from_pretrained(
-            request_json["model"], revision=request_json["revision"], trust_remote_code=True
+            request_json["model"], revision=request_json["revision"], trust_remote_code=trust_remote_code
         )
 except:
     model_config = AutoConfig.from_pretrained(
             request_json["model"], revision=request_json["revision"]
         )
+    trust_remote_code = False
 
 quantization_config = getattr(model_config, 'quantization_config', None)
 
-pretrained = 'pretrained=' + request_json["model"] + ",trust_remote_code=True"
+pretrained = 'pretrained=' + request_json["model"] + f",trust_remote_code={trust_remote_code}"
 commit_hash = request_json["revision"]
 model_args = pretrained + ",dtype=" + request_json["compute_dtype"] +",_commit_hash=" + commit_hash
 
