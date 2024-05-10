@@ -72,7 +72,7 @@ steps:
             ${{ parameters.repoName }}:${{ parameters.repoTag }}
         elif [ "${{ parameters.hardware }}" == "gpu" ]; then
           docker run -dit  --disable-content-trust --privileged --name=${{ parameters.containerName }} --shm-size="2g" \
-              --runtime=nvidia --gpus all \
+              --gpus all \
               -e http_proxy=$(gpu_proxy) -e https_proxy=$(gpu_proxy) \
               -v ${BUILD_SOURCESDIRECTORY}:/lb_eval \
               -v /home_backup/lkk/autorounds:/dataset \
