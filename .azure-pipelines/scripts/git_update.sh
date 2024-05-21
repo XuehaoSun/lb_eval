@@ -3,7 +3,7 @@ set -x
 
 function prepare_repo() {
     pip install -U "huggingface_hub[cli]"
-    huggingface-cli login --token $HUGGINGFACE_TOKEN --add-to-git-credential
+    huggingface-cli login --token $HUGGINGFACE_TOKEN
 
     workspace=$(pwd)
     git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
