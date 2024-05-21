@@ -1,11 +1,8 @@
 #!/bin/bash
 set -x
-export http_proxy=http://child-jf.intel.com:912
-export https_proxy=http://child-jf.intel.com:912
 
 function prepare_repo() {
     pip install -U "huggingface_hub[cli]"
-    huggingface-cli login --token $HUGGINGFACE_TOKEN
 
     workspace=$(pwd)
     git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
