@@ -8,6 +8,10 @@ parameters:
     default: ""
 
 steps:
+  - task: UsePythonVersion@0
+    displayName: "Use Python 3.10"
+    inputs:
+      versionSpec: "3.10"
   - task: Bash@3
     condition: always()
     inputs:
@@ -18,3 +22,4 @@ steps:
       commitMessage: "Commit from Azure DevOps update Status ${{ parameters.status }}"
       status: ${{ parameters.status }}
       TOKEN: $(TOKEN)
+      HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
