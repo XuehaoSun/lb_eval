@@ -2,8 +2,6 @@
 set -x
 
 function prepare_repo() {
-    pip install -U "huggingface_hub[cli]"
-
     workspace=$(pwd)
     git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
     git clone https://huggingface.co/datasets/Intel/ld_results
