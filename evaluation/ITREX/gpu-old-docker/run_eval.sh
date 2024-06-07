@@ -19,8 +19,8 @@ done
 
 cd /lb_eval/evaluation/ITREX/gpu
 
-export http_proxy=http://child-jf.intel.com:912
-export https_proxy=http://child-jf.intel.com:912
+export http_proxy=http://child-ir.intel.com:912
+export https_proxy=http://child-ir.intel.com:912
 
 cmd="python run_generation.py --request-file /lb_eval/requests/$config_name"
 eval ${cmd}

@@ -19,8 +19,8 @@ done
 
 cd /lb_eval/evaluation/ITREX/gpu
 
-export http_proxy=http://child-jf.intel.com:912
-export https_proxy=http://child-jf.intel.com:912
+export http_proxy=http://child-ir.intel.com:912
+export https_proxy=http://child-ir.intel.com:912
 export CUDA_VISIBLE_DEVICES=0
 export HF_HOME=/dataset/hf_cache/
 
