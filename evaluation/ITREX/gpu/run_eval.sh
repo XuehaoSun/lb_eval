@@ -30,6 +30,8 @@ cmd="python -m pip install --no-cache-dir auto-gptq==0.7.1 --extra-index-url htt
 eval ${cmd}
 cmd="python -m pip install --no-cache-dir einops==0.8.0 tiktoken"
 eval ${cmd}
+cmd="python -m pip install --no-cache-dir transformers==4.43.1"
+eval ${cmd}
 
 cmd="python run_generation.py --request-file /lb_eval/requests/$config_name"
 eval ${cmd}
