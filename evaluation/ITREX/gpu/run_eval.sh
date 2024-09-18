@@ -24,9 +24,11 @@ export https_proxy=http://child-ir.intel.com:912
 export CUDA_VISIBLE_DEVICES=0
 export HF_HOME=/dataset/hf_cache/
 
-cmd="python -m pip install optimum==1.19.1"
+#cmd="python -m pip install optimum==1.19.1"
+cmd="python -m pip install -U optimum"
 eval ${cmd}
-cmd="python -m pip install --no-cache-dir auto-gptq==0.7.1 --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/"
+#cmd="python -m pip install --no-cache-dir auto-gptq==0.7.1 --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/"
+cmd="python -m pip install -U auto-gptq --no-build-isolation"
 eval ${cmd}
 cmd="python -m pip install --no-cache-dir einops==0.8.0 tiktoken"
 eval ${cmd}
