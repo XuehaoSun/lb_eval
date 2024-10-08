@@ -12,12 +12,16 @@ parameters:
     type: string
     default: "cpu"
 
-
 steps:
   - template: docker-template.yml
     parameters:
       scriptsPath: ${{ parameters.scriptsPath}}
       hardware: "${{ parameters.hardware}}"
+
+  - script: |
+      docker exec ${{ parameters.modelContainerName }} \
+        bash -c "pip install -U huggingface_hub[cli] && huggingface-cli login --token $(HF_TOKEN_MODELS)"
+    displayName: Login to huggingface
 
   - script: |
       docker exec ${{ parameters.modelContainerName }} \
