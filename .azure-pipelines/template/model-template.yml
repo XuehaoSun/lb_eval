@@ -20,7 +20,7 @@ steps:
 
   - script: |
       docker exec ${{ parameters.modelContainerName }} \
-        bash -c "pip install -U huggingface_hub[cli] && git config --global credential.helper store && huggingface-cli login --token $(HF_TOKEN_MODELS) --add-to-git-credential"
+        bash -c "export HF_HOME=/dataset/hf_cache/ && pip install -U huggingface_hub[cli] && git config --global credential.helper store && huggingface-cli login --token $(HF_TOKEN_MODELS) --add-to-git-credential"
     displayName: Login to huggingface
 
   - script: |
