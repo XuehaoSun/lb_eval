@@ -35,5 +35,8 @@ eval ${cmd}
 cmd="python -m pip install --no-cache-dir transformers==4.43.1"
 eval ${cmd}
 
+cmd="python -m pip install auto-round"
+eval ${cmd}
+
 cmd="python run_generation.py --request-file /lb_eval/requests/$config_name"
 eval ${cmd}
