@@ -42,7 +42,7 @@ quantization_config = getattr(model_config, 'quantization_config', None)
 if "quant_method" in quantization_config and "auto-round" in quantization_config["quant_method"]:
     print("use autoround..................................................")
     try:
-        from auto_round.auto_quantizer import AutoHfQuantizer
+        from auto_round import AutoHfQuantizer
     except:
         print("import autoround error.")
 
