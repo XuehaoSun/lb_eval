@@ -41,7 +41,7 @@ quantization_config = getattr(model_config, 'quantization_config', None)
 
 if "quant_method" in quantization_config and "auto-round" in quantization_config["quant_method"]:
     print("use autoround..................................................")
-    from auto_round import AutoHfQuantizer
+    from auto_round.auto_quantizer import AutoHfQuantizer
 
 pretrained = 'pretrained=' + request_json["model"] + f",trust_remote_code={trust_remote_code}"
 commit_hash = request_json["revision"]
