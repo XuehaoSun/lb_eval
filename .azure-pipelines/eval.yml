@@ -48,7 +48,7 @@ stages:
               script: |
                 export PYTHONUNBUFFERED=1
                 cd ${BUILD_SOURCESDIRECTORY}
-                python .azure-pipelines/scripts/cuda_unit_test/runpod_manager.py \
+                python .azure-pipelines/scripts/runpod_manager.py \
                   --action create \
                   --api_key $(RUNPOD_API_KEY) \
                   --name "lb-$(Build.BuildId)" \
@@ -63,7 +63,7 @@ stages:
               script: |
                 cd ${BUILD_SOURCESDIRECTORY}
                 export PYTHONUNBUFFERED=1
-                python .azure-pipelines/scripts/cuda_unit_test/runpod_manager.py \
+                python .azure-pipelines/scripts/runpod_manager.py \
                   --action wait \
                   --api_key $(RUNPOD_API_KEY) \
                   --name "lb-$(Build.BuildId)"
@@ -76,7 +76,7 @@ stages:
               script: |
                 cd ${BUILD_SOURCESDIRECTORY}
                 export PYTHONUNBUFFERED=1
-                python .azure-pipelines/scripts/cuda_unit_test/azure_agent.py \
+                python .azure-pipelines/scripts/azure_agent.py \
                   --action wait \
                   --url "$(System.CollectionUri)" \
                   --pat "$(AZP_DEVOPS_PAT)" \
@@ -178,7 +178,7 @@ stages:
               script: |
                 echo "Terminating Pod: lb-$(Build.BuildId)"
                 export PYTHONUNBUFFERED=1
-                python .azure-pipelines/scripts/cuda_unit_test/runpod_manager.py \
+                python .azure-pipelines/scripts/runpod_manager.py \
                   --action terminate \
                   --api_key $(RUNPOD_API_KEY) \
                   --name "lb-$(Build.BuildId)"
@@ -191,7 +191,7 @@ stages:
               script: |
                 cd ${BUILD_SOURCESDIRECTORY}
                 export PYTHONUNBUFFERED=1
-                python .azure-pipelines/scripts/cuda_unit_test/azure_agent.py \
+                python .azure-pipelines/scripts/azure_agent.py \
                   --action deregister \
                   --url "$(System.CollectionUri)" \
                   --pat "$(AZP_DEVOPS_PAT)" \
