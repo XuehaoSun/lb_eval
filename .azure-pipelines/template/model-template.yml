@@ -19,13 +19,14 @@ steps:
       hardware: "${{ parameters.hardware}}"
 
   - script: |
-      docker exec ${{ parameters.modelContainerName }} \
-        bash -c "export HF_HOME=/dataset/hf_cache/ && pip install -U huggingface_hub[cli] && git config --global credential.helper store && huggingface-cli login --token $(HF_TOKEN_MODELS) --add-to-git-credential"
+      uv pip install -U huggingface_hub[cli]
+      git config --global credential.helper store
+      huggingface-cli login --token $(HF_TOKEN_MODELS) --add-to-git-credential"
     displayName: Login to huggingface
 
   - script: |
-      docker exec ${{ parameters.modelContainerName }} \
-        bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash run_eval.sh --config_name=${{ parameters.requestJson }}"
+      cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{ parameters.scriptsPath}}
+      bash run_eval.sh --config_name=${{ parameters.requestJson }}"
     displayName: Eval
 
   - template: git-status-template.yml
@@ -43,11 +44,3 @@ steps:
       status: ""
       TOKEN: $(TOKEN)
       HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
-
-  - task: Bash@3
-    condition: always()
-    inputs:
-      targetType: "inline"
-      script: |
-        docker exec ${{ parameters.modelContainerName }} bash -c "rm -fr /lb_eval/* && rm -fr /lb_eval/.* || true"
-    displayName: "Docker clean up"

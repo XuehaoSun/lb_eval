@@ -11,72 +11,189 @@ trigger:
 pool:
   vmImage: "ubuntu-latest"
 
-stages:
-  - stage: CheckHardware
-    jobs:
-      - job: CheckHardware
-        steps:
-        - bash: |
-            cd requests
-            request_json=$(find . -name *.json)
-            hardware=$(grep "hardware" ${request_json} | cut -d'"' -f4)
-            scripts=$(grep "scripts" ${request_json} | cut -d'"' -f4)
-            if [[ ${hardware} = 'cpu' ]]; then 
-                agent_pool='LB_CPU'
-            elif [[ ${hardware} = 'gaudi2' ]]; then
-                agent_pool='LB_GAUDI'
-            elif [[ ${hardware} = 'gpu' ]]; then
-                agent_pool='LB_GPU'
-            else
-                echo "Hardware ${hardware} not supported"
-                exit 1
-            fi
-            echo "##vso[task.setvariable variable=hardware;isOutput=true]${hardware}"
-            echo "##vso[task.setvariable variable=scripts;isOutput=true]${scripts}"
-            echo "##vso[task.setvariable variable=agent_pool;isOutput=true]${agent_pool}"
-            echo "##vso[task.setvariable variable=request_json;isOutput=true]${request_json}"
-          name: setVarFromJsonFileValue
-        - bash: |
-            echo "Hardware: $(setVarFromJsonFileValue.hardware)"
-            echo "Scripts: $(setVarFromJsonFileValue.scripts)"
-            echo "Agent Pool: $(setVarFromJsonFileValue.agent_pool)"
-            echo "Request Json: $(setVarFromJsonFileValue.request_json)"
-        - template: template/git-status-template.yml
-          parameters:
-            status: "Waiting"
-            requestJson: "$(setVarFromJsonFileValue.request_json)"
+variables:
+  - name: POOL_NAME
+    value: "LB_RunPod_GPU_Pool"
+  - name: AGENT_NAME
+    value: "lb-agent-$(Build.BuildId)"
 
+stages:
+  - stage: Start_Pod
+    jobs:
+      - job: Start_Pod_Job
+        displayName: "Launch Pod & Run CUDA Tests"
+        timeoutInMinutes: 60
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - checkout: self
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: "3.13"
+            displayName: "Use Python 3.13"
+
+          - task: Bash@3
+            displayName: "Install dependencies"
+            inputs:
+              targetType: "inline"
+              script: |
+                pip install requests
+
+          - task: Bash@3
+            displayName: "Create RunPod Instance"
+            name: create_runpod
+            inputs:
+              targetType: "inline"
+              script: |
+                export PYTHONUNBUFFERED=1
+                cd ${BUILD_SOURCESDIRECTORY}
+                python .azure-pipelines/scripts/cuda_unit_test/runpod_manager.py \
+                  --action create \
+                  --api_key $(RUNPOD_API_KEY) \
+                  --name "lb-$(Build.BuildId)" \
+                  --container_disk_size "100" \
+                  --env AZP_URL=$(System.CollectionUri) AZP_TOKEN=$(AZP_DEVOPS_PAT) AZP_POOL=$(POOL_NAME) AZP_AGENT_NAME="$(AGENT_NAME)"
+
+          - task: Bash@3
+            displayName: "Wait for Pod to be Online"
+            name: wait_for_pod
+            inputs:
+              targetType: "inline"
+              script: |
+                cd ${BUILD_SOURCESDIRECTORY}
+                export PYTHONUNBUFFERED=1
+                python .azure-pipelines/scripts/cuda_unit_test/runpod_manager.py \
+                  --action wait \
+                  --api_key $(RUNPOD_API_KEY) \
+                  --name "lb-$(Build.BuildId)"
+
+          - task: Bash@3
+            displayName: "Wait for Agent to be Online"
+            name: wait_for_agent
+            inputs:
+              targetType: "inline"
+              script: |
+                cd ${BUILD_SOURCESDIRECTORY}
+                export PYTHONUNBUFFERED=1
+                python .azure-pipelines/scripts/cuda_unit_test/azure_agent.py \
+                  --action wait \
+                  --url "$(System.CollectionUri)" \
+                  --pat "$(AZP_DEVOPS_PAT)" \
+                  --pool "$(POOL_NAME)" \
+                  --agent "$(AGENT_NAME)"
+
+      # - job: CheckHardware
+      #   timeoutInMinutes: 10
+      #   pool:
+      #     vmImage: "ubuntu-latest"
+      #   steps:
+      #     - checkout: self
+
+      #     - bash: |
+      #         cd requests
+      #         request_json=$(find . -name *.json)
+      #         hardware=$(grep "hardware" ${request_json} | cut -d'"' -f4)
+      #         scripts=$(grep "scripts" ${request_json} | cut -d'"' -f4)
+      #         echo "##vso[task.setvariable variable=hardware;isOutput=true]${hardware}"
+      #         echo "##vso[task.setvariable variable=scripts;isOutput=true]${scripts}"
+      #         echo "##vso[task.setvariable variable=request_json;isOutput=true]${request_json}"
+      #       name: setVarFromJsonFileValue
+
+      #     - bash: |
+      #         echo "Hardware: $(setVarFromJsonFileValue.hardware)"
+      #         echo "Scripts: $(setVarFromJsonFileValue.scripts)"
+      #         echo "Request Json: $(setVarFromJsonFileValue.request_json)"
+
+      #     - template: template/git-status-template.yml
+      #       parameters:
+      #         status: "Waiting"
+      #         requestJson: "$(setVarFromJsonFileValue.request_json)"
 
   - stage: Eval
     displayName: Evaluation
-    variables:
-      hardware: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.hardware']]
-      scripts: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.scripts']]
-      agent_pool: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.agent_pool']]
-      request_json: $[stageDependencies.CheckHardware.CheckHardware.outputs['setVarFromJsonFileValue.request_json']]
-    pool: $(agent_pool)
-    dependsOn: [CheckHardware]
+    # variables:
+    #   hardware: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.hardware']]
+    #   scripts: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.scripts']]
+    #   request_json: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.request_json']]
+    pool: "$(POOL_NAME)"
+    dependsOn: [Start_Pod]
     jobs:
       - job: Eval
         timeoutInMinutes: 2880
         steps:
-          - script: |
-              rm -fr ${BUILD_SOURCESDIRECTORY} || sudo rm -fr ${BUILD_SOURCESDIRECTORY} || true
-              echo y | docker system prune
-            displayName: "Clean workspace"
-
           - checkout: self
             clean: true
             displayName: "Checkout out Repo"
             fetchDepth: 100
 
-          - template: template/git-status-template.yml
-            parameters:
-              status: "Running"
-              requestJson: "$(request_json)"
+          - task: Bash@3
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Running on GPU"
+                nvidia-smi
 
-          - template: template/model-template.yml
-            parameters:
-              scriptsPath: "$(scripts)/$(hardware)"
-              requestJson: "$(request_json)"
-              hardware: "$(hardware)"
+          # - template: template/git-status-template.yml
+          #   parameters:
+          #     status: "Running"
+          #     requestJson: "$(request_json)"
+
+          # - template: template/model-template.yml
+          #   parameters:
+          #     scriptsPath: "$(scripts)/$(hardware)"
+          #     requestJson: "$(request_json)"
+          #     hardware: "$(hardware)"
+
+  - stage: Cleanup_Verification
+    displayName: "Verify Pod Cleanup"
+    dependsOn:
+      - Eval
+    condition: always()
+    jobs:
+      - job: Verify_Cleanup
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - checkout: self
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: "3.13"
+            displayName: "Use Python 3.13"
+
+          - task: Bash@3
+            displayName: "Install dependencies"
+            condition: always()
+            inputs:
+              targetType: "inline"
+              script: |
+                pip install requests
+
+          - task: Bash@3
+            displayName: "Terminate RunPod Instance"
+            condition: always()
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Terminating Pod: lb-$(Build.BuildId)"
+                export PYTHONUNBUFFERED=1
+                python .azure-pipelines/scripts/cuda_unit_test/runpod_manager.py \
+                  --action terminate \
+                  --api_key $(RUNPOD_API_KEY) \
+                  --name "lb-$(Build.BuildId)"
+
+          - task: Bash@3
+            displayName: "Deregister Agent from Pool"
+            condition: always()
+            inputs:
+              targetType: "inline"
+              script: |
+                cd ${BUILD_SOURCESDIRECTORY}
+                export PYTHONUNBUFFERED=1
+                python .azure-pipelines/scripts/cuda_unit_test/azure_agent.py \
+                  --action deregister \
+                  --url "$(System.CollectionUri)" \
+                  --pat "$(AZP_DEVOPS_PAT)" \
+                  --pool "$(POOL_NAME)" \
+                  --agent "$(AGENT_NAME)"
