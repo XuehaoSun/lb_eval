@@ -41,7 +41,7 @@ DATA_CENTER_IDS = [
 DATA_CENTER_BAN_LIST = ["EUR-IS-2", "US-IL-1"]
 DATA_CENTER_SELECT_LIST = [dc for dc in DATA_CENTER_IDS if dc not in DATA_CENTER_BAN_LIST]
 REQUIRED_COUNT = 1
-IMAGES_NAME = "xuehaosu/azure-agent:v0.1"
+IMAGES_NAME = "ghcr.io/xuehaosun/leaderboard:v0.1"
 
 
 def run_create_pod(api_key, payload):

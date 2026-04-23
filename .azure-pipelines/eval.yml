@@ -42,8 +42,9 @@ stages:
 
           - bash: |
               cd requests
-              request_json=$(find . -name *.json)
-              hardware=$(grep "hardware" ${request_json} | cut -d'"' -f4)
+              # request_json=$(find . -name *.json)
+              request_json="test.json"
+              hardware=$(grep "quant_gpu_type" ${request_json} | cut -d'"' -f4)
               scripts=$(grep "scripts" ${request_json} | cut -d'"' -f4)
               echo "##vso[task.setvariable variable=hardware;isOutput=true]${hardware}"
               echo "##vso[task.setvariable variable=scripts;isOutput=true]${scripts}"
@@ -99,10 +100,10 @@ stages:
                   --pool "$(POOL_NAME)" \
                   --agent "$(AGENT_NAME)"
 
-          - template: template/git-status-template.yml
-            parameters:
-              status: "Waiting"
-              requestJson: "$(setVarFromJsonFileValue.request_json)"
+          # - template: template/git-status-template.yml
+          #   parameters:
+          #     status: "Waiting"
+          #     requestJson: "$(setVarFromJsonFileValue.request_json)"
 
   - stage: Eval
     displayName: Evaluation
@@ -130,10 +131,10 @@ stages:
                 lscpu
             displayName: "Verify Hardware"
 
-          - template: template/git-status-template.yml
-            parameters:
-              status: "Running"
-              requestJson: "$(request_json)"
+          # - template: template/git-status-template.yml
+          #   parameters:
+          #     status: "Running"
+          #     requestJson: "$(request_json)"
 
           - template: template/model-template.yml
             parameters:

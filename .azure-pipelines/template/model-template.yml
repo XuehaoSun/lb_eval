@@ -1,7 +1,4 @@
 parameters:
-  - name: modelContainerName
-    type: string
-    default: "model_eval"
   - name: scriptsPath
     type: string
     default: "ITREX/cpu"
@@ -30,21 +27,24 @@ steps:
 
   - script: |
       cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{ parameters.scriptsPath}}
-      bash run_eval.sh --config_name=${{ parameters.requestJson }}"
+      # bash run_eval.sh --config_name=${{ parameters.requestJson }}"
+      uv pip install git+https://github.com/intel/auto-round.git
+      uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+      auto-round --bits 4 --iters 1 --model Qwen/Qwen3-0.6B
     displayName: Eval
 
-  - template: git-status-template.yml
-    parameters:
-      status: "Finished"
-      requestJson: ${{ parameters.requestJson }}
+  # - template: git-status-template.yml
+  #   parameters:
+  #     status: "Finished"
+  #     requestJson: ${{ parameters.requestJson }}
 
-  - task: Bash@3
-    inputs:
-      filePath: .azure-pipelines/scripts/git_update.sh
-    name: gitUpdateResults
-    env:
-      requestJson: ${{ parameters.requestJson }}
-      commitMessage: "Commit from Azure DevOps update Results"
-      status: ""
-      TOKEN: $(TOKEN)
-      HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
+  # - task: Bash@3
+  #   inputs:
+  #     filePath: .azure-pipelines/scripts/git_update.sh
+  #   name: gitUpdateResults
+  #   env:
+  #     requestJson: ${{ parameters.requestJson }}
+  #     commitMessage: "Commit from Azure DevOps update Results"
+  #     status: ""
+  #     TOKEN: $(TOKEN)
+  #     HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
