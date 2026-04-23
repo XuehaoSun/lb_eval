@@ -480,51 +480,6 @@ if eval_jsonl.exists():
 
 echo "=== Auto-Eval Pipeline Done ==="
 
-
-
-
-
-
-if [[ $TASK_EXIT -ne 0 ]]; then
-    log_warn "Pipeline exited with code $TASK_EXIT (may still have partial results)"
-fi
-
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 4: Collect results from container to host
-# ══════════════════════════════════════════════════════════════════════════════
-log_step "Step 4: Collecting results"
-
-# Determine the result path inside the container
-MODEL_SLUG_LOCAL="${MODEL_ID//\//_}"
-if [[ "$PIPELINE" == "auto_quant" ]]; then
-    CONTAINER_RESULT_PATH="${CONTAINER_OUTPUT_DIR}/${MODEL_SLUG_LOCAL}-${SCHEME}"
-else
-    CONTAINER_RESULT_PATH="${CONTAINER_OUTPUT_DIR}"
-fi
-
-# Copy key result files from container (in case volume mount didn't cover everything)
-for f in summary.json accuracy.json; do
-    docker cp "${CONTAINER_NAME}:${CONTAINER_RESULT_PATH}/${f}" "$JOB_OUTPUT_DIR/${f}" 2>/dev/null || true
-done
-
-# Copy session logs if available
-docker exec "$CONTAINER_NAME" bash -c "ls ${CONTAINER_RESULT_PATH}/session_*.jsonl 2>/dev/null" | while read -r log_file; do
-    BASENAME="$(basename "$log_file")"
-    docker cp "${CONTAINER_NAME}:${log_file}" "$JOB_OUTPUT_DIR/${BASENAME}" 2>/dev/null || true
-done 2>/dev/null || true
-
-# Copy session markdown files
-docker exec "$CONTAINER_NAME" bash -c "ls ${CONTAINER_RESULT_PATH}/session_*.md 2>/dev/null" | while read -r md_file; do
-    BASENAME="$(basename "$md_file")"
-    docker cp "${CONTAINER_NAME}:${md_file}" "$JOB_OUTPUT_DIR/${BASENAME}" 2>/dev/null || true
-done 2>/dev/null || true
-
-# List collected results
-log_info "Results collected in: $JOB_OUTPUT_DIR"
-ls -la "$JOB_OUTPUT_DIR/" 2>/dev/null || true
-
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 5: Upload quantized model to HuggingFace (auto_quant only)
 # ══════════════════════════════════════════════════════════════════════════════
@@ -541,20 +496,11 @@ if [[ "$PIPELINE" == "auto_quant" && "$SKIP_UPLOAD" != "true" && "$SKIP_HF" != "
         MODEL_SHORT="${MODEL_ID#*/}"  # Remove org prefix
         HF_REPO_NAME="${MODEL_SHORT}-autoround-${SCHEME}"
 
-        # Copy quantized model from container to host (for upload)
-        QUANT_MODEL_HOST_DIR="$JOB_OUTPUT_DIR/model"
-        if [[ -d "$JOB_OUTPUT_DIR/${MODEL_SLUG_LOCAL}-${SCHEME}" ]]; then
-            QUANT_MODEL_HOST_DIR="$JOB_OUTPUT_DIR/${MODEL_SLUG_LOCAL}-${SCHEME}"
-        else
-            mkdir -p "$QUANT_MODEL_HOST_DIR"
-            docker cp "${CONTAINER_NAME}:${CONTAINER_RESULT_PATH}/." "$QUANT_MODEL_HOST_DIR/" 2>/dev/null || true
-        fi
-
         log_info "Uploading model to HuggingFace as: $HF_REPO_NAME"
         python3 "$SCRIPT_DIR/upload_model_hf.py" \
             "$QUANT_MODEL_HOST_DIR" \
             "$HF_REPO_NAME" \
-            --summary-json "$JOB_OUTPUT_DIR/summary.json" \
+            --summary-json "$JOB_OUTPUT_DIR/quant_summary.json" \
             || log_warn "HuggingFace upload failed. Results are saved locally."
     fi
 else
@@ -563,114 +509,3 @@ else
     fi
 fi
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 6: Upload results to GitHub (lb_eval repo)
-# ══════════════════════════════════════════════════════════════════════════════
-if [[ "$SKIP_UPLOAD" != "true" && "$SKIP_GITHUB" != "true" ]]; then
-    log_step "Step 6: Uploading results to GitHub"
-
-    LB_EVAL_DIR="${LB_EVAL_REPO:-${SCRIPT_DIR}/lb_eval}"
-    if [[ -d "$LB_EVAL_DIR/.git" ]]; then
-        # Determine status based on whether results exist
-        FINAL_STATUS="Finished"
-        if [[ -f "$JOB_OUTPUT_DIR/accuracy.json" ]]; then
-            HAS_RESULTS=$(python3 -c "
-import json
-try:
-    d = json.load(open('$JOB_OUTPUT_DIR/accuracy.json'))
-    print('yes' if d.get('status') == 'success' else 'no')
-except: print('no')
-" 2>/dev/null || echo "no")
-            if [[ "$HAS_RESULTS" != "yes" ]]; then
-                FINAL_STATUS="Failed"
-            fi
-        elif [[ -f "$JOB_OUTPUT_DIR/summary.json" ]]; then
-            HAS_RESULTS=$(python3 -c "
-import json
-try:
-    d = json.load(open('$JOB_OUTPUT_DIR/summary.json'))
-    print('yes' if d.get('status') == 'success' else 'no')
-except: print('no')
-" 2>/dev/null || echo "no")
-            if [[ "$HAS_RESULTS" != "yes" ]]; then
-                FINAL_STATUS="Failed"
-            fi
-        else
-            FINAL_STATUS="Failed"
-        fi
-
-        log_info "Uploading to lb_eval with status=$FINAL_STATUS"
-        export LB_EVAL_REPO="$LB_EVAL_DIR"
-        bash "$SCRIPT_DIR/upload_results_github.sh" \
-            "$JOB_OUTPUT_DIR" \
-            "$MODEL_ID" \
-            "$JSON_FILENAME" \
-            "$FINAL_STATUS" \
-            || log_warn "GitHub upload failed. Results are saved locally."
-    else
-        log_warn "lb_eval repo not found at: $LB_EVAL_DIR"
-        log_warn "Skipping GitHub upload. Results saved in: $JOB_OUTPUT_DIR"
-    fi
-else
-    log_info "Skipping GitHub upload (--skip-upload or --skip-github)"
-fi
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 7: Summary and cleanup
-# ══════════════════════════════════════════════════════════════════════════════
-log_step "Step 7: Summary"
-
-echo "──────────────────────────────────────────────"
-echo "  Job             : $JSON_FILENAME"
-echo "  Model           : $MODEL_ID"
-echo "  Pipeline        : $PIPELINE"
-echo "  Container       : $CONTAINER_NAME"
-echo "  Output dir      : $JOB_OUTPUT_DIR"
-echo ""
-
-# Print key results
-if [[ -f "$JOB_OUTPUT_DIR/summary.json" ]]; then
-    echo "  --- summary.json ---"
-    python3 -c "
-import json
-d = json.load(open('$JOB_OUTPUT_DIR/summary.json'))
-print(f\"  Status       : {d.get('status', 'unknown')}\")
-print(f\"  Duration     : {d.get('duration_seconds', 'N/A')}s\")
-if 'hf_repo' in d:
-    print(f\"  HF Repo      : {d['hf_repo']}\")
-if 'compression_ratio' in d:
-    print(f\"  Compression  : {d.get('compression_ratio', 'N/A')}x\")
-" 2>/dev/null || echo "  (could not parse summary.json)"
-fi
-
-if [[ -f "$JOB_OUTPUT_DIR/accuracy.json" ]]; then
-    echo ""
-    echo "  --- accuracy.json ---"
-    python3 -c "
-import json
-d = json.load(open('$JOB_OUTPUT_DIR/accuracy.json'))
-print(f\"  Status       : {d.get('status', 'unknown')}\")
-print(f\"  Framework    : {d.get('eval_framework', 'N/A')}\")
-tasks = d.get('tasks', {})
-for name, scores in tasks.items():
-    acc = scores.get('accuracy', 'N/A')
-    stderr = scores.get('accuracy_stderr', '')
-    stderr_str = f' ± {stderr}' if stderr else ''
-    print(f\"  {name:20s}: {acc}{stderr_str}\")
-" 2>/dev/null || echo "  (could not parse accuracy.json)"
-fi
-
-echo "──────────────────────────────────────────────"
-
-# Container cleanup
-if [[ "$KEEP_CONTAINER" != "true" ]]; then
-    log_info "Stopping container: $CONTAINER_NAME"
-    docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
-    docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || true
-    log_ok "Container removed."
-else
-    log_info "Container kept running: $CONTAINER_NAME"
-    log_info "Debug with: docker exec -it $CONTAINER_NAME bash"
-fi
-
-log_ok "Pipeline complete. Results saved in: $JOB_OUTPUT_DIR"
