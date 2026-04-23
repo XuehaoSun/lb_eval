@@ -20,6 +20,15 @@ steps:
     displayName: Login to huggingface
 
   - script: |
+      npm install -g openclaw@2026.3.24
+      uv pip install --no-cache-dir openclaw==2026.3.20
+      cp -r openclaw_config/ /root/.openclaw/
+
+      cd ${BUILD_SOURCESDIRECTORY}/
+      bash entrypoint.sh
+    displayName: Set Up OpenClaw
+
+  - script: |
       cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{ parameters.scriptsPath}}
       bash run_eval.sh --config_name=${{ parameters.requestJson }}"
     displayName: Eval
