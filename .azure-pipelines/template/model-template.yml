@@ -21,17 +21,14 @@ steps:
       uv pip install --no-cache-dir openclaw==2026.3.20
       cp -r openclaw_config/ /root/.openclaw/
 
-      cd ${BUILD_SOURCESDIRECTORY}/
-      bash entrypoint.sh
+      cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts
+      python sync_minimax_key.py --minimax_key $(MINIMAX_KEY) --output_path /root/.openclaw/agents/main/agent/auth-profiles.json
     displayName: Set Up OpenClaw
 
-  - script: |
-      cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{ parameters.scriptsPath}}
-      # bash run_eval.sh --config_name=${{ parameters.requestJson }}"
-      uv pip install git+https://github.com/intel/auto-round.git
-      uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
-      auto-round --bits 4 --iters 1 --model Qwen/Qwen3-0.6B
-    displayName: Eval
+  # - script: |
+  #     cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{ parameters.scriptsPath}}
+  #     bash run_eval.sh --config_name=${{ parameters.requestJson }}"
+  #   displayName: Eval
 
   # - template: git-status-template.yml
   #   parameters:
