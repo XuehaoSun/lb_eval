@@ -40,6 +40,21 @@ stages:
               script: |
                 pip install requests
 
+          - bash: |
+              cd requests
+              request_json=$(find . -name *.json)
+              hardware=$(grep "hardware" ${request_json} | cut -d'"' -f4)
+              scripts=$(grep "scripts" ${request_json} | cut -d'"' -f4)
+              echo "##vso[task.setvariable variable=hardware;isOutput=true]${hardware}"
+              echo "##vso[task.setvariable variable=scripts;isOutput=true]${scripts}"
+              echo "##vso[task.setvariable variable=request_json;isOutput=true]${request_json}"
+            name: setVarFromJsonFileValue
+
+          - bash: |
+              echo "Hardware: $(setVarFromJsonFileValue.hardware)"
+              echo "Scripts: $(setVarFromJsonFileValue.scripts)"
+              echo "Request Json: $(setVarFromJsonFileValue.request_json)"
+
           - task: Bash@3
             displayName: "Create RunPod Instance"
             name: create_runpod
@@ -53,7 +68,8 @@ stages:
                   --api_key $(RUNPOD_API_KEY) \
                   --name "lb-$(Build.BuildId)" \
                   --container_disk_size "100" \
-                  --env AZP_URL=$(System.CollectionUri) AZP_TOKEN=$(AZP_DEVOPS_PAT) AZP_POOL=$(POOL_NAME) AZP_AGENT_NAME="$(AGENT_NAME)"
+                  --env AZP_URL=$(System.CollectionUri) AZP_TOKEN=$(AZP_DEVOPS_PAT) AZP_POOL=$(POOL_NAME) AZP_AGENT_NAME="$(AGENT_NAME)" \
+                  --gpu_id "$(setVarFromJsonFileValue.hardware)"
 
           - task: Bash@3
             displayName: "Wait for Pod to be Online"
@@ -83,39 +99,17 @@ stages:
                   --pool "$(POOL_NAME)" \
                   --agent "$(AGENT_NAME)"
 
-      # - job: CheckHardware
-      #   timeoutInMinutes: 10
-      #   pool:
-      #     vmImage: "ubuntu-latest"
-      #   steps:
-      #     - checkout: self
-
-      #     - bash: |
-      #         cd requests
-      #         request_json=$(find . -name *.json)
-      #         hardware=$(grep "hardware" ${request_json} | cut -d'"' -f4)
-      #         scripts=$(grep "scripts" ${request_json} | cut -d'"' -f4)
-      #         echo "##vso[task.setvariable variable=hardware;isOutput=true]${hardware}"
-      #         echo "##vso[task.setvariable variable=scripts;isOutput=true]${scripts}"
-      #         echo "##vso[task.setvariable variable=request_json;isOutput=true]${request_json}"
-      #       name: setVarFromJsonFileValue
-
-      #     - bash: |
-      #         echo "Hardware: $(setVarFromJsonFileValue.hardware)"
-      #         echo "Scripts: $(setVarFromJsonFileValue.scripts)"
-      #         echo "Request Json: $(setVarFromJsonFileValue.request_json)"
-
-      #     - template: template/git-status-template.yml
-      #       parameters:
-      #         status: "Waiting"
-      #         requestJson: "$(setVarFromJsonFileValue.request_json)"
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Waiting"
+              requestJson: "$(setVarFromJsonFileValue.request_json)"
 
   - stage: Eval
     displayName: Evaluation
-    # variables:
-    #   hardware: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.hardware']]
-    #   scripts: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.scripts']]
-    #   request_json: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.request_json']]
+    variables:
+      hardware: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.hardware']]
+      scripts: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.scripts']]
+      request_json: $[stageDependencies.Start_Pod.Start_Pod.outputs['setVarFromJsonFileValue.request_json']]
     pool: "$(POOL_NAME)"
     dependsOn: [Start_Pod]
     jobs:
@@ -133,17 +127,18 @@ stages:
               script: |
                 echo "Running on GPU"
                 nvidia-smi
+                lscpu
 
-          # - template: template/git-status-template.yml
-          #   parameters:
-          #     status: "Running"
-          #     requestJson: "$(request_json)"
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Running"
+              requestJson: "$(request_json)"
 
-          # - template: template/model-template.yml
-          #   parameters:
-          #     scriptsPath: "$(scripts)/$(hardware)"
-          #     requestJson: "$(request_json)"
-          #     hardware: "$(hardware)"
+          - template: template/model-template.yml
+            parameters:
+              scriptsPath: "$(scripts)/$(hardware)"
+              requestJson: "$(request_json)"
+              hardware: "$(hardware)"
 
   - stage: Cleanup_Verification
     displayName: "Verify Pod Cleanup"

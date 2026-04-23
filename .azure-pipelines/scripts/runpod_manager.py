@@ -6,7 +6,6 @@ import time
 import requests
 
 TARGET_GPUS = [
-    "NVIDIA GeForce RTX 4090",
     "NVIDIA GeForce RTX 5090",
     "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
     "NVIDIA RTX PRO 6000 Blackwell Server Edition",
@@ -94,7 +93,7 @@ def create_pod(args):
         "dataCenterPriority": "availability",
         "env": env_dict,
         "gpuCount": args.gpu_count,
-        "gpuTypeIds": TARGET_GPUS,
+        "gpuTypeIds": [args.gpu_id] if args.gpu_id else TARGET_GPUS,
         "gpuTypePriority": "custom",
         "name": args.name,
         "volumeInGb": 0,
@@ -192,6 +191,7 @@ def main():
     parser.add_argument("--pod_id", help="Pod ID for termination")
     parser.add_argument("--name", help="Pod name")
     parser.add_argument("--gpu_count", type=int, default=1)
+    parser.add_argument("--gpu_id", help="GPU type ID (overrides default GPU types if specified)")
     parser.add_argument("--container_disk_size", type=int, default=50)
     parser.add_argument("--env", nargs="*", help="Environment variables in KEY=VALUE format")
 

@@ -10,14 +10,9 @@ parameters:
     default: ""
   - name: hardware
     type: string
-    default: "cpu"
+    default: "gpu"
 
 steps:
-  - template: docker-template.yml
-    parameters:
-      scriptsPath: ${{ parameters.scriptsPath}}
-      hardware: "${{ parameters.hardware}}"
-
   - script: |
       uv pip install -U huggingface_hub[cli]
       git config --global credential.helper store
