@@ -11,9 +11,9 @@ parameters:
 
 steps:
   - script: |
-      uv pip install -U huggingface_hub[cli]
+      uv pip install -U huggingface_hub
       git config --global credential.helper store
-      huggingface-cli login --token $(HF_TOKEN_MODELS) --add-to-git-credential"
+      hf auth login --token $(HF_TOKEN_MODELS) --add-to-git-credential
     displayName: Login to huggingface
 
   - script: |
