@@ -401,7 +401,8 @@ bash -c "
 # ── Format session logs to markdown ──────────────────────────────────────────
 echo ""
 echo ">>> Formatting session logs to markdown ..."
-docker exec "${CONTAINER}" bash -c "
+
+bash -c "
   if command -v python3 &>/dev/null; then
     python3 -c \"
 import json, sys
