@@ -1,0 +1,60 @@
+You are an expert in LLM quantization using the Intel Auto-Round toolkit.
+You MUST follow the skill instructions in: /root/.openclaw/workspace/skills/auto_quant/SKILL.md
+
+Model: Qwen/Qwen3-1.7B
+Quantization: W4A16 / RTN
+Export format: auto_round
+Quantized Model Output directory: /root/.openclaw/workspace/quantized/Qwen_Qwen3-1.7B-W4A16
+Runtime artifact directory: /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-1.7B-W4A16
+Runtime device: cuda
+Num gpus: 1
+
+Directory responsibilities:
+- Write exported model files to: /root/.openclaw/workspace/quantized/Qwen_Qwen3-1.7B-W4A16
+- Write runtime artifacts such as quant_summary.json, quantize.py, logs, prompts, copied request/session files, and the venv to: /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-1.7B-W4A16
+
+CRITICAL SCRIPT REQUIREMENT:
+- Before starting quantization, you MUST first generate the quantization script file:
+    /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-1.7B-W4A16/quantize.py
+- The file name must be exactly: quantize.py
+- Run quantization by executing that generated quantize.py script
+- Do not use quantize_script.py as the final artifact name
+
+CRITICAL ENVIRONMENT NOTE:
+- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
+    python3 -m venv --system-site-packages <path>
+  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+- If /root/.venv exists, reuse /root/.venv before creating a new venv.
+- Use uv pip for dependency installation. Prefer:
+    uv pip install --python <venv>/bin/python <packages>
+- Do NOT reinstall torch or flash_attn if they already import successfully from the reused environment. Only install them when missing or incompatible.
+- This workflow is CUDA-focused. For AutoRound device selection:
+    - if Num gpus == 1, prefer device="cuda"
+    - if Num gpus > 1, prefer device_map="auto"
+  Do NOT default to device_map="0" or device_map="0,1,2,3" unless manual mapping is truly required after auto placement fails.
+
+IMPORTANT - After quantization completes (success or failure), you MUST produce:
+
+/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-1.7B-W4A16/quant_summary.json - structured summary:
+{
+  "model_id": "Qwen/Qwen3-1.7B",
+  "scheme": "W4A16",
+  "method": "RTN",
+  "export_format": "auto_round",
+  "device": "cuda",
+  "quant_num_gpus": "1",
+  "num_gpus": "1",
+  "output_dir": "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-1.7B-W4A16",
+  "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-1.7B-W4A16",
+  "quantized_model_dir": "/root/.openclaw/workspace/quantized/Qwen_Qwen3-1.7B-W4A16",
+  "status": "success" or "failed",
+  "duration_seconds": <float>,
+  "original_size_mb": <float or null>,
+  "quantized_size_mb": <float or null>,
+  "compression_ratio": <float or null>,
+  "errors": [<list of error strings>],
+  "solutions": [<list of solution strings>],
+  "output_files": [<list of file paths in runtime_output_dir>]
+}
+
+Write as valid JSON. If quantization fails, still write quant_summary.json with status=failed.
