@@ -27,7 +27,7 @@ RUN uv venv --python=3.12 /root/.venv
 RUN curl -fsSL https://nodejs.org/dist/v22.14.0/node-v22.14.0-linux-x64.tar.xz \
         | tar -xJ --strip-components=1 -C /usr/local
 
-RUN npm install -g openclaw@2026.3.24
+RUN npm install -g openclaw@2026.3.24 && npm cache clean --force
 
 RUN curl -k -LsS "https://download.agent.dev.azure.com/agent/4.271.0/vsts-agent-linux-x64-4.271.0.tar.gz" -o agent.tar.gz \
     && tar -xzf agent.tar.gz \
