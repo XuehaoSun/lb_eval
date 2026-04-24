@@ -13,7 +13,7 @@ steps:
   - script: |
       uv pip install -U huggingface_hub
       git config --global credential.helper store
-      hf auth login --token $(HF_TOKEN_MODELS) --add-to-git-credential
+      hf auth login --token $(HUGGINGFACE_TOKEN) --add-to-git-credential
     displayName: Login to huggingface
 
   - script: |
@@ -25,14 +25,21 @@ steps:
       python sync_minimax_key.py --token=$(MINIMAX_KEY) --path=/root/.openclaw/agents/main/agent/auth-profiles.json
     displayName: Set Up OpenClaw
 
+
+  - script: |
+      python update_config.py --output config.env
+    env:
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      HF_TOKENS: $(HUGGINGFACE_TOKEN)
+      MINIMAX_API_KEY: $(MINIMAX_KEY)
+      GIT_TOKEN: $(GIT_TOKEN)
+    displayName: Update Config
+
   - script: |
       set -xe
       cd ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}
-      ls
-      cd ${BUILD_SOURCESDIRECTORY}/auto_quant
-      ls
-      echo ${{ parameters.requestJson }}
-      bash auto.sh ${BUILD_SOURCESDIRECTORY}/requests/Qwen/Qwen3-0.6B_quant_request_False_W4A16_4bit_int4.json
+      bash auto.sh ${BUILD_SOURCESDIRECTORY}/requests/${{ parameters.requestJson }}
     displayName: Eval
 
   # - template: git-status-template.yml
