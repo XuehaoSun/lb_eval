@@ -161,7 +161,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Upload result artifacts to the lb_eval GitHub repo")
     parser.add_argument("runtime_output_dir", help="Directory containing quant/eval runtime artifacts")
     parser.add_argument("model_id", help="Original model id, e.g. Qwen/Qwen3-0.6B")
+    parser.add_argument("--pipeline", default="", help="Pipeline label: auto_quant or auto_eval")
     parser.add_argument("--scheme", default="W4A16", help="Quantization scheme label")
+    parser.add_argument("--quant-num-gpus", default="", help="Quantization GPU count")
+    parser.add_argument("--eval-num-gpus", default="", help="Evaluation GPU count")
     parser.add_argument(
         "--model-output-dir",
         default="",
@@ -283,6 +286,7 @@ def main() -> int:
         copy_file(path, run_dir / path.name, copied)
 
     aggregate = {
+        "pipeline": args.pipeline or ("auto_quant" if quant_summary else "auto_eval"),
         "model_id": args.model_id,
         "artifact_name": artifact_name,
         "generated_at": utc_now(),
@@ -293,6 +297,23 @@ def main() -> int:
         "accuracy": accuracy,
         "copied_files": [str(Path(path).relative_to(repo_dir)) for path in copied],
     }
+    if aggregate["pipeline"] == "auto_quant":
+        aggregate["quant_num_gpus"] = args.quant_num_gpus or (
+            str(quant_summary.get("quant_num_gpus") or quant_summary.get("num_gpus"))
+            if isinstance(quant_summary, dict) and (quant_summary.get("quant_num_gpus") or quant_summary.get("num_gpus")) is not None
+            else None
+        )
+        aggregate["eval_num_gpus"] = args.eval_num_gpus or (
+            str(accuracy.get("eval_num_gpus") or accuracy.get("num_gpus"))
+            if isinstance(accuracy, dict) and (accuracy.get("eval_num_gpus") or accuracy.get("num_gpus")) is not None
+            else None
+        )
+    else:
+        aggregate["num_gpus"] = args.eval_num_gpus or args.quant_num_gpus or (
+            str(accuracy.get("num_gpus"))
+            if isinstance(accuracy, dict) and accuracy.get("num_gpus") is not None
+            else None
+        )
     aggregate_path = model_result_dir / f"results_{timestamp}.json"
     aggregate_path.write_text(json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     copied.append(str(aggregate_path))

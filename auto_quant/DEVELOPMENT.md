@@ -214,7 +214,7 @@ If `OPENCLAW_WORKSPACE_DIR` is empty, `auto.sh` auto-detects it in this order:
 | `DEVICE` | Optional | Runtime device, usually `cuda` |
 | `DEVICE_INDEX` | Optional | Device index used in the eval summary |
 | `TIMEOUT` | Optional | OpenClaw agent timeout |
-| `EVAL_TASKS` | Optional | Evaluation tasks, e.g. `piqa` |
+| `EVAL_TASKS` | Optional | Evaluation tasks, e.g. `piqa,mmlu,hellaswag,gsm8k` |
 | `EVAL_BATCH_SIZE` | Optional | Evaluation batch size |
 
 ### 6.6 Output directories
