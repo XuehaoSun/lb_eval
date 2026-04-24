@@ -1,155 +1,329 @@
 #!/usr/bin/env bash
-# ═══════════════════════════════════════════════════════════════════════════════
-# auto.sh — Unified one-click pipeline launcher
-#
-# Usage:
-#   bash auto.sh <task_json_file> [options]
-#
-# Examples:
-#   bash auto.sh Qwen3-8B_quant_request_False_INT4_4bit_int4.json
-#   bash auto.sh Qwen3.5-27B_eval_request_False_INT4_4bit_int4.json --no-build
-#   bash auto.sh task.json --skip-upload
-#
-# Options:
-#   --no-build      Skip Docker image build (reuse existing image)
-#   --skip-upload   Skip HuggingFace and GitHub upload steps
-#   --skip-hf       Skip HuggingFace model upload only
-#   --skip-github   Skip GitHub results upload only
-#   --keep          Keep container running after completion (for debugging)
-#   --dry-run       Print configuration and exit without running
-#
-# Configuration:
-#   Place a config.env file in the tasks/ directory (see config.env.template).
-#   Values from config.env are used as defaults; JSON fields take priority.
-# ═══════════════════════════════════════════════════════════════════════════════
 
-set -euo pipefail
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# ── Color output helpers ─────────────────────────────────────────────────────
-RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
-CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
+if [[ -t 1 ]]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    CYAN='\033[0;36m'
+    BOLD='\033[1m'
+    NC='\033[0m'
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    CYAN=''
+    BOLD=''
+    NC=''
+fi
 
-log_info()  { echo -e "${CYAN}[auto.sh]${NC} $*"; }
-log_ok()    { echo -e "${GREEN}[auto.sh]${NC} $*"; }
-log_warn()  { echo -e "${YELLOW}[auto.sh]${NC} $*"; }
+log_info() { echo -e "${CYAN}[auto.sh]${NC} $*"; }
+log_ok() { echo -e "${GREEN}[auto.sh]${NC} $*"; }
+log_warn() { echo -e "${YELLOW}[auto.sh]${NC} $*"; }
 log_error() { echo -e "${RED}[auto.sh]${NC} $*"; }
-log_step()  { echo -e "\n${BOLD}${CYAN}════════ $* ════════${NC}\n"; }
+log_step() { echo -e "\n${BOLD}${CYAN}========== $* ==========${NC}\n"; }
 
-# ── Parse CLI arguments ──────────────────────────────────────────────────────
+usage() {
+    cat <<'EOF'
+Usage:
+  bash auto.sh <task_json_file> [options]
+
+Options:
+  --skip-upload   Skip all uploads
+  --skip-hf       Skip HuggingFace model upload
+  --skip-github   Skip GitHub results upload
+  --dry-run       Print resolved configuration and exit
+  -h, --help      Show this help
+EOF
+}
+
+require_command() {
+    local cmd="$1"
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        log_error "Required command not found: $cmd"
+        exit 1
+    fi
+}
+
+resolve_first_existing_dir() {
+    local candidate
+    for candidate in "$@"; do
+        if [[ -n "$candidate" && -d "$candidate" ]]; then
+            printf '%s\n' "$candidate"
+            return 0
+        fi
+    done
+    return 1
+}
+
+resolve_json_file() {
+    local input_path="$1"
+    if [[ -f "$input_path" ]]; then
+        printf '%s\n' "$input_path"
+        return 0
+    fi
+    if [[ -f "$SCRIPT_DIR/$input_path" ]]; then
+        printf '%s\n' "$SCRIPT_DIR/$input_path"
+        return 0
+    fi
+    return 1
+}
+
+json_status() {
+    local path="$1"
+    local default_value="${2:-missing}"
+    if [[ ! -f "$path" ]]; then
+        printf '%s\n' "$default_value"
+        return 0
+    fi
+    python3 - "$path" "$default_value" <<'PY'
+import json
+import sys
+
+path = sys.argv[1]
+default_value = sys.argv[2]
+
+try:
+    with open(path, encoding="utf-8") as handle:
+        data = json.load(handle)
+    print(data.get("status", default_value))
+except Exception:
+    print(default_value)
+PY
+}
+
+run_step() {
+    local title="$1"
+    shift
+
+    log_step "$title"
+
+    local rendered_command
+    printf -v rendered_command '%q ' "$@"
+    if [[ ${#rendered_command} -gt 800 ]]; then
+        rendered_command="${rendered_command:0:800} ... [truncated]"
+    fi
+    log_info "Command: ${rendered_command% }"
+
+    "$@"
+    local status=$?
+    LAST_EXIT_CODE=$status
+
+    if [[ $status -eq 0 ]]; then
+        log_ok "$title succeeded"
+    else
+        log_warn "$title failed with exit code $status"
+        FAILED_STEPS+=("$title (exit=$status)")
+    fi
+
+    return 0
+}
+
+copy_if_exists() {
+    local source_path="$1"
+    local target_path="$2"
+    local label="$3"
+
+    if [[ -f "$source_path" ]]; then
+        run_step "$label" cp "$source_path" "$target_path"
+    else
+        log_warn "$label skipped: file not found: $source_path"
+    fi
+}
+
+show_json_if_exists() {
+    local title="$1"
+    local path="$2"
+
+    if [[ -f "$path" ]]; then
+        log_step "$title"
+        cat "$path"
+    else
+        log_warn "$title skipped: file not found: $path"
+    fi
+}
+
+ensure_runtime_dirs() {
+    mkdir -p "$RUN_OUTPUT_DIR" "$LOG_DIR"
+}
+
+save_prompt_copy() {
+    local file_name="$1"
+    local prompt_text="$2"
+
+    ensure_runtime_dirs
+    printf '%s\n' "$prompt_text" > "$LOG_DIR/$file_name"
+}
+
+write_quant_prompt() {
+    cat <<EOF
+You are an expert in LLM quantization using the Intel Auto-Round toolkit.
+You MUST follow the skill instructions in: ${QUANT_SKILL_PATH}
+
+Model: ${MODEL_ID}
+Quantization: ${SCHEME} / ${METHOD}
+Export format: ${EXPORT_FORMAT}
+Quantized Model Output directory: ${QUANTIZED_MODEL_DIR}
+Runtime artifact directory: ${RUN_OUTPUT_DIR}
+Runtime device: ${DEVICE}
+Num gpus: ${NUM_GPUS}
+
+Directory responsibilities:
+- Write exported model files to: ${QUANTIZED_MODEL_DIR}
+- Write runtime artifacts such as quant_summary.json, quantize_script.py, logs, prompts, copied request/session files, and the venv to: ${RUN_OUTPUT_DIR}
+
+CRITICAL ENVIRONMENT NOTE:
+- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
+    python3 -m venv --system-site-packages <path>
+  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+
+IMPORTANT - After quantization completes (success or failure), you MUST produce:
+
+${QUANT_SUMMARY_JSON} - structured summary:
+{
+  "model_id": "${MODEL_ID}",
+  "scheme": "${SCHEME}",
+  "method": "${METHOD}",
+  "export_format": "${EXPORT_FORMAT}",
+  "device": "${DEVICE}",
+  "num_gpus": "${NUM_GPUS}",
+  "output_dir": "${RUN_OUTPUT_DIR}",
+  "runtime_output_dir": "${RUN_OUTPUT_DIR}",
+  "quantized_model_dir": "${QUANTIZED_MODEL_DIR}",
+  "status": "success" or "failed",
+  "duration_seconds": <float>,
+  "original_size_mb": <float or null>,
+  "quantized_size_mb": <float or null>,
+  "compression_ratio": <float or null>,
+  "errors": [<list of error strings>],
+  "solutions": [<list of solution strings>],
+  "output_files": [<list of file paths in runtime_output_dir>]
+}
+
+Write as valid JSON. If quantization fails, still write quant_summary.json with status=failed.
+EOF
+}
+
+write_eval_prompt() {
+    cat <<EOF
+You are an expert in evaluating quantized LLM models.
+You MUST follow the skill instructions in: ${EVAL_SKILL_PATH}
+
+Quantized model path: ${QUANTIZED_MODEL_DIR}
+Runtime artifact directory: ${RUN_OUTPUT_DIR}
+Evaluation tasks: ${EVAL_TASKS}
+Batch size: ${EVAL_BATCH_SIZE}
+Num gpus: ${EVAL_NUM_GPUS}
+
+The quantized model was produced by auto_quant with scheme=${SCHEME}, export_format=${EXPORT_FORMAT}.
+A venv may already exist at ${RUN_OUTPUT_DIR}/venv (created by auto_quant with --system-site-packages).
+
+CRITICAL ENVIRONMENT NOTE:
+- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
+    python3 -m venv --system-site-packages <path>
+  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+- If a venv already exists at ${RUN_OUTPUT_DIR}/venv, reuse it - just install lm_eval and vllm into it.
+- Write evaluation outputs, logs, prompts, copied request/session files, and other runtime artifacts to: ${RUN_OUTPUT_DIR}
+
+IMPORTANT - After evaluation completes, you MUST produce:
+
+${ACCURACY_JSON} - evaluation results:
+{
+  "model_id": "${MODEL_ID}",
+  "model_path": "${QUANTIZED_MODEL_DIR}",
+  "scheme": "${SCHEME}",
+  "device": "${DEVICE}:${DEVICE_INDEX}",
+  "tasks": {
+    "<task_name>": {
+      "accuracy": <float>,
+      "accuracy_stderr": <float or null>
+    }
+  },
+  "status": "success" or "failed",
+  "duration_seconds": <float>,
+  "eval_framework": "lm_eval+vllm" or "lm_eval+hf" or "manual",
+  "errors": [<list of error strings if any>]
+}
+
+The accuracy values MUST be real numbers from actual evaluation runs.
+Write as valid JSON. If evaluation fails, still write accuracy.json with status=failed.
+EOF
+}
+
 JSON_INPUT=""
-NO_BUILD=false
 SKIP_UPLOAD=false
 SKIP_HF=false
 SKIP_GITHUB=false
-KEEP_CONTAINER=false
 DRY_RUN=false
 
 for arg in "$@"; do
     case "$arg" in
-        --no-build)     NO_BUILD=true ;;
-        --skip-upload)  SKIP_UPLOAD=true ;;
-        --skip-hf)      SKIP_HF=true ;;
-        --skip-github)  SKIP_GITHUB=true ;;
-        --keep)         KEEP_CONTAINER=true ;;
-        --dry-run)      DRY_RUN=true ;;
+        --skip-upload) SKIP_UPLOAD=true ;;
+        --skip-hf) SKIP_HF=true ;;
+        --skip-github) SKIP_GITHUB=true ;;
+        --dry-run) DRY_RUN=true ;;
         -h|--help)
-            head -30 "$0" | tail -27
-            exit 0 ;;
+            usage
+            exit 0
+            ;;
         *)
             if [[ -z "$JSON_INPUT" ]]; then
                 JSON_INPUT="$arg"
             else
                 log_error "Unknown argument: $arg"
+                usage
                 exit 1
-            fi ;;
+            fi
+            ;;
     esac
 done
 
 if [[ -z "$JSON_INPUT" ]]; then
-    echo "Usage: bash auto.sh <task_json_file> [options]"
-    echo "Run 'bash auto.sh --help' for more information."
+    usage
     exit 1
 fi
 
-# Resolve JSON file path
-JSON_FILE="$JSON_INPUT"
-if [[ ! -f "$JSON_FILE" ]]; then
-    JSON_FILE="$SCRIPT_DIR/$JSON_INPUT"
-fi
-if [[ ! -f "$JSON_FILE" ]]; then
+JSON_FILE="$(resolve_json_file "$JSON_INPUT")" || {
     log_error "JSON file not found: $JSON_INPUT"
     exit 1
-fi
+}
 JSON_FILENAME="$(basename "$JSON_FILE")"
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 0: Load config and prerequisites
-# ══════════════════════════════════════════════════════════════════════════════
-log_step "Step 0: Loading configuration"
-
-# Load shared config (provides defaults, not overrides)
 CONFIG_FILE="${SCRIPT_DIR}/config.env"
 if [[ -f "$CONFIG_FILE" ]]; then
-    set -a; source "$CONFIG_FILE"; set +a
-    log_info "Loaded config from: $CONFIG_FILE"
-else
-    log_warn "No config.env found. Using defaults. Copy config.env.template to config.env."
+    set -a
+    source "$CONFIG_FILE"
+    set +a
 fi
 
-# Check prerequisites
-for cmd in python3; do
-    if ! command -v "$cmd" &>/dev/null; then
-        log_error "Required command not found: $cmd"
-        exit 1
-    fi
-done
+require_command python3
 
+eval "$(python3 - "$JSON_FILE" <<'PY'
+import json
+import re
+import shlex
+import sys
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 1: Parse JSON and normalize environment variables
-# ══════════════════════════════════════════════════════════════════════════════
-log_step "Step 1: Parsing task JSON"
-
-# Use python3 to parse JSON and emit shell variable exports
-eval "$(python3 << PYEOF
-import json, os, re, sys
-
-with open("$JSON_FILE") as f:
-    data = json.load(f)
+json_file = sys.argv[1]
+with open(json_file, encoding="utf-8") as handle:
+    data = json.load(handle)
 
 job_type = data.get("job_type", "")
 script = data.get("script", "")
 model = data.get("model", "")
-
-# Determine pipeline
-if script == "auto_quant" or job_type == "quantization & evaluation":
-    pipeline = "auto_quant"
-else:
-    pipeline = "auto_eval"
-
-# Model slug (safe for filenames and container names)
-model_slug = model.replace("/", "_").replace(" ", "_")
-
-# Extract scheme code (e.g., "W4A16" from "INT4 (W4A16)")
+pipeline = "auto_quant" if script == "auto_quant" or job_type == "quantization & evaluation" else "auto_eval"
 quant_scheme_full = data.get("quant_scheme", data.get("compute_dtype", "INT4 (W4A16)"))
-m = re.search(r"W\d+A\d+", str(quant_scheme_full))
-scheme = m.group(0) if m else "W4A16"
+match = re.search(r"W\d+A\d+", str(quant_scheme_full))
+scheme = match.group(0) if match else "W4A16"
+model_slug = model.replace("/", "_").replace(" ", "_")
+quant_gpu = str(data.get("quant_gpu_nums", data.get("gpu_nums", 1)))
+eval_gpu = str(data.get("eval_gpu_nums", data.get("gpu_nums", quant_gpu)))
+model_path_override = model if pipeline == "auto_eval" else ""
 
-# GPU numbers
-quant_gpu = data.get("quant_gpu_nums", data.get("gpu_nums", 1))
-eval_gpu = data.get("eval_gpu_nums", quant_gpu)
-
-# For eval-only jobs, model is the already-quantized HF model
-# For quant jobs, model is the FP model to be quantized
-if pipeline == "auto_eval":
-    model_path = model  # HF model ID — agent will download it
-else:
-    model_path = ""  # Will be set after quantization
-
-vars_to_export = {
+exports = {
     "JOB_TYPE": job_type,
     "PIPELINE": pipeline,
     "MODEL_ID": model,
@@ -157,520 +331,234 @@ vars_to_export = {
     "REVISION": data.get("revision", "main"),
     "SCHEME": scheme,
     "QUANT_SCHEME_FULL": quant_scheme_full,
-    "NUM_GPUS": str(quant_gpu),
-    "EVAL_NUM_GPUS": str(eval_gpu),
+    "NUM_GPUS": quant_gpu,
+    "EVAL_NUM_GPUS": eval_gpu,
     "QUANT_PRECISION": data.get("quant_precision", data.get("precision", "4bit")),
     "QUANT_WEIGHT_DTYPE": data.get("quant_weight_dtype", data.get("weight_dtype", "int4")),
-    "MODEL_PARAMS": str(data.get("model_params", data.get("params", 0))),
-    "HARDWARE": data.get("hardware", "RTX 4090"),
-    "INPUT_DTYPE": data.get("input_dtype", "bfloat16"),
-    "MODEL_PATH_OVERRIDE": model_path,
-    "ARCHITECTURES": data.get("architectures", ""),
-    "LICENSE": data.get("license", "unknown"),
+    "MODEL_PATH_OVERRIDE": model_path_override,
 }
 
-for k, v in vars_to_export.items():
-    # Shell-safe escaping
-    v_safe = str(v).replace("'", "'\\''")
-    print(f"export {k}='{v_safe}'")
-PYEOF
+for key, value in exports.items():
+    print(f"export {key}={shlex.quote(str(value))}")
+PY
 )"
 
-# Derived variables
-TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
-CONTAINER_NAME="auto-${MODEL_SLUG}-${$}"
-JOB_OUTPUT_DIR=$"${OUTPUT_DIR:-/root/.openclaw/workspace/quantized}/${MODEL_SLUG}-${SCHEME}"
-QUANTIZED_MODEL_DIR="${OUTPUT_DIR:-/root/.openclaw/workspace/quantized}/${MODEL_SLUG}-${SCHEME}"
-PIPELINE_DIR="${REPO_ROOT}/${PIPELINE}"
-
-
-# Print configuration summary
-echo "──────────────────────────────────────────────"
-echo "  JSON file      : $JSON_FILENAME"
-echo "  Job type       : $JOB_TYPE"
-echo "  Pipeline       : $PIPELINE"
-echo "  Model          : $MODEL_ID"
-echo "  Scheme         : $SCHEME ($QUANT_SCHEME_FULL)"
-echo "  GPU (quant)    : $NUM_GPUS"
-echo "  GPU (eval)     : $EVAL_NUM_GPUS"
-echo "  Host output    : $JOB_OUTPUT_DIR"
-echo "  Quantized model out  : $QUANTIZED_MODEL_DIR"
-echo "  Pipeline dir   : $PIPELINE_DIR"
-echo "──────────────────────────────────────────────"
-
-if [[ "$DRY_RUN" == "true" ]]; then
-    log_info "Dry run complete. Exiting."
-    exit 0
-fi
-echo $JOB_OUTPUT_DIR
-
-# Create host output directory
-mkdir -p "$JOB_OUTPUT_DIR"
-
-# Save the original request JSON to the job output for reference
-cp "$JSON_FILE" "$JOB_OUTPUT_DIR/request.json"
-
-
+OUTPUT_DIR="${OUTPUT_DIR:-/root/.openclaw/workspace/quantized}"
+RUNTIME_OUTPUT_BASE_DIR="${RUNTIME_OUTPUT_BASE_DIR:-/root/.openclaw/workspace/quantized/runs}"
 METHOD="${METHOD:-RTN}"
 EXPORT_FORMAT="${EXPORT_FORMAT:-auto_round}"
 DEVICE="${DEVICE:-cuda}"
+DEVICE_INDEX="${DEVICE_INDEX:-0}"
 TIMEOUT="${TIMEOUT:-36000}"
-
 EVAL_TASKS="${EVAL_TASKS:-piqa}"
 EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-8}"
+OPENCLAW_WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-}"
+OPENCLAW_SESSIONS_DIR="${OPENCLAW_SESSIONS_DIR:-/root/.openclaw/agents/main/sessions}"
 
-QUANT_SKILL_PATH="/root/.openclaw/workspace/skills/auto_quant/SKILL.md"
-EVAL_SKILL_PATH="/root/.openclaw/workspace/skills/auto_eval/SKILL.md"
+MODEL_OUTPUT_DIR="${OUTPUT_DIR}/${MODEL_SLUG}-${SCHEME}"
+RUN_OUTPUT_DIR="${RUNTIME_OUTPUT_BASE_DIR}/${MODEL_SLUG}-${SCHEME}"
+QUANTIZED_MODEL_DIR="$MODEL_OUTPUT_DIR"
+if [[ "$PIPELINE" == "auto_eval" && -n "${MODEL_PATH_OVERRIDE:-}" ]]; then
+    QUANTIZED_MODEL_DIR="$MODEL_PATH_OVERRIDE"
+fi
 
-# Session IDs (use same PID-based suffix so we can find them later)
+if [[ -z "$OPENCLAW_WORKSPACE_DIR" ]]; then
+    OPENCLAW_WORKSPACE_DIR="$(
+        resolve_first_existing_dir \
+            "/root/leaderboard_Agent/auto_quant/openclaw_home/workspace" \
+            "/root/leaderboard_Agent/tasks/lb_eval/openclaw_config/workspace" \
+            "/root/.openclaw/workspace"
+    )" || {
+        log_error "Could not resolve OPENCLAW_WORKSPACE_DIR; set it in config.env"
+        exit 1
+    }
+fi
+
+LOG_DIR="${RUN_OUTPUT_DIR}/logs"
+ensure_runtime_dirs
+LOG_FILE="${LOG_DIR}/auto.log"
+: > "$LOG_FILE"
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+FAILED_STEPS=()
+LAST_EXIT_CODE=0
+
+QUANT_SKILL_PATH="${OPENCLAW_WORKSPACE_DIR}/skills/auto_quant/SKILL.md"
+EVAL_SKILL_PATH="${OPENCLAW_WORKSPACE_DIR}/skills/auto_eval/SKILL.md"
 QUANT_SESSION="autoeval_quant_$$"
 EVAL_SESSION="autoeval_eval_$$"
+QUANT_SUMMARY_JSON="${RUN_OUTPUT_DIR}/quant_summary.json"
+ACCURACY_JSON="${RUN_OUTPUT_DIR}/accuracy.json"
+REQUEST_JSON="${RUN_OUTPUT_DIR}/request.json"
+QUANT_SESSION_SRC="${OPENCLAW_SESSIONS_DIR}/${QUANT_SESSION}.jsonl"
+EVAL_SESSION_SRC="${OPENCLAW_SESSIONS_DIR}/${EVAL_SESSION}.jsonl"
+QUANT_SESSION_DST="${RUN_OUTPUT_DIR}/session_quant_$$.jsonl"
+EVAL_SESSION_DST="${RUN_OUTPUT_DIR}/session_eval_$$.jsonl"
+FORMATTER="${SCRIPT_DIR}/format_sessions.py"
+GITHUB_UPLOADER="${SCRIPT_DIR}/upload_results_github.py"
 
-FULL_OUTPUT=$JOB_OUTPUT_DIR
+log_step "Resolved configuration"
+echo "JSON file           : $JSON_FILENAME"
+echo "Job type            : $JOB_TYPE"
+echo "Pipeline            : $PIPELINE"
+echo "Model               : $MODEL_ID"
+echo "Revision            : $REVISION"
+echo "Scheme              : $SCHEME ($QUANT_SCHEME_FULL)"
+echo "Quant GPUs          : $NUM_GPUS"
+echo "Eval GPUs           : $EVAL_NUM_GPUS"
+echo "OpenClaw workspace  : $OPENCLAW_WORKSPACE_DIR"
+echo "OpenClaw sessions   : $OPENCLAW_SESSIONS_DIR"
+echo "Quant skill path    : $QUANT_SKILL_PATH"
+echo "Eval skill path     : $EVAL_SKILL_PATH"
+echo "Model output dir    : $MODEL_OUTPUT_DIR"
+echo "Runtime output dir  : $RUN_OUTPUT_DIR"
+echo "Quantized model dir : $QUANTIZED_MODEL_DIR"
+echo "Log file            : $LOG_FILE"
+echo "Skip upload(all)    : $SKIP_UPLOAD"
+echo "Skip HF upload      : $SKIP_HF"
+echo "Skip GitHub upload  : $SKIP_GITHUB"
 
-QUANT_STATUS=$(bash -c "
-  if [[ -f '${FULL_OUTPUT}/quant_summary.json' ]]; then
-    python3 -c \"import json; d=json.load(open('${FULL_OUTPUT}/quant_summary.json')); print(d.get('status','unknown'))\"
-  else
-    echo 'missing'
-  fi
-" 2>/dev/null || echo "error")
-
-
-
-echo "Quant status: ${QUANT_STATUS}"
-
-
-if [[ "${QUANT_STATUS}" != "success" ]]; then
-    echo ""
-    echo ">>> Step 1/2: Running auto_quant first ..."
-    echo ""
-
-    QUANT_PROMPT="You are an expert in LLM quantization using the Intel Auto-Round toolkit.
-You MUST follow the skill instructions in: ${QUANT_SKILL_PATH}
-
-Model: ${MODEL_ID}
-Quantization: ${SCHEME} / ${METHOD}
-Export format: ${EXPORT_FORMAT}
-Quantized Model Output directory: ${QUANTIZED_MODEL_DIR}
-Runtime device: ${DEVICE}
-Num gpus: ${NUM_GPUS}
-
-CRITICAL ENVIRONMENT NOTE:
-- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
-    python3 -m venv --system-site-packages <path>
-  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
-
-IMPORTANT — After quantization completes (success or failure), you MUST produce:
-
-${FULL_OUTPUT}/quant_summary.json — structured summary:
-{
-  \"model_id\": \"${MODEL_ID}\",
-  \"scheme\": \"${SCHEME}\",
-  \"method\": \"${METHOD}\",
-  \"export_format\": \"${EXPORT_FORMAT}\",
-  \"device\": \"${DEVICE}\",
-  \"num_gpus\": \"${NUM_GPUS}\",
-  \"output_dir\": \"${FULL_OUTPUT}\",
-  \"quantized_model_dir\": \"${QUANTIZED_MODEL_DIR}\",
-  \"status\": \"success\" or \"failed\",
-  \"duration_seconds\": <float>,
-  \"original_size_mb\": <float or null>,
-  \"quantized_size_mb\": <float or null>,
-  \"compression_ratio\": <float or null>,
-  \"errors\": [<list of error strings>],
-  \"solutions\": [<list of solution strings>],
-  \"output_files\": [<list of file paths in output_dir>]
-}
-
-Write as valid JSON. If quantization fails, still write quant_summary.json with status=failed."
-
-    bash -c "
-      export http_proxy=\$HTTP_PROXY && export https_proxy=\$HTTPS_PROXY && \
-      openclaw agent --local \
-        --session-id '${QUANT_SESSION}' \
-        --message '$(echo "$QUANT_PROMPT" | sed "s/'/'\\''/g")' \
-        --timeout ${TIMEOUT}
-    "
-
-    # Verify quant succeeded
-    QUANT_STATUS=$(bash -c "
-      if [[ -f '${FULL_OUTPUT}/quant_summary.json' ]]; then
-        python3 -c \"import json; d=json.load(open('${FULL_OUTPUT}/quant_summary.json')); print(d.get('status','unknown'))\"
-      else
-        echo 'missing'
-      fi
-    " 2>/dev/null || echo "error")
-
-    if [[ "${QUANT_STATUS}" != "success" ]]; then
-        echo "ERROR: auto_quant failed or did not produce quant_summary.json (status=${QUANT_STATUS})"
-        bash -c "cat '${FULL_OUTPUT}/quant_summary.json' 2>/dev/null || echo '(not found)'"
-        exit 1
-    fi
-
-    echo ">>> auto_quant completed successfully."
-else
-    echo ">>> Quantized model already exists, skipping auto_quant."
+if [[ ! -f "$QUANT_SKILL_PATH" ]]; then
+    log_error "Quant skill file not found: $QUANT_SKILL_PATH"
+    exit 1
+fi
+if [[ ! -f "$EVAL_SKILL_PATH" ]]; then
+    log_error "Eval skill file not found: $EVAL_SKILL_PATH"
+    exit 1
 fi
 
-# ── Copy quant session log to output dir ────────────────────────────────────
-echo ""
-echo ">>> Copying quant session log ..."
+ensure_runtime_dirs
+run_step "Copy request JSON" cp "$JSON_FILE" "$REQUEST_JSON"
 
-bash -c "
-  cp /root/.openclaw/agents/main/sessions/${QUANT_SESSION}.jsonl '${FULL_OUTPUT}/session_quant_$$.jsonl' && \
-  echo 'Copied: ${FULL_OUTPUT}/session_quant_$$.jsonl'
-" 2>/dev/null || echo "Note: Could not copy quant session log from container"
-
-
-# ── Step 2: Run auto_eval ────────────────────────────────────────────────────
-echo ""
-echo ">>> Step 2/2: Running auto_eval ..."
-echo ""
-
-EVAL_PROMPT="You are an expert in evaluating quantized LLM models.
-You MUST follow the skill instructions in: ${EVAL_SKILL_PATH}
-
-Quantized model path: ${QUANTIZED_MODEL_DIR}
-Evaluation tasks: ${EVAL_TASKS}
-Batch size: ${EVAL_BATCH_SIZE}
-Nuym gpus: ${EVAL_NUM_GPUS}
-
-The quantized model was produced by auto_quant with scheme=${SCHEME}, export_format=${EXPORT_FORMAT}.
-A venv may already exist at ${FULL_OUTPUT}/venv (created by auto_quant with --system-site-packages).
-CRITICAL ENVIRONMENT NOTE:
-- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
-    python3 -m venv --system-site-packages <path>
-  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
-- If a venv already exists at ${FULL_OUTPUT}/venv, reuse it — just install lm_eval and vllm into it.
-
-IMPORTANT — After evaluation completes, you MUST produce:
-
-${FULL_OUTPUT}/accuracy.json — evaluation results:
-{
-  \"model_id\": \"${MODEL_ID}\",
-  \"model_path\": \"${FULL_OUTPUT}\",
-  \"scheme\": \"${SCHEME}\",
-  \"device\": \"${DEVICE}:${DEVICE_INDEX}\",
-  \"tasks\": {
-    \"<task_name>\": {
-      \"accuracy\": <float>,
-      \"accuracy_stderr\": <float or null>
-    }
-  },
-  \"status\": \"success\" or \"failed\",
-  \"duration_seconds\": <float>,
-  \"eval_framework\": \"lm_eval+vllm\" or \"lm_eval+hf\" or \"manual\",
-  \"errors\": [<list of error strings if any>]
-}
-
-The accuracy values MUST be real numbers from actual evaluation runs.
-Write as valid JSON. If evaluation fails, still write accuracy.json with status=failed."
-
-bash -c "
-  export http_proxy=\$HTTP_PROXY https_proxy=\$HTTPS_PROXY && \
-  openclaw agent --local \
-    --session-id '${EVAL_SESSION}' \
-    --message '$(echo "$EVAL_PROMPT" | sed "s/'/'\\''/g")' \
-    --timeout ${TIMEOUT}
-"
-
-EVAL_EXIT=$?
-
-echo "=========================="
-echo "Eval exit code: ${EVAL_EXIT}"
-echo ""
-
-
-# ── Copy eval session log to output dir ─────────────────────────────────────
-echo ">>> Copying eval session log ..."
-bash -c "
-  cp /root/.openclaw/agents/main/sessions/${EVAL_SESSION}.jsonl '${FULL_OUTPUT}/session_eval_$$.jsonl' && \
-  echo 'Copied: ${FULL_OUTPUT}/session_eval_$$.jsonl'
-" 2>/dev/null || echo "Note: Could not copy eval session log from container"
-
-# Print results
-bash -c "
-  echo '--- summary.json (quant) ---'
-  cat '${FULL_OUTPUT}/summary.json' 2>/dev/null || echo '(not found)'
-  echo ''
-  echo '--- accuracy.json (eval) ---'
-  cat '${FULL_OUTPUT}/accuracy.json' 2>/dev/null || echo '(not found)'
-"
-
-# ── Format session logs to markdown ──────────────────────────────────────────
-echo ""
-echo ">>> Formatting session logs to markdown ..."
-docker exec "${CONTAINER}" bash -c "
-  if command -v python3 &>/dev/null; then
-    python3 -c \"
-import json, sys
-from pathlib import Path
-
-def format_content_block(block):
-    btype = block.get('type', '')
-    if btype == 'text':
-        return block.get('text', '')
-    elif btype == 'thinking':
-        return '**Thinking:** ' + block.get('thinking', '')
-    elif btype == 'toolCall':
-        name = block.get('name', 'unknown')
-        args = block.get('arguments', {})
-        args_str = json.dumps(args, indent=2, ensure_ascii=False) if isinstance(args, dict) else str(args)
-        return f'**Tool:** \`{name}\`\n\`\`\`json\n{args_str}\n\`\`\`'
-    elif btype == 'toolResult':
-        content = block.get('content', [])
-        if isinstance(content, str):
-            return f'**Result:**\n\`\`\`\n{content}\n\`\`\`'
-        parts = []
-        for c in content if isinstance(content, list) else []:
-            if isinstance(c, dict):
-                parts.append(c.get('text', ''))
-        return '\n'.join(parts)
-    return f'[{btype}]'
-
-def format_message(msg):
-    message = msg.get('message', {})
-    role = message.get('role', 'unknown')
-    content = message.get('content', [])
-    ts = msg.get('timestamp', '')
-    from datetime import datetime
-    try:
-        dt = datetime.fromisoformat(ts.replace('Z', '+00:00'))
-        ts_str = dt.strftime('%H:%M:%S')
-    except:
-        ts_str = ts
-    header = f'### [{ts_str}] {role.upper()}'
-    if isinstance(content, str):
-        body = content
-    elif isinstance(content, list):
-        parts = [format_content_block(b) for b in content if isinstance(b, dict)]
-        body = '\n\n'.join(parts)
-    else:
-        body = str(content)
-    return f'{header}\n\n{body}\n'
-
-def format_session(jsonl_path, out_path):
-    with open(jsonl_path) as f:
-        records = [json.loads(l) for l in f if l.strip()]
-    msgs = [r for r in records if r.get('type') == 'message']
-    meta = next((r for r in records if r.get('type') == 'session'), {})
-    sid = meta.get('id', jsonl_path.stem)
-    lines = [f'# Session: {sid}', '', f'- **Session ID:** \`{sid}\`', f'- **Timestamp:** {meta.get(\"timestamp\",\"\")}', '']
-    step = 'Step 1: Quantization' if 'quant' in sid.lower() else 'Step 2: Evaluation' if 'eval' in sid.lower() else 'Session'
-    lines += [f'## {step}', '']
-    for m in msgs:
-        lines.append(format_message(m))
-        lines.append('')
-    out_path.write_text('\n'.join(lines))
-    print(f'Written: {out_path}')
-
-# Format both sessions
-quant_jsonl = Path('${FULL_OUTPUT}/session_quant_$$.jsonl')
-eval_jsonl = Path('${FULL_OUTPUT}/session_eval_$$.jsonl')
-if quant_jsonl.exists():
-    format_session(quant_jsonl, quant_jsonl.with_suffix('.md'))
-if eval_jsonl.exists():
-    format_session(eval_jsonl, eval_jsonl.with_suffix('.md'))
-  \"
-  fi
-" 2>/dev/null || echo "Note: Could not format session logs (python3 not available in container)"
-
-
-
-echo "=== Auto-Eval Pipeline Done ==="
-
-
-
-
-
-
-if [[ $TASK_EXIT -ne 0 ]]; then
-    log_warn "Pipeline exited with code $TASK_EXIT (may still have partial results)"
+if [[ "$DRY_RUN" == "true" ]]; then
+    log_ok "Dry run complete"
+    exit 0
 fi
 
+require_command openclaw
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 4: Collect results from container to host
-# ══════════════════════════════════════════════════════════════════════════════
-log_step "Step 4: Collecting results"
-
-# Determine the result path inside the container
-MODEL_SLUG_LOCAL="${MODEL_ID//\//_}"
+QUANT_STATUS="$(json_status "$QUANT_SUMMARY_JSON")"
 if [[ "$PIPELINE" == "auto_quant" ]]; then
-    CONTAINER_RESULT_PATH="${CONTAINER_OUTPUT_DIR}/${MODEL_SLUG_LOCAL}-${SCHEME}"
+    if [[ "$QUANT_STATUS" != "success" ]]; then
+        QUANT_PROMPT="$(write_quant_prompt)"
+        save_prompt_copy "quant_prompt.txt" "$QUANT_PROMPT"
+        run_step \
+            "Run auto_quant" \
+            env \
+                http_proxy="${HTTP_PROXY:-}" \
+                https_proxy="${HTTPS_PROXY:-}" \
+                HTTP_PROXY="${HTTP_PROXY:-}" \
+                HTTPS_PROXY="${HTTPS_PROXY:-}" \
+                openclaw agent --local \
+                    --session-id "$QUANT_SESSION" \
+                    --message "$QUANT_PROMPT" \
+                    --timeout "$TIMEOUT"
+        QUANT_STATUS="$(json_status "$QUANT_SUMMARY_JSON")"
+    else
+        log_ok "Quantization already succeeded, skipping auto_quant"
+    fi
 else
-    CONTAINER_RESULT_PATH="${CONTAINER_OUTPUT_DIR}"
+    QUANT_STATUS="success"
 fi
 
-# Copy key result files from container (in case volume mount didn't cover everything)
-for f in summary.json accuracy.json; do
-    docker cp "${CONTAINER_NAME}:${CONTAINER_RESULT_PATH}/${f}" "$JOB_OUTPUT_DIR/${f}" 2>/dev/null || true
-done
+ensure_runtime_dirs
+copy_if_exists "$QUANT_SESSION_SRC" "$QUANT_SESSION_DST" "Copy quant session log"
 
-# Copy session logs if available
-docker exec "$CONTAINER_NAME" bash -c "ls ${CONTAINER_RESULT_PATH}/session_*.jsonl 2>/dev/null" | while read -r log_file; do
-    BASENAME="$(basename "$log_file")"
-    docker cp "${CONTAINER_NAME}:${log_file}" "$JOB_OUTPUT_DIR/${BASENAME}" 2>/dev/null || true
-done 2>/dev/null || true
+EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
+if [[ "$EVAL_STATUS" != "success" ]]; then
+    if [[ "$QUANT_STATUS" == "success" ]]; then
+        EVAL_PROMPT="$(write_eval_prompt)"
+        save_prompt_copy "eval_prompt.txt" "$EVAL_PROMPT"
+        run_step \
+            "Run auto_eval" \
+            env \
+                http_proxy="${HTTP_PROXY:-}" \
+                https_proxy="${HTTPS_PROXY:-}" \
+                HTTP_PROXY="${HTTP_PROXY:-}" \
+                HTTPS_PROXY="${HTTPS_PROXY:-}" \
+                openclaw agent --local \
+                    --session-id "$EVAL_SESSION" \
+                    --message "$EVAL_PROMPT" \
+                    --timeout "$TIMEOUT"
+        EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
+    else
+        log_warn "Skipping auto_eval because quantization status is $QUANT_STATUS"
+    fi
+else
+    log_ok "Evaluation already succeeded, skipping auto_eval"
+fi
 
-# Copy session markdown files
-docker exec "$CONTAINER_NAME" bash -c "ls ${CONTAINER_RESULT_PATH}/session_*.md 2>/dev/null" | while read -r md_file; do
-    BASENAME="$(basename "$md_file")"
-    docker cp "${CONTAINER_NAME}:${md_file}" "$JOB_OUTPUT_DIR/${BASENAME}" 2>/dev/null || true
-done 2>/dev/null || true
+ensure_runtime_dirs
+copy_if_exists "$EVAL_SESSION_SRC" "$EVAL_SESSION_DST" "Copy eval session log"
 
-# List collected results
-log_info "Results collected in: $JOB_OUTPUT_DIR"
-ls -la "$JOB_OUTPUT_DIR/" 2>/dev/null || true
+SESSION_INPUTS=()
+if [[ -f "$QUANT_SESSION_DST" ]]; then
+    SESSION_INPUTS+=("$QUANT_SESSION_DST")
+fi
+if [[ -f "$EVAL_SESSION_DST" ]]; then
+    SESSION_INPUTS+=("$EVAL_SESSION_DST")
+fi
+if [[ ${#SESSION_INPUTS[@]} -gt 0 ]]; then
+    run_step "Format session logs" python3 "$FORMATTER" "${SESSION_INPUTS[@]}"
+else
+    log_warn "Format session logs skipped: no session JSONL files were copied"
+fi
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 5: Upload quantized model to HuggingFace (auto_quant only)
-# ══════════════════════════════════════════════════════════════════════════════
+show_json_if_exists "Quant summary" "$QUANT_SUMMARY_JSON"
+show_json_if_exists "Accuracy summary" "$ACCURACY_JSON"
+
 if [[ "$PIPELINE" == "auto_quant" && "$SKIP_UPLOAD" != "true" && "$SKIP_HF" != "true" ]]; then
-    log_step "Step 5: Uploading model to HuggingFace"
-
-    # Check if HF tokens are configured
-    if [[ -z "${HF_TOKENS:-}" ]]; then
-        log_warn "HF_TOKENS not set. Skipping HuggingFace upload."
-        log_warn "Set HF_TOKENS in config.env to enable model upload."
-    else
-        # Determine repo name: {ModelName}-autoround-{Scheme}
-        # e.g., Qwen3-8B-autoround-W4A16
-        MODEL_SHORT="${MODEL_ID#*/}"  # Remove org prefix
+    if [[ "$QUANT_STATUS" == "success" ]]; then
+        MODEL_SHORT="${MODEL_ID#*/}"
         HF_REPO_NAME="${MODEL_SHORT}-autoround-${SCHEME}"
-
-        # Copy quantized model from container to host (for upload)
-        QUANT_MODEL_HOST_DIR="$JOB_OUTPUT_DIR/model"
-        if [[ -d "$JOB_OUTPUT_DIR/${MODEL_SLUG_LOCAL}-${SCHEME}" ]]; then
-            QUANT_MODEL_HOST_DIR="$JOB_OUTPUT_DIR/${MODEL_SLUG_LOCAL}-${SCHEME}"
-        else
-            mkdir -p "$QUANT_MODEL_HOST_DIR"
-            docker cp "${CONTAINER_NAME}:${CONTAINER_RESULT_PATH}/." "$QUANT_MODEL_HOST_DIR/" 2>/dev/null || true
-        fi
-
-        log_info "Uploading model to HuggingFace as: $HF_REPO_NAME"
-        python3 "$SCRIPT_DIR/upload_model_hf.py" \
-            "$QUANT_MODEL_HOST_DIR" \
-            "$HF_REPO_NAME" \
-            --summary-json "$JOB_OUTPUT_DIR/summary.json" \
-            || log_warn "HuggingFace upload failed. Results are saved locally."
-    fi
-else
-    if [[ "$PIPELINE" == "auto_quant" ]]; then
-        log_info "Skipping HuggingFace upload (--skip-upload or --skip-hf)"
-    fi
-fi
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 6: Upload results to GitHub (lb_eval repo)
-# ══════════════════════════════════════════════════════════════════════════════
-if [[ "$SKIP_UPLOAD" != "true" && "$SKIP_GITHUB" != "true" ]]; then
-    log_step "Step 6: Uploading results to GitHub"
-
-    LB_EVAL_DIR="${LB_EVAL_REPO:-${SCRIPT_DIR}/lb_eval}"
-    if [[ -d "$LB_EVAL_DIR/.git" ]]; then
-        # Determine status based on whether results exist
-        FINAL_STATUS="Finished"
-        if [[ -f "$JOB_OUTPUT_DIR/accuracy.json" ]]; then
-            HAS_RESULTS=$(python3 -c "
-import json
-try:
-    d = json.load(open('$JOB_OUTPUT_DIR/accuracy.json'))
-    print('yes' if d.get('status') == 'success' else 'no')
-except: print('no')
-" 2>/dev/null || echo "no")
-            if [[ "$HAS_RESULTS" != "yes" ]]; then
-                FINAL_STATUS="Failed"
-            fi
-        elif [[ -f "$JOB_OUTPUT_DIR/summary.json" ]]; then
-            HAS_RESULTS=$(python3 -c "
-import json
-try:
-    d = json.load(open('$JOB_OUTPUT_DIR/summary.json'))
-    print('yes' if d.get('status') == 'success' else 'no')
-except: print('no')
-" 2>/dev/null || echo "no")
-            if [[ "$HAS_RESULTS" != "yes" ]]; then
-                FINAL_STATUS="Failed"
-            fi
-        else
-            FINAL_STATUS="Failed"
-        fi
-
-        log_info "Uploading to lb_eval with status=$FINAL_STATUS"
-        export LB_EVAL_REPO="$LB_EVAL_DIR"
-        bash "$SCRIPT_DIR/upload_results_github.sh" \
-            "$JOB_OUTPUT_DIR" \
-            "$MODEL_ID" \
-            "$JSON_FILENAME" \
-            "$FINAL_STATUS" \
-            || log_warn "GitHub upload failed. Results are saved locally."
+        run_step \
+            "Upload quantized model to HuggingFace" \
+            python3 "$SCRIPT_DIR/upload_model_hf.py" \
+                "$MODEL_OUTPUT_DIR" \
+                "$HF_REPO_NAME" \
+                --summary-json "$QUANT_SUMMARY_JSON"
     else
-        log_warn "lb_eval repo not found at: $LB_EVAL_DIR"
-        log_warn "Skipping GitHub upload. Results saved in: $JOB_OUTPUT_DIR"
+        log_warn "Skipping HuggingFace upload because quantization status is $QUANT_STATUS"
     fi
+fi
+
+if [[ "$SKIP_UPLOAD" != "true" && "$SKIP_GITHUB" != "true" ]]; then
+    run_step \
+        "Upload result artifacts to GitHub" \
+        python3 "$GITHUB_UPLOADER" \
+            "$RUN_OUTPUT_DIR" \
+            "$MODEL_ID" \
+            --scheme "$SCHEME" \
+            --model-output-dir "$QUANTIZED_MODEL_DIR"
+fi
+
+log_step "Final summary"
+echo "Quant status : $QUANT_STATUS"
+echo "Eval status  : $EVAL_STATUS"
+echo "Model dir    : $QUANTIZED_MODEL_DIR"
+echo "Runtime dir  : $RUN_OUTPUT_DIR"
+echo "Log file     : $LOG_FILE"
+
+if [[ ${#FAILED_STEPS[@]} -gt 0 ]]; then
+    echo "Step failures:"
+    printf '  - %s\n' "${FAILED_STEPS[@]}"
+fi
+
+OVERALL_EXIT=0
+if [[ "$PIPELINE" == "auto_quant" && "$QUANT_STATUS" != "success" ]]; then
+    OVERALL_EXIT=1
+fi
+if [[ "$EVAL_STATUS" != "success" ]]; then
+    OVERALL_EXIT=1
+fi
+if [[ ${#FAILED_STEPS[@]} -gt 0 ]]; then
+    OVERALL_EXIT=1
+fi
+
+if [[ $OVERALL_EXIT -eq 0 ]]; then
+    log_ok "Pipeline finished successfully"
 else
-    log_info "Skipping GitHub upload (--skip-upload or --skip-github)"
+    log_warn "Pipeline finished with failures"
 fi
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 7: Summary and cleanup
-# ══════════════════════════════════════════════════════════════════════════════
-log_step "Step 7: Summary"
-
-echo "──────────────────────────────────────────────"
-echo "  Job             : $JSON_FILENAME"
-echo "  Model           : $MODEL_ID"
-echo "  Pipeline        : $PIPELINE"
-echo "  Container       : $CONTAINER_NAME"
-echo "  Output dir      : $JOB_OUTPUT_DIR"
-echo ""
-
-# Print key results
-if [[ -f "$JOB_OUTPUT_DIR/summary.json" ]]; then
-    echo "  --- summary.json ---"
-    python3 -c "
-import json
-d = json.load(open('$JOB_OUTPUT_DIR/summary.json'))
-print(f\"  Status       : {d.get('status', 'unknown')}\")
-print(f\"  Duration     : {d.get('duration_seconds', 'N/A')}s\")
-if 'hf_repo' in d:
-    print(f\"  HF Repo      : {d['hf_repo']}\")
-if 'compression_ratio' in d:
-    print(f\"  Compression  : {d.get('compression_ratio', 'N/A')}x\")
-" 2>/dev/null || echo "  (could not parse summary.json)"
-fi
-
-if [[ -f "$JOB_OUTPUT_DIR/accuracy.json" ]]; then
-    echo ""
-    echo "  --- accuracy.json ---"
-    python3 -c "
-import json
-d = json.load(open('$JOB_OUTPUT_DIR/accuracy.json'))
-print(f\"  Status       : {d.get('status', 'unknown')}\")
-print(f\"  Framework    : {d.get('eval_framework', 'N/A')}\")
-tasks = d.get('tasks', {})
-for name, scores in tasks.items():
-    acc = scores.get('accuracy', 'N/A')
-    stderr = scores.get('accuracy_stderr', '')
-    stderr_str = f' ± {stderr}' if stderr else ''
-    print(f\"  {name:20s}: {acc}{stderr_str}\")
-" 2>/dev/null || echo "  (could not parse accuracy.json)"
-fi
-
-echo "──────────────────────────────────────────────"
-
-# Container cleanup
-if [[ "$KEEP_CONTAINER" != "true" ]]; then
-    log_info "Stopping container: $CONTAINER_NAME"
-    docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
-    docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || true
-    log_ok "Container removed."
-else
-    log_info "Container kept running: $CONTAINER_NAME"
-    log_info "Debug with: docker exec -it $CONTAINER_NAME bash"
-fi
-
-log_ok "Pipeline complete. Results saved in: $JOB_OUTPUT_DIR"
+exit "$OVERALL_EXIT"
