@@ -83,8 +83,9 @@ def run_create_pod(api_key, payload):
 
 
 def create_pod(args):
+    env_dict = {}
     if args.env:
-        env_dict = {kv.split("=", 1)[0]: kv.split("=", 1)[1] for kv in args.env}
+        env_dict = {kv.split("=", 1)[0]: kv.split("=", 1)[1] for kv in args.env if "=" in kv}
 
     payload = {
         "cloudType": "SECURE",

@@ -26,7 +26,11 @@ steps:
     displayName: Set Up OpenClaw
 
   - script: |
+      set -xe
       cd ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}
+      ls
+      cd ${BUILD_SOURCESDIRECTORY}/auto_quant
+      ls
       bash auto.sh ${BUILD_SOURCESDIRECTORY}/requests/${{ parameters.requestJson }}
     displayName: Eval
 
