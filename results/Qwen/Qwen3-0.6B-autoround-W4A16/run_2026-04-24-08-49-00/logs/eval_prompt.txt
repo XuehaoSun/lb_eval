@@ -1,0 +1,46 @@
+You are an expert in evaluating quantized LLM models.
+You MUST follow the skill instructions in: /root/.openclaw/workspace/skills/auto_eval/SKILL.md
+
+Quantized model path: /root/.openclaw/workspace/quantized/Qwen_Qwen3-0.6B-W4A16
+Runtime artifact directory: /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16
+Evaluation tasks: piqa,mmlu,hellaswag,gsm8k
+Batch size: 8
+Num gpus: 1
+
+The quantized model was produced by auto_quant with scheme=W4A16, export_format=auto_round.
+A venv may already exist at /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16/venv (created by auto_quant with --system-site-packages).
+
+CRITICAL ENVIRONMENT NOTE:
+- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
+    python3 -m venv --system-site-packages <path>
+  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+- If /root/.venv exists, reuse /root/.venv before creating a new venv.
+- If a venv already exists at /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16/venv, reuse it - just install lm_eval and vllm into it.
+- Use uv pip for dependency installation. Prefer:
+    uv pip install --python <venv>/bin/python <packages>
+- Do NOT reinstall torch or flash_attn if they already import successfully from the reused environment. Only install them when missing or incompatible.
+- Write evaluation outputs, logs, prompts, copied request/session files, and other runtime artifacts to: /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16
+
+IMPORTANT - After evaluation completes, you MUST produce:
+
+/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16/accuracy.json - evaluation results:
+{
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_path": "/root/.openclaw/workspace/quantized/Qwen_Qwen3-0.6B-W4A16",
+  "scheme": "W4A16",
+  "device": "cuda:0",
+  "num_gpus": "1",
+  "tasks": {
+    "<task_name>": {
+      "accuracy": <float>,
+      "accuracy_stderr": <float or null>
+    }
+  },
+  "status": "success" or "failed",
+  "duration_seconds": <float>,
+  "eval_framework": "lm_eval+vllm" or "lm_eval+hf" or "manual",
+  "errors": [<list of error strings if any>]
+}
+
+The accuracy values MUST be real numbers from actual evaluation runs.
+Write as valid JSON. If evaluation fails, still write accuracy.json with status=failed.
