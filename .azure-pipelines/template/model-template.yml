@@ -11,20 +11,14 @@ parameters:
 
 steps:
   - script: |
-      uv pip install -U huggingface_hub
-      git config --global credential.helper store
-      hf auth login --token $(HUGGINGFACE_TOKEN) --add-to-git-credential
-    displayName: Login to huggingface
-
-  - script: |
       npm install -g openclaw@2026.3.24
-      uv pip install --no-cache-dir openclaw==2026.3.20
+      uv pip install openclaw==2026.3.20
+      uv pip install -U huggingface_hub
       cp -r openclaw_config/ /root/.openclaw/
 
       cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts
       python sync_minimax_key.py --token=$(MINIMAX_KEY) --path=/root/.openclaw/agents/main/agent/auth-profiles.json
     displayName: Set Up OpenClaw
-
 
   - script: |
       cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts

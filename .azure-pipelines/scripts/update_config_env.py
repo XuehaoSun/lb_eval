@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Update config.env: preserve all existing values, only override keys passed via --set.
 
