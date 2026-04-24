@@ -27,7 +27,8 @@ steps:
 
 
   - script: |
-      python update_config.py --output config.env
+      cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts
+      python update_config.py --output ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}/auto_quant/config.env
     env:
       HTTP_PROXY: ""
       HTTPS_PROXY: ""
