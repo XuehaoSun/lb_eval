@@ -28,13 +28,13 @@ steps:
 
   - script: |
       cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts
-      python update_config_env.py --output ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}/auto_quant/config.env
-    env:
-      HTTP_PROXY: ""
-      HTTPS_PROXY: ""
-      HF_TOKENS: $(HUGGINGFACE_TOKEN)
-      MINIMAX_API_KEY: $(MINIMAX_KEY)
-      GIT_TOKEN: $(GIT_TOKEN)
+      python update_config_env.py \
+        --output ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}/config.env \
+        --set HTTP_PROXY="" \
+        --set HTTPS_PROXY="" \
+        --set HF_TOKENS=$(HUGGINGFACE_TOKEN) \
+        --set MINIMAX_API_KEY=$(MINIMAX_KEY) \
+        --set GIT_TOKEN=$(GIT_TOKEN)
     displayName: Update Config
 
   - script: |

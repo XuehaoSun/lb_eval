@@ -1,23 +1,19 @@
 #!/usr/bin/env python3
 """
-Update config.env with secrets from environment variables or CLI arguments.
+Update config.env: preserve all existing values, only override keys passed via --set.
 
 Usage:
-    # Method 1: Pass via environment variables
-    export DB_PASSWORD="secret123"
-    export API_KEY="key456"
-    python update_config.py --env-prefix "" --output config.env
-
-    # Method 2: Pass via CLI arguments
+    # Update specific keys while keeping all other existing values
     python update_config.py --set DB_PASSWORD="secret123" --set API_KEY="key456" --output config.env
 
-    # Method 3: Mixed (CLI takes precedence over env vars)
-    export DB_PASSWORD="from_env"
-    python update_config.py --set DB_PASSWORD="from_cli" --output config.env
+    # Add new keys without losing existing ones
+    python update_config.py --set NEW_VAR="value" --output config.env
+
+    # Preview changes without writing
+    python update_config.py --dry-run --set DB_PASSWORD="secret123" --output config.env
 """
 
 import argparse
-import os
 import re
 import sys
 from pathlib import Path
@@ -25,26 +21,16 @@ from pathlib import Path
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Update config.env file with secrets from environment variables or CLI arguments"
+        description="Update config.env: preserve existing values, override only --set keys"
     )
     parser.add_argument("--output", "-o", default="config.env", help="Output .env file path (default: config.env)")
-    parser.add_argument(
-        "--env-prefix",
-        default="",
-        help="Environment variable prefix filter. Only variables starting with this prefix are read (default: empty, read all)",
-    )
     parser.add_argument(
         "--set",
         "-s",
         action="append",
         default=[],
-        help="Set variable directly via CLI, format: KEY=VALUE (can be used multiple times)",
-    )
-    parser.add_argument(
-        "--keys",
-        nargs="+",
-        default=[],
-        help="List of keys to update. If not specified, all found variables are updated",
+        required=True,
+        help="Set variable via CLI, format: KEY=VALUE (can be used multiple times)",
     )
     parser.add_argument("--dry-run", action="store_true", help="Dry run - print content without writing to file")
     return parser.parse_args()
@@ -78,16 +64,6 @@ def parse_env_file(filepath: Path) -> dict[str, str]:
     return configs
 
 
-def get_env_variables(prefix: str = "") -> dict[str, str]:
-    """Read configuration from environment variables with optional prefix filter."""
-    configs = {}
-    for key, value in os.environ.items():
-        if prefix and not key.startswith(prefix):
-            continue
-        configs[key] = value
-    return configs
-
-
 def parse_cli_sets(sets: list[str]) -> dict[str, str]:
     """Parse --set arguments."""
     configs = {}
@@ -100,35 +76,17 @@ def parse_cli_sets(sets: list[str]) -> dict[str, str]:
     return configs
 
 
-def merge_configs(
-    file_configs: dict[str, str], env_configs: dict[str, str], cli_configs: dict[str, str], target_keys: list[str]
-) -> dict[str, str]:
+def merge_configs(file_configs: dict[str, str], cli_configs: dict[str, str]) -> dict[str, str]:
     """
-    Merge configurations with priority: CLI > Environment > File.
+    Preserve all existing file values, only override keys from --set.
 
     Args:
         file_configs: Existing configurations from file
-        env_configs: Configurations from environment variables
         cli_configs: Configurations from CLI arguments
-        target_keys: Specific keys to update (empty list means all)
     """
-    if target_keys:
-        keys_to_update = set(target_keys)
-    else:
-        keys_to_update = set(file_configs.keys()) | set(env_configs.keys()) | set(cli_configs.keys())
-
-    result = {}
-    for key in keys_to_update:
-        # Priority: CLI > ENV > FILE
-        if key in cli_configs:
-            result[key] = cli_configs[key]
-        elif key in env_configs:
-            result[key] = env_configs[key]
-        elif key in file_configs:
-            result[key] = file_configs[key]
-        else:
-            print(f"Warning: key '{key}' not found in any source", file=sys.stderr)
-
+    result = dict(file_configs)  # Start with all existing file values
+    for key, value in cli_configs.items():
+        result[key] = value  # Override with CLI values
     return result
 
 
@@ -186,28 +144,23 @@ def main() -> int:
     # Step 1: Read existing file configurations
     file_configs = parse_env_file(output_path)
 
-    # Step 2: Read environment variables
-    env_configs = get_env_variables(args.env_prefix)
-
-    # Step 3: Read CLI arguments
+    # Step 2: Read CLI arguments
     cli_configs = parse_cli_sets(args.set)
 
-    # Step 4: Merge configurations
-    final_configs = merge_configs(
-        file_configs=file_configs, env_configs=env_configs, cli_configs=cli_configs, target_keys=args.keys
-    )
+    # Step 3: Merge - preserve file values, override with CLI
+    final_configs = merge_configs(file_configs=file_configs, cli_configs=cli_configs)
 
     if not final_configs:
         print("Error: No configurations found to write", file=sys.stderr)
         return 1
 
-    # Step 5: Write file
+    # Step 4: Write file
     update_config_file(output_path, final_configs, dry_run=args.dry_run)
 
-    # Print summary (hide actual values, show keys only)
+    # Print summary
     print(f"\nUpdate Summary:")
     for key in sorted(final_configs.keys()):
-        source = "CLI" if key in cli_configs else ("ENV" if key in env_configs else "FILE")
+        source = "CLI" if key in cli_configs else "FILE"
         print(f"  [{source}] {key}=***")
 
     return 0
