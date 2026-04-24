@@ -205,6 +205,49 @@ ensure_quantize_script_artifact() {
     fi
 }
 
+normalize_json_gpu_metadata() {
+    local target_path="$1"
+    local mode="$2"
+    local quant_gpus="$3"
+    local eval_gpus="$4"
+
+    [[ -f "$target_path" ]] || return 0
+
+    run_step \
+        "Normalize $(basename "$target_path") GPU metadata" \
+        python3 - "$target_path" "$mode" "$quant_gpus" "$eval_gpus" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+mode = sys.argv[2]
+quant_gpus = sys.argv[3]
+eval_gpus = sys.argv[4]
+
+with path.open(encoding="utf-8") as handle:
+    data = json.load(handle)
+
+if not isinstance(data, dict):
+    raise SystemExit(f"{path} must contain a JSON object")
+
+if mode == "quant_summary":
+    data["quant_num_gpus"] = quant_gpus
+    data["num_gpus"] = quant_gpus
+elif mode == "accuracy_auto_quant":
+    data["eval_num_gpus"] = eval_gpus
+    data["num_gpus"] = eval_gpus
+elif mode == "accuracy_auto_eval":
+    data["num_gpus"] = eval_gpus
+else:
+    raise SystemExit(f"unsupported mode: {mode}")
+
+with path.open("w", encoding="utf-8") as handle:
+    json.dump(data, handle, indent=2, ensure_ascii=False)
+    handle.write("\n")
+PY
+}
+
 write_quant_prompt() {
     cat <<EOF
 You are an expert in LLM quantization using the Intel Auto-Round toolkit.
@@ -251,6 +294,7 @@ ${QUANT_SUMMARY_JSON} - structured summary:
   "method": "${METHOD}",
   "export_format": "${EXPORT_FORMAT}",
   "device": "${DEVICE}",
+  "quant_num_gpus": "${NUM_GPUS}",
   "num_gpus": "${NUM_GPUS}",
   "output_dir": "${RUN_OUTPUT_DIR}",
   "runtime_output_dir": "${RUN_OUTPUT_DIR}",
@@ -302,6 +346,7 @@ ${ACCURACY_JSON} - evaluation results:
   "model_path": "${QUANTIZED_MODEL_DIR}",
   "scheme": "${SCHEME}",
   "device": "${DEVICE}:${DEVICE_INDEX}",
+  "num_gpus": "${EVAL_NUM_GPUS}",
   "tasks": {
     "<task_name>": {
       "accuracy": <float>,
@@ -416,7 +461,7 @@ EXPORT_FORMAT="${EXPORT_FORMAT:-auto_round}"
 DEVICE="${DEVICE:-cuda}"
 DEVICE_INDEX="${DEVICE_INDEX:-0}"
 TIMEOUT="${TIMEOUT:-36000}"
-EVAL_TASKS="${EVAL_TASKS:-piqa}"
+EVAL_TASKS="${EVAL_TASKS:-piqa,mmlu,hellaswag,gsm8k}"
 EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-8}"
 OPENCLAW_WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-}"
 OPENCLAW_SESSIONS_DIR="${OPENCLAW_SESSIONS_DIR:-/root/.openclaw/agents/main/sessions}"
@@ -574,6 +619,13 @@ fi
 ensure_runtime_dirs
 copy_if_exists "$EVAL_SESSION_SRC" "$EVAL_SESSION_DST" "Copy eval session log"
 
+if [[ "$PIPELINE" == "auto_quant" ]]; then
+    normalize_json_gpu_metadata "$QUANT_SUMMARY_JSON" "quant_summary" "$NUM_GPUS" "$EVAL_NUM_GPUS"
+    normalize_json_gpu_metadata "$ACCURACY_JSON" "accuracy_auto_quant" "$NUM_GPUS" "$EVAL_NUM_GPUS"
+else
+    normalize_json_gpu_metadata "$ACCURACY_JSON" "accuracy_auto_eval" "$NUM_GPUS" "$EVAL_NUM_GPUS"
+fi
+
 SESSION_INPUTS=()
 if [[ -f "$QUANT_SESSION_DST" ]]; then
     SESSION_INPUTS+=("$QUANT_SESSION_DST")
@@ -611,7 +663,10 @@ if [[ "$SKIP_UPLOAD" != "true" && "$SKIP_GITHUB" != "true" ]]; then
         python3 "$GITHUB_UPLOADER" \
             "$RUN_OUTPUT_DIR" \
             "$MODEL_ID" \
+            --pipeline "$PIPELINE" \
             --scheme "$SCHEME" \
+            --quant-num-gpus "$NUM_GPUS" \
+            --eval-num-gpus "$EVAL_NUM_GPUS" \
             --model-output-dir "$QUANTIZED_MODEL_DIR"
 fi
 

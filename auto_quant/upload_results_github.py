@@ -5,6 +5,7 @@ Upload auto_quant result artifacts into the lb_eval GitHub repository.
 Artifacts copied from the runtime output directory:
 - quant_summary.json / summary.json
 - accuracy.json
+- quantize.py
 - logs/
 - session_*.jsonl
 - session_*.md
@@ -160,7 +161,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Upload result artifacts to the lb_eval GitHub repo")
     parser.add_argument("runtime_output_dir", help="Directory containing quant/eval runtime artifacts")
     parser.add_argument("model_id", help="Original model id, e.g. Qwen/Qwen3-0.6B")
+    parser.add_argument("--pipeline", default="", help="Pipeline label: auto_quant or auto_eval")
     parser.add_argument("--scheme", default="W4A16", help="Quantization scheme label")
+    parser.add_argument("--quant-num-gpus", default="", help="Quantization GPU count")
+    parser.add_argument("--eval-num-gpus", default="", help="Evaluation GPU count")
     parser.add_argument(
         "--model-output-dir",
         default="",
@@ -229,6 +233,8 @@ def main() -> int:
     quant_summary_path = runtime_output_dir / "quant_summary.json"
     summary_path = runtime_output_dir / "summary.json"
     accuracy_path = runtime_output_dir / "accuracy.json"
+    quantize_script_path = runtime_output_dir / "quantize.py"
+    legacy_quantize_script_path = runtime_output_dir / "quantize_script.py"
     logs_dir = runtime_output_dir / "logs"
     quant_summary = load_json(quant_summary_path) or load_json(summary_path)
     accuracy = load_json(accuracy_path)
@@ -268,6 +274,10 @@ def main() -> int:
     copy_file(quant_summary_path, run_dir / "quant_summary.json", copied)
     copy_file(summary_path, run_dir / "summary.json", copied)
     copy_file(accuracy_path, run_dir / "accuracy.json", copied)
+    if quantize_script_path.is_file():
+        copy_file(quantize_script_path, run_dir / "quantize.py", copied)
+    elif legacy_quantize_script_path.is_file():
+        copy_file(legacy_quantize_script_path, run_dir / "quantize.py", copied)
     copy_tree(logs_dir, run_dir / "logs", copied)
 
     for path in sorted(runtime_output_dir.glob("session_*.jsonl")):
@@ -276,6 +286,7 @@ def main() -> int:
         copy_file(path, run_dir / path.name, copied)
 
     aggregate = {
+        "pipeline": args.pipeline or ("auto_quant" if quant_summary else "auto_eval"),
         "model_id": args.model_id,
         "artifact_name": artifact_name,
         "generated_at": utc_now(),
@@ -286,6 +297,23 @@ def main() -> int:
         "accuracy": accuracy,
         "copied_files": [str(Path(path).relative_to(repo_dir)) for path in copied],
     }
+    if aggregate["pipeline"] == "auto_quant":
+        aggregate["quant_num_gpus"] = args.quant_num_gpus or (
+            str(quant_summary.get("quant_num_gpus") or quant_summary.get("num_gpus"))
+            if isinstance(quant_summary, dict) and (quant_summary.get("quant_num_gpus") or quant_summary.get("num_gpus")) is not None
+            else None
+        )
+        aggregate["eval_num_gpus"] = args.eval_num_gpus or (
+            str(accuracy.get("eval_num_gpus") or accuracy.get("num_gpus"))
+            if isinstance(accuracy, dict) and (accuracy.get("eval_num_gpus") or accuracy.get("num_gpus")) is not None
+            else None
+        )
+    else:
+        aggregate["num_gpus"] = args.eval_num_gpus or args.quant_num_gpus or (
+            str(accuracy.get("num_gpus"))
+            if isinstance(accuracy, dict) and accuracy.get("num_gpus") is not None
+            else None
+        )
     aggregate_path = model_result_dir / f"results_{timestamp}.json"
     aggregate_path.write_text(json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     copied.append(str(aggregate_path))

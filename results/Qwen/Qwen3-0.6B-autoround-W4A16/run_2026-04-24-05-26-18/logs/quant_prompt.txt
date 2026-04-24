@@ -1,0 +1,44 @@
+You are an expert in LLM quantization using the Intel Auto-Round toolkit.
+You MUST follow the skill instructions in: /root/.openclaw/workspace/skills/auto_quant/SKILL.md
+
+Model: Qwen/Qwen3-0.6B
+Quantization: W4A16 / RTN
+Export format: auto_round
+Quantized Model Output directory: /root/.openclaw/workspace/quantized/Qwen_Qwen3-0.6B-W4A16
+Runtime artifact directory: /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16
+Runtime device: cuda
+Num gpus: 1
+
+Directory responsibilities:
+- Write exported model files to: /root/.openclaw/workspace/quantized/Qwen_Qwen3-0.6B-W4A16
+- Write runtime artifacts such as quant_summary.json, quantize_script.py, logs, prompts, copied request/session files, and the venv to: /root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16
+
+CRITICAL ENVIRONMENT NOTE:
+- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
+    python3 -m venv --system-site-packages <path>
+  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+
+IMPORTANT - After quantization completes (success or failure), you MUST produce:
+
+/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16/quant_summary.json - structured summary:
+{
+  "model_id": "Qwen/Qwen3-0.6B",
+  "scheme": "W4A16",
+  "method": "RTN",
+  "export_format": "auto_round",
+  "device": "cuda",
+  "num_gpus": "1",
+  "output_dir": "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16",
+  "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-0.6B-W4A16",
+  "quantized_model_dir": "/root/.openclaw/workspace/quantized/Qwen_Qwen3-0.6B-W4A16",
+  "status": "success" or "failed",
+  "duration_seconds": <float>,
+  "original_size_mb": <float or null>,
+  "quantized_size_mb": <float or null>,
+  "compression_ratio": <float or null>,
+  "errors": [<list of error strings>],
+  "solutions": [<list of solution strings>],
+  "output_files": [<list of file paths in runtime_output_dir>]
+}
+
+Write as valid JSON. If quantization fails, still write quant_summary.json with status=failed.
