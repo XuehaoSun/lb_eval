@@ -1,0 +1,49 @@
+{
+  "pipeline": "auto_eval",
+  "model_id": "kaitchup/Qwen3.5-27B-autoround-W4A16",
+  "artifact_name": "Qwen3.5-27B-autoround-W4A16",
+  "generated_at": "2026-04-24T14:59:11Z",
+  "source_runtime_dir": "/root/.openclaw/workspace/quantized/runs/kaitchup_Qwen3.5-27B-autoround-W4A16-W4A16",
+  "source_model_dir": "/root/_work/1/s/auto_eval/kaitchup/Qwen3.5-27B-autoround-W4A16",
+  "run_dir": "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-24-14-59-09",
+  "quant_summary": null,
+  "accuracy": {
+    "model_id": "kaitchup/Qwen3.5-27B-autoround-W4A16",
+    "model_path": "kaitchup/Qwen3.5-27B-autoround-W4A16",
+    "scheme": "W4A16",
+    "device": "cuda:0",
+    "num_gpus": "1",
+    "tasks": {
+      "piqa": {
+        "accuracy": 0.56,
+        "accuracy_stderr": 0.07091242083423346
+      }
+    },
+    "status": "partial",
+    "duration_seconds": 1800.89,
+    "eval_framework": "lm_eval+hf",
+    "errors": [
+      "vLLM evaluation failed: CUDA PTX incompatibility - Marlin kernel PTX compiled for CUDA 12.x does not support RTX 5090 (Blackwell compute 12.0). Error: cudaErrorUnsupportedPtxVersion",
+      "HF+parallelize evaluation failed: KeyError during inference with Accelerate offloading - AutoRoundQuantizer weight names (qweight/qzeros/scales) incompatible with Accelerate disk offloading for dynamic loading",
+      "HF+device_map evaluation failed: OOM - 27B bf16 model needs ~54GB but only 32GB VRAM available",
+      "Full evaluation running on CPU due to GPU incompatibility. Partial result: 50 samples on piqa (acc=0.56)."
+    ],
+    "note": "RTX 5090 (Blackwell compute 12.0) is incompatible with all GPU inference options for auto_round W4A16 quantized model. vLLM Marlin kernel, auto_round_eval (Triton), and HF backends all fail due to CUDA kernel compatibility issues. CPU evaluation is extremely slow (~13s/request, ~3+ hours for 200 samples/task). Background evaluation is running with 200 samples per task for all 4 tasks.",
+    "partial_results": {
+      "piqa_50_samples": {
+        "acc": 0.56,
+        "acc_stderr": 0.0709,
+        "acc_norm": 0.5,
+        "acc_norm_stderr": 0.0714
+      }
+    }
+  },
+  "copied_files": [
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-24-14-59-09/accuracy.json",
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-24-14-59-09/lm_eval_results",
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-24-14-59-09/logs",
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-24-14-59-09/session_eval_376.jsonl",
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-24-14-59-09/session_eval_376.md"
+  ],
+  "num_gpus": "1"
+}
