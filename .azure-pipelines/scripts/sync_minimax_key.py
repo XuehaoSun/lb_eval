@@ -6,11 +6,11 @@ import sys
 def main():
     parser = argparse.ArgumentParser(description="Sync MINIMAX_API_KEY into OpenClaw auth profiles")
     parser.add_argument(
-        "path",
+        "--path",
         help="Path to auth-profiles.json",
     )
     parser.add_argument(
-        "token",
+        "--token",
         help="MINIMAX_API_KEY token",
     )
     args = parser.parse_args()

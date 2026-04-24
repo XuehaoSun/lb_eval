@@ -22,13 +22,13 @@ steps:
       cp -r openclaw_config/ /root/.openclaw/
 
       cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts
-      python sync_minimax_key.py --minimax_key $(MINIMAX_KEY) --output_path /root/.openclaw/agents/main/agent/auth-profiles.json
+      python sync_minimax_key.py --token=$(MINIMAX_KEY) --path=/root/.openclaw/agents/main/agent/auth-profiles.json
     displayName: Set Up OpenClaw
 
-  # - script: |
-  #     cd ${BUILD_SOURCESDIRECTORY}/evaluation/${{ parameters.scriptsPath}}
-  #     bash run_eval.sh --config_name=${{ parameters.requestJson }}"
-  #   displayName: Eval
+  - script: |
+      cd ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}
+      bash auto.sh ${BUILD_SOURCESDIRECTORY}/requests/${{ parameters.requestJson }}
+    displayName: Eval
 
   # - template: git-status-template.yml
   #   parameters:
