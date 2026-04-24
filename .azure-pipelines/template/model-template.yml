@@ -1,53 +1,37 @@
 parameters:
-  - name: modelContainerName
-    type: string
-    default: "model_eval"
   - name: scriptsPath
     type: string
-    default: "ITREX/cpu"
+    default: "auto_quant"
   - name: requestJson
     type: string
     default: ""
   - name: hardware
     type: string
-    default: "cpu"
+    default: "gpu"
 
 steps:
-  - template: docker-template.yml
-    parameters:
-      scriptsPath: ${{ parameters.scriptsPath}}
-      hardware: "${{ parameters.hardware}}"
+  - script: |
+      uv pip install openclaw==2026.3.20
+      uv pip install -U huggingface_hub
+      cp -r openclaw_config/ /root/.openclaw/
+
+      cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts
+      python sync_minimax_key.py --token=$(MINIMAX_KEY) --path=/root/.openclaw/agents/main/agent/auth-profiles.json
+    displayName: Set Up OpenClaw
 
   - script: |
-      docker exec ${{ parameters.modelContainerName }} \
-        bash -c "export HF_HOME=/dataset/hf_cache/ && pip install -U huggingface_hub[cli] && git config --global credential.helper store && huggingface-cli login --token $(HF_TOKEN_MODELS) --add-to-git-credential"
-    displayName: Login to huggingface
+      cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts
+      python update_config_env.py \
+        --output ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}/config.env \
+        --set HTTP_PROXY="" \
+        --set HTTPS_PROXY="" \
+        --set HF_TOKENS=$(HUGGINGFACE_TOKEN) \
+        --set MINIMAX_API_KEY=$(MINIMAX_KEY) \
+        --set GIT_TOKEN=$(GIT_TOKEN)
+    displayName: Update Config
 
   - script: |
-      docker exec ${{ parameters.modelContainerName }} \
-        bash -c "cd /lb_eval/evaluation/${{ parameters.scriptsPath}} && bash run_eval.sh --config_name=${{ parameters.requestJson }}"
+      set -xe
+      cd ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}
+      bash auto.sh ${BUILD_SOURCESDIRECTORY}/requests/${{ parameters.requestJson }}
     displayName: Eval
-
-  - template: git-status-template.yml
-    parameters:
-      status: "Finished"
-      requestJson: ${{ parameters.requestJson }}
-
-  - task: Bash@3
-    inputs:
-      filePath: .azure-pipelines/scripts/git_update.sh
-    name: gitUpdateResults
-    env:
-      requestJson: ${{ parameters.requestJson }}
-      commitMessage: "Commit from Azure DevOps update Results"
-      status: ""
-      TOKEN: $(TOKEN)
-      HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
-
-  - task: Bash@3
-    condition: always()
-    inputs:
-      targetType: "inline"
-      script: |
-        docker exec ${{ parameters.modelContainerName }} bash -c "rm -fr /lb_eval/* && rm -fr /lb_eval/.* || true"
-    displayName: "Docker clean up"
