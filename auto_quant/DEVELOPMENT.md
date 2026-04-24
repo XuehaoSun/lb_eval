@@ -82,6 +82,7 @@ bash auto.sh <task.json> --skip-github
 8. Copy quant session JSONL from the OpenClaw sessions directory
 9. If evaluation has not already succeeded and quantization succeeded:
    - generate eval prompt
+   - use `auto_eval` for the quantization+evaluation flow, or `auto_eval_vllm` for evaluation-only requests
    - run `openclaw agent --local`
    - expect `accuracy.json`
 10. Copy eval session JSONL

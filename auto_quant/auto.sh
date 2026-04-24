@@ -59,6 +59,27 @@ resolve_first_existing_dir() {
     return 1
 }
 
+resolve_first_existing_file() {
+    local candidate
+    for candidate in "$@"; do
+        if [[ -n "$candidate" && -f "$candidate" ]]; then
+            printf '%s\n' "$candidate"
+            return 0
+        fi
+    done
+    return 1
+}
+
+resolve_skill_path() {
+    local skill_name="$1"
+    resolve_first_existing_file \
+        "${OPENCLAW_WORKSPACE_DIR}/skills/${skill_name}/SKILL.md" \
+        "/root/leaderboard_Agent/tasks/lb_eval/openclaw_config/workspace/skills/${skill_name}/SKILL.md" \
+        "/root/leaderboard_Agent/auto_quant/openclaw_home/workspace/skills/${skill_name}/SKILL.md" \
+        "/root/leaderboard_Agent/auto_eval/openclaw_home/workspace/skills/${skill_name}/SKILL.md" \
+        "/root/.openclaw/workspace/skills/${skill_name}/SKILL.md"
+}
+
 resolve_json_file() {
     local input_path="$1"
     if [[ -f "$input_path" ]]; then
@@ -383,8 +404,21 @@ exec > >(tee -a "$LOG_FILE") 2>&1
 FAILED_STEPS=()
 LAST_EXIT_CODE=0
 
-QUANT_SKILL_PATH="${OPENCLAW_WORKSPACE_DIR}/skills/auto_quant/SKILL.md"
-EVAL_SKILL_PATH="${OPENCLAW_WORKSPACE_DIR}/skills/auto_eval/SKILL.md"
+QUANT_SKILL_PATH=""
+if [[ "$PIPELINE" == "auto_quant" ]]; then
+    QUANT_SKILL_PATH="$(resolve_skill_path "auto_quant")" || {
+        log_error "Quant skill file not found"
+        exit 1
+    }
+fi
+EVAL_SKILL_NAME="auto_eval"
+if [[ "$PIPELINE" == "auto_eval" ]]; then
+    EVAL_SKILL_NAME="auto_eval_vllm"
+fi
+EVAL_SKILL_PATH="$(resolve_skill_path "$EVAL_SKILL_NAME")" || {
+    log_error "Eval skill file not found for skill: $EVAL_SKILL_NAME"
+    exit 1
+}
 QUANT_SESSION="autoeval_quant_$$"
 EVAL_SESSION="autoeval_eval_$$"
 QUANT_SUMMARY_JSON="${RUN_OUTPUT_DIR}/quant_summary.json"
@@ -408,7 +442,8 @@ echo "Quant GPUs          : $NUM_GPUS"
 echo "Eval GPUs           : $EVAL_NUM_GPUS"
 echo "OpenClaw workspace  : $OPENCLAW_WORKSPACE_DIR"
 echo "OpenClaw sessions   : $OPENCLAW_SESSIONS_DIR"
-echo "Quant skill path    : $QUANT_SKILL_PATH"
+echo "Eval skill          : $EVAL_SKILL_NAME"
+echo "Quant skill path    : ${QUANT_SKILL_PATH:-'(not used)'}"
 echo "Eval skill path     : $EVAL_SKILL_PATH"
 echo "Model output dir    : $MODEL_OUTPUT_DIR"
 echo "Runtime output dir  : $RUN_OUTPUT_DIR"
@@ -418,7 +453,7 @@ echo "Skip upload(all)    : $SKIP_UPLOAD"
 echo "Skip HF upload      : $SKIP_HF"
 echo "Skip GitHub upload  : $SKIP_GITHUB"
 
-if [[ ! -f "$QUANT_SKILL_PATH" ]]; then
+if [[ "$PIPELINE" == "auto_quant" && ! -f "$QUANT_SKILL_PATH" ]]; then
     log_error "Quant skill file not found: $QUANT_SKILL_PATH"
     exit 1
 fi
@@ -461,8 +496,10 @@ else
     QUANT_STATUS="success"
 fi
 
-ensure_runtime_dirs
-copy_if_exists "$QUANT_SESSION_SRC" "$QUANT_SESSION_DST" "Copy quant session log"
+if [[ "$PIPELINE" == "auto_quant" ]]; then
+    ensure_runtime_dirs
+    copy_if_exists "$QUANT_SESSION_SRC" "$QUANT_SESSION_DST" "Copy quant session log"
+fi
 
 EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
 if [[ "$EVAL_STATUS" != "success" ]]; then
@@ -470,7 +507,7 @@ if [[ "$EVAL_STATUS" != "success" ]]; then
         EVAL_PROMPT="$(write_eval_prompt)"
         save_prompt_copy "eval_prompt.txt" "$EVAL_PROMPT"
         run_step \
-            "Run auto_eval" \
+            "Run ${EVAL_SKILL_NAME}" \
             env \
                 http_proxy="${HTTP_PROXY:-}" \
                 https_proxy="${HTTPS_PROXY:-}" \
