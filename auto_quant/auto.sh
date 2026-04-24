@@ -155,6 +155,13 @@ copy_if_exists() {
     fi
 }
 
+record_failure() {
+    local message="$1"
+    log_warn "$message"
+    FAILED_STEPS+=("$message")
+    LAST_EXIT_CODE=1
+}
+
 show_json_if_exists() {
     local title="$1"
     local path="$2"
@@ -179,6 +186,25 @@ save_prompt_copy() {
     printf '%s\n' "$prompt_text" > "$LOG_DIR/$file_name"
 }
 
+ensure_quantize_script_artifact() {
+    local quant_script_path="${RUN_OUTPUT_DIR}/quantize.py"
+    local legacy_script_path="${RUN_OUTPUT_DIR}/quantize_script.py"
+
+    ensure_runtime_dirs
+
+    if [[ -f "$quant_script_path" ]]; then
+        return 0
+    fi
+
+    if [[ -f "$legacy_script_path" ]]; then
+        run_step "Normalize quantization script artifact" cp "$legacy_script_path" "$quant_script_path"
+    fi
+
+    if [[ ! -f "$quant_script_path" ]]; then
+        record_failure "Quantization script missing: expected ${quant_script_path}"
+    fi
+}
+
 write_quant_prompt() {
     cat <<EOF
 You are an expert in LLM quantization using the Intel Auto-Round toolkit.
@@ -194,12 +220,27 @@ Num gpus: ${NUM_GPUS}
 
 Directory responsibilities:
 - Write exported model files to: ${QUANTIZED_MODEL_DIR}
-- Write runtime artifacts such as quant_summary.json, quantize_script.py, logs, prompts, copied request/session files, and the venv to: ${RUN_OUTPUT_DIR}
+- Write runtime artifacts such as quant_summary.json, quantize.py, logs, prompts, copied request/session files, and the venv to: ${RUN_OUTPUT_DIR}
+
+CRITICAL SCRIPT REQUIREMENT:
+- Before starting quantization, you MUST first generate the quantization script file:
+    ${RUN_OUTPUT_DIR}/quantize.py
+- The file name must be exactly: quantize.py
+- Run quantization by executing that generated quantize.py script
+- Do not use quantize_script.py as the final artifact name
 
 CRITICAL ENVIRONMENT NOTE:
 - System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
     python3 -m venv --system-site-packages <path>
   This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+- If /root/.venv exists, reuse /root/.venv before creating a new venv.
+- Use uv pip for dependency installation. Prefer:
+    uv pip install --python <venv>/bin/python <packages>
+- Do NOT reinstall torch or flash_attn if they already import successfully from the reused environment. Only install them when missing or incompatible.
+- This workflow is CUDA-focused. For AutoRound device selection:
+    - if Num gpus == 1, prefer device="cuda"
+    - if Num gpus > 1, prefer device_map="auto"
+  Do NOT default to device_map="0" or device_map="0,1,2,3" unless manual mapping is truly required after auto placement fails.
 
 IMPORTANT - After quantization completes (success or failure), you MUST produce:
 
@@ -246,7 +287,11 @@ CRITICAL ENVIRONMENT NOTE:
 - System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
     python3 -m venv --system-site-packages <path>
   This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+- If /root/.venv exists, reuse /root/.venv before creating a new venv.
 - If a venv already exists at ${RUN_OUTPUT_DIR}/venv, reuse it - just install lm_eval and vllm into it.
+- Use uv pip for dependency installation. Prefer:
+    uv pip install --python <venv>/bin/python <packages>
+- Do NOT reinstall torch or flash_attn if they already import successfully from the reused environment. Only install them when missing or incompatible.
 - Write evaluation outputs, logs, prompts, copied request/session files, and other runtime artifacts to: ${RUN_OUTPUT_DIR}
 
 IMPORTANT - After evaluation completes, you MUST produce:
@@ -499,6 +544,7 @@ fi
 if [[ "$PIPELINE" == "auto_quant" ]]; then
     ensure_runtime_dirs
     copy_if_exists "$QUANT_SESSION_SRC" "$QUANT_SESSION_DST" "Copy quant session log"
+    ensure_quantize_script_artifact
 fi
 
 EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
