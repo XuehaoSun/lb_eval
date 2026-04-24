@@ -41,6 +41,26 @@ This skill provides a complete workflow for:
 | `max_model_len` | Max sequence length | No | `8192` |
 | `gpu_memory_utilization` | VRAM fraction | No | `0.9` |
 
+## Environment / Dependency Rules (CRITICAL)
+
+Prefer reusing an existing system venv before creating a new one:
+
+```bash
+if [ -x /root/.venv/bin/python ]; then
+  VENV_PY=/root/.venv/bin/python
+else
+  python3 -m venv --system-site-packages {output_path}/venv
+  VENV_PY={output_path}/venv/bin/python
+fi
+```
+
+Rules:
+
+1. Use `uv pip`, not plain `pip install`, for dependency installation
+2. If `torch` already imports from the reused environment, keep it
+3. If `flash_attn` already imports from the reused environment, keep it
+4. Only reinstall `torch` / `flash_attn` when they are missing or clearly incompatible
+
 ---
 
 ## Step 1: Analyze Model and Detect Quantization Format
@@ -254,10 +274,11 @@ ValueError: Unknown model: vllm
 **Solution:**
 ```bash
 # Install lm-eval with vllm support
-pip install lm-eval[torch,vllm]
+$VENV_PY -m pip install -U uv
+uv pip install --python "$VENV_PY" lm-eval[torch,vllm]
 
 # Verify vllm is importable
-python -c "import vllm; print(vllm.__version__)"
+"$VENV_PY" -c "import vllm; print(vllm.__version__)"
 ```
 
 #### 2. CUDA Device Not Available
@@ -348,10 +369,10 @@ ModuleNotFoundError: No module named 'vllm'
 **Solution:**
 ```bash
 # Install vllm with CUDA support
-pip install vllm
+uv pip install --python "$VENV_PY" vllm
 
 # Or from PyPI with CUDA extras
-pip install vllm[cuda]  # if available
+uv pip install --python "$VENV_PY" "vllm[cuda]"  # if available
 ```
 
 ---
@@ -518,19 +539,37 @@ CUDA_VISIBLE_DEVICES=0,1 python eval_script.py \
 ### Install Dependencies
 
 ```bash
-# For CUDA support
-pip install torch --index-url https://download.pytorch.org/whl/cu124
+# Reuse the system venv if present; otherwise create a local one
+if [ -x /root/.venv/bin/python ]; then
+  VENV_PY=/root/.venv/bin/python
+else
+  python3 -m venv --system-site-packages {output_path}/venv
+  VENV_PY={output_path}/venv/bin/python
+fi
+
+# Bootstrap uv
+$VENV_PY -m pip install -U uv
+
+# Keep inherited CUDA packages when they already work
+"$VENV_PY" -c "import torch; print('CUDA:', torch.cuda.is_available(), 'Devices:', torch.cuda.device_count())"
+"$VENV_PY" -c "import flash_attn; print('flash_attn ok')" || true
 
 # Install vllm with CUDA support
-pip install vllm
+uv pip install --python "$VENV_PY" vllm
 
 # Install lm-eval with vllm
-pip install lm-eval[torch,vllm]
+uv pip install --python "$VENV_PY" lm-eval[torch,vllm]
+
+# Only if torch is missing or incompatible, install a matching CUDA wheel
+# uv pip install --python "$VENV_PY" --index-url https://download.pytorch.org/whl/cu124 torch
+
+# Only if flash_attn is required and missing
+# uv pip install --python "$VENV_PY" flash-attn --no-build-isolation
 
 # Verify installations
-python -c "import torch; print('CUDA:', torch.cuda.is_available(), 'Devices:', torch.cuda.device_count())"
-python -c "import vllm; print('vLLM:', vllm.__version__)"
-python -c "import lm_eval; print('lm-eval:', lm_eval.__version__)"
+"$VENV_PY" -c "import torch; print('CUDA:', torch.cuda.is_available(), 'Devices:', torch.cuda.device_count())"
+"$VENV_PY" -c "import vllm; print('vLLM:', vllm.__version__)"
+"$VENV_PY" -c "import lm_eval; print('lm-eval:', lm_eval.__version__)"
 ```
 
 ---

@@ -39,6 +39,19 @@ def sanitize_name(value: str) -> str:
     return value.replace("/", "_").replace(" ", "_")
 
 
+def looks_like_quantized_artifact(model_short: str) -> bool:
+    lowered = model_short.lower()
+    markers = (
+        "-autoround-",
+        "-gptq",
+        "-awq",
+        ".gguf",
+        "-gguf",
+        "llm-compressor",
+    )
+    return any(marker in lowered for marker in markers)
+
+
 def run_git(args: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(
         ["git", *args],
@@ -107,6 +120,8 @@ def detect_artifact_name(model_id: str, scheme: str, quant_summary: dict | None)
             return hf_repo.rstrip("/").rsplit("/", 1)[-1]
 
     model_short = model_id.split("/", 1)[-1] if "/" in model_id else model_id
+    if looks_like_quantized_artifact(model_short):
+        return sanitize_name(model_short)
     return sanitize_name(f"{model_short}-autoround-{scheme}")
 
 
@@ -218,10 +233,8 @@ def main() -> int:
     quant_summary = load_json(quant_summary_path) or load_json(summary_path)
     accuracy = load_json(accuracy_path)
 
-    org, model_short = (
-        args.model_id.split("/", 1) if "/" in args.model_id else ("unknown", args.model_id)
-    )
     artifact_name = detect_artifact_name(args.model_id, args.scheme, quant_summary)
+    org = args.model_id.split("/", 1)[0] if "/" in args.model_id else "unknown"
     timestamp = file_timestamp()
 
     branch = args.branch
@@ -231,6 +244,7 @@ def main() -> int:
     print(f"[github-upload] repo dir: {repo_dir}")
     print(f"[github-upload] model id: {args.model_id}")
     print(f"[github-upload] artifact name: {artifact_name}")
+    print(f"[github-upload] result org: {org}")
     print(f"[github-upload] branch: {branch}")
     ensure_git_config(repo_dir, args.git_user_name, args.git_user_email)
     print(f"[github-upload] git user: {args.git_user_name} <{args.git_user_email}>")

@@ -9,20 +9,26 @@ import os
 import sys
 import shutil
 import argparse
+import subprocess
 from pathlib import Path
 
 
 def create_venv_and_install(output_dir: str, auto_round_source: str = "/storage/lkk/auto-round"):
     """创建虚拟环境并安装 auto-round"""
-    venv_path = os.path.join(output_dir, "venv")
-    
-    print(f"Creating virtual environment at {venv_path}...")
-    
-    # 创建虚拟环境
-    os.system(f"python3 -m venv {venv_path}")
+    system_venv = "/root/.venv"
+    if os.path.exists(os.path.join(system_venv, "bin", "python")):
+        venv_path = system_venv
+        print(f"Reusing existing system venv at {venv_path}...")
+    else:
+        venv_path = os.path.join(output_dir, "venv")
+        
+        print(f"Creating virtual environment at {venv_path}...")
+        
+        # 创建虚拟环境，继承系统 torch/cuda
+        subprocess.run(["python3", "-m", "venv", "--system-site-packages", venv_path], check=True)
     
     # 激活虚拟环境并安装 auto-round
-    pip_path = os.path.join(venv_path, "bin", "pip")
+    python_path = os.path.join(venv_path, "bin", "python")
     
     print(f"Installing auto-round from {auto_round_source}...")
     
@@ -35,8 +41,9 @@ def create_venv_and_install(output_dir: str, auto_round_source: str = "/storage/
     shutil.copytree(auto_round_source, work_dir)
     
     # 安装依赖和 auto-round
-    os.system(f"{pip_path} install -U pip setuptools wheel")
-    os.system(f"{pip_path} install -e {work_dir}")
+    subprocess.run([python_path, "-m", "pip", "install", "-U", "uv"], check=True)
+    subprocess.run(["uv", "pip", "install", "--python", python_path, "-U", "pip", "setuptools", "wheel"], check=True)
+    subprocess.run(["uv", "pip", "install", "--python", python_path, "-e", work_dir], check=True)
     
     return venv_path, work_dir
 
@@ -48,6 +55,7 @@ def generate_quantize_script(
     iters: int = 200,
     nsamples: int = 128,
     format: str = "auto_round",
+    num_gpus: int = 1,
     **kwargs
 ) -> str:
     """生成量化脚本"""
@@ -77,6 +85,7 @@ Scheme: {scheme}
 Iterations: {iters}
 Samples: {nsamples}
 Format: {format}
+Num GPUs: {num_gpus}
 """
 
 from auto_round import AutoRound
@@ -87,11 +96,18 @@ output_dir = "{output_dir}"
 scheme = "{scheme}"
 iters = {iters}
 nsamples = {nsamples}
+num_gpus = {num_gpus}
+
+# CUDA rule for this repo:
+# - single GPU: device="cuda"
+# - multi-GPU: device_map="auto"
+autoround_device_kwargs = {{"device": "cuda"}} if num_gpus <= 1 else {{"device_map": "auto"}}
 
 print(f"Loading model: {{model_name_or_path}}")
 print(f"Quantization scheme: {{scheme}}")
 print(f"Iterations: {{iters}}")
 print(f"Samples: {{nsamples}}")
+print(f"Device args: {{autoround_device_kwargs}}")
 
 # 创建 AutoRound 对象并量化
 ar = AutoRound(
@@ -99,6 +115,7 @@ ar = AutoRound(
     scheme=scheme,
     iters=iters,
     nsamples=nsamples,
+    **autoround_device_kwargs,
 )
 
 # 量化并保存
@@ -118,6 +135,7 @@ def run_quantization(
     iters: int = 200,
     nsamples: int = 128,
     format: str = "auto_round",
+    num_gpus: int = 1,
     auto_round_source: str = "/storage/lkk/auto-round",
     **kwargs
 ):
@@ -135,6 +153,7 @@ def run_quantization(
     print(f"Iters: {iters}")
     print(f"Samples: {nsamples}")
     print(f"Format: {format}")
+    print(f"Num GPUs: {num_gpus}")
     print("=" * 60)
     
     # Step 1: 创建虚拟环境并安装
@@ -148,10 +167,11 @@ def run_quantization(
         iters=iters,
         nsamples=nsamples,
         format=format,
+        num_gpus=num_gpus,
         **kwargs
     )
     
-    script_path = os.path.join(output_dir, "quantize_script.py")
+    script_path = os.path.join(output_dir, "quantize.py")
     with open(script_path, "w") as f:
         f.write(script_content)
     
@@ -183,6 +203,7 @@ def main():
     parser.add_argument("--iters", type=int, default=200, help="Number of iterations")
     parser.add_argument("--nsamples", type=int, default=128, help="Number of calibration samples")
     parser.add_argument("--format", default="auto_round", help="Export format")
+    parser.add_argument("--num-gpus", type=int, default=1, help="GPU count: 1 -> device='cuda', >1 -> device_map='auto'")
     parser.add_argument("--source", default="/storage/lkk/auto-round", help="Auto-round source directory")
     
     args = parser.parse_args()
@@ -194,6 +215,7 @@ def main():
         iters=args.iters,
         nsamples=args.nsamples,
         format=args.format,
+        num_gpus=args.num_gpus,
         auto_round_source=args.source,
     )
 

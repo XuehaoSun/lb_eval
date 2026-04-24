@@ -40,6 +40,26 @@ This skill provides a complete workflow for:
 | `max_model_len` | Max sequence length | No | `8192` |
 | `trust_remote_code` | Allow custom model code | No | `True` |
 
+## Environment / Dependency Rules (CRITICAL)
+
+Prefer reusing an existing system venv before creating a new one:
+
+```bash
+if [ -x /root/.venv/bin/python ]; then
+  VENV_PY=/root/.venv/bin/python
+else
+  python3 -m venv --system-site-packages {output_path}/venv
+  VENV_PY={output_path}/venv/bin/python
+fi
+```
+
+Rules:
+
+1. Use `uv pip`, not plain `pip install`, for dependency installation
+2. If `torch` already imports from the reused environment, keep it
+3. If `flash_attn` already imports from the reused environment, keep it
+4. Only reinstall `torch` / `flash_attn` when they are missing or clearly incompatible
+
 ---
 
 ## Step 1: Analyze Model and Detect Quantization Format
@@ -254,10 +274,11 @@ ValueError: Unknown model: hf
 **Solution:**
 ```bash
 # Install lm-eval with HF support
-pip install lm-eval[torch]
+$VENV_PY -m pip install -U uv
+uv pip install --python "$VENV_PY" lm-eval[torch]
 
 # Or ensure transformers is importable
-python -c "import transformers; print(transformers.__version__)"
+"$VENV_PY" -c "import transformers; print(transformers.__version__)"
 ```
 
 #### 2. CUDA Device Not Available
@@ -334,10 +355,10 @@ ModuleNotFoundError: No module named 'transformers'
 **Solution:**
 ```bash
 # Install transformers
-pip install transformers
+uv pip install --python "$VENV_PY" transformers
 
 # Install with accelerator for better GPU support
-pip install transformers accelerate
+uv pip install --python "$VENV_PY" transformers accelerate
 ```
 
 #### 6. Multi-GPU Parallelization Error
@@ -523,19 +544,37 @@ python eval_script.py \
 ### Install Dependencies
 
 ```bash
-# For CUDA support
-pip install torch --index-url https://download.pytorch.org/whl/cu118
+# Reuse the system venv if present; otherwise create a local one
+if [ -x /root/.venv/bin/python ]; then
+  VENV_PY=/root/.venv/bin/python
+else
+  python3 -m venv --system-site-packages {output_path}/venv
+  VENV_PY={output_path}/venv/bin/python
+fi
+
+# Bootstrap uv
+$VENV_PY -m pip install -U uv
+
+# Keep inherited CUDA packages when they already work
+"$VENV_PY" -c "import torch; print('CUDA:', torch.cuda.is_available(), 'Devices:', torch.cuda.device_count())"
+"$VENV_PY" -c "import flash_attn; print('flash_attn ok')" || true
 
 # Install transformers and accelerate
-pip install transformers accelerate
+uv pip install --python "$VENV_PY" transformers accelerate
 
 # Install lm-eval with torch
-pip install lm-eval[torch]
+uv pip install --python "$VENV_PY" lm-eval[torch]
+
+# Only if torch is missing or incompatible, install a matching CUDA wheel
+# uv pip install --python "$VENV_PY" --index-url https://download.pytorch.org/whl/cu124 torch
+
+# Only if flash_attn is required and missing
+# uv pip install --python "$VENV_PY" flash-attn --no-build-isolation
 
 # Verify installations
-python -c "import torch; print('CUDA:', torch.cuda.is_available(), 'Devices:', torch.cuda.device_count())"
-python -c "import transformers; print('Transformers:', transformers.__version__)"
-python -c "import lm_eval; print('lm-eval:', lm_eval.__version__)"
+"$VENV_PY" -c "import torch; print('CUDA:', torch.cuda.is_available(), 'Devices:', torch.cuda.device_count())"
+"$VENV_PY" -c "import transformers; print('Transformers:', transformers.__version__)"
+"$VENV_PY" -c "import lm_eval; print('lm-eval:', lm_eval.__version__)"
 ```
 
 ---

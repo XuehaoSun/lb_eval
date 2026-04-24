@@ -37,7 +37,40 @@ AutoRound is an advanced quantization toolkit for LLMs that achieves high accura
 | `iters` | Training iterations (0=RTN) | No | `200` |
 | `nsamples` | Calibration samples | No | `128` |
 | `format` | Export format | No | `auto_round` |
-| `device_map` | Device to use | No | `0` (GPU 0) |
+| `device` / `device_map` | CUDA device selection for quantization | No | Single GPU: `device="cuda"`; Multi-GPU: `device_map="auto"` |
+
+### CUDA Device Rules (CRITICAL)
+
+This workflow is primarily for **CUDA / NVIDIA GPU** quantization.
+
+When generating a quantization script for this repo, follow these rules:
+
+1. **Single GPU CUDA**: use `device="cuda"` in the AutoRound API
+2. **Multi-GPU CUDA**: use `device_map="auto"` in the AutoRound API
+3. **Do not default to** `device_map="0"` or `device_map="0,1,2,3"` in generated scripts
+4. Only use a manual explicit map or comma-separated device list when:
+   - `device_map="auto"` fails
+   - or you are intentionally debugging manual placement
+
+Examples:
+
+```python
+# Single GPU (recommended default)
+ar = AutoRound(..., device="cuda")
+
+# Multi-GPU (recommended default)
+ar = AutoRound(..., device_map="auto")
+```
+
+CLI equivalents:
+
+```bash
+# Single GPU
+CUDA_VISIBLE_DEVICES=0 auto-round --model Qwen/Qwen3-0.6B --scheme W4A16 --device cuda
+
+# Multi-GPU
+CUDA_VISIBLE_DEVICES=0,1,2,3 auto-round --model Qwen/Qwen3-0.6B --scheme W4A16 --device auto
+```
 
 ### Quantization Schemes
 
@@ -109,6 +142,13 @@ Replace `{model_id}` with HuggingFace model ID (e.g., `meta-llama/Llama-3.1-8B-I
 
 The `auto_run` skill writes a `model_info.json` file to the shared workspace directory after environment setup. If this file exists, reuse the venv from it instead of creating a new one.
 
+**Also check for a prebuilt system venv first:**
+
+- If `/root/.venv/bin/python` exists, reuse `/root/.venv`
+- Do **not** create a new venv if `/root/.venv` is already suitable
+- Install dependencies with `uv pip`, not plain `pip install`
+- If `torch` or `flash_attn` already import successfully from the reused venv, keep them; do not reinstall them unless they are missing or incompatible
+
 The shared workspace directory is typically the `auto_run` output directory for this model:
 - e.g., `/storage/lkk/inference/Qwen_Qwen3-0.6B/model_info.json`
 - The task prompt may explicitly specify it as `workspace_dir`
@@ -124,15 +164,21 @@ info_path = Path(workspace_dir) / "model_info.json"
 if info_path.exists():
     model_info = json.loads(info_path.read_text())
     venv_path = model_info["venv_path"]          # e.g. /storage/.../venv
-    venv_pip  = f"{venv_path}/bin/pip"
     venv_py   = f"{venv_path}/bin/python"
+    venv_uv   = f"uv pip --python {venv_py}"
     print(f"✅ Reusing shared venv from auto_run: {venv_path}")
+    # → Skip Steps 2.1-2.2, go directly to Step 3
+elif Path("/root/.venv/bin/python").exists():
+    venv_path = "/root/.venv"
+    venv_py   = f"{venv_path}/bin/python"
+    venv_uv   = f"uv pip --python {venv_py}"
+    print(f"✅ Reusing system venv: {venv_path}")
     # → Skip Steps 2.1-2.2, go directly to Step 3
 else:
     print("ℹ️  No model_info.json found, will create standalone venv in output_dir")
     venv_path = "{output_dir}/venv"
-    venv_pip  = f"{venv_path}/bin/pip"
     venv_py   = f"{venv_path}/bin/python"
+    venv_uv   = f"uv pip --python {venv_py}"
     # → Continue with Steps 2.1-2.2 below
 ```
 
@@ -146,10 +192,11 @@ mkdir -p {output_dir}
 mkdir -p {output_dir}/logs
 
 # Create virtual environment
-python3 -m venv {output_dir}/venv
+python3 -m venv --system-site-packages {output_dir}/venv
 
-# Activate and upgrade pip
-{output_dir}/venv/bin/pip install -U pip setuptools wheel
+# Bootstrap uv in the venv and use uv pip for package installation
+{output_dir}/venv/bin/python -m pip install -U uv
+uv pip install --python {output_dir}/venv/bin/python -U pip setuptools wheel
 ```
 
 ### Install Auto-Round
@@ -160,29 +207,39 @@ python3 -m venv {output_dir}/venv
 cp -r /storage/lkk/auto-round {output_dir}/auto-round-src
 
 # Install in editable mode
-{output_dir}/venv/bin/pip install -e {output_dir}/auto-round-src
+uv pip install --python {output_dir}/venv/bin/python -e {output_dir}/auto-round-src
 ```
 
 **Option B: From GitHub**
 ```bash
-{output_dir}/venv/bin/pip install git+https://github.com/intel/auto-round.git
+uv pip install --python {output_dir}/venv/bin/python git+https://github.com/intel/auto-round.git
 ```
 
 **Option C: From PyPI**
 ```bash
-{output_dir}/venv/bin/pip install auto-round
+uv pip install --python {output_dir}/venv/bin/python auto-round
 ```
 
 ### Install Additional Dependencies
 
 ```bash
-# Core dependencies (usually auto-installed)
-{output_dir}/venv/bin/pip install torch transformers accelerate datasets
+# Verify inherited CUDA packages first; keep them if they already work
+{output_dir}/venv/bin/python -c "import torch; print('torch ok:', torch.__version__)"
+{output_dir}/venv/bin/python -c "import flash_attn; print('flash_attn ok')" || true
+
+# Install or update non-CUDA packages with uv pip
+uv pip install --python {output_dir}/venv/bin/python transformers accelerate datasets
 
 # For specific formats
-{output_dir}/venv/bin/pip install compressed-tensors  # For better compression
-{output_dir}/venv/bin/pip install llama-cpp-python   # For GGUF inference
-{output_dir}/venv/bin/pip install gptqmodel           # For GPTQ inference
+uv pip install --python {output_dir}/venv/bin/python compressed-tensors  # For better compression
+uv pip install --python {output_dir}/venv/bin/python llama-cpp-python   # For GGUF inference
+uv pip install --python {output_dir}/venv/bin/python gptqmodel          # For GPTQ inference
+
+# Only if torch is missing or incompatible, install a matching CUDA wheel
+# uv pip install --python {output_dir}/venv/bin/python --index-url https://download.pytorch.org/whl/cu124 torch
+
+# Only if flash_attn is required and missing, install it explicitly
+# uv pip install --python {output_dir}/venv/bin/python flash-attn --no-build-isolation
 ```
 
 ---
@@ -214,15 +271,19 @@ scheme = "{scheme}"  # e.g., "W4A16", "MXFP4", "GGUF:Q4_K_M"
 iters = {iters}      # 0 for RTN mode, 200 for default, 1000 for best
 nsamples = {nsamples}
 format_str = "{format}"  # "auto_round", "llm_compressor", "gguf:q4_k_m"
+num_gpus = 1  # replace with the actual GPU count for this run
 
-# Optional: specify device
-device_map = "0"  # or "auto", "cuda", "cpu", "0,1,2,3"
+# CUDA device selection rule for this repo:
+# - single GPU: device="cuda"
+# - multi-GPU: device_map="auto"
+autoround_device_kwargs = {"device": "cuda"} if num_gpus <= 1 else {"device_map": "auto"}
 
 print(f"Loading model: {{model_name_or_path}}")
 print(f"Scheme: {{scheme}}")
 print(f"Iters: {{iters}}")
 print(f"nsamples: {{nsamples}}")
 print(f"Format: {{format_str}}")
+print(f"Device args: {{autoround_device_kwargs}}")
 
 # Create AutoRound instance
 ar = AutoRound(
@@ -230,11 +291,11 @@ ar = AutoRound(
     scheme=scheme,
     iters=iters,
     nsamples=nsamples,
-    device_map=device_map,
     # Optional optimizations
     # enable_torch_compile=True,  # Faster quantization (PyTorch 2.6+)
     # low_gpu_mem_usage=True,    # Lower VRAM, ~30% slower
     # disable_opt_rtn=True,      # For GGUF: use pure RTN
+    **autoround_device_kwargs,
 )
 
 # Quantize and save
@@ -282,10 +343,10 @@ ImportError: cannot import name 'AutoRound' from 'auto_round'
 **Solutions:**
 ```bash
 # Reinstall auto-round
-{venv}/bin/pip install --upgrade auto-round
+uv pip install --python {venv}/bin/python --upgrade auto-round
 
 # Or from source
-{venv}/bin/pip install -e /path/to/auto-round --force-reinstall
+uv pip install --python {venv}/bin/python -e /path/to/auto-round --force-reinstall
 
 # Check installation
 {venv}/bin/pip show auto-round
@@ -309,7 +370,7 @@ ar = AutoRound(
     nsamples=nsamples,
     enable_torch_compile=True,    # PyTorch 2.6+ recommended
     low_gpu_mem_usage=True,       # Offload to CPU, ~20% more time
-    device_map="auto",            # Let AutoRound handle device
+    device="cuda",                # Keep single-GPU CUDA explicit
 )
 
 # Solution B: Reduce batch size
@@ -324,7 +385,7 @@ ar = AutoRound(
     disable_opt_rtn=True,  # For GGUF format
 
 # Solution E: Use multiple GPUs
-    device_map="0,1,2,3",  # Multiple GPUs
+    device_map="auto",           # Recommended multi-GPU default
 ```
 
 **CLI alternatives:**
@@ -334,6 +395,9 @@ auto-round-light --model ... --scheme W4A16
 
 # Low memory mode
 auto-round --model ... --scheme W4A16 --low_gpu_mem_usage
+
+# Multi-GPU CUDA
+CUDA_VISIBLE_DEVICES=0,1,2,3 auto-round --model ... --scheme W4A16 --device auto
 ```
 
 #### 3. Version Conflicts
@@ -351,15 +415,18 @@ VersionConflict: transformers x.x.x is incompatible with...
 {venv}/bin/pip show torch transformers accelerate
 
 # Upgrade/downgrade transformers
-{venv}/bin/pip install transformers>=4.35.0
-{venv}/bin/pip install transformers==4.40.0
+uv pip install --python {venv}/bin/python "transformers>=4.35.0"
+uv pip install --python {venv}/bin/python "transformers==4.40.0"
 
-# Upgrade torch (PyTorch 2.6+ recommended for auto-round)
-{venv}/bin/pip install torch>=2.5.0
-{venv}/bin/pip install --index-url https://download.pytorch.org/whl/cu124 torch
+# Upgrade torch only when it is actually missing or incompatible
+uv pip install --python {venv}/bin/python "torch>=2.5.0"
+uv pip install --python {venv}/bin/python --index-url https://download.pytorch.org/whl/cu124 torch
+
+# Install flash-attn only if required by the model/runtime and currently missing
+uv pip install --python {venv}/bin/python flash-attn --no-build-isolation
 
 # Reinstall auto-round dependencies
-{venv}/bin/pip install -r /path/to/auto-round/requirements.txt
+uv pip install --python {venv}/bin/python -r /path/to/auto-round/requirements.txt
 ```
 
 #### 4. Model Loading Errors
@@ -452,6 +519,7 @@ python -c "import torch; print(torch.cuda.is_available())"
 # Check GPU visibility
 echo $CUDA_VISIBLE_DEVICES
 CUDA_VISIBLE_DEVICES=0 python script.py
+CUDA_VISIBLE_DEVICES=0,1 python script.py
 
 # Use CPU instead
 device_map = "cpu"
@@ -672,7 +740,7 @@ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}
 python3 --version
 
 # Key packages
-pip show torch transformers auto-round
+python -m pip show torch transformers auto-round
 ```
 
 ## Reproduce Command
@@ -858,9 +926,14 @@ curl -L https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/resolve/main/REA
 **2. Set up environment:**
 ```bash
 mkdir -p /storage/quantized/llama-8b-w4a16/logs
-python3 -m venv /storage/quantized/llama-8b-w4a16/venv
-/storage/quantized/llama-8b-w4a16/venv/bin/pip install -U pip setuptools wheel
-/storage/quantized/llama-8b-w4a16/venv/bin/pip install -e /storage/lkk/auto-round
+if [ -x /root/.venv/bin/python ]; then
+  VENV_PY=/root/.venv/bin/python
+else
+  python3 -m venv --system-site-packages /storage/quantized/llama-8b-w4a16/venv
+  VENV_PY=/storage/quantized/llama-8b-w4a16/venv/bin/python
+fi
+$VENV_PY -m pip install -U uv
+uv pip install --python "$VENV_PY" -e /storage/lkk/auto-round
 ```
 
 **3. Create quantization script:**
@@ -873,7 +946,23 @@ ar = AutoRound(
     scheme="W4A16",
     iters=200,
     nsamples=128,
-    device_map="0",
+    device="cuda",
+    enable_torch_compile=True,
+)
+ar.quantize_and_save(output_dir="/storage/quantized/llama-8b-w4a16", format="auto_round")
+```
+
+**Multi-GPU CUDA example:**
+```python
+from auto_round import AutoRound
+
+ar = AutoRound(
+    "meta-llama/Llama-3.1-8B-Instruct",
+    scheme="W4A16",
+    iters=200,
+    nsamples=128,
+    device_map="auto",
+    low_gpu_mem_usage=True,
     enable_torch_compile=True,
 )
 ar.quantize_and_save(output_dir="/storage/quantized/llama-8b-w4a16", format="auto_round")
@@ -925,7 +1014,8 @@ auto-round list format
 | Best accuracy | `iters=1000`, `enable_alg_ext=True` |
 | Low VRAM | `low_gpu_mem_usage=True`, `batch_size=1` |
 | GGUF format | `format="gguf:q4_k_m"`, `iters=0` |
-| Multiple GPUs | `device_map="0,1,2,3"` |
+| Single GPU CUDA | `device="cuda"` |
+| Multiple GPUs | `CUDA_VISIBLE_DEVICES=0,1,2,3` + `device_map="auto"` |
 | 2-bit quantization | Use `W2A16` + best recipe |
 | MXFP4/MXFP8 | Research only, no kernel |
 
