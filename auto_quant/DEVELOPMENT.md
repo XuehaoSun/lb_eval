@@ -85,6 +85,7 @@ bash auto.sh <task.json> --skip-github
    - use `auto_eval` for the quantization+evaluation flow, or `auto_eval_vllm` for evaluation-only requests
    - run `openclaw agent --local`
    - expect `accuracy.json`
+   - expect raw `lm_eval_results/` written via `lm_eval --output_path`
 10. Copy eval session JSONL
 11. Format copied session JSONL files into Markdown
 12. If enabled and quantization succeeded:
@@ -311,6 +312,7 @@ Copied artifacts include:
 - `quant_summary.json`
 - `summary.json` if present
 - `accuracy.json`
+- `lm_eval_results/`
 - `logs/`
 - `session_*.jsonl`
 - `session_*.md`

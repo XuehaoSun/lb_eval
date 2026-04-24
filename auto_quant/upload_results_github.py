@@ -5,6 +5,7 @@ Upload auto_quant result artifacts into the lb_eval GitHub repository.
 Artifacts copied from the runtime output directory:
 - quant_summary.json / summary.json
 - accuracy.json
+- lm_eval_results/
 - quantize.py
 - logs/
 - session_*.jsonl
@@ -235,6 +236,7 @@ def main() -> int:
     accuracy_path = runtime_output_dir / "accuracy.json"
     quantize_script_path = runtime_output_dir / "quantize.py"
     legacy_quantize_script_path = runtime_output_dir / "quantize_script.py"
+    lm_eval_results_dir = runtime_output_dir / "lm_eval_results"
     logs_dir = runtime_output_dir / "logs"
     quant_summary = load_json(quant_summary_path) or load_json(summary_path)
     accuracy = load_json(accuracy_path)
@@ -278,6 +280,7 @@ def main() -> int:
         copy_file(quantize_script_path, run_dir / "quantize.py", copied)
     elif legacy_quantize_script_path.is_file():
         copy_file(legacy_quantize_script_path, run_dir / "quantize.py", copied)
+    copy_tree(lm_eval_results_dir, run_dir / "lm_eval_results", copied)
     copy_tree(logs_dir, run_dir / "logs", copied)
 
     for path in sorted(runtime_output_dir.glob("session_*.jsonl")):

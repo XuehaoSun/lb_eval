@@ -320,6 +320,7 @@ You MUST follow the skill instructions in: ${EVAL_SKILL_PATH}
 
 Quantized model path: ${QUANTIZED_MODEL_DIR}
 Runtime artifact directory: ${RUN_OUTPUT_DIR}
+Raw lm_eval output directory: ${LM_EVAL_OUTPUT_DIR}
 Evaluation tasks: ${EVAL_TASKS}
 Batch size: ${EVAL_BATCH_SIZE}
 Num gpus: ${EVAL_NUM_GPUS}
@@ -337,6 +338,9 @@ CRITICAL ENVIRONMENT NOTE:
     uv pip install --python <venv>/bin/python <packages>
 - Do NOT reinstall torch or flash_attn if they already import successfully from the reused environment. Only install them when missing or incompatible.
 - Write evaluation outputs, logs, prompts, copied request/session files, and other runtime artifacts to: ${RUN_OUTPUT_DIR}
+- When invoking lm_eval, you MUST pass:
+    --output_path ${LM_EVAL_OUTPUT_DIR}
+- Do NOT omit --output_path. Keep the raw lm_eval output files under that exact directory for later upload.
 
 IMPORTANT - After evaluation completes, you MUST produce:
 
@@ -358,6 +362,9 @@ ${ACCURACY_JSON} - evaluation results:
   "eval_framework": "lm_eval+vllm" or "lm_eval+hf" or "manual",
   "errors": [<list of error strings if any>]
 }
+
+${LM_EVAL_OUTPUT_DIR}/ - raw lm_eval output directory created by:
+    lm_eval ... --output_path ${LM_EVAL_OUTPUT_DIR}
 
 The accuracy values MUST be real numbers from actual evaluation runs.
 Write as valid JSON. If evaluation fails, still write accuracy.json with status=failed.
@@ -513,6 +520,7 @@ QUANT_SESSION="autoeval_quant_$$"
 EVAL_SESSION="autoeval_eval_$$"
 QUANT_SUMMARY_JSON="${RUN_OUTPUT_DIR}/quant_summary.json"
 ACCURACY_JSON="${RUN_OUTPUT_DIR}/accuracy.json"
+LM_EVAL_OUTPUT_DIR="${RUN_OUTPUT_DIR}/lm_eval_results"
 REQUEST_JSON="${RUN_OUTPUT_DIR}/request.json"
 QUANT_SESSION_SRC="${OPENCLAW_SESSIONS_DIR}/${QUANT_SESSION}.jsonl"
 EVAL_SESSION_SRC="${OPENCLAW_SESSIONS_DIR}/${EVAL_SESSION}.jsonl"

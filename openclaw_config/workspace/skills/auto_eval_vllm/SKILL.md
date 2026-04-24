@@ -61,6 +61,20 @@ Rules:
 3. If `flash_attn` already imports from the reused environment, keep it
 4. Only reinstall `torch` / `flash_attn` when they are missing or clearly incompatible
 
+## lm-eval Output Artifact Rule (CRITICAL)
+
+Always run `lm_eval` with an explicit output directory and keep the generated files:
+
+```bash
+--output_path {output_path}
+```
+
+Rules:
+
+1. Do **not** omit `--output_path`
+2. If the caller provides a concrete runtime path, use it exactly
+3. Prefer the `lm_eval` CLI over ad-hoc wrappers so raw result artifacts are persisted automatically
+
 ---
 
 ## Step 1: Analyze Model and Detect Quantization Format
@@ -216,6 +230,7 @@ lm_eval \
     --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,gpu_memory_utilization=0.9 \
     --tasks arc_easy,arc_challenge,piqa,hellaswag \
     --batch_size 1 \
+    --output_path lm_eval_results \
     --device cuda
 ```
 
