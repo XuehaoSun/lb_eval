@@ -72,6 +72,11 @@ stages:
                   --env AZP_URL=$(System.CollectionUri) AZP_TOKEN=$(AZP_DEVOPS_PAT) AZP_POOL=$(POOL_NAME) AZP_AGENT_NAME="$(AGENT_NAME)" \
                   --gpu_id "$(setVarFromJsonFileValue.hardware)"
 
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Waiting"
+              requestJson: "$(setVarFromJsonFileValue.request_json)"
+
           - task: Bash@3
             displayName: "Wait for Pod to be Online"
             name: wait_for_pod
@@ -100,10 +105,10 @@ stages:
                   --pool "$(POOL_NAME)" \
                   --agent "$(AGENT_NAME)"
 
-          # - template: template/git-status-template.yml
-          #   parameters:
-          #     status: "Waiting"
-          #     requestJson: "$(setVarFromJsonFileValue.request_json)"
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Running"
+              requestJson: "$(setVarFromJsonFileValue.request_json)"
 
   - stage: Eval
     displayName: Evaluation
@@ -131,11 +136,6 @@ stages:
                 lscpu
             displayName: "Verify Hardware"
 
-          # - template: template/git-status-template.yml
-          #   parameters:
-          #     status: "Running"
-          #     requestJson: "$(request_json)"
-
           - template: template/model-template.yml
             parameters:
               scriptsPath: "$(scripts)"
@@ -144,6 +144,10 @@ stages:
 
   - stage: Cleanup_Verification
     displayName: "Verify Pod Cleanup"
+    variables:
+      hardware: $[stageDependencies.Start_Pod.Start_Pod_Job.outputs['setVarFromJsonFileValue.hardware']]
+      scripts: $[stageDependencies.Start_Pod.Start_Pod_Job.outputs['setVarFromJsonFileValue.scripts']]
+      request_json: $[stageDependencies.Start_Pod.Start_Pod_Job.outputs['setVarFromJsonFileValue.request_json']]
     dependsOn:
       - Eval
     condition: always()
@@ -194,3 +198,19 @@ stages:
                   --pat "$(AZP_DEVOPS_PAT)" \
                   --pool "$(POOL_NAME)" \
                   --agent "$(AGENT_NAME)"
+
+          - template: git-status-template.yml
+            parameters:
+              status: "Finished"
+              requestJson: "$(request_json)"
+
+          - task: Bash@3
+            inputs:
+              filePath: .azure-pipelines/scripts/git_update.sh
+            name: gitUpdateResults
+            env:
+              requestJson: "$(request_json)"
+              commitMessage: "Commit from Azure DevOps update Results"
+              status: ""
+              TOKEN: $(TOKEN)
+              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
