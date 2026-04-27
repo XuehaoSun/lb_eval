@@ -1,0 +1,34 @@
+{
+  "pipeline": "auto_eval",
+  "model_id": "kaitchup/Qwen3.5-27B-autoround-W4A16",
+  "artifact_name": "Qwen3.5-27B-autoround-W4A16",
+  "generated_at": "2026-04-27T10:35:43Z",
+  "source_runtime_dir": "/root/.openclaw/workspace/quantized/runs/kaitchup_Qwen3.5-27B-autoround-W4A16-W4A16",
+  "source_model_dir": "/root/_work/1/s/auto_eval/kaitchup/Qwen3.5-27B-autoround-W4A16",
+  "run_dir": "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-27-18-35-43",
+  "quant_summary": null,
+  "accuracy": {
+    "model_id": "kaitchup/Qwen3.5-27B-autoround-W4A16",
+    "model_path": "kaitchup/Qwen3.5-27B-autoround-W4A16",
+    "scheme": "W4A16",
+    "device": "cuda:0",
+    "num_gpus": "1",
+    "tasks": {},
+    "status": "failed",
+    "duration_seconds": null,
+    "eval_framework": "lm_eval+vllm",
+    "errors": [
+      "vLLM backend: torch.AcceleratorError: CUDA error: the provided PTX was compiled with an unsupported toolchain (cudaErrorUnsupportedPtxVersion). The RTX 5090 (compute capability 12.0/sm_120) with CUDA 12.8 driver requires PTX 8.0+, but PyTorch 2.10.0+cu128's JIT-compiled CUDA operations use an older PTX version incompatible with compute 12.0. This affects all CUDA tensor operations in the vllm Marlin kernel's weight processing (marlin_permute_scales, torch.index_select, fancy indexing all fail with the same PTX error). Tested torch versions: 2.10.0+cu128 (PTX issue), 2.6.0+cu124 (sm_120 unsupported), 2.5.1+cu121 (sm_120 unsupported), 2.7.0+cu126 (sm_120 unsupported). No compatible torch version found for RTX 5090 except 2.10.0+cu128 which has the PTX issue.",
+      "HF backend: RuntimeError: Expected all tensors to be on the same device. With device_map='auto', the model places embedding layers on CPU (to save GPU memory) but lm_eval passes input tensors to CUDA, causing device mismatch. Without device_map (full GPU load), OOM occurs as 27B bf16 weights (~54GB) exceed 31GB VRAM. Additionally, gptqmodel C++ extensions are skipped due to torch 2.10.0 incompatibility (needs torch>=2.11.0), so quantized weights are not properly handled.",
+      "Root cause: The NVIDIA GeForce RTX 5090 (compute capability 12.0, CUDA 12.8 driver) is too new for the current stable software stack. No PyTorch version with CUDA support is fully compatible with sm_120. The only torch version supporting sm_120 (2.10.0+cu128) has PTX JIT compilation issues with the Marlin/GPTQ quantized model kernel. Evaluation cannot proceed on this hardware/software combination."
+    ]
+  },
+  "copied_files": [
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-27-18-35-43/accuracy.json",
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-27-18-35-43/lm_eval_results",
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-27-18-35-43/logs",
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-27-18-35-43/session_eval_312.jsonl",
+    "results/kaitchup/Qwen3.5-27B-autoround-W4A16/run_2026-04-27-18-35-43/session_eval_312.md"
+  ],
+  "num_gpus": "1"
+}
