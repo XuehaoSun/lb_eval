@@ -29,19 +29,8 @@ function get_status() {
         rsync -avP "$workspace/lb_eval_backup/results/${model_name}/" \
                    "$workspace/ld_results/${model_name}/" 2>/dev/null || true
 
-        # ── Remove processed request from requests/ ─────────────────
-        # This ensures the request is not re-dispatched in the next
-        # pipeline run.  The corresponding status/ file is kept
-        # (already set to Finished by git-status-template).
-        local req_file="$workspace/lb_eval_backup/requests/${requestJson}"
-        if [ -f "${req_file}" ]; then
-            echo "[git_update] Removing processed request: requests/${requestJson}"
-            rm -f "${req_file}"
-            # Clean up empty parent directory
-            local req_dir
-            req_dir=$(dirname "${req_file}")
-            rmdir "${req_dir}" 2>/dev/null || true
-        fi
+        # NOTE: pending_requests/ files are intentionally kept — the dispatcher
+        # uses status/ (not pending_requests/) for scheduling decisions.
     fi
 }
 
