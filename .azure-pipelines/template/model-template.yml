@@ -1,14 +1,3 @@
-parameters:
-  - name: scriptsPath
-    type: string
-    default: "auto_quant"
-  - name: requestJson
-    type: string
-    default: ""
-  - name: hardware
-    type: string
-    default: "gpu"
-
 steps:
   - script: |
       uv pip install openclaw==2026.3.20
@@ -22,16 +11,17 @@ steps:
   - script: |
       cd ${BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts
       python update_config_env.py \
-        --output ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}/config.env \
+        --output ${BUILD_SOURCESDIRECTORY}/$(SCRIPTS_PATH)/config.env \
         --set HTTP_PROXY="" \
         --set HTTPS_PROXY="" \
         --set HF_TOKENS=$(HUGGINGFACE_TOKEN) \
         --set MINIMAX_API_KEY=$(MINIMAX_KEY) \
-        --set GIT_TOKEN=$(GIT_TOKEN)
+        --set GIT_TOKEN=$(GIT_TOKEN) \
+        --set LB_STORAGE_BLOB_TOKEN=$(LB_STORAGE_BLOB_TOKEN)
     displayName: Update Config
 
   - script: |
       set -xe
-      cd ${BUILD_SOURCESDIRECTORY}/${{ parameters.scriptsPath }}
-      bash auto.sh ${BUILD_SOURCESDIRECTORY}/requests/${{ parameters.requestJson }}
+      cd ${BUILD_SOURCESDIRECTORY}/$(SCRIPTS_PATH)
+      bash auto.sh ${BUILD_SOURCESDIRECTORY}/requests/$(REQUEST_JSON)
     displayName: Eval
