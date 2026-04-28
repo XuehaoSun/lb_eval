@@ -675,7 +675,8 @@ if [[ "$SKIP_UPLOAD" != "true" && "$SKIP_GITHUB" != "true" ]]; then
             --scheme "$SCHEME" \
             --quant-num-gpus "$NUM_GPUS" \
             --eval-num-gpus "$EVAL_NUM_GPUS" \
-            --model-output-dir "$QUANTIZED_MODEL_DIR"
+            --model-output-dir "$QUANTIZED_MODEL_DIR" \
+            --request-filename "$JSON_FILENAME"
 fi
 
 log_step "Final summary"

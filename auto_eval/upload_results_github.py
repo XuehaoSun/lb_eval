@@ -115,6 +115,74 @@ def copy_tree(src: Path, dst: Path, copied: list[str]) -> None:
     copied.append(str(dst))
 
 
+def derive_pipeline_status(quant_summary: dict | None, accuracy: dict | None) -> str:
+    """Derive overall pipeline status from quant_summary and accuracy results.
+
+    Returns one of: "Finished", "Quant Failed", "Eval Failed", "Partial".
+    """
+    qs_status = (quant_summary or {}).get("status", "missing")
+    acc_status = (accuracy or {}).get("status", "missing")
+
+    if qs_status == "failed":
+        return "Quant Failed"
+    if acc_status == "failed":
+        return "Eval Failed"
+
+    # Check for any task with acc=0 (indicates evaluation failure)
+    if isinstance(accuracy, dict):
+        tasks = accuracy.get("tasks")
+        if isinstance(tasks, dict):
+            for task_name, task_val in tasks.items():
+                acc_value = task_val if not isinstance(task_val, dict) else task_val.get("accuracy")
+                try:
+                    if acc_value is not None and float(acc_value) == 0.0:
+                        return "Eval Failed"
+                except (TypeError, ValueError):
+                    pass
+
+    if qs_status == "success" and acc_status == "success":
+        return "Finished"
+    if acc_status == "success":
+        return "Finished"
+    if qs_status == "success" and acc_status == "partial":
+        return "Partial"
+    return "Partial"
+
+
+def write_back_status(repo_dir: Path, request_filename: str, new_status: str,
+                      copied: list[str]) -> None:
+    """Update the status field in the matching request file under status/."""
+    if not request_filename:
+        print("[github-upload] No --request-filename provided; skipping status write-back")
+        return
+
+    status_dir = repo_dir / "status"
+    if not status_dir.is_dir():
+        print(f"[github-upload] status/ directory not found at {status_dir}; skipping write-back")
+        return
+
+    # Search for the request file under status/
+    matches = list(status_dir.rglob(request_filename))
+    if not matches:
+        print(f"[github-upload] Request file '{request_filename}' not found under {status_dir}; skipping write-back")
+        return
+
+    for match_path in matches:
+        try:
+            with match_path.open(encoding="utf-8") as handle:
+                data = json.load(handle)
+            old_status = data.get("status", "unknown")
+            data["status"] = new_status
+            with match_path.open("w", encoding="utf-8") as handle:
+                json.dump(data, handle, indent=4, ensure_ascii=False)
+                handle.write("\n")
+            copied.append(str(match_path))
+            print(f"[github-upload] Status write-back: {match_path.relative_to(repo_dir)} "
+                  f"({old_status} -> {new_status})")
+        except Exception as exc:
+            print(f"[github-upload] WARNING: failed to write-back status for {match_path}: {exc}")
+
+
 def detect_artifact_name(model_id: str, scheme: str, quant_summary: dict | None) -> str:
     if quant_summary:
         hf_repo = quant_summary.get("hf_repo")
@@ -198,6 +266,12 @@ def main() -> int:
         "--branch",
         default=os.environ.get("GIT_BRANCH", ""),
         help="Branch to update. Defaults to current branch.",
+    )
+    parser.add_argument(
+        "--request-filename",
+        default="",
+        help="Original request JSON filename (e.g. Qwen3-0.6B_quant_request_False_W4A16_4bit_int4.json). "
+             "Used to write back status and recorded in the aggregate JSON.",
     )
     parser.add_argument(
         "--dry-run",
@@ -292,6 +366,7 @@ def main() -> int:
         "pipeline": args.pipeline or ("auto_quant" if quant_summary else "auto_eval"),
         "model_id": args.model_id,
         "artifact_name": artifact_name,
+        "request_filename": args.request_filename or None,
         "generated_at": utc_now(),
         "source_runtime_dir": str(runtime_output_dir),
         "source_model_dir": str(model_output_dir) if model_output_dir else None,
@@ -320,6 +395,11 @@ def main() -> int:
     aggregate_path = model_result_dir / f"results_{timestamp}.json"
     aggregate_path.write_text(json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     copied.append(str(aggregate_path))
+
+    # Write-back status to the original request file in status/
+    pipeline_status = derive_pipeline_status(quant_summary, accuracy)
+    print(f"[github-upload] Derived pipeline status: {pipeline_status}")
+    write_back_status(repo_dir, args.request_filename, pipeline_status, copied)
 
     rel_paths = [str(Path(path).relative_to(repo_dir)) for path in copied]
     if not rel_paths:
