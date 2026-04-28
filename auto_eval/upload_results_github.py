@@ -21,12 +21,33 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import time
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
+
+# Patterns that match common secret/token formats
+_SECRET_PATTERNS = [
+    # HuggingFace tokens: hf_xxxx (20+ alphanumeric chars)
+    re.compile(r'\bhf_[a-zA-Z0-9]{20,}\b'),
+    # GitHub PATs: ghp_, gho_, ghs_, ghu_, github_pat_
+    re.compile(r'\b(ghp_|gho_|ghs_|ghu_)[a-zA-Z0-9]{36,}\b'),
+    re.compile(r'\bgithub_pat_[a-zA-Z0-9_]{22,}\b'),
+    # Generic Bearer tokens in headers
+    re.compile(r'(Bearer\s+)[a-zA-Z0-9_.~+/=-]{20,}', re.IGNORECASE),
+    # Azure DevOps PATs (52-char base64)
+    re.compile(r'\b[a-z0-9]{52}\b(?=.*(?:azuredevops|_work|pipeline))', re.IGNORECASE),
+]
+
+
+def sanitize_secrets(text: str) -> str:
+    """Replace known secret/token patterns with [REDACTED]."""
+    for pattern in _SECRET_PATTERNS:
+        text = pattern.sub(lambda m: '[REDACTED]', text)
+    return text
 
 
 def utc_now() -> str:
@@ -104,6 +125,22 @@ def copy_file(src: Path, dst: Path, copied: list[str]) -> None:
     dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src, dst)
     copied.append(str(dst))
+
+
+def copy_file_sanitized(src: Path, dst: Path, copied: list[str]) -> None:
+    """Copy a text file, stripping secrets from its content."""
+    if not src.exists() or not src.is_file():
+        return
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        content = src.read_text(encoding="utf-8", errors="replace")
+        sanitized = sanitize_secrets(content)
+        dst.write_text(sanitized, encoding="utf-8")
+        if content != sanitized:
+            print(f"[github-upload] Sanitized secrets in {src.name}")
+        copied.append(str(dst))
+    except Exception as exc:
+        print(f"[github-upload] WARNING: failed to sanitize {src.name}, skipping: {exc}")
 
 
 def copy_tree(src: Path, dst: Path, copied: list[str]) -> None:
@@ -358,9 +395,9 @@ def main() -> int:
     copy_tree(logs_dir, run_dir / "logs", copied)
 
     for path in sorted(runtime_output_dir.glob("session_*.jsonl")):
-        copy_file(path, run_dir / path.name, copied)
+        copy_file_sanitized(path, run_dir / path.name, copied)
     for path in sorted(runtime_output_dir.glob("session_*.md")):
-        copy_file(path, run_dir / path.name, copied)
+        copy_file_sanitized(path, run_dir / path.name, copied)
 
     aggregate = {
         "pipeline": args.pipeline or ("auto_quant" if quant_summary else "auto_eval"),
@@ -427,11 +464,42 @@ def main() -> int:
         print(f"[github-upload] ERROR: git commit failed:\n{commit_result.stderr.strip()}")
         return 1
 
-    push_args = ["push", push_target, f"HEAD:{branch}"]
-    push_result = run_git(push_args, repo_dir, check=False)
-    if push_result.returncode != 0:
-        print(f"[github-upload] ERROR: git push failed:\n{push_result.stderr.strip()}")
-        return 1
+    # Push with retry: if another container pushed first, pull --rebase and retry.
+    max_retries = 5
+    for attempt in range(1, max_retries + 1):
+        push_args = ["push", push_target, f"HEAD:{branch}"]
+        push_result = run_git(push_args, repo_dir, check=False)
+        if push_result.returncode == 0:
+            break
+
+        stderr = push_result.stderr.strip()
+        # Only retry on non-fast-forward / concurrent push conflicts
+        is_conflict = any(hint in stderr.lower() for hint in [
+            "non-fast-forward", "fetch first", "stale info",
+            "failed to push", "cannot lock ref",
+        ])
+        if not is_conflict or attempt == max_retries:
+            print(f"[github-upload] ERROR: git push failed (attempt {attempt}/{max_retries}):\n{stderr}")
+            return 1
+
+        wait = 2 ** attempt  # 2, 4, 8, 16, 32 seconds
+        print(f"[github-upload] Push conflict (attempt {attempt}/{max_retries}), "
+              f"retrying in {wait}s after pull --rebase ...")
+        time.sleep(wait)
+
+        rebase_result = run_git(["pull", "--rebase", pull_target, branch], repo_dir, check=False)
+        if rebase_result.returncode != 0:
+            # Rebase conflict — abort and retry with a fresh rebase
+            run_git(["rebase", "--abort"], repo_dir, check=False)
+            print(f"[github-upload] WARNING: rebase conflict, resetting and retrying ...")
+            # Reset to remote state, re-apply our changes
+            run_git(["fetch", pull_target, branch], repo_dir, check=False)
+            run_git(["reset", "--hard", f"FETCH_HEAD"], repo_dir, check=False)
+            # Re-stage and re-commit all our artifact files
+            run_git(["add", *rel_paths], repo_dir, check=False)
+            recommit = run_git(["diff", "--cached", "--quiet"], repo_dir, check=False)
+            if recommit.returncode != 0:
+                run_git(["commit", "-m", commit_message], repo_dir, check=False)
 
     print("[github-upload] Uploaded artifacts:")
     for rel_path in rel_paths:
