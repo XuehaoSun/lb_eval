@@ -1,0 +1,32 @@
+{
+  "model_id": "meta-llama/Llama-3.1-8B-Instruct",
+  "scheme": "W4A16",
+  "method": "RTN",
+  "export_format": "auto_round",
+  "device": "cuda",
+  "quant_num_gpus": "1",
+  "num_gpus": "1",
+  "output_dir": "/root/.openclaw/workspace/quantized/meta-llama_Llama-3.1-8B-Instruct-W4A16",
+  "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/meta-llama_Llama-3.1-8B-Instruct-W4A16",
+  "quantized_model_dir": "/root/.openclaw/workspace/quantized/meta-llama_Llama-3.1-8B-Instruct-W4A16",
+  "status": "failed",
+  "duration_seconds": 1452.0,
+  "original_size_mb": 16445.44,
+  "quantized_size_mb": null,
+  "compression_ratio": null,
+  "errors": [
+    "RTX 5090 (compute capability sm_120) is not supported by PyTorch 2.6.0+cu124. Supported: sm_50, sm_60, sm_70, sm_75, sm_80, sm_86, sm_90",
+    "CUDA error: no kernel image is available for execution on the device - CUDA kernels for sm_120 are not available",
+    "CPU fallback is extremely slow for 8B model (estimated 6+ hours), process terminated"
+  ],
+  "solutions": [
+    "Install PyTorch nightly build with CUDA 12.12+ support for RTX 5090 sm_120: pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cu128",
+    "Use a GPU with supported compute capability (sm_50-sm_90)",
+    "If CPU quantization is required, expect 6+ hours for an 8B model with RTN method",
+    "Consider using a different quantization method or pre-compiled kernels if available"
+  ],
+  "output_files": [
+    "/root/.openclaw/workspace/quantized/runs/meta-llama_Llama-3.1-8B-Instruct-W4A16/quantize.py",
+    "/root/.openclaw/workspace/quantized/runs/meta-llama_Llama-3.1-8B-Instruct-W4A16/request.json"
+  ]
+}
