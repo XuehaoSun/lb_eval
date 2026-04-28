@@ -39,134 +39,144 @@ stages:
                 pip install requests
 
           - task: Bash@3
-            displayName: "Create RunPod Instance"
-            name: create_runpod
+            displayName: "Test variables"
             inputs:
               targetType: "inline"
               script: |
-                export PYTHONUNBUFFERED=1
-                cd ${BUILD_SOURCESDIRECTORY}
-                python .azure-pipelines/scripts/runpod_manager.py \
-                  --action create \
-                  --api_key $(RUNPOD_API_KEY) \
-                  --name "lb-$(Build.BuildId)" \
-                  --container_disk_size "200" \
-                  --gpu_id $(GPU_ID) \
-                  --gpu_count 1 \
-                  --env AZP_URL=$(System.CollectionUri) AZP_TOKEN=$(AZP_DEVOPS_PAT) AZP_POOL=$(POOL_NAME) AZP_AGENT_NAME="$(AGENT_NAME)"
+                echo "Testing variables..."
+                echo "SCRIPTS_PATH: $(SCRIPTS_PATH)"
+                echo "GPU_ID: $(GPU_ID)"
+                echo "REQUEST_JSON: $(REQUEST_JSON)"
 
-          - task: Bash@3
-            displayName: "Wait for Pod to be Online"
-            name: wait_for_pod
-            inputs:
-              targetType: "inline"
-              script: |
-                cd ${BUILD_SOURCESDIRECTORY}
-                export PYTHONUNBUFFERED=1
-                python .azure-pipelines/scripts/runpod_manager.py \
-                  --action wait \
-                  --api_key $(RUNPOD_API_KEY) \
-                  --name "lb-$(Build.BuildId)"
+  #         - task: Bash@3
+  #           displayName: "Create RunPod Instance"
+  #           name: create_runpod
+  #           inputs:
+  #             targetType: "inline"
+  #             script: |
+  #               export PYTHONUNBUFFERED=1
+  #               cd ${BUILD_SOURCESDIRECTORY}
+  #               python .azure-pipelines/scripts/runpod_manager.py \
+  #                 --action create \
+  #                 --api_key $(RUNPOD_API_KEY) \
+  #                 --name "lb-$(Build.BuildId)" \
+  #                 --container_disk_size "200" \
+  #                 --gpu_id $(GPU_ID) \
+  #                 --gpu_count 1 \
+  #                 --env AZP_URL=$(System.CollectionUri) AZP_TOKEN=$(AZP_DEVOPS_PAT) AZP_POOL=$(POOL_NAME) AZP_AGENT_NAME="$(AGENT_NAME)"
 
-          - task: Bash@3
-            displayName: "Wait for Agent to be Online"
-            name: wait_for_agent
-            inputs:
-              targetType: "inline"
-              script: |
-                cd ${BUILD_SOURCESDIRECTORY}
-                export PYTHONUNBUFFERED=1
-                python .azure-pipelines/scripts/azure_agent.py \
-                  --action wait \
-                  --url "$(System.CollectionUri)" \
-                  --pat "$(AZP_DEVOPS_PAT)" \
-                  --pool "$(POOL_NAME)" \
-                  --agent "$(AGENT_NAME)"
+  #         - task: Bash@3
+  #           displayName: "Wait for Pod to be Online"
+  #           name: wait_for_pod
+  #           inputs:
+  #             targetType: "inline"
+  #             script: |
+  #               cd ${BUILD_SOURCESDIRECTORY}
+  #               export PYTHONUNBUFFERED=1
+  #               python .azure-pipelines/scripts/runpod_manager.py \
+  #                 --action wait \
+  #                 --api_key $(RUNPOD_API_KEY) \
+  #                 --name "lb-$(Build.BuildId)"
 
-  - stage: Eval
-    displayName: Evaluation
-    pool: "$(POOL_NAME)"
-    dependsOn: [Start_Pod]
-    jobs:
-      - job: Eval
-        timeoutInMinutes: 2880
-        steps:
-          - checkout: self
-            clean: true
-            displayName: "Checkout Repo"
-            fetchDepth: 100
+  #         - task: Bash@3
+  #           displayName: "Wait for Agent to be Online"
+  #           name: wait_for_agent
+  #           inputs:
+  #             targetType: "inline"
+  #             script: |
+  #               cd ${BUILD_SOURCESDIRECTORY}
+  #               export PYTHONUNBUFFERED=1
+  #               python .azure-pipelines/scripts/azure_agent.py \
+  #                 --action wait \
+  #                 --url "$(System.CollectionUri)" \
+  #                 --pat "$(AZP_DEVOPS_PAT)" \
+  #                 --pool "$(POOL_NAME)" \
+  #                 --agent "$(AGENT_NAME)"
 
-          - task: Bash@3
-            inputs:
-              targetType: "inline"
-              script: |
-                echo "Running on GPU"
-                nvidia-smi
-                lscpu
-            displayName: "Verify Hardware"
+  # - stage: Eval
+  #   displayName: Evaluation
+  #   pool: "$(POOL_NAME)"
+  #   dependsOn: [Start_Pod]
+  #   jobs:
+  #     - job: Eval
+  #       timeoutInMinutes: 2880
+  #       steps:
+  #         - checkout: self
+  #           clean: true
+  #           displayName: "Checkout Repo"
+  #           fetchDepth: 100
 
-          - template: template/model-template.yml
+  #         - task: Bash@3
+  #           inputs:
+  #             targetType: "inline"
+  #             script: |
+  #               echo "Running on GPU"
+  #               nvidia-smi
+  #               lscpu
+  #           displayName: "Verify Hardware"
 
-  - stage: Cleanup_Verification
-    displayName: "Verify Pod Cleanup"
-    dependsOn:
-      - Eval
-    condition: always()
-    jobs:
-      - job: Verify_Cleanup
-        pool:
-          vmImage: "ubuntu-latest"
-        steps:
-          - checkout: self
+  #         - template: template/model-template.yml
 
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: "3.13"
-            displayName: "Use Python 3.13"
+  # - stage: Cleanup_Verification
+  #   displayName: "Verify Pod Cleanup"
+  #   dependsOn:
+  #     - Eval
+  #   condition: always()
+  #   jobs:
+  #     - job: Verify_Cleanup
+  #       pool:
+  #         vmImage: "ubuntu-latest"
+  #       steps:
+  #         - checkout: self
 
-          - task: Bash@3
-            displayName: "Install dependencies"
-            condition: always()
-            inputs:
-              targetType: "inline"
-              script: |
-                pip install requests
+  #         - task: UsePythonVersion@0
+  #           inputs:
+  #             versionSpec: "3.13"
+  #           displayName: "Use Python 3.13"
 
-          - task: Bash@3
-            displayName: "Terminate RunPod Instance"
-            condition: always()
-            inputs:
-              targetType: "inline"
-              script: |
-                echo "Terminating Pod: lb-$(Build.BuildId)"
-                export PYTHONUNBUFFERED=1
-                python .azure-pipelines/scripts/runpod_manager.py \
-                  --action terminate \
-                  --api_key $(RUNPOD_API_KEY) \
-                  --name "lb-$(Build.BuildId)"
+  #         - task: Bash@3
+  #           displayName: "Install dependencies"
+  #           condition: always()
+  #           inputs:
+  #             targetType: "inline"
+  #             script: |
+  #               pip install requests
 
-          - task: Bash@3
-            displayName: "Deregister Agent from Pool"
-            condition: always()
-            inputs:
-              targetType: "inline"
-              script: |
-                cd ${BUILD_SOURCESDIRECTORY}
-                export PYTHONUNBUFFERED=1
-                python .azure-pipelines/scripts/azure_agent.py \
-                  --action deregister \
-                  --url "$(System.CollectionUri)" \
-                  --pat "$(AZP_DEVOPS_PAT)" \
-                  --pool "$(POOL_NAME)" \
-                  --agent "$(AGENT_NAME)"
+  #         - task: Bash@3
+  #           displayName: "Terminate RunPod Instance"
+  #           condition: always()
+  #           inputs:
+  #             targetType: "inline"
+  #             script: |
+  #               echo "Terminating Pod: lb-$(Build.BuildId)"
+  #               export PYTHONUNBUFFERED=1
+  #               python .azure-pipelines/scripts/runpod_manager.py \
+  #                 --action terminate \
+  #                 --api_key $(RUNPOD_API_KEY) \
+  #                 --name "lb-$(Build.BuildId)"
 
-          - task: Bash@3
-            inputs:
-              filePath: .azure-pipelines/scripts/git_update.sh
-            name: gitUpdateResults
-            env:
-              requestJson: $(REQUEST_JSON)
-              commitMessage: "Commit from Azure DevOps update Results"
-              status: ""
-              TOKEN: $(TOKEN)
-              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
+  #         - task: Bash@3
+  #           displayName: "Deregister Agent from Pool"
+  #           condition: always()
+  #           inputs:
+  #             targetType: "inline"
+  #             script: |
+  #               cd ${BUILD_SOURCESDIRECTORY}
+  #               export PYTHONUNBUFFERED=1
+  #               python .azure-pipelines/scripts/azure_agent.py \
+  #                 --action deregister \
+  #                 --url "$(System.CollectionUri)" \
+  #                 --pat "$(AZP_DEVOPS_PAT)" \
+  #                 --pool "$(POOL_NAME)" \
+  #                 --agent "$(AGENT_NAME)"
+
+  #         - task: Bash@3
+  #           inputs:
+  #             filePath: .azure-pipelines/scripts/git_update.sh
+  #           name: gitUpdateResults
+  #           env:
+  #             requestJson: $(REQUEST_JSON)
+  #             commitMessage: "Commit from Azure DevOps update Results"
+  #             status: ""
+  #             TOKEN: $(TOKEN)
+  #             HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
