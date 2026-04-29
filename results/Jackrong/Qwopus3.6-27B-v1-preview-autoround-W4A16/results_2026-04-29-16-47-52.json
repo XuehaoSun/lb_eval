@@ -1,0 +1,59 @@
+{
+  "pipeline": "auto_quant",
+  "model_id": "Jackrong/Qwopus3.6-27B-v1-preview",
+  "artifact_name": "Qwopus3.6-27B-v1-preview-autoround-W4A16",
+  "request_filename": "Qwopus3.6-27B-v1-preview_quant_request_False_W4A16_4bit_int4.json",
+  "generated_at": "2026-04-29T16:47:52Z",
+  "source_runtime_dir": "/root/.openclaw/workspace/quantized/runs/Jackrong_Qwopus3.6-27B-v1-preview-W4A16",
+  "source_model_dir": "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16",
+  "run_dir": "results/Jackrong/Qwopus3.6-27B-v1-preview-autoround-W4A16/run_2026-04-29-16-47-52",
+  "quant_summary": {
+    "model_id": "Jackrong/Qwopus3.6-27B-v1-preview",
+    "scheme": "W4A16",
+    "method": "RTN",
+    "export_format": "auto_round",
+    "device": "cuda",
+    "quant_num_gpus": "1",
+    "num_gpus": "1",
+    "output_dir": "/root/.openclaw/workspace/quantized/runs/Jackrong_Qwopus3.6-27B-v1-preview-W4A16",
+    "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/Jackrong_Qwopus3.6-27B-v1-preview-W4A16",
+    "quantized_model_dir": "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16",
+    "status": "failed",
+    "duration_seconds": 602.0,
+    "original_size_mb": 55562.86,
+    "quantized_size_mb": 16155.6,
+    "compression_ratio": 3.44,
+    "errors": [
+      "AssertionError during finalize() in shard_writer.py: module.to('meta') failed after all 64 layers were quantized and written to shards 1-9. This appears to be a bug in AutoRound's _offload_to_meta when handling non-Parameter buffers in the Qwen3.5 multimodal model architecture."
+    ],
+    "solutions": [
+      "All 64 language model layers were successfully quantized before the error",
+      "9 model shards were written to output directory before the finalize error",
+      "The quantized model data is likely intact despite the finalize error",
+      "Alternative export formats (auto_gptq, auto_awq) or using device_map='auto' might avoid this issue",
+      "Consider filing an issue at https://github.com/intel/auto-round for the AssertionError in shard_writer.py _offload_to_meta"
+    ],
+    "output_files": [
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00001.safetensors",
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00002.safetensors",
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00003.safetensors",
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00004.safetensors",
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00005.safetensors",
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00006.safetensors",
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00007.safetensors",
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00008.safetensors",
+      "/root/.openclaw/workspace/quantized/Jackrong_Qwopus3.6-27B-v1-preview-W4A16/model-shard-00009.safetensors"
+    ],
+    "failure_stage": "quantization"
+  },
+  "accuracy": null,
+  "copied_files": [
+    "results/Jackrong/Qwopus3.6-27B-v1-preview-autoround-W4A16/run_2026-04-29-16-47-52/quant_summary.json",
+    "results/Jackrong/Qwopus3.6-27B-v1-preview-autoround-W4A16/run_2026-04-29-16-47-52/quantize.py",
+    "results/Jackrong/Qwopus3.6-27B-v1-preview-autoround-W4A16/run_2026-04-29-16-47-52/logs",
+    "results/Jackrong/Qwopus3.6-27B-v1-preview-autoround-W4A16/run_2026-04-29-16-47-52/session_quant_336.jsonl",
+    "results/Jackrong/Qwopus3.6-27B-v1-preview-autoround-W4A16/run_2026-04-29-16-47-52/session_quant_336.md"
+  ],
+  "quant_num_gpus": "1",
+  "eval_num_gpus": "1"
+}
