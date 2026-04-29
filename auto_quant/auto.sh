@@ -116,6 +116,111 @@ except Exception:
 PY
 }
 
+ensure_failure_summary() {
+    local target_path="$1"
+    local mode="$2"
+    local failure_stage="$3"
+    local current_status="missing"
+
+    if [[ -f "$target_path" ]]; then
+        current_status="$(json_status "$target_path")"
+    fi
+    if [[ "$current_status" == "success" || "$current_status" == "failed" ]]; then
+        return 0
+    fi
+
+    run_step \
+        "Write fallback $(basename "$target_path")" \
+        python3 - "$target_path" "$mode" "$failure_stage" "$MODEL_ID" "$SCHEME" "$METHOD" "$EXPORT_FORMAT" "$DEVICE" "$DEVICE_INDEX" "$NUM_GPUS" "$EVAL_NUM_GPUS" "$RUN_OUTPUT_DIR" "$QUANTIZED_MODEL_DIR" "$LM_EVAL_OUTPUT_DIR" "${FAILED_STEPS[@]}" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+target_path = Path(sys.argv[1])
+mode = sys.argv[2]
+failure_stage = sys.argv[3]
+model_id = sys.argv[4]
+scheme = sys.argv[5]
+method = sys.argv[6]
+export_format = sys.argv[7]
+device = sys.argv[8]
+device_index = sys.argv[9]
+quant_num_gpus = sys.argv[10]
+eval_num_gpus = sys.argv[11]
+run_output_dir = sys.argv[12]
+quantized_model_dir = sys.argv[13]
+lm_eval_output_dir = sys.argv[14]
+fallback_errors = [err for err in sys.argv[15:] if err]
+
+existing = {}
+if target_path.exists():
+    try:
+        with target_path.open(encoding="utf-8") as handle:
+            loaded = json.load(handle)
+        if isinstance(loaded, dict):
+            existing = loaded
+    except Exception:
+        existing = {}
+
+existing_status = existing.get("status")
+if existing_status in {"success", "failed"}:
+    raise SystemExit(0)
+
+existing_errors = existing.get("errors")
+if not isinstance(existing_errors, list):
+    existing_errors = []
+
+errors = []
+for value in [*existing_errors, *fallback_errors]:
+    if value and value not in errors:
+        errors.append(value)
+if not errors:
+    errors = [f"{failure_stage} failed before final summary was written"]
+
+payload = dict(existing)
+payload["status"] = "failed"
+payload["failure_stage"] = failure_stage
+payload["errors"] = errors
+payload.setdefault("duration_seconds", None)
+
+if mode == "quant_summary":
+    payload.setdefault("model_id", model_id)
+    payload.setdefault("scheme", scheme)
+    payload.setdefault("method", method)
+    payload.setdefault("export_format", export_format)
+    payload.setdefault("device", device)
+    payload["quant_num_gpus"] = quant_num_gpus
+    payload["num_gpus"] = quant_num_gpus
+    payload.setdefault("output_dir", run_output_dir)
+    payload.setdefault("runtime_output_dir", run_output_dir)
+    payload.setdefault("quantized_model_dir", quantized_model_dir)
+    payload.setdefault("original_size_mb", None)
+    payload.setdefault("quantized_size_mb", None)
+    payload.setdefault("compression_ratio", None)
+    payload.setdefault("solutions", [])
+    payload.setdefault("output_files", [])
+elif mode == "accuracy":
+    payload.setdefault("model_id", model_id)
+    payload.setdefault("model_path", quantized_model_dir)
+    payload.setdefault("scheme", scheme)
+    payload.setdefault("device", f"{device}:{device_index}")
+    payload["eval_num_gpus"] = eval_num_gpus
+    payload["num_gpus"] = eval_num_gpus
+    payload.setdefault("tasks", {})
+    payload.setdefault("eval_framework", None)
+    payload.setdefault("lm_eval_output_dir", lm_eval_output_dir)
+else:
+    raise SystemExit(f"unsupported mode: {mode}")
+
+target_path.parent.mkdir(parents=True, exist_ok=True)
+tmp_path = target_path.with_name(f"{target_path.name}.tmp")
+with tmp_path.open("w", encoding="utf-8") as handle:
+    json.dump(payload, handle, indent=2, ensure_ascii=False)
+    handle.write("\n")
+tmp_path.replace(target_path)
+PY
+}
+
 run_step() {
     local title="$1"
     shift
@@ -174,6 +279,122 @@ show_json_if_exists() {
     fi
 }
 
+start_session_monitor() {
+    local session_path="$1"
+    local label="$2"
+    local pid_var="${3:-}"
+
+    if [[ -z "${SESSION_MONITOR:-}" || ! -f "${SESSION_MONITOR:-}" ]]; then
+        log_warn "Session monitor unavailable, skipping live session stream for ${label}"
+        return 1
+    fi
+
+    python3 -u "$SESSION_MONITOR" "$session_path" --label "$label" &
+    local monitor_pid="$!"
+    if [[ -n "$pid_var" ]]; then
+        printf -v "$pid_var" '%s' "$monitor_pid"
+    else
+        printf '%s\n' "$monitor_pid"
+    fi
+}
+
+stop_session_monitor() {
+    local monitor_pid="${1:-}"
+    if [[ -z "$monitor_pid" ]]; then
+        return 0
+    fi
+
+    kill "$monitor_pid" >/dev/null 2>&1 || true
+    wait "$monitor_pid" 2>/dev/null || true
+}
+
+start_log_tail() {
+    local file_path="$1"
+    local label="$2"
+    local pid_var="${3:-}"
+
+    bash -lc '
+        file_path="$1"
+        label="$2"
+        while [[ ! -f "$file_path" ]]; do
+            sleep 1
+        done
+        printf "\n========== %s ==========\n\n" "$label"
+        exec tail -n +1 -F -- "$file_path"
+    ' _ "$file_path" "$label" &
+
+    local tail_pid="$!"
+    if [[ -n "$pid_var" ]]; then
+        printf -v "$pid_var" '%s' "$tail_pid"
+    else
+        printf '%s\n' "$tail_pid"
+    fi
+}
+
+start_artifact_watch() {
+    local file_path="$1"
+    local title="$2"
+    local pid_var="${3:-}"
+    local max_lines="${4:-400}"
+
+    bash -lc '
+        file_path="$1"
+        title="$2"
+        max_lines="$3"
+        while [[ ! -f "$file_path" ]]; do
+            sleep 1
+        done
+        printf "\n========== %s ==========\n\n" "$title"
+        total_lines=$(wc -l < "$file_path" 2>/dev/null || printf "0")
+        if [[ "$total_lines" =~ ^[0-9]+$ ]] && (( total_lines > max_lines )); then
+            sed -n "1,${max_lines}p" "$file_path"
+            printf "[auto.sh] %s truncated: showing first %s/%s lines\n" "$title" "$max_lines" "$total_lines"
+        else
+            cat "$file_path"
+        fi
+    ' _ "$file_path" "$title" "$max_lines" &
+
+    local watch_pid="$!"
+    if [[ -n "$pid_var" ]]; then
+        printf -v "$pid_var" '%s' "$watch_pid"
+    else
+        printf '%s\n' "$watch_pid"
+    fi
+}
+
+show_text_if_exists() {
+    local title="$1"
+    local path="$2"
+    local max_lines="${3:-400}"
+
+    if [[ -f "$path" ]]; then
+        log_step "$title"
+        local total_lines
+        total_lines=$(wc -l < "$path" 2>/dev/null || printf '0')
+        if [[ "$total_lines" =~ ^[0-9]+$ ]] && (( total_lines > max_lines )); then
+            sed -n "1,${max_lines}p" "$path"
+            log_warn "$title truncated: showing first ${max_lines}/${total_lines} lines"
+        else
+            cat "$path"
+        fi
+    else
+        log_warn "$title skipped: file not found: $path"
+    fi
+}
+
+copy_session_if_exists() {
+    local source_path="$1"
+    local target_path="$2"
+    local copy_label="$3"
+
+    if [[ ! -f "$source_path" ]]; then
+        log_warn "$copy_label skipped: file not found: $source_path"
+        return 0
+    fi
+
+    run_step "$copy_label" cp "$source_path" "$target_path"
+}
+
 ensure_runtime_dirs() {
     mkdir -p "$RUN_OUTPUT_DIR" "$LOG_DIR"
 }
@@ -202,6 +423,57 @@ ensure_quantize_script_artifact() {
 
     if [[ ! -f "$quant_script_path" ]]; then
         record_failure "Quantization script missing: expected ${quant_script_path}"
+    fi
+}
+
+ensure_evaluate_script_artifact() {
+    local strict_mode="${1:-true}"
+    local eval_script_path="${RUN_OUTPUT_DIR}/evaluate.sh"
+    local legacy_shell_paths=(
+        "${RUN_OUTPUT_DIR}/eval.sh"
+        "${RUN_OUTPUT_DIR}/eval_script.sh"
+        "${RUN_OUTPUT_DIR}/evaluate_script.sh"
+    )
+    local legacy_python_paths=(
+        "${RUN_OUTPUT_DIR}/evaluate.py"
+        "${RUN_OUTPUT_DIR}/eval.py"
+        "${RUN_OUTPUT_DIR}/eval_script.py"
+        "${RUN_OUTPUT_DIR}/evaluate_script.py"
+    )
+    local legacy_path=""
+
+    ensure_runtime_dirs
+
+    if [[ -f "$eval_script_path" ]]; then
+        return 0
+    fi
+
+    for legacy_path in "${legacy_shell_paths[@]}"; do
+        if [[ -f "$legacy_path" ]]; then
+            run_step "Normalize evaluation script artifact" cp "$legacy_path" "$eval_script_path"
+            break
+        fi
+    done
+
+    if [[ ! -f "$eval_script_path" ]]; then
+        for legacy_path in "${legacy_python_paths[@]}"; do
+            if [[ -f "$legacy_path" ]]; then
+                local message="Legacy Python evaluation script found (${legacy_path}); expected ${eval_script_path} for new runs"
+                if [[ "$strict_mode" == "true" ]]; then
+                    record_failure "$message"
+                else
+                    log_warn "$message"
+                fi
+                return 0
+            fi
+        done
+
+        local message="Evaluation script missing: expected ${eval_script_path}"
+        if [[ "$strict_mode" == "true" ]]; then
+            record_failure "$message"
+        else
+            log_warn "$message"
+        fi
     fi
 }
 
@@ -258,6 +530,7 @@ Quantization: ${SCHEME} / ${METHOD}
 Export format: ${EXPORT_FORMAT}
 Quantized Model Output directory: ${QUANTIZED_MODEL_DIR}
 Runtime artifact directory: ${RUN_OUTPUT_DIR}
+Quantization execution log path: ${QUANT_EXEC_LOG}
 Runtime device: ${DEVICE}
 Num gpus: ${NUM_GPUS}
 
@@ -269,7 +542,19 @@ CRITICAL SCRIPT REQUIREMENT:
 - Before starting quantization, you MUST first generate the quantization script file:
     ${RUN_OUTPUT_DIR}/quantize.py
 - The file name must be exactly: quantize.py
-- Run quantization by executing that generated quantize.py script
+- The script must be a standalone Python program runnable with:
+    python3 -u ${RUN_OUTPUT_DIR}/quantize.py
+- The generated quantize.py must focus on the core quantization/export logic only.
+- Do NOT put venv creation, pip/uv installation, proxy/bootstrap shell setup, summary generation, or unrelated orchestration into quantize.py.
+- In this same OpenClaw task, prepare or reuse the Python environment separately before executing quantize.py.
+- In this same OpenClaw task, first write quantize.py, then execute that generated script yourself.
+- When you execute quantize.py, you MUST stream stdout/stderr into this log file while still printing output:
+    python3 -u ${RUN_OUTPUT_DIR}/quantize.py 2>&1 | tee ${QUANT_EXEC_LOG}
+- ${QUANT_SUMMARY_JSON} is a final summary artifact, not a progress marker.
+- After quantize.py finishes, inspect the exported artifacts and write ${QUANT_SUMMARY_JSON} in a separate finalize step outside quantize.py.
+- Do NOT write a success ${QUANT_SUMMARY_JSON} until quantization has finished and the exported artifacts are ready.
+- Write ${QUANT_SUMMARY_JSON} atomically via a temporary file and rename/move it into place only at finalize time.
+- If quantization fails, still write a minimal failed ${QUANT_SUMMARY_JSON} before exiting non-zero, also atomically.
 - Do not use quantize_script.py as the final artifact name
 
 CRITICAL ENVIRONMENT NOTE:
@@ -285,7 +570,7 @@ CRITICAL ENVIRONMENT NOTE:
     - if Num gpus > 1, prefer device_map="auto"
   Do NOT default to device_map="0" or device_map="0,1,2,3" unless manual mapping is truly required after auto placement fails.
 
-IMPORTANT - After quantization completes (success or failure), you MUST produce:
+IMPORTANT - In this same OpenClaw task, after separate quantization and finalize steps, you MUST produce:
 
 ${QUANT_SUMMARY_JSON} - structured summary:
 {
@@ -313,7 +598,7 @@ Write as valid JSON. If quantization fails, still write quant_summary.json with 
 EOF
 }
 
-write_eval_prompt() {
+write_eval_script_prompt() {
     cat <<EOF
 You are an expert in evaluating quantized LLM models.
 You MUST follow the skill instructions in: ${EVAL_SKILL_PATH}
@@ -321,6 +606,8 @@ You MUST follow the skill instructions in: ${EVAL_SKILL_PATH}
 Quantized model path: ${QUANTIZED_MODEL_DIR}
 Runtime artifact directory: ${RUN_OUTPUT_DIR}
 Raw lm_eval output directory: ${LM_EVAL_OUTPUT_DIR}
+Evaluation script path: ${RUN_OUTPUT_DIR}/evaluate.sh
+Evaluation execution log path: ${EVAL_EXEC_LOG}
 Evaluation tasks: ${EVAL_TASKS}
 Batch size: ${EVAL_BATCH_SIZE}
 Num gpus: ${EVAL_NUM_GPUS}
@@ -338,11 +625,37 @@ CRITICAL ENVIRONMENT NOTE:
     uv pip install --python <venv>/bin/python <packages>
 - Do NOT reinstall torch or flash_attn if they already import successfully from the reused environment. Only install them when missing or incompatible.
 - Write evaluation outputs, logs, prompts, copied request/session files, and other runtime artifacts to: ${RUN_OUTPUT_DIR}
-- When invoking lm_eval, you MUST pass:
+- Before starting evaluation, you MUST first generate the evaluation script file:
+    ${RUN_OUTPUT_DIR}/evaluate.sh
+- The file name must be exactly: evaluate.sh
+- The script must be a standalone shell program runnable with:
+    bash ${RUN_OUTPUT_DIR}/evaluate.sh
+- The generated evaluate.sh must focus on Stage A raw lm_eval execution only.
+- Do NOT put venv creation, pip/uv installation, package bootstrap, JSON parsing, accuracy.json writing, or destructive cleanup/recreation into evaluate.sh.
+- In this same OpenClaw task, prepare or reuse the evaluation environment separately before executing evaluate.sh.
+- Prefer direct lm_eval CLI commands and standard shell environment variables over ad-hoc Python wrappers.
+- In this same OpenClaw task, first write evaluate.sh, then execute that generated script yourself.
+- When you execute evaluate.sh or a direct lm_eval command, you MUST stream stdout/stderr into this log file while still printing output:
+    bash ${RUN_OUTPUT_DIR}/evaluate.sh 2>&1 | tee ${EVAL_EXEC_LOG}
+- ${ACCURACY_JSON} is a final summary artifact, not a progress marker.
+- After Stage A raw lm_eval completes, parse the latest raw results and write ${ACCURACY_JSON} in a separate finalize step outside evaluate.sh.
+- Do NOT write a success ${ACCURACY_JSON} until Stage A raw lm_eval output and Stage B parsing have both completed successfully.
+- Write ${ACCURACY_JSON} atomically via a temporary file and rename/move it into place only at finalize time.
+- If evaluation fails, still write a minimal failed ${ACCURACY_JSON} before exiting non-zero, also atomically.
+- The overall evaluation workflow MUST still behave as two idempotent stages:
+    Stage A: run lm_eval and persist raw results under ${LM_EVAL_OUTPUT_DIR}
+    Stage B: parse the latest raw results into ${ACCURACY_JSON}
+- Stage A and Stage B MUST be independently rerunnable.
+- If ${LM_EVAL_OUTPUT_DIR} already contains a valid raw results file matching `results_*.json`, do NOT rerun Stage A; only rerun Stage B parsing.
+- If Stage B parsing fails after Stage A already succeeded, exit non-zero but preserve the raw lm_eval outputs, logs, and venv so the next retry only reruns parsing.
+- Do NOT delete or recreate ${LM_EVAL_OUTPUT_DIR} when raw results already exist.
+- Parsing logic should read the latest results file under ${LM_EVAL_OUTPUT_DIR}/**/results_*.json rather than assuming lm_eval must be rerun.
+- Do NOT leave the final artifact named eval.sh, eval_script.sh, or evaluate_script.sh.
+- When the generated script invokes lm_eval, it MUST pass:
     --output_path ${LM_EVAL_OUTPUT_DIR}
 - Do NOT omit --output_path. Keep the raw lm_eval output files under that exact directory for later upload.
 
-IMPORTANT - After evaluation completes, you MUST produce:
+IMPORTANT - In this same OpenClaw task, after separate raw-eval and finalize steps, you MUST produce:
 
 ${ACCURACY_JSON} - evaluation results:
 {
@@ -367,7 +680,7 @@ ${LM_EVAL_OUTPUT_DIR}/ - raw lm_eval output directory created by:
     lm_eval ... --output_path ${LM_EVAL_OUTPUT_DIR}
 
 The accuracy values MUST be real numbers from actual evaluation runs.
-Write as valid JSON. If evaluation fails, still write accuracy.json with status=failed.
+Write as valid JSON. If evaluation fails, the script may invoke python only for JSON post-processing, but it must still write accuracy.json with status=failed before exiting non-zero.
 EOF
 }
 
@@ -521,12 +834,17 @@ EVAL_SESSION="autoeval_eval_$$"
 QUANT_SUMMARY_JSON="${RUN_OUTPUT_DIR}/quant_summary.json"
 ACCURACY_JSON="${RUN_OUTPUT_DIR}/accuracy.json"
 LM_EVAL_OUTPUT_DIR="${RUN_OUTPUT_DIR}/lm_eval_results"
+QUANT_SCRIPT="${RUN_OUTPUT_DIR}/quantize.py"
+EVAL_SCRIPT="${RUN_OUTPUT_DIR}/evaluate.sh"
+QUANT_EXEC_LOG="${LOG_DIR}/quant_exec.log"
+EVAL_EXEC_LOG="${LOG_DIR}/eval_exec.log"
 REQUEST_JSON="${RUN_OUTPUT_DIR}/request.json"
 QUANT_SESSION_SRC="${OPENCLAW_SESSIONS_DIR}/${QUANT_SESSION}.jsonl"
 EVAL_SESSION_SRC="${OPENCLAW_SESSIONS_DIR}/${EVAL_SESSION}.jsonl"
 QUANT_SESSION_DST="${RUN_OUTPUT_DIR}/session_quant_$$.jsonl"
 EVAL_SESSION_DST="${RUN_OUTPUT_DIR}/session_eval_$$.jsonl"
 FORMATTER="${SCRIPT_DIR}/format_sessions.py"
+SESSION_MONITOR="${SCRIPT_DIR}/stream_session.py"
 GITHUB_UPLOADER="${SCRIPT_DIR}/upload_results_github.py"
 
 log_step "Resolved configuration"
@@ -575,6 +893,14 @@ if [[ "$PIPELINE" == "auto_quant" ]]; then
     if [[ "$QUANT_STATUS" != "success" ]]; then
         QUANT_PROMPT="$(write_quant_prompt)"
         save_prompt_copy "quant_prompt.txt" "$QUANT_PROMPT"
+        quant_script_watch_pid=""
+        quant_exec_tail_pid=""
+        if [[ ! -f "$QUANT_SCRIPT" ]]; then
+            start_artifact_watch "$QUANT_SCRIPT" "Generated quantization script" quant_script_watch_pid 400 || true
+        fi
+        start_log_tail "$QUANT_EXEC_LOG" "Quantization execution log" quant_exec_tail_pid || true
+        quant_monitor_pid=""
+        start_session_monitor "$QUANT_SESSION_SRC" "quant-live" quant_monitor_pid || true
         run_step \
             "Run auto_quant" \
             env \
@@ -582,10 +908,20 @@ if [[ "$PIPELINE" == "auto_quant" ]]; then
                 https_proxy="${HTTPS_PROXY:-}" \
                 HTTP_PROXY="${HTTP_PROXY:-}" \
                 HTTPS_PROXY="${HTTPS_PROXY:-}" \
+                PYTHONUNBUFFERED=1 \
                 openclaw agent --local \
                     --session-id "$QUANT_SESSION" \
                     --message "$QUANT_PROMPT" \
                     --timeout "$TIMEOUT"
+        stop_session_monitor "${quant_monitor_pid:-}"
+        stop_session_monitor "${quant_script_watch_pid:-}"
+        stop_session_monitor "${quant_exec_tail_pid:-}"
+        copy_session_if_exists \
+            "$QUANT_SESSION_SRC" \
+            "$QUANT_SESSION_DST" \
+            "Copy quant session log"
+        ensure_quantize_script_artifact
+        show_text_if_exists "Generated quantization script" "$QUANT_SCRIPT" 400
         QUANT_STATUS="$(json_status "$QUANT_SUMMARY_JSON")"
     else
         log_ok "Quantization already succeeded, skipping auto_quant"
@@ -596,15 +932,26 @@ fi
 
 if [[ "$PIPELINE" == "auto_quant" ]]; then
     ensure_runtime_dirs
-    copy_if_exists "$QUANT_SESSION_SRC" "$QUANT_SESSION_DST" "Copy quant session log"
+    if [[ ! -f "$QUANT_SESSION_DST" ]]; then
+        copy_if_exists "$QUANT_SESSION_SRC" "$QUANT_SESSION_DST" "Copy quant session log"
+    fi
     ensure_quantize_script_artifact
+    show_text_if_exists "Generated quantization script" "$QUANT_SCRIPT" 400
 fi
 
 EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
 if [[ "$EVAL_STATUS" != "success" ]]; then
     if [[ "$QUANT_STATUS" == "success" ]]; then
-        EVAL_PROMPT="$(write_eval_prompt)"
-        save_prompt_copy "eval_prompt.txt" "$EVAL_PROMPT"
+        EVAL_PROMPT="$(write_eval_script_prompt)"
+        save_prompt_copy "eval_script_prompt.txt" "$EVAL_PROMPT"
+        eval_script_watch_pid=""
+        eval_exec_tail_pid=""
+        if [[ ! -f "$EVAL_SCRIPT" ]]; then
+            start_artifact_watch "$EVAL_SCRIPT" "Generated evaluation script" eval_script_watch_pid 400 || true
+        fi
+        start_log_tail "$EVAL_EXEC_LOG" "Evaluation execution log" eval_exec_tail_pid || true
+        eval_monitor_pid=""
+        start_session_monitor "$EVAL_SESSION_SRC" "eval-live" eval_monitor_pid || true
         run_step \
             "Run ${EVAL_SKILL_NAME}" \
             env \
@@ -612,20 +959,45 @@ if [[ "$EVAL_STATUS" != "success" ]]; then
                 https_proxy="${HTTPS_PROXY:-}" \
                 HTTP_PROXY="${HTTP_PROXY:-}" \
                 HTTPS_PROXY="${HTTPS_PROXY:-}" \
+                PYTHONUNBUFFERED=1 \
                 openclaw agent --local \
                     --session-id "$EVAL_SESSION" \
                     --message "$EVAL_PROMPT" \
                     --timeout "$TIMEOUT"
+        stop_session_monitor "${eval_monitor_pid:-}"
+        stop_session_monitor "${eval_script_watch_pid:-}"
+        stop_session_monitor "${eval_exec_tail_pid:-}"
+        copy_session_if_exists \
+            "$EVAL_SESSION_SRC" \
+            "$EVAL_SESSION_DST" \
+            "Copy eval session log"
+        ensure_evaluate_script_artifact
+        show_text_if_exists "Generated evaluation script" "$EVAL_SCRIPT" 400
         EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
     else
         log_warn "Skipping auto_eval because quantization status is $QUANT_STATUS"
     fi
 else
     log_ok "Evaluation already succeeded, skipping auto_eval"
+    ensure_evaluate_script_artifact false
 fi
 
 ensure_runtime_dirs
-copy_if_exists "$EVAL_SESSION_SRC" "$EVAL_SESSION_DST" "Copy eval session log"
+if [[ ! -f "$EVAL_SESSION_DST" ]]; then
+    copy_if_exists "$EVAL_SESSION_SRC" "$EVAL_SESSION_DST" "Copy eval session log"
+fi
+show_text_if_exists "Generated evaluation script" "$EVAL_SCRIPT" 400
+
+if [[ "$PIPELINE" == "auto_quant" && "$QUANT_STATUS" != "success" ]]; then
+    ensure_failure_summary "$QUANT_SUMMARY_JSON" "quant_summary" "quantization"
+    QUANT_STATUS="$(json_status "$QUANT_SUMMARY_JSON")"
+fi
+if [[ "$EVAL_STATUS" != "success" ]]; then
+    if [[ "$PIPELINE" == "auto_eval" || "$QUANT_STATUS" == "success" ]]; then
+        ensure_failure_summary "$ACCURACY_JSON" "accuracy" "evaluation"
+        EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
+    fi
+fi
 
 if [[ "$PIPELINE" == "auto_quant" ]]; then
     normalize_json_gpu_metadata "$QUANT_SUMMARY_JSON" "quant_summary" "$NUM_GPUS" "$EVAL_NUM_GPUS"

@@ -7,6 +7,7 @@ Artifacts copied from the runtime output directory:
 - accuracy.json
 - lm_eval_results/
 - quantize.py
+- evaluate.sh
 - logs/
 - session_*.jsonl
 - session_*.md
@@ -347,6 +348,16 @@ def main() -> int:
     accuracy_path = runtime_output_dir / "accuracy.json"
     quantize_script_path = runtime_output_dir / "quantize.py"
     legacy_quantize_script_path = runtime_output_dir / "quantize_script.py"
+    evaluation_script_candidates = [
+        (runtime_output_dir / "evaluate.sh", "evaluate.sh"),
+        (runtime_output_dir / "eval.sh", "evaluate.sh"),
+        (runtime_output_dir / "eval_script.sh", "evaluate.sh"),
+        (runtime_output_dir / "evaluate_script.sh", "evaluate.sh"),
+        (runtime_output_dir / "evaluate.py", "evaluate.py"),
+        (runtime_output_dir / "eval.py", "evaluate.py"),
+        (runtime_output_dir / "eval_script.py", "evaluate.py"),
+        (runtime_output_dir / "evaluate_script.py", "evaluate.py"),
+    ]
     lm_eval_results_dir = runtime_output_dir / "lm_eval_results"
     logs_dir = runtime_output_dir / "logs"
     quant_summary = load_json(quant_summary_path) or load_json(summary_path)
@@ -391,6 +402,10 @@ def main() -> int:
         copy_file(quantize_script_path, run_dir / "quantize.py", copied)
     elif legacy_quantize_script_path.is_file():
         copy_file(legacy_quantize_script_path, run_dir / "quantize.py", copied)
+    for evaluation_script_path, target_name in evaluation_script_candidates:
+        if evaluation_script_path.is_file():
+            copy_file(evaluation_script_path, run_dir / target_name, copied)
+            break
     copy_tree(lm_eval_results_dir, run_dir / "lm_eval_results", copied)
     copy_tree(logs_dir, run_dir / "logs", copied)
 

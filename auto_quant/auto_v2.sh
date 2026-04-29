@@ -116,111 +116,6 @@ except Exception:
 PY
 }
 
-ensure_failure_summary() {
-    local target_path="$1"
-    local mode="$2"
-    local failure_stage="$3"
-    local current_status="missing"
-
-    if [[ -f "$target_path" ]]; then
-        current_status="$(json_status "$target_path")"
-    fi
-    if [[ "$current_status" == "success" || "$current_status" == "failed" ]]; then
-        return 0
-    fi
-
-    run_step \
-        "Write fallback $(basename "$target_path")" \
-        python3 - "$target_path" "$mode" "$failure_stage" "$MODEL_ID" "$SCHEME" "$METHOD" "$EXPORT_FORMAT" "$DEVICE" "$DEVICE_INDEX" "$NUM_GPUS" "$EVAL_NUM_GPUS" "$RUN_OUTPUT_DIR" "$QUANTIZED_MODEL_DIR" "$LM_EVAL_OUTPUT_DIR" "${FAILED_STEPS[@]}" <<'PY'
-import json
-import sys
-from pathlib import Path
-
-target_path = Path(sys.argv[1])
-mode = sys.argv[2]
-failure_stage = sys.argv[3]
-model_id = sys.argv[4]
-scheme = sys.argv[5]
-method = sys.argv[6]
-export_format = sys.argv[7]
-device = sys.argv[8]
-device_index = sys.argv[9]
-quant_num_gpus = sys.argv[10]
-eval_num_gpus = sys.argv[11]
-run_output_dir = sys.argv[12]
-quantized_model_dir = sys.argv[13]
-lm_eval_output_dir = sys.argv[14]
-fallback_errors = [err for err in sys.argv[15:] if err]
-
-existing = {}
-if target_path.exists():
-    try:
-        with target_path.open(encoding="utf-8") as handle:
-            loaded = json.load(handle)
-        if isinstance(loaded, dict):
-            existing = loaded
-    except Exception:
-        existing = {}
-
-existing_status = existing.get("status")
-if existing_status in {"success", "failed"}:
-    raise SystemExit(0)
-
-existing_errors = existing.get("errors")
-if not isinstance(existing_errors, list):
-    existing_errors = []
-
-errors = []
-for value in [*existing_errors, *fallback_errors]:
-    if value and value not in errors:
-        errors.append(value)
-if not errors:
-    errors = [f"{failure_stage} failed before final summary was written"]
-
-payload = dict(existing)
-payload["status"] = "failed"
-payload["failure_stage"] = failure_stage
-payload["errors"] = errors
-payload.setdefault("duration_seconds", None)
-
-if mode == "quant_summary":
-    payload.setdefault("model_id", model_id)
-    payload.setdefault("scheme", scheme)
-    payload.setdefault("method", method)
-    payload.setdefault("export_format", export_format)
-    payload.setdefault("device", device)
-    payload["quant_num_gpus"] = quant_num_gpus
-    payload["num_gpus"] = quant_num_gpus
-    payload.setdefault("output_dir", run_output_dir)
-    payload.setdefault("runtime_output_dir", run_output_dir)
-    payload.setdefault("quantized_model_dir", quantized_model_dir)
-    payload.setdefault("original_size_mb", None)
-    payload.setdefault("quantized_size_mb", None)
-    payload.setdefault("compression_ratio", None)
-    payload.setdefault("solutions", [])
-    payload.setdefault("output_files", [])
-elif mode == "accuracy":
-    payload.setdefault("model_id", model_id)
-    payload.setdefault("model_path", quantized_model_dir)
-    payload.setdefault("scheme", scheme)
-    payload.setdefault("device", f"{device}:{device_index}")
-    payload["eval_num_gpus"] = eval_num_gpus
-    payload["num_gpus"] = eval_num_gpus
-    payload.setdefault("tasks", {})
-    payload.setdefault("eval_framework", None)
-    payload.setdefault("lm_eval_output_dir", lm_eval_output_dir)
-else:
-    raise SystemExit(f"unsupported mode: {mode}")
-
-target_path.parent.mkdir(parents=True, exist_ok=True)
-tmp_path = target_path.with_name(f"{target_path.name}.tmp")
-with tmp_path.open("w", encoding="utf-8") as handle:
-    json.dump(payload, handle, indent=2, ensure_ascii=False)
-    handle.write("\n")
-tmp_path.replace(target_path)
-PY
-}
-
 run_step() {
     local title="$1"
     shift
@@ -544,17 +439,10 @@ CRITICAL SCRIPT REQUIREMENT:
 - The file name must be exactly: quantize.py
 - The script must be a standalone Python program runnable with:
     python3 -u ${RUN_OUTPUT_DIR}/quantize.py
-- The generated quantize.py must focus on the core quantization/export logic only.
-- Do NOT put venv creation, pip/uv installation, proxy/bootstrap shell setup, summary generation, or unrelated orchestration into quantize.py.
-- In this same OpenClaw task, prepare or reuse the Python environment separately before executing quantize.py.
+- The script itself must perform the full quantization flow, including any needed environment reuse or setup.
 - In this same OpenClaw task, first write quantize.py, then execute that generated script yourself.
 - When you execute quantize.py, you MUST stream stdout/stderr into this log file while still printing output:
     python3 -u ${RUN_OUTPUT_DIR}/quantize.py 2>&1 | tee ${QUANT_EXEC_LOG}
-- ${QUANT_SUMMARY_JSON} is a final summary artifact, not a progress marker.
-- After quantize.py finishes, inspect the exported artifacts and write ${QUANT_SUMMARY_JSON} in a separate finalize step outside quantize.py.
-- Do NOT write a success ${QUANT_SUMMARY_JSON} until quantization has finished and the exported artifacts are ready.
-- Write ${QUANT_SUMMARY_JSON} atomically via a temporary file and rename/move it into place only at finalize time.
-- If quantization fails, still write a minimal failed ${QUANT_SUMMARY_JSON} before exiting non-zero, also atomically.
 - Do not use quantize_script.py as the final artifact name
 
 CRITICAL ENVIRONMENT NOTE:
@@ -570,7 +458,7 @@ CRITICAL ENVIRONMENT NOTE:
     - if Num gpus > 1, prefer device_map="auto"
   Do NOT default to device_map="0" or device_map="0,1,2,3" unless manual mapping is truly required after auto placement fails.
 
-IMPORTANT - In this same OpenClaw task, after separate quantization and finalize steps, you MUST produce:
+IMPORTANT - The generated quantize.py script must, when executed, produce:
 
 ${QUANT_SUMMARY_JSON} - structured summary:
 {
@@ -630,24 +518,17 @@ CRITICAL ENVIRONMENT NOTE:
 - The file name must be exactly: evaluate.sh
 - The script must be a standalone shell program runnable with:
     bash ${RUN_OUTPUT_DIR}/evaluate.sh
-- The generated evaluate.sh must focus on Stage A raw lm_eval execution only.
-- Do NOT put venv creation, pip/uv installation, package bootstrap, JSON parsing, accuracy.json writing, or destructive cleanup/recreation into evaluate.sh.
-- In this same OpenClaw task, prepare or reuse the evaluation environment separately before executing evaluate.sh.
+- The script itself must perform the full evaluation flow, including any needed environment reuse or setup.
 - Prefer direct lm_eval CLI commands and standard shell environment variables over ad-hoc Python wrappers.
 - In this same OpenClaw task, first write evaluate.sh, then execute that generated script yourself.
 - When you execute evaluate.sh or a direct lm_eval command, you MUST stream stdout/stderr into this log file while still printing output:
     bash ${RUN_OUTPUT_DIR}/evaluate.sh 2>&1 | tee ${EVAL_EXEC_LOG}
-- ${ACCURACY_JSON} is a final summary artifact, not a progress marker.
-- After Stage A raw lm_eval completes, parse the latest raw results and write ${ACCURACY_JSON} in a separate finalize step outside evaluate.sh.
-- Do NOT write a success ${ACCURACY_JSON} until Stage A raw lm_eval output and Stage B parsing have both completed successfully.
-- Write ${ACCURACY_JSON} atomically via a temporary file and rename/move it into place only at finalize time.
-- If evaluation fails, still write a minimal failed ${ACCURACY_JSON} before exiting non-zero, also atomically.
-- The overall evaluation workflow MUST still behave as two idempotent stages:
+- The generated evaluate.sh MUST separate evaluation into two idempotent stages:
     Stage A: run lm_eval and persist raw results under ${LM_EVAL_OUTPUT_DIR}
     Stage B: parse the latest raw results into ${ACCURACY_JSON}
 - Stage A and Stage B MUST be independently rerunnable.
-- If ${LM_EVAL_OUTPUT_DIR} already contains a valid raw results file matching `results_*.json`, do NOT rerun Stage A; only rerun Stage B parsing.
-- If Stage B parsing fails after Stage A already succeeded, exit non-zero but preserve the raw lm_eval outputs, logs, and venv so the next retry only reruns parsing.
+- If ${LM_EVAL_OUTPUT_DIR} already contains a valid raw results file matching `results_*.json`, evaluate.sh MUST skip rerunning lm_eval and only rerun Stage B parsing.
+- If Stage B parsing fails after Stage A already succeeded, evaluate.sh MUST exit non-zero but preserve the raw lm_eval outputs, logs, and venv so the next retry only reruns parsing.
 - Do NOT delete or recreate ${LM_EVAL_OUTPUT_DIR} when raw results already exist.
 - Parsing logic should read the latest results file under ${LM_EVAL_OUTPUT_DIR}/**/results_*.json rather than assuming lm_eval must be rerun.
 - Do NOT leave the final artifact named eval.sh, eval_script.sh, or evaluate_script.sh.
@@ -655,7 +536,7 @@ CRITICAL ENVIRONMENT NOTE:
     --output_path ${LM_EVAL_OUTPUT_DIR}
 - Do NOT omit --output_path. Keep the raw lm_eval output files under that exact directory for later upload.
 
-IMPORTANT - In this same OpenClaw task, after separate raw-eval and finalize steps, you MUST produce:
+IMPORTANT - The generated evaluate.sh script must, when executed, produce:
 
 ${ACCURACY_JSON} - evaluation results:
 {
@@ -987,17 +868,6 @@ if [[ ! -f "$EVAL_SESSION_DST" ]]; then
     copy_if_exists "$EVAL_SESSION_SRC" "$EVAL_SESSION_DST" "Copy eval session log"
 fi
 show_text_if_exists "Generated evaluation script" "$EVAL_SCRIPT" 400
-
-if [[ "$PIPELINE" == "auto_quant" && "$QUANT_STATUS" != "success" ]]; then
-    ensure_failure_summary "$QUANT_SUMMARY_JSON" "quant_summary" "quantization"
-    QUANT_STATUS="$(json_status "$QUANT_SUMMARY_JSON")"
-fi
-if [[ "$EVAL_STATUS" != "success" ]]; then
-    if [[ "$PIPELINE" == "auto_eval" || "$QUANT_STATUS" == "success" ]]; then
-        ensure_failure_summary "$ACCURACY_JSON" "accuracy" "evaluation"
-        EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
-    fi
-fi
 
 if [[ "$PIPELINE" == "auto_quant" ]]; then
     normalize_json_gpu_metadata "$QUANT_SUMMARY_JSON" "quant_summary" "$NUM_GPUS" "$EVAL_NUM_GPUS"

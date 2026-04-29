@@ -81,9 +81,10 @@ bash auto.sh <task.json> --skip-github
    - expect `quant_summary.json`
 8. Copy quant session JSONL from the OpenClaw sessions directory
 9. If evaluation has not already succeeded and quantization succeeded:
-   - generate eval prompt
+   - generate an eval-script prompt
    - use `auto_eval` for the quantization+evaluation flow, or `auto_eval_vllm` for evaluation-only requests
-   - run `openclaw agent --local`
+   - run `openclaw agent --local` to write `evaluate.sh`
+   - let OpenClaw execute the generated `evaluate.sh` within the same autonomous task
    - expect `accuracy.json`
    - expect raw `lm_eval_results/` written via `lm_eval --output_path`
 10. Copy eval session JSONL
@@ -100,6 +101,12 @@ bash auto.sh <task.json> --skip-github
 - Step failures are recorded and the script continues when possible
 - The final exit code still reflects pipeline failure
 - Prompt files are saved as runtime artifacts, but prompt text is generated in memory first
+- New evaluation runs generate a first-class runtime artifact: `evaluate.sh`
+- GitHub artifact upload now includes both `quantize.py` and `evaluate.sh` when present
+- `auto.log` now follows the OpenClaw session JSONL during execution and prints incremental user / assistant / tool summaries
+- `auto.log` also tails fixed execution logs (`logs/quant_exec.log`, `logs/eval_exec.log`) when OpenClaw streams script stdout/stderr via `tee`
+- `auto.log` prints the generated `quantize.py` / `evaluate.sh` artifacts (truncated when very long)
+- Quantization and evaluation remain OpenClaw-owned; `auto.sh` only adds live session visibility, script display, and session artifact export
 
 ## 5. Directory layout
 
@@ -312,6 +319,8 @@ Copied artifacts include:
 - `quant_summary.json`
 - `summary.json` if present
 - `accuracy.json`
+- `quantize.py`
+- `evaluate.sh`
 - `lm_eval_results/`
 - `logs/`
 - `session_*.jsonl`
@@ -347,6 +356,11 @@ python3 format_sessions.py /path/to/runtime-output-dir
 
 - If `quant_summary.json` already has `status=success`, quantization is skipped
 - If `accuracy.json` already has `status=success`, evaluation is skipped
+- If a reused runtime dir already contains `evaluate.sh`, `auto.sh` reuses that script for the next evaluation attempt
+- Older runtime dirs with legacy `evaluate.py` still work as historical artifacts, but new runs are expected to generate `evaluate.sh`
+- New evaluation scripts are expected to split raw `lm_eval` execution from result parsing so a parsing failure does not force `lm_eval` to run again on the next retry
+- Successful `quant_summary.json` and `accuracy.json` are treated as final summary artifacts and should be written atomically at the end; if OpenClaw fails before that, `auto.sh` writes a minimal failed fallback summary so upload/status write-back still works
+- Generated `quantize.py` should contain only core quantization/export logic, and generated `evaluate.sh` should contain only raw `lm_eval` execution; environment preparation and parsing/finalization stay as separate steps in the same OpenClaw task
 
 ### Failure handling
 
@@ -372,6 +386,7 @@ python3 format_sessions.py /path/to/runtime-output-dir
    - runtime `logs/auto.log`
    - `quant_summary.json`
    - `accuracy.json`
+   - `evaluate.sh`
    - copied session JSONL/Markdown
 5. Confirm the model dir contains only upload-worthy model files
 6. Confirm GitHub upload contains runtime artifacts only
