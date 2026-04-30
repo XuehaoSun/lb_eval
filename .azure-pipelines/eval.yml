@@ -1,6 +1,13 @@
 trigger: none
 pr: none
 
+parameters:
+  - name: runName
+    type: string
+    default: "lb-eval"
+
+name: ${{ parameters.runName }}_$(Build.BuildId)
+
 pool:
   vmImage: "ubuntu-latest"
 
@@ -10,6 +17,9 @@ variables:
   - name: AGENT_NAME
     value: "lb-agent-$(Build.BuildId)"
 
+# ====================================================================
+# Stage 1: Start_Pod — create RunPod instance, register agent
+# ====================================================================
 stages:
   - stage: Start_Pod
     jobs:
@@ -50,6 +60,11 @@ stages:
                   --gpu_count 1 \
                   --env AZP_URL=$(System.CollectionUri) AZP_TOKEN=$(AZP_DEVOPS_PAT) AZP_POOL=$(POOL_NAME) AZP_AGENT_NAME="$(AGENT_NAME)"
 
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Waiting"
+              requestJson: "$(REQUEST_JSON)"
+
           - task: Bash@3
             displayName: "Wait for Pod to be Online"
             name: wait_for_pod
@@ -78,6 +93,14 @@ stages:
                   --pool "$(POOL_NAME)" \
                   --agent "$(AGENT_NAME)"
 
+          - template: template/git-status-template.yml
+            parameters:
+              status: "Running"
+              requestJson: "$(REQUEST_JSON)"
+
+# ====================================================================
+# Stage 2: Eval — run auto.sh on the GPU pod
+# ====================================================================
   - stage: Eval
     displayName: Evaluation
     pool: "$(POOL_NAME)"
@@ -102,9 +125,13 @@ stages:
 
           - template: template/model-template.yml
 
+# ====================================================================
+# Stage 3: Cleanup — terminate pod, deregister agent, push results
+# ====================================================================
   - stage: Cleanup_Verification
     displayName: "Verify Pod Cleanup"
     dependsOn:
+      - Start_Pod
       - Eval
     condition: always()
     jobs:

@@ -1,0 +1,38 @@
+{
+  "model_id": "Qwen/Qwen3.5-27B",
+  "model_path": "/root/.openclaw/workspace/quantized/Qwen_Qwen3.5-27B-W4A16",
+  "scheme": "W4A16",
+  "device": "cuda:0",
+  "num_gpus": "1",
+  "tasks": {
+    "piqa": {
+      "accuracy": null,
+      "accuracy_stderr": null
+    },
+    "mmlu": {
+      "accuracy": null,
+      "accuracy_stderr": null
+    },
+    "hellaswag": {
+      "accuracy": null,
+      "accuracy_stderr": null
+    },
+    "gsm8k": {
+      "accuracy": null,
+      "accuracy_stderr": null
+    }
+  },
+  "status": "failed",
+  "duration_seconds": 0.0,
+  "eval_framework": "lm_eval+hf",
+  "errors": [
+    "auto_round quantized model (export_format=auto_round:auto_gptq) fundamentally incompatible with HuggingFace and vLLM inference stacks",
+    "Model stores weights as qweight/qzeros/scales (quantized), original fp16 weights are MISSING from checkpoint",
+    "MISSING weights initialized randomly on CPU by transformers, causing device mismatch during inference",
+    "HF backend with device_map='auto' loads model with MISSING weights on CPU, then fails with 'RuntimeError: Expected all tensors to be on the same device' during generate()",
+    "vLLM backend loads model (17.5 GiB) but fails with OOM when allocating KV cache (model + KV cache exceeds 23.5 GiB GPU memory)",
+    "A100 (23.5 GiB) insufficient for Qwen3.5-27B model even with W4A16 quantization due to ~20GB quantized weight footprint",
+    "lm_eval preprocessing completes successfully (gsm8k 1319, hellaswag 10042, mmlu 10042, piqa 1838 contexts built) but generation fails on first inference call"
+  ],
+  "eval_num_gpus": "1"
+}

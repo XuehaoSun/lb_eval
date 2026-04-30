@@ -7,6 +7,7 @@ Artifacts copied from the runtime output directory:
 - accuracy.json
 - lm_eval_results/
 - quantize.py
+- evaluate.sh
 - logs/
 - session_*.jsonl
 - session_*.md
@@ -21,12 +22,33 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import time
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
+
+# Patterns that match common secret/token formats
+_SECRET_PATTERNS = [
+    # HuggingFace tokens: hf_xxxx (20+ alphanumeric chars)
+    re.compile(r'\bhf_[a-zA-Z0-9]{20,}\b'),
+    # GitHub PATs: ghp_, gho_, ghs_, ghu_, github_pat_
+    re.compile(r'\b(ghp_|gho_|ghs_|ghu_)[a-zA-Z0-9]{36,}\b'),
+    re.compile(r'\bgithub_pat_[a-zA-Z0-9_]{22,}\b'),
+    # Generic Bearer tokens in headers
+    re.compile(r'(Bearer\s+)[a-zA-Z0-9_.~+/=-]{20,}', re.IGNORECASE),
+    # Azure DevOps PATs (52-char base64)
+    re.compile(r'\b[a-z0-9]{52}\b(?=.*(?:azuredevops|_work|pipeline))', re.IGNORECASE),
+]
+
+
+def sanitize_secrets(text: str) -> str:
+    """Replace known secret/token patterns with [REDACTED]."""
+    for pattern in _SECRET_PATTERNS:
+        text = pattern.sub(lambda m: '[REDACTED]', text)
+    return text
 
 
 def utc_now() -> str:
@@ -106,6 +128,22 @@ def copy_file(src: Path, dst: Path, copied: list[str]) -> None:
     copied.append(str(dst))
 
 
+def copy_file_sanitized(src: Path, dst: Path, copied: list[str]) -> None:
+    """Copy a text file, stripping secrets from its content."""
+    if not src.exists() or not src.is_file():
+        return
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        content = src.read_text(encoding="utf-8", errors="replace")
+        sanitized = sanitize_secrets(content)
+        dst.write_text(sanitized, encoding="utf-8")
+        if content != sanitized:
+            print(f"[github-upload] Sanitized secrets in {src.name}")
+        copied.append(str(dst))
+    except Exception as exc:
+        print(f"[github-upload] WARNING: failed to sanitize {src.name}, skipping: {exc}")
+
+
 def copy_tree(src: Path, dst: Path, copied: list[str]) -> None:
     if not src.exists() or not src.is_dir():
         return
@@ -113,6 +151,74 @@ def copy_tree(src: Path, dst: Path, copied: list[str]) -> None:
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
     copied.append(str(dst))
+
+
+def derive_pipeline_status(quant_summary: dict | None, accuracy: dict | None) -> str:
+    """Derive overall pipeline status from quant_summary and accuracy results.
+
+    Returns one of: "Finished", "Quant Failed", "Eval Failed", "Partial".
+    """
+    qs_status = (quant_summary or {}).get("status", "missing")
+    acc_status = (accuracy or {}).get("status", "missing")
+
+    if qs_status == "failed":
+        return "Quant Failed"
+    if acc_status == "failed":
+        return "Eval Failed"
+
+    # Check for any task with acc=0 (indicates evaluation failure)
+    if isinstance(accuracy, dict):
+        tasks = accuracy.get("tasks")
+        if isinstance(tasks, dict):
+            for task_name, task_val in tasks.items():
+                acc_value = task_val if not isinstance(task_val, dict) else task_val.get("accuracy")
+                try:
+                    if acc_value is not None and float(acc_value) == 0.0:
+                        return "Eval Failed"
+                except (TypeError, ValueError):
+                    pass
+
+    if qs_status == "success" and acc_status == "success":
+        return "Finished"
+    if acc_status == "success":
+        return "Finished"
+    if qs_status == "success" and acc_status == "partial":
+        return "Partial"
+    return "Partial"
+
+
+def write_back_status(repo_dir: Path, request_filename: str, new_status: str,
+                      copied: list[str]) -> None:
+    """Update the status field in the matching request file under status/."""
+    if not request_filename:
+        print("[github-upload] No --request-filename provided; skipping status write-back")
+        return
+
+    status_dir = repo_dir / "status"
+    if not status_dir.is_dir():
+        print(f"[github-upload] status/ directory not found at {status_dir}; skipping write-back")
+        return
+
+    # Search for the request file under status/
+    matches = list(status_dir.rglob(request_filename))
+    if not matches:
+        print(f"[github-upload] Request file '{request_filename}' not found under {status_dir}; skipping write-back")
+        return
+
+    for match_path in matches:
+        try:
+            with match_path.open(encoding="utf-8") as handle:
+                data = json.load(handle)
+            old_status = data.get("status", "unknown")
+            data["status"] = new_status
+            with match_path.open("w", encoding="utf-8") as handle:
+                json.dump(data, handle, indent=4, ensure_ascii=False)
+                handle.write("\n")
+            copied.append(str(match_path))
+            print(f"[github-upload] Status write-back: {match_path.relative_to(repo_dir)} "
+                  f"({old_status} -> {new_status})")
+        except Exception as exc:
+            print(f"[github-upload] WARNING: failed to write-back status for {match_path}: {exc}")
 
 
 def detect_artifact_name(model_id: str, scheme: str, quant_summary: dict | None) -> str:
@@ -200,6 +306,12 @@ def main() -> int:
         help="Branch to update. Defaults to current branch.",
     )
     parser.add_argument(
+        "--request-filename",
+        default="",
+        help="Original request JSON filename (e.g. Qwen3-0.6B_quant_request_False_W4A16_4bit_int4.json). "
+             "Used to write back status and recorded in the aggregate JSON.",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Prepare artifact files locally but do not create a commit or push",
@@ -236,6 +348,16 @@ def main() -> int:
     accuracy_path = runtime_output_dir / "accuracy.json"
     quantize_script_path = runtime_output_dir / "quantize.py"
     legacy_quantize_script_path = runtime_output_dir / "quantize_script.py"
+    evaluation_script_candidates = [
+        (runtime_output_dir / "evaluate.sh", "evaluate.sh"),
+        (runtime_output_dir / "eval.sh", "evaluate.sh"),
+        (runtime_output_dir / "eval_script.sh", "evaluate.sh"),
+        (runtime_output_dir / "evaluate_script.sh", "evaluate.sh"),
+        (runtime_output_dir / "evaluate.py", "evaluate.py"),
+        (runtime_output_dir / "eval.py", "evaluate.py"),
+        (runtime_output_dir / "eval_script.py", "evaluate.py"),
+        (runtime_output_dir / "evaluate_script.py", "evaluate.py"),
+    ]
     lm_eval_results_dir = runtime_output_dir / "lm_eval_results"
     logs_dir = runtime_output_dir / "logs"
     quant_summary = load_json(quant_summary_path) or load_json(summary_path)
@@ -280,18 +402,23 @@ def main() -> int:
         copy_file(quantize_script_path, run_dir / "quantize.py", copied)
     elif legacy_quantize_script_path.is_file():
         copy_file(legacy_quantize_script_path, run_dir / "quantize.py", copied)
+    for evaluation_script_path, target_name in evaluation_script_candidates:
+        if evaluation_script_path.is_file():
+            copy_file(evaluation_script_path, run_dir / target_name, copied)
+            break
     copy_tree(lm_eval_results_dir, run_dir / "lm_eval_results", copied)
     copy_tree(logs_dir, run_dir / "logs", copied)
 
     for path in sorted(runtime_output_dir.glob("session_*.jsonl")):
-        copy_file(path, run_dir / path.name, copied)
+        copy_file_sanitized(path, run_dir / path.name, copied)
     for path in sorted(runtime_output_dir.glob("session_*.md")):
-        copy_file(path, run_dir / path.name, copied)
+        copy_file_sanitized(path, run_dir / path.name, copied)
 
     aggregate = {
         "pipeline": args.pipeline or ("auto_quant" if quant_summary else "auto_eval"),
         "model_id": args.model_id,
         "artifact_name": artifact_name,
+        "request_filename": args.request_filename or None,
         "generated_at": utc_now(),
         "source_runtime_dir": str(runtime_output_dir),
         "source_model_dir": str(model_output_dir) if model_output_dir else None,
@@ -321,6 +448,11 @@ def main() -> int:
     aggregate_path.write_text(json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     copied.append(str(aggregate_path))
 
+    # Write-back status to the original request file in status/
+    pipeline_status = derive_pipeline_status(quant_summary, accuracy)
+    print(f"[github-upload] Derived pipeline status: {pipeline_status}")
+    write_back_status(repo_dir, args.request_filename, pipeline_status, copied)
+
     rel_paths = [str(Path(path).relative_to(repo_dir)) for path in copied]
     if not rel_paths:
         print("[github-upload] No artifacts found to upload.")
@@ -347,11 +479,42 @@ def main() -> int:
         print(f"[github-upload] ERROR: git commit failed:\n{commit_result.stderr.strip()}")
         return 1
 
-    push_args = ["push", push_target, f"HEAD:{branch}"]
-    push_result = run_git(push_args, repo_dir, check=False)
-    if push_result.returncode != 0:
-        print(f"[github-upload] ERROR: git push failed:\n{push_result.stderr.strip()}")
-        return 1
+    # Push with retry: if another container pushed first, pull --rebase and retry.
+    max_retries = 5
+    for attempt in range(1, max_retries + 1):
+        push_args = ["push", push_target, f"HEAD:{branch}"]
+        push_result = run_git(push_args, repo_dir, check=False)
+        if push_result.returncode == 0:
+            break
+
+        stderr = push_result.stderr.strip()
+        # Only retry on non-fast-forward / concurrent push conflicts
+        is_conflict = any(hint in stderr.lower() for hint in [
+            "non-fast-forward", "fetch first", "stale info",
+            "failed to push", "cannot lock ref",
+        ])
+        if not is_conflict or attempt == max_retries:
+            print(f"[github-upload] ERROR: git push failed (attempt {attempt}/{max_retries}):\n{stderr}")
+            return 1
+
+        wait = 2 ** attempt  # 2, 4, 8, 16, 32 seconds
+        print(f"[github-upload] Push conflict (attempt {attempt}/{max_retries}), "
+              f"retrying in {wait}s after pull --rebase ...")
+        time.sleep(wait)
+
+        rebase_result = run_git(["pull", "--rebase", pull_target, branch], repo_dir, check=False)
+        if rebase_result.returncode != 0:
+            # Rebase conflict — abort and retry with a fresh rebase
+            run_git(["rebase", "--abort"], repo_dir, check=False)
+            print(f"[github-upload] WARNING: rebase conflict, resetting and retrying ...")
+            # Reset to remote state, re-apply our changes
+            run_git(["fetch", pull_target, branch], repo_dir, check=False)
+            run_git(["reset", "--hard", f"FETCH_HEAD"], repo_dir, check=False)
+            # Re-stage and re-commit all our artifact files
+            run_git(["add", *rel_paths], repo_dir, check=False)
+            recommit = run_git(["diff", "--cached", "--quiet"], repo_dir, check=False)
+            if recommit.returncode != 0:
+                run_git(["commit", "-m", commit_message], repo_dir, check=False)
 
     print("[github-upload] Uploaded artifacts:")
     for rel_path in rel_paths:
