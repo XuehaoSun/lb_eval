@@ -121,9 +121,17 @@ stages:
                 echo "Running on GPU"
                 nvidia-smi
                 lscpu
+                cd .azure-pipelines/scripts
+                nohup uv run monitor_gpu.py daemon > monitor.log 2>&1 &
             displayName: "Verify Hardware"
 
           - template: template/model-template.yml
+
+          - script: |
+              cd .azure-pipelines/scripts
+              uv run monitor_gpu.py stop
+            displayName: "GPU Monitor"
+            condition: always()
 
 # ====================================================================
 # Stage 3: Cleanup — terminate pod, deregister agent, push results
