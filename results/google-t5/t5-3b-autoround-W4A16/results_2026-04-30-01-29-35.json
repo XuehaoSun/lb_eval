@@ -1,0 +1,47 @@
+{
+  "pipeline": "auto_quant",
+  "model_id": "google-t5/t5-3b",
+  "artifact_name": "t5-3b-autoround-W4A16",
+  "request_filename": "t5-3b_quant_request_False_W4A16_4bit_int4.json",
+  "generated_at": "2026-04-30T01:29:36Z",
+  "source_runtime_dir": "/root/.openclaw/workspace/quantized/runs/google-t5_t5-3b-W4A16",
+  "source_model_dir": "/root/.openclaw/workspace/quantized/google-t5_t5-3b-W4A16",
+  "run_dir": "results/google-t5/t5-3b-autoround-W4A16/run_2026-04-30-01-29-35",
+  "quant_summary": {
+    "model_id": "google-t5/t5-3b",
+    "scheme": "W4A16",
+    "method": "RTN",
+    "export_format": "auto_round",
+    "device": "cuda",
+    "quant_num_gpus": "1",
+    "num_gpus": "1",
+    "output_dir": "/root/.openclaw/workspace/quantized/runs/google-t5_t5-3b-W4A16",
+    "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/google-t5_t5-3b-W4A16",
+    "quantized_model_dir": "/root/.openclaw/workspace/quantized/google-t5_t5-3b-W4A16",
+    "status": "failed",
+    "duration_seconds": null,
+    "original_size_mb": null,
+    "quantized_size_mb": null,
+    "compression_ratio": null,
+    "errors": [
+      "ValueError: You have to specify either decoder_input_ids or decoder_inputs_embeds - T5 is an Encoder-Decoder (Seq2Seq) model, but AutoRound's LLMCompressor only supports CausalLM (decoder-only) models. The calibration phase failed because AutoRound only provides input_ids without decoder_input_ids.",
+      "AutoRound model loading error: Unrecognized configuration class <class 'transformers.models.t5.configuration_t5.T5Config'> for this kind of AutoModel: AutoModelForCausalLM"
+    ],
+    "solutions": [
+      "T5 is not supported by AutoRound - AutoRound only supports CausalLM (decoder-only) models like Llama, Qwen, Gemma, etc.",
+      "Encoder-Decoder models like T5, BART, MarianMT, PEGASUS require custom handling for the encoder-decoder attention mechanism during calibration, which AutoRound does not implement",
+      "Alternative quantization approaches for T5: (1) Use GPTQ via transformers library, (2) Use AWQ, (3) Use bitsandbytes with dynamic quantization, (4) Use Intel's neural-compressor which may support Seq2Seq models"
+    ],
+    "output_files": []
+  },
+  "accuracy": null,
+  "copied_files": [
+    "results/google-t5/t5-3b-autoround-W4A16/run_2026-04-30-01-29-35/quant_summary.json",
+    "results/google-t5/t5-3b-autoround-W4A16/run_2026-04-30-01-29-35/quantize.py",
+    "results/google-t5/t5-3b-autoround-W4A16/run_2026-04-30-01-29-35/logs",
+    "results/google-t5/t5-3b-autoround-W4A16/run_2026-04-30-01-29-35/session_quant_330.jsonl",
+    "results/google-t5/t5-3b-autoround-W4A16/run_2026-04-30-01-29-35/session_quant_330.md"
+  ],
+  "quant_num_gpus": "1",
+  "eval_num_gpus": "1"
+}
