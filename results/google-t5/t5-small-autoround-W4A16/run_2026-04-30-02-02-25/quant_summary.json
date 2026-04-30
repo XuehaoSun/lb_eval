@@ -1,0 +1,35 @@
+{
+  "model_id": "google-t5/t5-small",
+  "scheme": "W4A16",
+  "method": "RTN",
+  "export_format": "auto_round",
+  "device": "cuda",
+  "quant_num_gpus": "1",
+  "num_gpus": "1",
+  "output_dir": "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16",
+  "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16",
+  "quantized_model_dir": "/root/.openclaw/workspace/quantized/google-t5_t5-small-W4A16",
+  "status": "success",
+  "duration_seconds": 2.0,
+  "original_size_mb": 230.81,
+  "quantized_size_mb": 53.26,
+  "compression_ratio": 0.231,
+  "errors": [],
+  "solutions": [
+    "T5 is a seq2seq model (not causal LM), so AutoModelForCausalLM cannot load it. Solution: pre-load model using T5ForConditionalGeneration.from_pretrained() and pass model object directly to AutoRound() instead of model ID string.",
+    "AutoRound calibration for T5 seq2seq models requires decoder_input_ids, which is complex. Solution: use iters=0 with disable_opt_rtn=True to force blockwise RTN quantization, bypassing calibration entirely.",
+    "T5 has tied weights (encoder.embed_tokens, decoder.embed_tokens, shared.weight all share memory). safetensors refuses to save shared tensors directly. Solution: use ar.quantize() then ar.save_quantized() to a temp dir then copy files, avoiding the internal safetensors shared-tensor check."
+  ],
+  "output_files": [
+    "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/quantize.py",
+    "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/logs/quant_exec.log",
+    "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/venv"
+  ],
+  "hf_repo": "https://huggingface.co/lvkaokao/t5-small-autoround-W4A16",
+  "hf_account": "lvkaokao",
+  "hf_account_id": "lvkaokao",
+  "hf_shared_ledger_enabled": false,
+  "hf_usage_file": "/root/leaderboard_Agent/tasks/lb_eval/auto_quant/hf_account_usage.json",
+  "hf_remaining_gb": 99.95,
+  "upload_time": "2026-04-30T02:02:22Z"
+}

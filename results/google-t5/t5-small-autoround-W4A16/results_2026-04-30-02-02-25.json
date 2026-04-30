@@ -1,0 +1,89 @@
+{
+  "pipeline": "auto_quant",
+  "model_id": "google-t5/t5-small",
+  "artifact_name": "t5-small-autoround-W4A16",
+  "request_filename": "t5-small_quant_request_False_W4A16_4bit_int4.json",
+  "generated_at": "2026-04-30T02:02:26Z",
+  "source_runtime_dir": "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16",
+  "source_model_dir": "/root/.openclaw/workspace/quantized/google-t5_t5-small-W4A16",
+  "run_dir": "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25",
+  "quant_summary": {
+    "model_id": "google-t5/t5-small",
+    "scheme": "W4A16",
+    "method": "RTN",
+    "export_format": "auto_round",
+    "device": "cuda",
+    "quant_num_gpus": "1",
+    "num_gpus": "1",
+    "output_dir": "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16",
+    "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16",
+    "quantized_model_dir": "/root/.openclaw/workspace/quantized/google-t5_t5-small-W4A16",
+    "status": "success",
+    "duration_seconds": 2.0,
+    "original_size_mb": 230.81,
+    "quantized_size_mb": 53.26,
+    "compression_ratio": 0.231,
+    "errors": [],
+    "solutions": [
+      "T5 is a seq2seq model (not causal LM), so AutoModelForCausalLM cannot load it. Solution: pre-load model using T5ForConditionalGeneration.from_pretrained() and pass model object directly to AutoRound() instead of model ID string.",
+      "AutoRound calibration for T5 seq2seq models requires decoder_input_ids, which is complex. Solution: use iters=0 with disable_opt_rtn=True to force blockwise RTN quantization, bypassing calibration entirely.",
+      "T5 has tied weights (encoder.embed_tokens, decoder.embed_tokens, shared.weight all share memory). safetensors refuses to save shared tensors directly. Solution: use ar.quantize() then ar.save_quantized() to a temp dir then copy files, avoiding the internal safetensors shared-tensor check."
+    ],
+    "output_files": [
+      "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/quantize.py",
+      "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/logs/quant_exec.log",
+      "/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/venv"
+    ],
+    "hf_repo": "https://huggingface.co/lvkaokao/t5-small-autoround-W4A16",
+    "hf_account": "lvkaokao",
+    "hf_account_id": "lvkaokao",
+    "hf_shared_ledger_enabled": false,
+    "hf_usage_file": "/root/leaderboard_Agent/tasks/lb_eval/auto_quant/hf_account_usage.json",
+    "hf_remaining_gb": 99.95,
+    "upload_time": "2026-04-30T02:02:22Z"
+  },
+  "accuracy": {
+    "model_id": "google-t5/t5-small",
+    "model_path": "/root/.openclaw/workspace/quantized/google-t5_t5-small-W4A16",
+    "scheme": "W4A16",
+    "device": "cuda:0",
+    "num_gpus": "1",
+    "tasks": {
+      "piqa": {
+        "accuracy": 0.5631120783460283,
+        "accuracy_stderr": 0.011572517929968242
+      },
+      "hellaswag": {
+        "accuracy": 0.26867157936666003,
+        "accuracy_stderr": 0.004423628080052265
+      },
+      "gsm8k": {
+        "accuracy": 0.013646702047005308,
+        "accuracy_stderr": 0.0031957470754807966
+      },
+      "mmlu": {
+        "accuracy": 0.23052271756160092,
+        "accuracy_stderr": 0.0035485822045021125
+      }
+    },
+    "status": "success",
+    "duration_seconds": 780.0,
+    "eval_framework": "lm_eval+hf",
+    "errors": [],
+    "eval_num_gpus": "1"
+  },
+  "copied_files": [
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/quant_summary.json",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/accuracy.json",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/quantize.py",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/evaluate.sh",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/lm_eval_results",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/logs",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/session_eval_327.jsonl",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/session_quant_327.jsonl",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/session_eval_327.md",
+    "results/google-t5/t5-small-autoround-W4A16/run_2026-04-30-02-02-25/session_quant_327.md"
+  ],
+  "quant_num_gpus": "1",
+  "eval_num_gpus": "1"
+}

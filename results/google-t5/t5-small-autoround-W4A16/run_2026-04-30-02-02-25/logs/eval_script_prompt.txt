@@ -1,0 +1,81 @@
+You are an expert in evaluating quantized LLM models.
+You MUST follow the skill instructions in: /root/.openclaw/workspace/skills/auto_eval/SKILL.md
+
+Quantized model path: /root/.openclaw/workspace/quantized/google-t5_t5-small-W4A16
+Runtime artifact directory: /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16
+Raw lm_eval output directory: /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/lm_eval_results
+Evaluation script path: /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/evaluate.sh
+Evaluation execution log path: /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/logs/eval_exec.log
+Evaluation tasks: piqa,mmlu,hellaswag,gsm8k
+Batch size: 8
+Num gpus: 1
+
+The quantized model was produced by auto_quant with scheme=W4A16, export_format=auto_round.
+A venv may already exist at /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/venv (created by auto_quant with --system-site-packages).
+
+CRITICAL ENVIRONMENT NOTE:
+- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
+    python3 -m venv --system-site-packages <path>
+  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+- If /root/.venv exists, reuse /root/.venv before creating a new venv.
+- If a venv already exists at /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/venv, reuse it - just install lm_eval and vllm into it.
+- Use uv pip for dependency installation. Prefer:
+    uv pip install --python <venv>/bin/python <packages>
+- Do NOT reinstall torch or flash_attn if they already import successfully from the reused environment. Only install them when missing or incompatible.
+- Write evaluation outputs, logs, prompts, copied request/session files, and other runtime artifacts to: /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16
+- Before starting evaluation, you MUST first generate the evaluation script file:
+    /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/evaluate.sh
+- The file name must be exactly: evaluate.sh
+- The script must be a standalone shell program runnable with:
+    bash /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/evaluate.sh
+- The generated evaluate.sh must focus on Stage A raw lm_eval execution only.
+- Do NOT put venv creation, pip/uv installation, package bootstrap, JSON parsing, accuracy.json writing, or destructive cleanup/recreation into evaluate.sh.
+- In this same OpenClaw task, prepare or reuse the evaluation environment separately before executing evaluate.sh.
+- Prefer direct lm_eval CLI commands and standard shell environment variables over ad-hoc Python wrappers.
+- In this same OpenClaw task, first write evaluate.sh, then execute that generated script yourself.
+- When you execute evaluate.sh or a direct lm_eval command, you MUST stream stdout/stderr into this log file while still printing output:
+    bash /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/evaluate.sh 2>&1 | tee /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/logs/eval_exec.log
+- /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/accuracy.json is a final summary artifact, not a progress marker.
+- After Stage A raw lm_eval completes, parse the latest raw results and write /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/accuracy.json in a separate finalize step outside evaluate.sh.
+- Do NOT write a success /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/accuracy.json until Stage A raw lm_eval output and Stage B parsing have both completed successfully.
+- Write /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/accuracy.json atomically via a temporary file and rename/move it into place only at finalize time.
+- If evaluation fails, still write a minimal failed /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/accuracy.json before exiting non-zero, also atomically.
+- The overall evaluation workflow MUST still behave as two idempotent stages:
+    Stage A: run lm_eval and persist raw results under /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/lm_eval_results
+    Stage B: parse the latest raw results into /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/accuracy.json
+- Stage A and Stage B MUST be independently rerunnable.
+- If /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/lm_eval_results already contains a valid raw results file matching , do NOT rerun Stage A; only rerun Stage B parsing.
+- If Stage B parsing fails after Stage A already succeeded, exit non-zero but preserve the raw lm_eval outputs, logs, and venv so the next retry only reruns parsing.
+- Do NOT delete or recreate /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/lm_eval_results when raw results already exist.
+- Parsing logic should read the latest results file under /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/lm_eval_results/**/results_*.json rather than assuming lm_eval must be rerun.
+- Do NOT leave the final artifact named eval.sh, eval_script.sh, or evaluate_script.sh.
+- When the generated script invokes lm_eval, it MUST pass:
+    --output_path /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/lm_eval_results
+- Do NOT omit --output_path. Keep the raw lm_eval output files under that exact directory for later upload.
+
+IMPORTANT - In this same OpenClaw task, after separate raw-eval and finalize steps, you MUST produce:
+
+/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/accuracy.json - evaluation results:
+{
+  "model_id": "google-t5/t5-small",
+  "model_path": "/root/.openclaw/workspace/quantized/google-t5_t5-small-W4A16",
+  "scheme": "W4A16",
+  "device": "cuda:0",
+  "num_gpus": "1",
+  "tasks": {
+    "<task_name>": {
+      "accuracy": <float>,
+      "accuracy_stderr": <float or null>
+    }
+  },
+  "status": "success" or "failed",
+  "duration_seconds": <float>,
+  "eval_framework": "lm_eval+vllm" or "lm_eval+hf" or "manual",
+  "errors": [<list of error strings if any>]
+}
+
+/root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/lm_eval_results/ - raw lm_eval output directory created by:
+    lm_eval ... --output_path /root/.openclaw/workspace/quantized/runs/google-t5_t5-small-W4A16/lm_eval_results
+
+The accuracy values MUST be real numbers from actual evaluation runs.
+Write as valid JSON. If evaluation fails, the script may invoke python only for JSON post-processing, but it must still write accuracy.json with status=failed before exiting non-zero.
