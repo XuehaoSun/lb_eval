@@ -52,13 +52,13 @@ stages:
                 export PYTHONUNBUFFERED=1
                 cd ${BUILD_SOURCESDIRECTORY}
                 python .azure-pipelines/scripts/runpod_manager.py \
-                  --action create \
-                  --api_key $(RUNPOD_API_KEY) \
+                  --action "create" \
+                  --api_key "$(RUNPOD_API_KEY)" \
                   --name "lb-$(Build.BuildId)" \
                   --container_disk_size "200" \
-                  --gpu_id $(GPU_ID) \
-                  --gpu_count 1 \
-                  --env AZP_URL=$(System.CollectionUri) AZP_TOKEN=$(AZP_DEVOPS_PAT) AZP_POOL=$(POOL_NAME) AZP_AGENT_NAME="$(AGENT_NAME)"
+                  --gpu_id "$(GPU_ID)" \
+                  --gpu_count "1" \
+                  --env AZP_URL="$(System.CollectionUri)" AZP_TOKEN="$(AZP_DEVOPS_PAT)" AZP_POOL="$(POOL_NAME)" AZP_AGENT_NAME="$(AGENT_NAME)"
 
           - template: template/git-status-template.yml
             parameters:
