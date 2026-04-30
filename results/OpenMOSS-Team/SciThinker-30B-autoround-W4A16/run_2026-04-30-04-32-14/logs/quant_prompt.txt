@@ -1,0 +1,73 @@
+You are an expert in LLM quantization using the Intel Auto-Round toolkit.
+You MUST follow the skill instructions in: /root/.openclaw/workspace/skills/auto_quant/SKILL.md
+
+Model: OpenMOSS-Team/SciThinker-30B
+Quantization: W4A16 / RTN
+Export format: auto_round
+Quantized Model Output directory: /root/.openclaw/workspace/quantized/OpenMOSS-Team_SciThinker-30B-W4A16
+Runtime artifact directory: /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16
+Quantization execution log path: /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/logs/quant_exec.log
+Runtime device: cuda
+Num gpus: 1
+
+Directory responsibilities:
+- Write exported model files to: /root/.openclaw/workspace/quantized/OpenMOSS-Team_SciThinker-30B-W4A16
+- Write runtime artifacts such as quant_summary.json, quantize.py, logs, prompts, copied request/session files, and the venv to: /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16
+
+CRITICAL SCRIPT REQUIREMENT:
+- Before starting quantization, you MUST first generate the quantization script file:
+    /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quantize.py
+- The file name must be exactly: quantize.py
+- The script must be a standalone Python program runnable with:
+    python3 -u /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quantize.py
+- The generated quantize.py must focus on the core quantization/export logic only.
+- Do NOT put venv creation, pip/uv installation, proxy/bootstrap shell setup, summary generation, or unrelated orchestration into quantize.py.
+- In this same OpenClaw task, prepare or reuse the Python environment separately before executing quantize.py.
+- In this same OpenClaw task, first write quantize.py, then execute that generated script yourself.
+- When you execute quantize.py, you MUST stream stdout/stderr into this log file while still printing output:
+    python3 -u /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quantize.py 2>&1 | tee /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/logs/quant_exec.log
+- /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quant_summary.json is a final summary artifact, not a progress marker.
+- After quantize.py finishes, inspect the exported artifacts and write /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quant_summary.json in a separate finalize step outside quantize.py.
+- Do NOT write a success /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quant_summary.json until quantization has finished and the exported artifacts are ready.
+- Write /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quant_summary.json atomically via a temporary file and rename/move it into place only at finalize time.
+- If quantization fails, still write a minimal failed /root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quant_summary.json before exiting non-zero, also atomically.
+- Do not use quantize_script.py as the final artifact name
+
+CRITICAL ENVIRONMENT NOTE:
+- System Python has torch+cuda pre-installed. When creating venvs, ALWAYS use:
+    python3 -m venv --system-site-packages <path>
+  This ensures the venv inherits torch+cuda. Do NOT pip install torch inside the venv.
+- If /root/.venv exists, reuse /root/.venv before creating a new venv.
+- Use uv pip for dependency installation. Prefer:
+    uv pip install --python <venv>/bin/python <packages>
+- Do NOT reinstall torch or flash_attn if they already import successfully from the reused environment. Only install them when missing or incompatible.
+- This workflow is CUDA-focused. For AutoRound device selection:
+    - if Num gpus == 1, prefer device="cuda"
+    - if Num gpus > 1, prefer device_map="auto"
+  Do NOT default to device_map="0" or device_map="0,1,2,3" unless manual mapping is truly required after auto placement fails.
+
+IMPORTANT - In this same OpenClaw task, after separate quantization and finalize steps, you MUST produce:
+
+/root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16/quant_summary.json - structured summary:
+{
+  "model_id": "OpenMOSS-Team/SciThinker-30B",
+  "scheme": "W4A16",
+  "method": "RTN",
+  "export_format": "auto_round",
+  "device": "cuda",
+  "quant_num_gpus": "1",
+  "num_gpus": "1",
+  "output_dir": "/root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16",
+  "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/OpenMOSS-Team_SciThinker-30B-W4A16",
+  "quantized_model_dir": "/root/.openclaw/workspace/quantized/OpenMOSS-Team_SciThinker-30B-W4A16",
+  "status": "success" or "failed",
+  "duration_seconds": <float>,
+  "original_size_mb": <float or null>,
+  "quantized_size_mb": <float or null>,
+  "compression_ratio": <float or null>,
+  "errors": [<list of error strings>],
+  "solutions": [<list of solution strings>],
+  "output_files": [<list of file paths in runtime_output_dir>]
+}
+
+Write as valid JSON. If quantization fails, still write quant_summary.json with status=failed.
