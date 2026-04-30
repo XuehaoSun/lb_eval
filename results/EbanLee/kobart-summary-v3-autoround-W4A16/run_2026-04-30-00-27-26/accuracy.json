@@ -1,0 +1,20 @@
+{
+  "model_id": "EbanLee/kobart-summary-v3",
+  "model_path": "/root/.openclaw/workspace/quantized/EbanLee_kobart-summary-v3-W4A16",
+  "scheme": "W4A16",
+  "device": "cuda:0",
+  "num_gpus": "1",
+  "tasks": {},
+  "status": "failed",
+  "duration_seconds": 0,
+  "eval_framework": "lm_eval+hf",
+  "errors": [
+    "CUDA device-side assert triggered in decoder self-attention during generation: indexSelect assertion failure (srcIndex >= srcSelectDimSize)",
+    "Model architecture mismatch: BartForConditionalGeneration (encoder-decoder) cannot be evaluated on causal LM benchmarks (piqa, mmlu, hellaswag, gsm8k) via lm_eval HF backend",
+    "The model is a Korean summarization BART, fundamentally incompatible with English causal LM evaluation tasks",
+    "lm_eval HF backend treats this as a causal LM causing malformed attention inputs in decoder cross-attention and self-attention layers",
+    "Quantized encoder-only weights (auto-round W4A16) interact with unquantized decoder weights causing numerical instability during generation",
+    "Stage A (raw lm_eval) failed - no results written to lm_eval_results/"
+  ],
+  "eval_num_gpus": "1"
+}
