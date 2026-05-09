@@ -520,6 +520,113 @@ with path.open("w", encoding="utf-8") as handle:
 PY
 }
 
+# ---------------------------------------------------------------------------
+# detect_and_patch_method  –  read the real quantization method from the
+# model's config.json (quantization_config.quant_method) and patch it into
+# quant_summary.json / accuracy.json so the leaderboard shows the correct
+# "Method" column.
+#
+# Usage:  detect_and_patch_method  MODEL_DIR_OR_HF_ID  JSON_FILE [JSON_FILE …]
+# ---------------------------------------------------------------------------
+detect_and_patch_method() {
+    local model_path="$1"; shift
+    local json_files=("$@")
+
+    [[ -z "$model_path" ]] && return 0
+    [[ ${#json_files[@]} -eq 0 ]] && return 0
+
+    # Filter to existing files only
+    local existing=()
+    for f in "${json_files[@]}"; do
+        [[ -f "$f" ]] && existing+=("$f")
+    done
+    [[ ${#existing[@]} -eq 0 ]] && return 0
+
+    run_step \
+        "Detect and patch quantization method" \
+        python3 - "$model_path" "${existing[@]}" <<'PY'
+import json
+import os
+import sys
+from pathlib import Path
+
+_METHOD_MAP = {
+    "compressed-tensors": "CompressedTensors",
+    "compressed_tensors": "CompressedTensors",
+    "gptq":              "GPTQ",
+    "awq":               "AWQ",
+    "auto_round":        "AutoRound",
+    "auto-round":        "AutoRound",
+    "autoround":         "AutoRound",
+    "bitsandbytes":      "BitsAndBytes",
+    "hqq":               "HQQ",
+    "fp8":               "FP8",
+    "fbgemm_fp8":        "FBGEMM-FP8",
+    "gguf":              "GGUF",
+    "quanto":            "Quanto",
+    "rtn":               "RTN",
+}
+
+def _detect_method(model_path: str) -> str:
+    """Try local config.json, then HuggingFace hub."""
+    # 1. Local config.json
+    cfg_path = Path(model_path) / "config.json"
+    if cfg_path.is_file():
+        try:
+            with cfg_path.open(encoding="utf-8") as f:
+                cfg = json.load(f)
+            method = (cfg.get("quantization_config") or {}).get("quant_method", "")
+            if method:
+                return _METHOD_MAP.get(method.lower().strip(), method)
+        except Exception:
+            pass
+
+    # 2. HuggingFace hub download (for auto_eval with HF model IDs)
+    if "/" in model_path and not os.path.isdir(model_path):
+        try:
+            from huggingface_hub import hf_hub_download
+            local = hf_hub_download(model_path, "config.json")
+            with open(local, encoding="utf-8") as f:
+                cfg = json.load(f)
+            method = (cfg.get("quantization_config") or {}).get("quant_method", "")
+            if method:
+                return _METHOD_MAP.get(method.lower().strip(), method)
+        except Exception:
+            pass
+
+    return ""
+
+model_path = sys.argv[1]
+json_files = sys.argv[2:]
+
+detected = _detect_method(model_path)
+if not detected:
+    print(f"[detect_method] Could not detect method for {model_path}")
+    sys.exit(0)
+
+print(f"[detect_method] Detected: {detected}")
+
+for fpath in json_files:
+    try:
+        with open(fpath, encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict):
+            continue
+        current = data.get("method")
+        # Patch if missing or was the default "RTN" placeholder
+        if not current or current == "RTN":
+            data["method"] = detected
+            with open(fpath, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+                f.write("\n")
+            print(f"  Patched {os.path.basename(fpath)}: {current!r} -> {detected!r}")
+        else:
+            print(f"  Kept {os.path.basename(fpath)}: {current!r}")
+    except Exception as exc:
+        print(f"  Error patching {fpath}: {exc}")
+PY
+}
+
 write_quant_prompt() {
     cat <<EOF
 You are an expert in LLM quantization using the Intel Auto-Round toolkit.
@@ -1011,8 +1118,10 @@ fi
 if [[ "$PIPELINE" == "auto_quant" ]]; then
     normalize_json_gpu_metadata "$QUANT_SUMMARY_JSON" "quant_summary" "$NUM_GPUS" "$EVAL_NUM_GPUS"
     normalize_json_gpu_metadata "$ACCURACY_JSON" "accuracy_auto_quant" "$NUM_GPUS" "$EVAL_NUM_GPUS"
+    detect_and_patch_method "$QUANTIZED_MODEL_DIR" "$QUANT_SUMMARY_JSON" "$ACCURACY_JSON"
 else
     normalize_json_gpu_metadata "$ACCURACY_JSON" "accuracy_auto_eval" "$NUM_GPUS" "$EVAL_NUM_GPUS"
+    detect_and_patch_method "$QUANTIZED_MODEL_DIR" "$ACCURACY_JSON"
 fi
 
 SESSION_INPUTS=()
