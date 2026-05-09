@@ -653,7 +653,11 @@ CRITICAL ENVIRONMENT NOTE:
 - Do NOT leave the final artifact named eval.sh, eval_script.sh, or evaluate_script.sh.
 - When the generated script invokes lm_eval, it MUST pass:
     --output_path ${LM_EVAL_OUTPUT_DIR}
+  and MUST set max_gen_toks=2048. The placement depends on the backend:
+    - For HF backend (--model hf):   --gen_kwargs max_gen_toks=2048
+    - For vLLM backend (--model vllm): append max_gen_toks=2048 inside --model_args
 - Do NOT omit --output_path. Keep the raw lm_eval output files under that exact directory for later upload.
+- Do NOT omit max_gen_toks=2048 regardless of backend.
 
 IMPORTANT - In this same OpenClaw task, after separate raw-eval and finalize steps, you MUST produce:
 

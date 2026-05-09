@@ -39,6 +39,7 @@ This skill provides a complete workflow for:
 | `num_gpus` | Number of GPUs to use for inference | No | `1` |
 | `max_model_len` | Max sequence length | No | `8192` |
 | `trust_remote_code` | Allow custom model code | No | `True` |
+| `max_gen_toks` | Max tokens to generate (via `--gen_kwargs`) | No | `2048` |
 
 ## Environment / Dependency Rules (CRITICAL)
 
@@ -66,13 +67,15 @@ Always run `lm_eval` with an explicit output directory and keep the generated fi
 
 ```bash
 --output_path {output_path}
+--gen_kwargs max_gen_toks=2048
 ```
 
 Rules:
 
 1. Do **not** omit `--output_path`
-2. If the caller provides a concrete runtime path, use it exactly
-3. Prefer the `lm_eval` CLI over ad-hoc wrappers so raw result artifacts are persisted automatically
+2. Do **not** omit `--gen_kwargs max_gen_toks=2048` — this is required for all evaluation runs
+3. If the caller provides a concrete runtime path, use it exactly
+4. Prefer the `lm_eval` CLI over ad-hoc wrappers so raw result artifacts are persisted automatically
 
 ---
 
@@ -193,6 +196,7 @@ lm_eval \
     --tasks piqa \
     --batch_size 1 \
     --output_path lm_eval_results \
+    --gen_kwargs max_gen_toks=2048 \
     --device cuda
 ```
 
@@ -209,6 +213,7 @@ lm_eval \
     --tasks piqa \
     --batch_size 1 \
     --output_path lm_eval_results \
+    --gen_kwargs max_gen_toks=2048 \
     --device cuda
 ```
 
@@ -222,6 +227,7 @@ lm_eval \
     --tasks piqa,hellaswag,mmlu \
     --batch_size 1 \
     --output_path lm_eval_results \
+    --gen_kwargs max_gen_toks=2048 \
     --device cuda
 
 # Task group
@@ -231,6 +237,7 @@ lm_eval \
     --tasks arc_easy,arc_challenge,piqa,hellaswag \
     --batch_size 1 \
     --output_path lm_eval_results \
+    --gen_kwargs max_gen_toks=2048 \
     --device cuda
 ```
 
@@ -244,10 +251,9 @@ results = lm_eval.simple_evaluate(
     model_args="pretrained=./quantized_model,dtype=bfloat16,device_map=auto,trust_remote_code=True",
     tasks="piqa",
     batch_size="auto",
-    device="cuda"
+    device="cuda",
+    gen_kwargs={"max_gen_toks": 2048}
 )
-
-print(results["results"])
 print(results["versions"])
 ```
 
@@ -489,7 +495,8 @@ def run_evaluation(
         tasks=tasks,
         batch_size=str(batch_size),
         device="cuda",
-        output_path=output_path
+        output_path=output_path,
+        gen_kwargs={"max_gen_toks": 2048}
     )
     
     # Print results
@@ -609,6 +616,7 @@ lm_eval \
     --tasks piqa \
     --batch_size 1 \
     --output_path ./lm_eval_results \
+    --gen_kwargs max_gen_toks=2048 \
     --device cuda
 ```
 
@@ -629,6 +637,7 @@ lm_eval \
     --tasks piqa \
     --batch_size 1 \
     --output_path ./lm_eval_results \
+    --gen_kwargs max_gen_toks=2048 \
     --device cuda
 ```
 
@@ -641,6 +650,7 @@ lm_eval \
     --tasks piqa,hellaswag,mmlu,arc_easy \
     --batch_size 1 \
     --output_path ./results \
+    --gen_kwargs max_gen_toks=2048 \
     --device cuda
 ```
 
@@ -654,7 +664,8 @@ results = lm_eval.simple_evaluate(
     model_args="pretrained=/path/to/quantized,dtype=bfloat16,device_map=auto,trust_remote_code=True",
     tasks="piqa",
     batch_size="auto",
-    device="cuda"
+    device="cuda",
+    gen_kwargs={"max_gen_toks": 2048}
 )
 print(results["results"]["piqa"])
 ```

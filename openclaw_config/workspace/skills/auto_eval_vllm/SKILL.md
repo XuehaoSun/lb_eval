@@ -69,11 +69,18 @@ Always run `lm_eval` with an explicit output directory and keep the generated fi
 --output_path {output_path}
 ```
 
+For the vLLM backend, `max_gen_toks` goes **inside `--model_args`** (not `--gen_kwargs`):
+
+```bash
+--model_args pretrained=...,max_gen_toks=2048,...
+```
+
 Rules:
 
 1. Do **not** omit `--output_path`
-2. If the caller provides a concrete runtime path, use it exactly
-3. Prefer the `lm_eval` CLI over ad-hoc wrappers so raw result artifacts are persisted automatically
+2. Do **not** omit `max_gen_toks=2048` — append it inside `--model_args` for vLLM backend
+3. If the caller provides a concrete runtime path, use it exactly
+4. Prefer the `lm_eval` CLI over ad-hoc wrappers so raw result artifacts are persisted automatically
 
 ---
 
@@ -143,7 +150,8 @@ Based on quantization format and GPU count, configure appropriate vLLM arguments
 dtype=bfloat16,\
 tensor_parallel_size=1,\
 max_model_len=8192,\
-gpu_memory_utilization=0.9
+gpu_memory_utilization=0.9,\
+max_gen_toks=2048
 ```
 
 ### For Multi-GPU (num_gpus > 1)
@@ -154,7 +162,8 @@ gpu_memory_utilization=0.9
 dtype=bfloat16,\
 tensor_parallel_size=$NUM_GPUS,\
 max_model_len=8192,\
-gpu_memory_utilization=0.9
+gpu_memory_utilization=0.9,\
+max_gen_toks=2048
 ```
 
 ### Key Parameters Explained
@@ -172,12 +181,12 @@ gpu_memory_utilization=0.9
 
 **For auto_gptq / auto_round format:**
 ```
-pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9
+pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9,max_gen_toks=2048
 ```
 
 **For llm_compressor (MXFP4/NVFP4) format:**
 ```
-pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9
+pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9,max_gen_toks=2048
 ```
 
 ---
@@ -189,7 +198,7 @@ pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len
 ```bash
 lm_eval \
     --model vllm \
-    --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9 \
+    --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9,max_gen_toks=2048 \
     --tasks piqa \
     --batch_size 1 \
     --output_path lm_eval_results \
@@ -205,7 +214,7 @@ export NUM_GPUS=2
 
 lm_eval \
     --model vllm \
-    --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=$NUM_GPUS,max_model_len=8192,gpu_memory_utilization=0.9 \
+    --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=$NUM_GPUS,max_model_len=8192,gpu_memory_utilization=0.9,max_gen_toks=2048 \
     --tasks piqa \
     --batch_size 1 \
     --output_path lm_eval_results \
@@ -218,7 +227,7 @@ lm_eval \
 # Multiple tasks
 lm_eval \
     --model vllm \
-    --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,gpu_memory_utilization=0.9 \
+    --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,gpu_memory_utilization=0.9,max_gen_toks=2048 \
     --tasks piqa,hellaswag,mmlu \
     --batch_size 1 \
     --output_path lm_eval_results \
@@ -227,7 +236,7 @@ lm_eval \
 # Task group
 lm_eval \
     --model vllm \
-    --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,gpu_memory_utilization=0.9 \
+    --model_args pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,gpu_memory_utilization=0.9,max_gen_toks=2048 \
     --tasks arc_easy,arc_challenge,piqa,hellaswag \
     --batch_size 1 \
     --output_path lm_eval_results \
@@ -241,13 +250,11 @@ import lm_eval
 
 results = lm_eval.simple_evaluate(
     model="vllm",
-    model_args="pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9",
+    model_args="pretrained=./quantized_model,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9,max_gen_toks=2048",
     tasks="piqa",
     batch_size="auto",
     device="cuda"
 )
-
-print(results["results"])
 print(results["versions"])
 ```
 
@@ -598,7 +605,7 @@ MODEL_PATH="/path/to/quantized"
 
 lm_eval \
     --model vllm \
-    --model_args "pretrained=$MODEL_PATH,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9" \
+    --model_args "pretrained=$MODEL_PATH,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9,max_gen_toks=2048" \
     --tasks piqa \
     --batch_size 1 \
     --output_path ./lm_eval_results \
@@ -614,7 +621,7 @@ export NUM_GPUS=2
 
 lm_eval \
     --model vllm \
-    --model_args "pretrained=$MODEL_PATH,dtype=bfloat16,tensor_parallel_size=$NUM_GPUS,max_model_len=8192,gpu_memory_utilization=0.9" \
+    --model_args "pretrained=$MODEL_PATH,dtype=bfloat16,tensor_parallel_size=$NUM_GPUS,max_model_len=8192,gpu_memory_utilization=0.9,max_gen_toks=2048" \
     --tasks piqa \
     --batch_size 1 \
     --output_path ./lm_eval_results \
@@ -626,7 +633,7 @@ lm_eval \
 ```bash
 lm_eval \
     --model vllm \
-    --model_args "pretrained=$MODEL_PATH,dtype=bfloat16,tensor_parallel_size=1,gpu_memory_utilization=0.9" \
+    --model_args "pretrained=$MODEL_PATH,dtype=bfloat16,tensor_parallel_size=1,gpu_memory_utilization=0.9,max_gen_toks=2048" \
     --tasks piqa,hellaswag,mmlu,arc_easy \
     --batch_size 1 \
     --output_path ./results \
@@ -640,7 +647,7 @@ import lm_eval
 
 results = lm_eval.simple_evaluate(
     model="vllm",
-    model_args="pretrained=/path/to/quantized,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9",
+    model_args="pretrained=/path/to/quantized,dtype=bfloat16,tensor_parallel_size=1,max_model_len=8192,gpu_memory_utilization=0.9,max_gen_toks=2048",
     tasks="piqa",
     batch_size="auto",
     device="cuda"
