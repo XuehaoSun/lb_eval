@@ -751,8 +751,13 @@ script = data.get("script", "")
 model = data.get("model", "")
 pipeline = "auto_quant" if script == "auto_quant" or job_type == "quantization & evaluation" else "auto_eval"
 quant_scheme_full = data.get("quant_scheme", data.get("compute_dtype", "INT4 (W4A16)"))
-match = re.search(r"W\d+A\d+", str(quant_scheme_full))
-scheme = match.group(0) if match else "W4A16"
+# Schemes like MXFP4, NVFP4 don't follow the WxAy pattern — use them directly
+_known_standalone_schemes = {"MXFP4", "NVFP4"}
+if str(quant_scheme_full).upper() in _known_standalone_schemes:
+    scheme = str(quant_scheme_full).upper()
+else:
+    match = re.search(r"W\d+A\d+", str(quant_scheme_full))
+    scheme = match.group(0) if match else "W4A16"
 model_slug = model.replace("/", "_").replace(" ", "_")
 quant_gpu = str(data.get("quant_gpu_nums", data.get("gpu_nums", 1)))
 eval_gpu = str(data.get("eval_gpu_nums", data.get("gpu_nums", quant_gpu)))
