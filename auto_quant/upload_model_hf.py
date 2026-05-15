@@ -510,6 +510,15 @@ def main() -> int:
         print("ERROR: No valid HuggingFace accounts available.")
         return 1
 
+    # Fall back to an appropriate token when no dedicated ledger token is set.
+    # GitHub repos → use GIT_TOKEN; HF repos → use the first HF upload token.
+    if not args.shared_ledger_token:
+        ledger_repo = (args.shared_ledger_repo or "").strip()
+        if "github.com" in ledger_repo:
+            args.shared_ledger_token = os.environ.get("GIT_TOKEN", "")
+        elif tokens:
+            args.shared_ledger_token = tokens[0]
+
     upload_size_bytes = get_folder_size_bytes(args.model_path)
     shared_enabled = str_to_bool(
         args.shared_ledger_enabled,
