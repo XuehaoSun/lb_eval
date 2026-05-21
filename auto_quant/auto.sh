@@ -1149,7 +1149,8 @@ if [[ "$PIPELINE" == "auto_quant" && "$SKIP_UPLOAD" != "true" && "$SKIP_HF" != "
             python3 "$SCRIPT_DIR/upload_model_hf.py" \
                 "$MODEL_OUTPUT_DIR" \
                 "$HF_REPO_NAME" \
-                --summary-json "$QUANT_SUMMARY_JSON"
+                --summary-json "$QUANT_SUMMARY_JSON" \
+                --accuracy-json "$ACCURACY_JSON"
     else
         log_warn "Skipping HuggingFace upload because quantization status is $QUANT_STATUS"
     fi
