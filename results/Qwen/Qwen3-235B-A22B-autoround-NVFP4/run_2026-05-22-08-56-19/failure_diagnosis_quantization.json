@@ -1,0 +1,8 @@
+{
+  "failure_category": "disk_full",
+  "root_cause": "200GB overlay root filesystem cannot accommodate 470GB Qwen3-235B-A22B model download; insufficient space for HF hub blob cache",
+  "key_error": "OSError: I/O error: IO Error: No space left on device (os error 28) | RuntimeError: Internal error: Internal Writer Error: Background writer channel closed | Warning: Not enough free disk space to download the file (expected ~4GB, only 0-2GB available)",
+  "retryable": false,
+  "suggested_fix": "This model requires ~470GB but the 200GB root overlay has no path with sufficient capacity. Retry would fail identically. Solutions: (1) Provision >500GB persistent volume mounted at /root/.cache/huggingface, (2) Pre-download model on host with access to 28TB RAID array and bind-mount into container, (3) Use a smaller model variant (Qwen/Qwen3-7B or Qwen/Qwen3-32B) that fits in available space.",
+  "confidence": 0.95
+}
