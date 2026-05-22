@@ -1115,6 +1115,325 @@ if [[ "$EVAL_STATUS" != "success" ]]; then
     fi
 fi
 
+# ── Agent-Assisted Failure Diagnosis ─────────────────────────────────────
+# When a stage fails, invoke a lightweight OpenClaw diagnosis agent to analyze
+# session logs, extract root cause, classify the failure, and merge findings
+# back into the summary JSON.  This runs only on failure and with a short timeout.
+DIAG_TIMEOUT="${DIAG_TIMEOUT:-3600}"
+SKIP_DIAGNOSIS="${SKIP_DIAGNOSIS:-false}"
+
+run_failure_diagnosis() {
+    local failed_stage="$1"
+    local session_file="$2"
+    local exec_log="$3"
+    local summary_json="$4"
+    local diagnosis_output="${RUN_OUTPUT_DIR}/failure_diagnosis_${failed_stage}.json"
+
+    if [[ "$SKIP_DIAGNOSIS" == "true" ]]; then
+        log_warn "Skipping failure diagnosis (SKIP_DIAGNOSIS=true)"
+        return 0
+    fi
+    if ! command -v openclaw &>/dev/null; then
+        log_warn "Skipping failure diagnosis: openclaw not available"
+        return 0
+    fi
+
+    local diag_prompt
+    diag_prompt=$(cat <<DIAGEOF
+You are a failure diagnosis expert for LLM quantization/evaluation pipelines.
+
+A ${failed_stage} task has FAILED for model "${MODEL_ID}" (scheme: ${SCHEME}, pipeline: ${PIPELINE}).
+
+Available files to examine:
+- Session log (JSONL): ${session_file}
+- Execution log: ${exec_log}
+- Summary JSON: ${summary_json}
+- Run output dir: ${RUN_OUTPUT_DIR}
+
+Your task:
+1. Read the session log (focus on the LAST 200 lines or error sections) and exec log if they exist
+2. Identify the ROOT CAUSE of the failure (not symptoms, the actual cause)
+3. Classify the failure into exactly ONE of these categories:
+   - oom: GPU/CPU memory insufficient for this model
+   - disk_full: Storage space exhausted
+   - unsupported_arch: Model architecture not supported by vLLM or transformers
+   - gated_repo: HuggingFace access denied (needs token or license agreement)
+   - model_incomplete: Missing weights, config, or safetensors files
+   - library_incompatible: Version conflicts between torch/vllm/transformers/auto-round
+   - driver_old: NVIDIA driver or CUDA toolkit too old
+   - timeout: Task exceeded time limit or was unusably slow
+   - agent_error: Script was not generated correctly or execution logic was wrong
+   - dataset_error: Evaluation dataset/task loading failure
+   - network_error: Download failed, connection timeout, HTTP errors
+   - unknown: Cannot determine from available logs
+4. Extract the key error message (the actual Python traceback or shell error, max 500 chars)
+5. Determine if retrying with the same configuration could succeed
+6. If retryable, suggest what the retry should do differently
+
+Write your diagnosis ONLY to this file: ${diagnosis_output}
+Format as valid JSON:
+{
+  "failure_category": "<one of the categories above>",
+  "root_cause": "<one-line description of what went wrong>",
+  "key_error": "<actual error text from logs, max 500 chars>",
+  "retryable": true or false,
+  "suggested_fix": "<what would fix this, or why retry won't help>",
+  "confidence": <float 0.0-1.0>
+}
+
+IMPORTANT RULES:
+- Only READ files. Do NOT attempt to fix, re-run, or modify anything.
+- Write ONLY the single JSON file specified above.
+- Be concise and precise. Focus on the root cause, not the full chain of events.
+- If logs are missing or empty, set confidence to 0.3 and category to "unknown".
+DIAGEOF
+)
+
+    log_step "Running failure diagnosis agent (${failed_stage})..."
+    local diag_session="diagnosis_${failed_stage}_$$"
+    run_step \
+        "Failure diagnosis (${failed_stage})" \
+        env PYTHONUNBUFFERED=1 \
+        openclaw agent --local \
+            --session-id "$diag_session" \
+            --message "$diag_prompt" \
+            --timeout "$DIAG_TIMEOUT"
+
+    if [[ -f "$diagnosis_output" ]]; then
+        log_ok "Diagnosis generated: $(basename "$diagnosis_output")"
+        # Merge diagnosis findings into the summary JSON
+        python3 - "$diagnosis_output" "$summary_json" <<'MERGEPY'
+import json
+import sys
+
+diag_path = sys.argv[1]
+summary_path = sys.argv[2]
+
+try:
+    with open(diag_path, encoding="utf-8") as f:
+        diag = json.load(f)
+    with open(summary_path, encoding="utf-8") as f:
+        summary = json.load(f)
+
+    summary["failure_category"] = diag.get("failure_category", "unknown")
+    summary["root_cause"] = diag.get("root_cause", "")
+    summary["key_error"] = diag.get("key_error", "")
+    summary["retryable"] = diag.get("retryable", False)
+    summary["suggested_fix"] = diag.get("suggested_fix", "")
+
+    errors = summary.get("errors", [])
+    if not isinstance(errors, list):
+        errors = []
+    root_cause = diag.get("root_cause", "")
+    category = diag.get("failure_category", "unknown")
+    if root_cause:
+        diag_line = f"[{category}] {root_cause}"
+        if diag_line not in errors:
+            errors.insert(0, diag_line)
+    summary["errors"] = errors
+
+    with open(summary_path, "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+    print(f"[diagnosis] Merged: category={category}, retryable={diag.get('retryable')}")
+except Exception as e:
+    print(f"[diagnosis] WARNING: merge failed: {e}", file=sys.stderr)
+MERGEPY
+    else
+        log_warn "Diagnosis agent did not produce output file"
+    fi
+}
+
+# Run diagnosis on failed stages
+if [[ "$PIPELINE" == "auto_quant" && "$QUANT_STATUS" == "failed" ]]; then
+    run_failure_diagnosis "quantization" "${QUANT_SESSION_DST:-}" "$QUANT_EXEC_LOG" "$QUANT_SUMMARY_JSON"
+fi
+if [[ "$EVAL_STATUS" == "failed" ]]; then
+    run_failure_diagnosis "evaluation" "${EVAL_SESSION_DST:-}" "$EVAL_EXEC_LOG" "$ACCURACY_JSON"
+fi
+
+# ── Smart Retry ──────────────────────────────────────────────────────────
+# If diagnosis says retryable, re-run the failed stage with failure context
+# injected so the agent can try a different strategy.
+MAX_SMART_RETRIES="${MAX_SMART_RETRIES:-1}"
+SKIP_SMART_RETRY="${SKIP_SMART_RETRY:-false}"
+
+_read_diag_field() {
+    local diag_file="$1" field="$2" default="${3:-}"
+    if [[ -f "$diag_file" ]]; then
+        python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get(sys.argv[2], sys.argv[3]))" \
+            "$diag_file" "$field" "$default" 2>/dev/null || echo "$default"
+    else
+        echo "$default"
+    fi
+}
+
+run_smart_retry() {
+    local stage="$1"           # "quantization" or "evaluation"
+    local original_prompt="$2"
+    local summary_json="$3"
+    local session_src="$4"
+    local session_dst="$5"
+    local exec_log="$6"
+    local diag_file="${RUN_OUTPUT_DIR}/failure_diagnosis_${stage}.json"
+
+    if [[ "$SKIP_SMART_RETRY" == "true" ]]; then
+        log_warn "Smart retry skipped (SKIP_SMART_RETRY=true)"
+        return 0
+    fi
+    if [[ ! -f "$diag_file" ]]; then
+        log_warn "Smart retry skipped: no diagnosis file for ${stage}"
+        return 0
+    fi
+
+    local retryable
+    retryable="$(_read_diag_field "$diag_file" "retryable" "False")"
+    if [[ "$retryable" != "True" && "$retryable" != "true" ]]; then
+        log_warn "Smart retry skipped: diagnosis says not retryable (${stage})"
+        return 0
+    fi
+
+    local root_cause suggested_fix failure_category
+    root_cause="$(_read_diag_field "$diag_file" "root_cause" "unknown")"
+    suggested_fix="$(_read_diag_field "$diag_file" "suggested_fix" "")"
+    failure_category="$(_read_diag_field "$diag_file" "failure_category" "unknown")"
+
+    log_step "Smart Retry: ${stage} (category: ${failure_category})"
+    echo "  Root cause: ${root_cause}"
+    echo "  Suggested fix: ${suggested_fix}"
+
+    # Build enhanced prompt with failure context
+    local retry_addendum
+    retry_addendum=$(cat <<RETRYEOF
+
+⚠️ CRITICAL: PREVIOUS ATTEMPT FAILED — YOU MUST USE A DIFFERENT STRATEGY
+
+The previous attempt at this ${stage} task FAILED. Here is the diagnosis:
+
+Failure category: ${failure_category}
+Root cause: ${root_cause}
+Suggested fix: ${suggested_fix}
+
+YOU MUST:
+1. NOT repeat the same approach that failed — try a different strategy.
+2. Apply the suggested fix above if applicable.
+3. Key strategies by failure category:
+   - oom: reduce batch_size, use device_map="auto" for multi-GPU, offload layers, or use a lighter backend
+   - library_incompatible: check version compatibility first, use pip install --upgrade for the conflicting package
+   - unsupported_arch: if vLLM fails, fall back to HuggingFace transformers backend with lm_eval --model hf
+   - agent_error: carefully verify each generated file is syntactically correct (use python3 -c "import ast; ast.parse(open('file').read())") before running
+   - dataset_error: verify task names are correct for lm_eval, use --tasks with validated task IDs
+   - timeout: reduce nsamples, use smaller calibration dataset, or skip slow tasks
+4. Before writing status=success, verify output files actually exist and contain valid data.
+5. If the issue is fundamentally unsolvable (e.g., model too large for available hardware with no workaround), write a clear failed status with explanation instead of trying endlessly.
+
+Previous artifacts may still exist in the workspace. You can inspect them but do NOT assume they are correct.
+The previous ${summary_json} has been reset — you must write a new one.
+RETRYEOF
+)
+
+    local retry_prompt="${original_prompt}${retry_addendum}"
+
+    # Reset the summary JSON so the retry starts fresh
+    if [[ -f "$summary_json" ]]; then
+        # Backup old summary
+        cp "$summary_json" "${summary_json}.pre_retry"
+        rm -f "$summary_json"
+    fi
+
+    # Clean up exec log for fresh capture
+    : > "$exec_log"
+
+    local retry_session="${stage}_retry_$$"
+    local retry_session_src="${OPENCLAW_SESSIONS_DIR}/${retry_session}.jsonl"
+    local retry_session_dst="${RUN_OUTPUT_DIR}/session_${stage}_retry_$$.jsonl"
+
+    save_prompt_copy "${stage}_retry_prompt.txt" "$retry_prompt"
+
+    local retry_monitor_pid="" retry_exec_tail_pid=""
+    start_log_tail "$exec_log" "Retry ${stage} execution log" retry_exec_tail_pid || true
+    start_session_monitor "$retry_session_src" "${stage}-retry-live" retry_monitor_pid || true
+
+    run_step \
+        "Smart Retry ${stage}" \
+        env \
+            http_proxy="${HTTP_PROXY:-}" \
+            https_proxy="${HTTPS_PROXY:-}" \
+            HTTP_PROXY="${HTTP_PROXY:-}" \
+            HTTPS_PROXY="${HTTPS_PROXY:-}" \
+            PYTHONUNBUFFERED=1 \
+            openclaw agent --local \
+                --session-id "$retry_session" \
+                --message "$retry_prompt" \
+                --timeout "$TIMEOUT"
+
+    stop_session_monitor "${retry_monitor_pid:-}"
+    stop_session_monitor "${retry_exec_tail_pid:-}"
+
+    # Copy retry session log
+    copy_session_if_exists "$retry_session_src" "$retry_session_dst" "Copy ${stage} retry session"
+
+    # Check new status
+    local new_status
+    new_status="$(json_status "$summary_json")"
+    if [[ "$new_status" == "success" ]]; then
+        log_ok "Smart Retry succeeded for ${stage}!"
+    else
+        log_warn "Smart Retry did not resolve ${stage} failure (status: ${new_status})"
+        # Write failure summary if still not written
+        if [[ "$new_status" != "failed" ]]; then
+            if [[ "$stage" == "quantization" ]]; then
+                ensure_failure_summary "$summary_json" "quant_summary" "quantization"
+            else
+                ensure_failure_summary "$summary_json" "accuracy" "evaluation"
+            fi
+        fi
+    fi
+    echo "$new_status"
+}
+
+# Execute smart retry for failed stages
+RETRY_COUNT=0
+if [[ "$PIPELINE" == "auto_quant" && "$QUANT_STATUS" == "failed" && $RETRY_COUNT -lt $MAX_SMART_RETRIES ]]; then
+    QUANT_PROMPT="$(write_quant_prompt)"
+    new_quant_status="$(run_smart_retry "quantization" "$QUANT_PROMPT" "$QUANT_SUMMARY_JSON" "$QUANT_SESSION_SRC" "$QUANT_SESSION_DST" "$QUANT_EXEC_LOG")"
+    if [[ "$new_quant_status" == "success" ]]; then
+        QUANT_STATUS="success"
+        RETRY_COUNT=$((RETRY_COUNT + 1))
+        # If quant succeeded on retry, try eval too
+        EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
+        if [[ "$EVAL_STATUS" != "success" ]]; then
+            EVAL_PROMPT="$(write_eval_script_prompt)"
+            eval_retry_session="autoeval_eval_retry_$$"
+            eval_retry_session_src="${OPENCLAW_SESSIONS_DIR}/${eval_retry_session}.jsonl"
+            start_log_tail "$EVAL_EXEC_LOG" "Evaluation execution log (post-retry)" eval_exec_tail_pid || true
+            run_step \
+                "Run ${EVAL_SKILL_NAME} (after quant retry)" \
+                env \
+                    http_proxy="${HTTP_PROXY:-}" \
+                    https_proxy="${HTTPS_PROXY:-}" \
+                    HTTP_PROXY="${HTTP_PROXY:-}" \
+                    HTTPS_PROXY="${HTTPS_PROXY:-}" \
+                    PYTHONUNBUFFERED=1 \
+                    openclaw agent --local \
+                        --session-id "$eval_retry_session" \
+                        --message "$EVAL_PROMPT" \
+                        --timeout "$TIMEOUT"
+            stop_session_monitor "${eval_exec_tail_pid:-}"
+            copy_session_if_exists "$eval_retry_session_src" "${RUN_OUTPUT_DIR}/session_eval_retry_$$.jsonl" "Copy eval session (post quant retry)"
+            EVAL_STATUS="$(json_status "$ACCURACY_JSON")"
+        fi
+    fi
+fi
+
+if [[ "$EVAL_STATUS" == "failed" && $RETRY_COUNT -lt $MAX_SMART_RETRIES ]]; then
+    EVAL_PROMPT="$(write_eval_script_prompt)"
+    new_eval_status="$(run_smart_retry "evaluation" "$EVAL_PROMPT" "$ACCURACY_JSON" "$EVAL_SESSION_SRC" "$EVAL_SESSION_DST" "$EVAL_EXEC_LOG")"
+    if [[ "$new_eval_status" == "success" ]]; then
+        EVAL_STATUS="success"
+    fi
+fi
+
 if [[ "$PIPELINE" == "auto_quant" ]]; then
     normalize_json_gpu_metadata "$QUANT_SUMMARY_JSON" "quant_summary" "$NUM_GPUS" "$EVAL_NUM_GPUS"
     normalize_json_gpu_metadata "$ACCURACY_JSON" "accuracy_auto_quant" "$NUM_GPUS" "$EVAL_NUM_GPUS"
@@ -1131,6 +1450,10 @@ fi
 if [[ -f "$EVAL_SESSION_DST" ]]; then
     SESSION_INPUTS+=("$EVAL_SESSION_DST")
 fi
+# Include retry session logs if they exist
+for retry_jsonl in "${RUN_OUTPUT_DIR}"/session_*_retry_*.jsonl; do
+    [[ -f "$retry_jsonl" ]] && SESSION_INPUTS+=("$retry_jsonl")
+done
 if [[ ${#SESSION_INPUTS[@]} -gt 0 ]]; then
     run_step "Format session logs" python3 "$FORMATTER" "${SESSION_INPUTS[@]}"
 else

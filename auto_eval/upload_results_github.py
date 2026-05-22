@@ -35,19 +35,38 @@ _SECRET_PATTERNS = [
     # HuggingFace tokens: hf_xxxx (20+ alphanumeric chars)
     re.compile(r'\bhf_[a-zA-Z0-9]{20,}\b'),
     # GitHub PATs: ghp_, gho_, ghs_, ghu_, github_pat_
-    re.compile(r'\b(ghp_|gho_|ghs_|ghu_)[a-zA-Z0-9]{36,}\b'),
+    re.compile(r'\b(?:ghp_|gho_|ghs_|ghu_)[a-zA-Z0-9]{36,}\b'),
     re.compile(r'\bgithub_pat_[a-zA-Z0-9_]{22,}\b'),
+    # Git URL-embedded credentials: https://x-access-token:TOKEN@github.com/...
+    re.compile(r'(https?://)([^\s@]+)(@(?:github\.com|huggingface\.co))'),
+    # --token <value> or token=<value> on CLI (e.g. huggingface-cli download --token xxx)
+    re.compile(r'(--token\s+)[a-zA-Z0-9_.-]{20,}', re.IGNORECASE),
+    re.compile(r'(token=)[a-zA-Z0-9_.-]{20,}'),
     # Generic Bearer tokens in headers
     re.compile(r'(Bearer\s+)[a-zA-Z0-9_.~+/=-]{20,}', re.IGNORECASE),
     # Azure DevOps PATs (52-char base64)
     re.compile(r'\b[a-z0-9]{52}\b(?=.*(?:azuredevops|_work|pipeline))', re.IGNORECASE),
+    # Weights & Biases tokens
+    re.compile(r'\bwandb_[a-zA-Z0-9]{20,}\b'),
 ]
 
 
 def sanitize_secrets(text: str) -> str:
-    """Replace known secret/token patterns with [REDACTED]."""
+    """Replace known secret/token patterns with [REDACTED].
+
+    For patterns with capturing groups (prefix), preserves the prefix and only
+    redacts the secret portion. For patterns without groups, replaces the whole match.
+    """
     for pattern in _SECRET_PATTERNS:
-        text = pattern.sub(lambda m: '[REDACTED]', text)
+        def _redact(m: re.Match, _p=pattern) -> str:
+            if m.lastindex and m.lastindex >= 3:
+                # URL pattern: group(1)=scheme, group(2)=creds, group(3)=@host
+                return m.group(1) + "[REDACTED]" + m.group(3)
+            if m.lastindex and m.lastindex >= 1:
+                # Prefix patterns (Bearer, --token, token=)
+                return m.group(1) + "[REDACTED]"
+            return "[REDACTED]"
+        text = pattern.sub(_redact, text)
     return text
 
 
@@ -151,6 +170,88 @@ def copy_tree(src: Path, dst: Path, copied: list[str]) -> None:
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
     copied.append(str(dst))
+
+
+def generate_failure_digest(run_dir: Path, quant_summary: dict | None, accuracy: dict | None) -> None:
+    """Generate a concise failure_digest.txt summarizing why the pipeline failed.
+
+    Extracts key error information from summary JSONs, diagnosis files, and exec logs
+    into a ≤50 line human-readable digest.
+    """
+    status = derive_pipeline_status(quant_summary, accuracy)
+    if status == "Finished":
+        return
+
+    lines: list[str] = []
+    lines.append(f"=== FAILURE DIGEST ===")
+    lines.append(f"Status: {status}")
+    lines.append("")
+
+    # Extract from diagnosis JSON if available
+    for diag_file in sorted(run_dir.glob("failure_diagnosis_*.json")):
+        try:
+            with diag_file.open(encoding="utf-8") as f:
+                diag = json.load(f)
+            stage = diag_file.stem.replace("failure_diagnosis_", "")
+            lines.append(f"--- Diagnosis ({stage}) ---")
+            lines.append(f"Category: {diag.get('failure_category', 'unknown')}")
+            lines.append(f"Root cause: {diag.get('root_cause', 'N/A')}")
+            lines.append(f"Retryable: {diag.get('retryable', 'unknown')}")
+            lines.append(f"Fix: {diag.get('suggested_fix', 'N/A')}")
+            key_error = diag.get("key_error", "")
+            if key_error:
+                lines.append(f"Key error: {key_error[:300]}")
+            lines.append("")
+        except Exception:
+            pass
+
+    # Extract errors from summary JSONs
+    for label, summary in [("Quantization", quant_summary), ("Evaluation", accuracy)]:
+        if not isinstance(summary, dict):
+            continue
+        s_status = summary.get("status")
+        if s_status != "failed":
+            continue
+        errors = summary.get("errors", [])
+        if errors:
+            lines.append(f"--- {label} errors ---")
+            for err in errors[:5]:
+                lines.append(f"  • {str(err)[:200]}")
+            lines.append("")
+
+    # Extract last error lines from exec logs
+    logs_dir = run_dir / "logs"
+    for log_name in ("quant_exec.log", "eval_exec.log"):
+        log_path = logs_dir / log_name
+        if not log_path.is_file():
+            continue
+        try:
+            text = log_path.read_text(encoding="utf-8", errors="replace")
+            log_lines = text.splitlines()
+            # Find last traceback or error lines
+            error_lines = []
+            in_traceback = False
+            for line in log_lines[-100:]:
+                if "Traceback" in line or "Error" in line or "Exception" in line:
+                    in_traceback = True
+                if in_traceback:
+                    error_lines.append(line)
+                    if len(error_lines) > 15:
+                        break
+            if error_lines:
+                lines.append(f"--- {log_name} (last error) ---")
+                lines.extend(error_lines[:10])
+                lines.append("")
+        except Exception:
+            pass
+
+    if len(lines) <= 3:
+        lines.append("No detailed error information available.")
+        lines.append("Check session logs for more context.")
+
+    digest_path = run_dir / "failure_digest.txt"
+    digest_path.write_text("\n".join(lines[:50]) + "\n", encoding="utf-8")
+    print(f"[github-upload] Generated {digest_path.name} ({len(lines)} lines)")
 
 
 def derive_pipeline_status(quant_summary: dict | None, accuracy: dict | None) -> str:
@@ -409,12 +510,27 @@ def main() -> int:
     copy_tree(lm_eval_results_dir, run_dir / "lm_eval_results", copied)
     copy_tree(logs_dir, run_dir / "logs", copied)
 
+    # Ensure exec logs are preserved (they may be in logs/ already via copy_tree,
+    # but also check for them directly in runtime_output_dir in case logs_dir differs)
+    logs_target = run_dir / "logs"
+    logs_target.mkdir(parents=True, exist_ok=True)
+    for exec_log_name in ("quant_exec.log", "eval_exec.log"):
+        exec_log_src = runtime_output_dir / exec_log_name
+        exec_log_dst = logs_target / exec_log_name
+        if exec_log_src.is_file() and not exec_log_dst.exists():
+            copy_file(exec_log_src, exec_log_dst, copied)
+
+    # Copy failure diagnosis files if present
+    for diag_file in sorted(runtime_output_dir.glob("failure_diagnosis_*.json")):
+        copy_file(diag_file, run_dir / diag_file.name, copied)
+
     for path in sorted(runtime_output_dir.glob("session_*.jsonl")):
         copy_file_sanitized(path, run_dir / path.name, copied)
     for path in sorted(runtime_output_dir.glob("session_*.md")):
         copy_file_sanitized(path, run_dir / path.name, copied)
 
     aggregate = {
+        "status": derive_pipeline_status(quant_summary, accuracy),
         "pipeline": args.pipeline or ("auto_quant" if quant_summary else "auto_eval"),
         "model_id": args.model_id,
         "artifact_name": artifact_name,
@@ -447,6 +563,9 @@ def main() -> int:
     aggregate_path = model_result_dir / f"results_{timestamp}.json"
     aggregate_path.write_text(json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     copied.append(str(aggregate_path))
+
+    # Generate failure digest for failed pipelines
+    generate_failure_digest(run_dir, quant_summary, accuracy)
 
     # Write-back status to the original request file in status/
     pipeline_status = derive_pipeline_status(quant_summary, accuracy)
