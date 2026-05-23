@@ -1,0 +1,60 @@
+{
+  "status": "Quant Failed",
+  "pipeline": "auto_quant",
+  "model_id": "Qwen/Qwen3-235B-A22B",
+  "artifact_name": "Qwen3-235B-A22B-autoround-W4A16",
+  "request_filename": "Qwen3-235B-A22B_quant_request_False_W4A16_4bit_int4_20260523T081910Z.json",
+  "generated_at": "2026-05-23T11:10:54Z",
+  "source_runtime_dir": "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-235B-A22B-W4A16",
+  "source_model_dir": "/root/.openclaw/workspace/quantized/Qwen_Qwen3-235B-A22B-W4A16",
+  "run_dir": "results/Qwen/Qwen3-235B-A22B-autoround-W4A16/run_2026-05-23-11-10-53",
+  "quant_summary": {
+    "model_id": "Qwen/Qwen3-235B-A22B",
+    "scheme": "W4A16",
+    "method": "RTN",
+    "export_format": "auto_round",
+    "device": "cuda",
+    "quant_num_gpus": "1",
+    "num_gpus": "1",
+    "output_dir": "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-235B-A22B-W4A16",
+    "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-235B-A22B-W4A16",
+    "quantized_model_dir": "/root/.openclaw/workspace/quantized/Qwen_Qwen3-235B-A22B-W4A16",
+    "status": "failed",
+    "duration_seconds": 0.0,
+    "original_size_mb": null,
+    "quantized_size_mb": null,
+    "compression_ratio": null,
+    "errors": [
+      "[disk_full] Insufficient disk space: Qwen/Qwen3-235B-A22B MoE model requires ~470GB BF16 weights, but the root filesystem is a 200GB overlay that fills to 100% during model download, with only ~1.8MB remaining after partial download of 50/118 safetensor shards (~195GB cached in blobs)",
+      "Insufficient disk space: required ~472GB (118 safetensors × ~4GB), available ~8.5GB on / and 117GB on /dev/shm",
+      "Model cache incomplete: only 50 of 118 safetensors present in cache (195GB of ~472GB)",
+      "OSError: No space left on device (os error 28) during model download"
+    ],
+    "solutions": [
+      "Increase available disk space by at least 300GB for full model download and quantization",
+      "Use a machine with larger storage capacity (minimum recommended: 500GB free space)",
+      "Pre-download model files using huggingface-cli before quantization"
+    ],
+    "output_files": [
+      "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-235B-A22B-W4A16/quantize.py",
+      "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-235B-A22B-W4A16/request.json",
+      "/root/.openclaw/workspace/quantized/runs/Qwen_Qwen3-235B-A22B-W4A16/logs/quant_exec.log"
+    ],
+    "failure_category": "disk_full",
+    "root_cause": "Insufficient disk space: Qwen/Qwen3-235B-A22B MoE model requires ~470GB BF16 weights, but the root filesystem is a 200GB overlay that fills to 100% during model download, with only ~1.8MB remaining after partial download of 50/118 safetensor shards (~195GB cached in blobs)",
+    "key_error": "OSError: I/O error: IO Error: No space left on device (os error 28) during hf_hub_download -> xet_get -> download_files, followed by: RuntimeError: Internal error: Internal Writer Error: Background writer channel closed",
+    "retryable": false,
+    "suggested_fix": "Cannot retry on this system. The 235B MoE model (118 safetensor shards × ~4GB each = ~470GB) exceeds the 200GB root filesystem. Retry requires: (1) machines with >500GB available disk, or (2) use a separate large storage path (e.g., /dev/shm with 117GB tmpfs is still insufficient for 470GB model), or (3) pre-download model to external storage before quantization. Additionally, the RTX 4090 (24GB VRAM) is insufficient to load a 235B model even with MoE architecture - quantization should run on H200/H100 GPUs with device_map='auto' for multi-GPU."
+  },
+  "accuracy": null,
+  "copied_files": [
+    "results/Qwen/Qwen3-235B-A22B-autoround-W4A16/run_2026-05-23-11-10-53/quant_summary.json",
+    "results/Qwen/Qwen3-235B-A22B-autoround-W4A16/run_2026-05-23-11-10-53/quantize.py",
+    "results/Qwen/Qwen3-235B-A22B-autoround-W4A16/run_2026-05-23-11-10-53/logs",
+    "results/Qwen/Qwen3-235B-A22B-autoround-W4A16/run_2026-05-23-11-10-53/failure_diagnosis_quantization.json",
+    "results/Qwen/Qwen3-235B-A22B-autoround-W4A16/run_2026-05-23-11-10-53/session_quant_391.jsonl",
+    "results/Qwen/Qwen3-235B-A22B-autoround-W4A16/run_2026-05-23-11-10-53/session_quant_391.md"
+  ],
+  "quant_num_gpus": "1",
+  "eval_num_gpus": "2"
+}
