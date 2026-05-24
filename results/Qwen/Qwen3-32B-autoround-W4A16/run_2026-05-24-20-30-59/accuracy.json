@@ -1,0 +1,23 @@
+{
+  "model_id": "Qwen/Qwen3-32B",
+  "model_path": "/root/.openclaw/workspace/quantized/Qwen_Qwen3-32B-W4A16",
+  "scheme": "W4A16",
+  "device": "cuda:0",
+  "num_gpus": "1",
+  "tasks": {},
+  "status": "failed",
+  "duration_seconds": 0.0,
+  "eval_framework": "lm_eval+hf",
+  "errors": [
+    "[library_incompatible] auto_round W4A16 quantized model has weights in qweight/qzeros/scales format without float .weight parameters, causing accelerate's device dispatch in transformers to fail when attaching hooks to meta-device tensors (inv_freq)",
+    "Model loading hangs with HF backend due to auto_round quantized layers (qweight/qzeros/scales without .weight counterparts) triggering meta device allocation in _move_missing_keys_from_meta_to_device",
+    "Model loading hangs with vLLM backend due to torch._inductor.custom_graph_pass incompatibility",
+    "auto_round.model_load() blocks indefinitely during set_non_auto_device_map for 32B quantized models"
+  ],
+  "failure_category": "library_incompatible",
+  "root_cause": "auto_round W4A16 quantized model has weights in qweight/qzeros/scales format without float .weight parameters, causing accelerate's device dispatch in transformers to fail when attaching hooks to meta-device tensors (inv_freq)",
+  "key_error": "ValueError: inv_freq is on the meta device, we need a `value` to put in on 0. raised during accelerate dispatch_model attach_align_device_hook_on_blocks after AutoModelForCausalLM.from_pretrained",
+  "retryable": false,
+  "suggested_fix": "This model was quantized with auto_round W4A16 scheme which stores weights as qweight/qzeros/scales buffers without standard .weight parameters. transformers/accelerate device_map='auto' dispatch cannot handle this quantized format. The vLLM backend also fails due to torch._inductor.custom_graph_pass missing (torch 2.10.0 cu121 lacks API added in torch 2.13). Fix requires either: (1) torch upgrade to 2.13+, or (2) re-quantize model with a scheme compatible with transformers native quantized loading (GPTQ/AWQ), or (3) use a different evaluation framework that supports auto_round quantized models directly",
+  "eval_num_gpus": "1"
+}
