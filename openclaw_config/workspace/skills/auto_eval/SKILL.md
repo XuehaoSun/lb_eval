@@ -60,6 +60,13 @@ Rules:
 2. If `torch` already imports from the reused environment, keep it
 3. If `flash_attn` already imports from the reused environment, keep it
 4. Only reinstall `torch` / `flash_attn` when they are missing or clearly incompatible
+5. If you ever need to install vllm (e.g. as fallback), **always** use a torch constraint:
+   ```bash
+   TORCH_VER=$("$VENV_PY" -c "import torch; print(torch.__version__.split('+')[0])")
+   echo "torch==${TORCH_VER}" > /tmp/torch_constraint.txt
+   uv pip install --python "$VENV_PY" vllm -c /tmp/torch_constraint.txt
+   ```
+   If that fails, use `--no-deps` and manually install missing dependencies. **Never let vllm replace torch.**
 
 ## lm-eval Output Artifact Rule (CRITICAL)
 
@@ -283,6 +290,16 @@ lm_eval ls tasks
 
 ## Step 5: Troubleshooting
 
+### General Debugging Principle
+
+**If standard fixes don't resolve the error, check the model's README (model card) — it may contain useful hints:**
+
+```bash
+curl -L https://huggingface.co/{model_id}/resolve/main/README.md | head -200
+```
+
+Look for: required library versions, known limitations, or special loading instructions. Not all model cards have useful info — if nothing relevant, move on to other strategies.
+
 ### Common Errors and Solutions
 
 #### 1. HF Backend Not Found
@@ -365,6 +382,29 @@ RuntimeError: Unsupported quantization format
 # For unsupported formats, try with trust_remote_code=True
 --model_args ...trust_remote_code=True
 ```
+
+#### 4.5. Unsupported Model Architecture During Evaluation
+
+**Error:**
+```
+NotImplementedError: ... is not supported
+KeyError: 'xxx' model type not found
+ValueError: Unrecognized model architecture
+```
+
+**Root cause:** Newer model architectures may not be recognized by the installed `transformers` version.
+
+**Strategy: Always prefer the latest versions of transformers and auto-round.**
+
+```bash
+# Upgrade transformers and auto-round to latest
+uv pip install --python "$VENV_PY" --upgrade transformers auto-round accelerate
+
+# If still failing, install transformers from source
+uv pip install --python "$VENV_PY" --upgrade git+https://github.com/huggingface/transformers.git
+```
+
+**Key principle:** When encountering unsupported model type errors, upgrading `transformers` (and `auto-round` if auto_round format is involved) to the latest version is the most likely fix.
 
 #### 5. Import Error: transformers module
 

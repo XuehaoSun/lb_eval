@@ -131,7 +131,7 @@ ensure_failure_summary() {
 
     run_step \
         "Write fallback $(basename "$target_path")" \
-        python3 - "$target_path" "$mode" "$failure_stage" "$MODEL_ID" "$SCHEME" "$METHOD" "$EXPORT_FORMAT" "$DEVICE" "$DEVICE_INDEX" "$NUM_GPUS" "$EVAL_NUM_GPUS" "$RUN_OUTPUT_DIR" "$QUANTIZED_MODEL_DIR" "$LM_EVAL_OUTPUT_DIR" "${FAILED_STEPS[@]}" <<'PY'
+        python3 - "$target_path" "$mode" "$failure_stage" "$MODEL_ID" "$SCHEME" "AutoRound" "$EXPORT_FORMAT" "$DEVICE" "$DEVICE_INDEX" "$NUM_GPUS" "$EVAL_NUM_GPUS" "$RUN_OUTPUT_DIR" "$QUANTIZED_MODEL_DIR" "$LM_EVAL_OUTPUT_DIR" "${FAILED_STEPS[@]}" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -633,7 +633,8 @@ You are an expert in LLM quantization using the Intel Auto-Round toolkit.
 You MUST follow the skill instructions in: ${QUANT_SKILL_PATH}
 
 Model: ${MODEL_ID}
-Quantization: ${SCHEME} / ${METHOD}
+Quantization scheme: ${SCHEME}
+Quantization iters: ${ITERS} (0=RTN fast mode, 200=tuning mode)
 Export format: ${EXPORT_FORMAT}
 Quantized Model Output directory: ${QUANTIZED_MODEL_DIR}
 Runtime artifact directory: ${RUN_OUTPUT_DIR}
@@ -683,8 +684,9 @@ ${QUANT_SUMMARY_JSON} - structured summary:
 {
   "model_id": "${MODEL_ID}",
   "scheme": "${SCHEME}",
-  "method": "${METHOD}",
+  "method": "AutoRound",
   "export_format": "${EXPORT_FORMAT}",
+  "iters": ${ITERS},
   "device": "${DEVICE}",
   "quant_num_gpus": "${NUM_GPUS}",
   "num_gpus": "${NUM_GPUS}",
@@ -902,8 +904,28 @@ EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-8}"
 OPENCLAW_WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-}"
 OPENCLAW_SESSIONS_DIR="${OPENCLAW_SESSIONS_DIR:-/root/.openclaw/agents/main/sessions}"
 
-MODEL_OUTPUT_DIR="${OUTPUT_DIR}/${MODEL_SLUG}-${SCHEME}"
-RUN_OUTPUT_DIR="${RUNTIME_OUTPUT_BASE_DIR}/${MODEL_SLUG}-${SCHEME}"
+# Map METHOD to iters and display suffix
+case "${METHOD^^}" in
+    RTN)
+        ITERS=0
+        METHOD_SUFFIX="RTN"
+        ;;
+    TUNING)
+        ITERS=200
+        METHOD_SUFFIX="Tuning"
+        ;;
+    *)
+        log_warn "Unknown METHOD=$METHOD, defaulting to RTN (iters=0)"
+        ITERS=0
+        METHOD_SUFFIX="RTN"
+        ;;
+esac
+
+# Model output directory includes HF repo name pattern: {model}-AutoRound-{scheme}-{method_suffix}
+MODEL_SHORT="${MODEL_ID#*/}"
+HF_REPO_NAME="${MODEL_SHORT}-AutoRound-${SCHEME}-${METHOD_SUFFIX}"
+MODEL_OUTPUT_DIR="${OUTPUT_DIR}/${HF_REPO_NAME}"
+RUN_OUTPUT_DIR="${RUNTIME_OUTPUT_BASE_DIR}/${MODEL_SLUG}-${SCHEME}-${METHOD_SUFFIX}"
 QUANTIZED_MODEL_DIR="$MODEL_OUTPUT_DIR"
 if [[ "$PIPELINE" == "auto_eval" && -n "${MODEL_PATH_OVERRIDE:-}" ]]; then
     QUANTIZED_MODEL_DIR="$MODEL_PATH_OVERRIDE"
@@ -970,6 +992,8 @@ echo "Pipeline            : $PIPELINE"
 echo "Model               : $MODEL_ID"
 echo "Revision            : $REVISION"
 echo "Scheme              : $SCHEME ($QUANT_SCHEME_FULL)"
+echo "Method              : AutoRound (iters=$ITERS, mode=$METHOD_SUFFIX)"
+echo "HF repo name        : $HF_REPO_NAME"
 echo "Quant GPUs          : $NUM_GPUS"
 echo "Eval GPUs           : $EVAL_NUM_GPUS"
 echo "OpenClaw workspace  : $OPENCLAW_WORKSPACE_DIR"
@@ -1465,8 +1489,6 @@ show_json_if_exists "Accuracy summary" "$ACCURACY_JSON"
 
 if [[ "$PIPELINE" == "auto_quant" && "$SKIP_UPLOAD" != "true" && "$SKIP_HF" != "true" ]]; then
     if [[ "$QUANT_STATUS" == "success" ]]; then
-        MODEL_SHORT="${MODEL_ID#*/}"
-        HF_REPO_NAME="${MODEL_SHORT}-autoround-${SCHEME}"
         run_step \
             "Upload quantized model to HuggingFace" \
             python3 "$SCRIPT_DIR/upload_model_hf.py" \

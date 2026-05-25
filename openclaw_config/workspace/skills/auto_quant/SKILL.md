@@ -429,6 +429,38 @@ uv pip install --python {venv}/bin/python flash-attn --no-build-isolation
 uv pip install --python {venv}/bin/python -r /path/to/auto-round/requirements.txt
 ```
 
+#### 3.5. Unsupported Model Architecture / New Model Support
+
+**Symptoms:**
+```
+NotImplementedError: ... is not supported
+KeyError: 'xxx' model type not found
+ValueError: Unrecognized model architecture
+AutoRound does not support model type 'xxx'
+```
+
+**Root cause:** Newer model architectures (e.g. Gemma4, Qwen3, DeepSeek-V3) may not be supported by the installed version of `transformers` or `auto-round`.
+
+**Strategy: Always prefer the latest versions of transformers and auto-round.**
+
+```bash
+# First, upgrade both to latest
+uv pip install --python {venv}/bin/python --upgrade transformers auto-round
+
+# If that's not enough, install auto-round from source (latest dev)
+uv pip install --python {venv}/bin/python --upgrade git+https://github.com/intel/auto-round.git
+
+# Also upgrade accelerate (often needed for new model arch support)
+uv pip install --python {venv}/bin/python --upgrade accelerate
+```
+
+**Key principle:** When you encounter an unsupported model type or architecture error, the most likely fix is upgrading `transformers` and/or `auto-round` to the latest version, because new model support is constantly being added to these libraries.
+
+**Priority order for version strategy:**
+1. Always try latest `transformers` + latest `auto-round` first
+2. If latest has a regression, pin to a known working version
+3. For very new models (released in last 1-2 weeks), install from git source
+
 #### 4. Model Loading Errors
 
 **Symptoms:**
@@ -556,6 +588,16 @@ dataset = "NeelNanda/pile-10k:train+validation"
 ## Step 5: Advanced Troubleshooting
 
 ### When Standard Solutions Don't Work
+
+#### 0. Check the Model Card (README) When Stuck
+
+**If standard fixes don't resolve the error, check the model's README.md — it may contain useful hints:**
+
+```bash
+curl -L https://huggingface.co/{model_id}/resolve/main/README.md | head -200
+```
+
+Look for: required library versions, known limitations, special loading instructions, or recommended settings. Not all model cards have useful info, so don't spend too long here — if nothing relevant, move on to other strategies.
 
 #### A. Web Search Strategy
 

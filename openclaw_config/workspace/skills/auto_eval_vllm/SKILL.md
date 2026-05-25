@@ -61,6 +61,66 @@ Rules:
 3. If `flash_attn` already imports from the reused environment, keep it
 4. Only reinstall `torch` / `flash_attn` when they are missing or clearly incompatible
 
+## vLLM Installation Strategy (CRITICAL)
+
+**Problem:** Installing vLLM can silently downgrade/upgrade system torch, breaking the CUDA environment irreparably.
+
+**You MUST follow this priority order when installing vLLM:**
+
+### Priority 1: Constraint-based install (recommended)
+
+Lock the current torch version so pip/uv cannot change it:
+
+```bash
+# Get current torch version and create constraint file
+TORCH_VER=$("$VENV_PY" -c "import torch; print(torch.__version__.split('+')[0])")
+echo "torch==${TORCH_VER}" > /tmp/torch_constraint.txt
+
+# Install vllm with constraint — pip will find a compatible vllm version
+uv pip install --python "$VENV_PY" vllm -c /tmp/torch_constraint.txt
+
+# Verify torch is still working
+"$VENV_PY" -c "import torch; assert torch.cuda.is_available(), 'CUDA broken!'"
+```
+
+If this fails with `ResolutionImpossible`, it means no vllm version is compatible with the current torch. Move to Priority 2.
+
+### Priority 2: --no-deps install + manual dependencies
+
+Install vllm without touching any existing packages, then manually add only the missing deps:
+
+```bash
+# Install vllm without any dependency resolution
+uv pip install --python "$VENV_PY" vllm --no-deps
+
+# Install vllm's non-torch dependencies manually
+uv pip install --python "$VENV_PY" \
+    ray outlines xformers tokenizers msgspec \
+    partial-json prometheus-client fastapi uvicorn
+
+# Verify both vllm and torch work
+"$VENV_PY" -c "import vllm; print('vllm ok:', vllm.__version__)"
+"$VENV_PY" -c "import torch; assert torch.cuda.is_available(), 'CUDA broken!'"
+```
+
+If import errors occur for missing modules, install them one by one. The key principle is: **never let vllm replace torch**.
+
+### Priority 3: Let agent figure it out
+
+If both above approaches fail, try alternative strategies:
+- Use a different vllm version: `uv pip install --python "$VENV_PY" "vllm==0.6.0" -c /tmp/torch_constraint.txt`
+- Build vllm from source against existing torch
+- Fall back to HF backend (`--model hf`) if vllm cannot be installed at all
+
+### After any vLLM install, always verify:
+
+```bash
+"$VENV_PY" -c "import torch; print('torch:', torch.__version__); assert torch.cuda.is_available()"
+"$VENV_PY" -c "import vllm; print('vllm:', vllm.__version__)"
+```
+
+If torch.cuda is broken after install, the environment is corrupted and you should report failure rather than continue.
+
 ## lm-eval Output Artifact Rule (CRITICAL)
 
 Always run `lm_eval` with an explicit output directory and keep the generated files:
@@ -284,6 +344,16 @@ lm_eval ls tasks
 
 ## Step 5: Troubleshooting
 
+### General Debugging Principle
+
+**If standard fixes don't resolve the error, check the model's README (model card) — it may contain useful hints:**
+
+```bash
+curl -L https://huggingface.co/{model_id}/resolve/main/README.md | head -200
+```
+
+Look for: required library versions, known limitations, or special loading instructions. Not all model cards have useful info — if nothing relevant, move on to other strategies.
+
 ### Common Errors and Solutions
 
 #### 1. vLLM Backend Not Found
@@ -363,6 +433,32 @@ RuntimeError: Unsupported quantization format
 # For auto_round format, ensure packing_format is set correctly
 # vLLM supports auto_round:auto_gptq packing format
 ```
+
+#### 4.5. Unsupported Model Architecture During Evaluation
+
+**Error:**
+```
+NotImplementedError: ... is not supported
+KeyError: 'xxx' model type not found
+ValueError: Unrecognized model architecture
+```
+
+**Root cause:** Newer model architectures may not be recognized by the installed `transformers` or `vllm` version.
+
+**Strategy: Always prefer the latest versions of transformers, auto-round, and vllm.**
+
+```bash
+# Upgrade transformers and auto-round to latest
+uv pip install --python "$VENV_PY" --upgrade transformers auto-round accelerate
+
+# Upgrade vllm to latest (for new model arch support)
+uv pip install --python "$VENV_PY" --upgrade vllm
+
+# If still failing, install transformers from source
+uv pip install --python "$VENV_PY" --upgrade git+https://github.com/huggingface/transformers.git
+```
+
+**Key principle:** When encountering unsupported model type errors, upgrading `transformers`, `vllm`, and `auto-round` to the latest version is the most likely fix, as new model support is constantly being added.
 
 #### 5. Multi-GPU Tensor Parallelism Error
 
