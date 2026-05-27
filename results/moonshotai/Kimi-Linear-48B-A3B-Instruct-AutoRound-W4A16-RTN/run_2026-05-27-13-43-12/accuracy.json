@@ -1,0 +1,23 @@
+{
+  "status": "failed",
+  "failure_stage": "evaluation",
+  "errors": [
+    "[library_incompatible] lm_eval harness passes torch_compile argument to the model's __init__, but the custom KimiLinearForCausalLM class from the quantized model does not accept this parameter",
+    "evaluation failed before final summary was written"
+  ],
+  "duration_seconds": null,
+  "model_id": "moonshotai/Kimi-Linear-48B-A3B-Instruct",
+  "model_path": "/root/.openclaw/workspace/quantized/Kimi-Linear-48B-A3B-Instruct-AutoRound-W4A16-RTN",
+  "scheme": "W4A16",
+  "device": "cuda:0",
+  "eval_num_gpus": "1",
+  "num_gpus": "1",
+  "tasks": {},
+  "eval_framework": null,
+  "lm_eval_output_dir": "/root/.openclaw/workspace/quantized/runs/moonshotai_Kimi-Linear-48B-A3B-Instruct-W4A16-RTN/lm_eval_results",
+  "failure_category": "library_incompatible",
+  "root_cause": "lm_eval harness passes torch_compile argument to the model's __init__, but the custom KimiLinearForCausalLM class from the quantized model does not accept this parameter",
+  "key_error": "TypeError: KimiLinearForCausalLM.__init__() got an unexpected keyword argument 'torch_compile'",
+  "retryable": false,
+  "suggested_fix": "This is a code-level incompatibility between lm_eval harness and the KimiLinearForCausalLM quantized wrapper class. The quantized model's __init__ needs to accept (and ignore or handle) the torch_compile kwarg, or lm_eval needs to be configured to not pass it. Neither can be fixed via retry alone — requires patching either the quantized model's wrapper class or the lm_eval harness argument construction."
+}
