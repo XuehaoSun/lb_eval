@@ -1,0 +1,58 @@
+{
+  "status": "Quant Failed",
+  "pipeline": "auto_quant",
+  "model_id": "ManniX-ITA/gemma-4-A4B-98e-v6-coder-it",
+  "artifact_name": "gemma-4-A4B-98e-v6-coder-it-autoround-W4A16",
+  "request_filename": "gemma-4-A4B-98e-v6-coder-it_quant_request_False_W4A16_4bit_int4.json",
+  "generated_at": "2026-05-27T02:58:53Z",
+  "source_runtime_dir": "/root/.openclaw/workspace/quantized/runs/ManniX-ITA_gemma-4-A4B-98e-v6-coder-it-W4A16-RTN",
+  "source_model_dir": "/root/.openclaw/workspace/quantized/gemma-4-A4B-98e-v6-coder-it-AutoRound-W4A16-RTN",
+  "run_dir": "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-W4A16/run_2026-05-27-02-58-52",
+  "quant_summary": {
+    "model_id": "ManniX-ITA/gemma-4-A4B-98e-v6-coder-it",
+    "scheme": "W4A16",
+    "method": "AutoRound",
+    "export_format": "auto_round",
+    "iters": 0,
+    "device": "cuda",
+    "quant_num_gpus": "1",
+    "num_gpus": "1",
+    "output_dir": "/root/.openclaw/workspace/quantized/runs/ManniX-ITA_gemma-4-A4B-98e-v6-coder-it-W4A16-RTN",
+    "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/ManniX-ITA_gemma-4-A4B-98e-v6-coder-it-W4A16-RTN",
+    "quantized_model_dir": "/root/.openclaw/workspace/quantized/gemma-4-A4B-98e-v6-coder-it-AutoRound-W4A16-RTN",
+    "status": "failed",
+    "duration_seconds": null,
+    "original_size_mb": null,
+    "quantized_size_mb": null,
+    "compression_ratio": null,
+    "errors": [
+      "[library_incompatible] Gemma4's hybrid attention (different head_dim for sliding_attention=256 vs full_attention=512 with partial_rotary_factor=0.25) is incompatible with auto-round's block-wise quantization calibration approach - RoPE dimensions mismatch at layer 5",
+      "RuntimeError: The size of tensor a (512) must match the size of tensor b (256) at non-singleton dimension 3",
+      "Error occurs in apply_rotary_pos_emb during block-wise forward pass for layer 5 (first full_attention layer)",
+      "Root cause: Gemma4 has hybrid attention with different head_dim for sliding_attention (256) vs full_attention (global_head_dim=512 with partial_rotary_factor=0.25). Auto-round's block-wise quantization does not correctly handle this architectural variation."
+    ],
+    "solutions": [
+      "Use a different quantization tool that handles Gemma4's hybrid attention (e.g., directly use GPTQModel, AWQ, or llama.cpp)",
+      "Wait for auto-round to add official Gemma4 hybrid attention support",
+      "Use a different model variant without hybrid attention",
+      "Try quantizing with LLM-Compressor instead of AutoRound"
+    ],
+    "output_files": [],
+    "failure_category": "library_incompatible",
+    "root_cause": "Gemma4's hybrid attention (different head_dim for sliding_attention=256 vs full_attention=512 with partial_rotary_factor=0.25) is incompatible with auto-round's block-wise quantization calibration approach - RoPE dimensions mismatch at layer 5",
+    "key_error": "RuntimeError: The size of tensor a (512) must match the size of tensor b (256) at non-singleton dimension 3 in apply_rotary_pos_emb (transformers/models/gemma4/modeling_gemma4.py L789)",
+    "retryable": false,
+    "suggested_fix": "This is a fundamental architectural incompatibility between Gemma4's hybrid attention and auto-round's calibration method. Use a different quantization tool (GPTQModel, AWQ, or llama.cpp) that handles hybrid attention correctly, or wait for auto-round to add official Gemma4 support."
+  },
+  "accuracy": null,
+  "copied_files": [
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-W4A16/run_2026-05-27-02-58-52/quant_summary.json",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-W4A16/run_2026-05-27-02-58-52/quantize.py",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-W4A16/run_2026-05-27-02-58-52/logs",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-W4A16/run_2026-05-27-02-58-52/failure_diagnosis_quantization.json",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-W4A16/run_2026-05-27-02-58-52/session_quant_401.jsonl",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-W4A16/run_2026-05-27-02-58-52/session_quant_401.md"
+  ],
+  "quant_num_gpus": "1",
+  "eval_num_gpus": "1"
+}

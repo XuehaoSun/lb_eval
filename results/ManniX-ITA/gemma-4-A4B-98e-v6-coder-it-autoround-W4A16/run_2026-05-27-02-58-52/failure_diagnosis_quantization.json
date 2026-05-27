@@ -1,0 +1,8 @@
+{
+  "failure_category": "library_incompatible",
+  "root_cause": "Gemma4's hybrid attention (different head_dim for sliding_attention=256 vs full_attention=512 with partial_rotary_factor=0.25) is incompatible with auto-round's block-wise quantization calibration approach - RoPE dimensions mismatch at layer 5",
+  "key_error": "RuntimeError: The size of tensor a (512) must match the size of tensor b (256) at non-singleton dimension 3 in apply_rotary_pos_emb (transformers/models/gemma4/modeling_gemma4.py L789)",
+  "retryable": false,
+  "suggested_fix": "This is a fundamental architectural incompatibility between Gemma4's hybrid attention and auto-round's calibration method. Use a different quantization tool (GPTQModel, AWQ, or llama.cpp) that handles hybrid attention correctly, or wait for auto-round to add official Gemma4 support.",
+  "confidence": 0.95
+}
