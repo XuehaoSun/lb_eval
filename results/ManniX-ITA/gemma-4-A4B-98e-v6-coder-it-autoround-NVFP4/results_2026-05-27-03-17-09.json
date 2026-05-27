@@ -1,0 +1,58 @@
+{
+  "status": "Quant Failed",
+  "pipeline": "auto_quant",
+  "model_id": "ManniX-ITA/gemma-4-A4B-98e-v6-coder-it",
+  "artifact_name": "gemma-4-A4B-98e-v6-coder-it-autoround-NVFP4",
+  "request_filename": "gemma-4-A4B-98e-v6-coder-it_quant_request_False_NVFP4_4bit_nvfp4.json",
+  "generated_at": "2026-05-27T03:17:10Z",
+  "source_runtime_dir": "/root/.openclaw/workspace/quantized/runs/ManniX-ITA_gemma-4-A4B-98e-v6-coder-it-NVFP4-RTN",
+  "source_model_dir": "/root/.openclaw/workspace/quantized/gemma-4-A4B-98e-v6-coder-it-AutoRound-NVFP4-RTN",
+  "run_dir": "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-NVFP4/run_2026-05-27-03-17-09",
+  "quant_summary": {
+    "model_id": "ManniX-ITA/gemma-4-A4B-98e-v6-coder-it",
+    "scheme": "NVFP4",
+    "method": "AutoRound",
+    "export_format": "auto_round",
+    "iters": 0,
+    "device": "cuda",
+    "quant_num_gpus": "1",
+    "num_gpus": "1",
+    "output_dir": "/root/.openclaw/workspace/quantized/runs/ManniX-ITA_gemma-4-A4B-98e-v6-coder-it-NVFP4-RTN",
+    "runtime_output_dir": "/root/.openclaw/workspace/quantized/runs/ManniX-ITA_gemma-4-A4B-98e-v6-coder-it-NVFP4-RTN",
+    "quantized_model_dir": "/root/.openclaw/workspace/quantized/gemma-4-A4B-98e-v6-coder-it-AutoRound-NVFP4-RTN",
+    "status": "failed",
+    "duration_seconds": null,
+    "original_size_mb": null,
+    "quantized_size_mb": null,
+    "compression_ratio": null,
+    "errors": [
+      "[agent_error] AutoRound's Gemma4 MoE block-wise quantization has a bug in its position embedding caching: cached position_embeddings from layer 0 (seq_len=512) have 256-dim RoPE tensors, but subsequent layers' attention expects 512-dim RoPE tensors. The bug is in _prepare_gemma4_replay_inputs which incorrectly caches/reuses per-layer rotary embeddings across layers.",
+      "RuntimeError: The size of tensor a (512) must match the size of tensor b (256) at non-singleton dimension 3",
+      "Root cause: Auto-round's Gemma4 block quantization uses a shared caching mechanism for position embeddings that is incompatible with Gemma4's RoPE implementation. When the cached position_embeddings from block 0 are computed at one sequence length (512) but a subsequent layer's attention expects a different sequence length (256), the RoPE cos/sin tensors have mismatched dimensions.",
+      "The bug manifests in _prepare_gemma4_replay_inputs when it retrieves cached position_embeddings and passes them to rotary_emb, which then calls the Gemma4 apply_rotary_pos_emb with mismatched tensor shapes."
+    ],
+    "solutions": [
+      "Fix requires a patch to auto_round/compressors/base.py or special_model_handler.py to ensure position_embeddings are recomputed per-layer rather than cached and reused when sequence lengths differ.",
+      "Alternative: Use device_map='auto' with batch_size=1 as a workaround, though this was not tested due to time constraints.",
+      "Alternative: Use a different export format (GGUF/GPTQ/AWQ) that does not use block-wise quantization with input caching.",
+      "Alternative: Wait for an auto-round fix that addresses the Gemma4 MoE + block quantization + RoPE interaction."
+    ],
+    "output_files": [],
+    "failure_category": "agent_error",
+    "root_cause": "AutoRound's Gemma4 MoE block-wise quantization has a bug in its position embedding caching: cached position_embeddings from layer 0 (seq_len=512) have 256-dim RoPE tensors, but subsequent layers' attention expects 512-dim RoPE tensors. The bug is in _prepare_gemma4_replay_inputs which incorrectly caches/reuses per-layer rotary embeddings across layers.",
+    "key_error": "RuntimeError: The size of tensor a (512) must match the size of tensor b (256) at non-singleton dimension 3\n  File apply_rotary_pos_emb, line 789 in modeling_gemma4.py\n  return (x * cos) + (rotate_half(x) * sin)",
+    "retryable": false,
+    "suggested_fix": "AutoRound's Gemma4 MoE + block-wise quantization with NVFP4 scheme is fundamentally incompatible with this model (gemma-4-A4B-98e-v6-coder-it). The root cause is in auto_round/compressors/special_model_handler.py _prepare_gemma4_replay_inputs which caches position_embeddings at layer 0 with incorrect RoPE dimensions and reuses them for later layers. Retry will not help. Suggested alternatives: (1) Use llm_compressor format instead of auto_round for NVFP4, (2) Use W4A16 scheme instead of NVFP4 which uses full-model rather than block-wise quantization, (3) Use a different quantization tool such as GPTQModel or AWQ that does not use block-wise calibration with cached position embeddings."
+  },
+  "accuracy": null,
+  "copied_files": [
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-NVFP4/run_2026-05-27-03-17-09/quant_summary.json",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-NVFP4/run_2026-05-27-03-17-09/quantize.py",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-NVFP4/run_2026-05-27-03-17-09/logs",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-NVFP4/run_2026-05-27-03-17-09/failure_diagnosis_quantization.json",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-NVFP4/run_2026-05-27-03-17-09/session_quant_398.jsonl",
+    "results/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it-autoround-NVFP4/run_2026-05-27-03-17-09/session_quant_398.md"
+  ],
+  "quant_num_gpus": "1",
+  "eval_num_gpus": "1"
+}
