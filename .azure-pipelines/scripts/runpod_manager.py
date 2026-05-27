@@ -6,9 +6,14 @@ import time
 import requests
 
 TARGET_GPUS = [
+    "NVIDIA GeForce RTX 4090",
     "NVIDIA GeForce RTX 5090",
-    "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "NVIDIA RTX 6000 Ada Generation",
+    "NVIDIA L40S",
     "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "NVIDIA A100-SXM4-80GB",
+    "NVIDIA H100 80GB HBM3",
 ]
 DATA_CENTER_IDS = [
     "AP-JP-1",
@@ -38,7 +43,7 @@ DATA_CENTER_IDS = [
     "US-TX-4",
     "US-WA-1",
 ]
-DATA_CENTER_BAN_LIST = ["EUR-IS-2", "US-IL-1"]
+DATA_CENTER_BAN_LIST = ["EUR-IS-1", "EUR-IS-2", "US-IL-1", "EU-CZ-1"]
 DATA_CENTER_SELECT_LIST = [dc for dc in DATA_CENTER_IDS if dc not in DATA_CENTER_BAN_LIST]
 REQUIRED_COUNT = 1
 IMAGES_NAME = "ghcr.io/xuehaosun/leaderboard:v0.1"
@@ -87,6 +92,15 @@ def create_pod(args):
     if args.env:
         env_dict = {kv.split("=", 1)[0]: kv.split("=", 1)[1] for kv in args.env if "=" in kv}
 
+    if args.gpu_id:
+        if args.gpu_id in TARGET_GPUS:
+            gpu_index = TARGET_GPUS.index(args.gpu_id)
+            gpu_type_ids = TARGET_GPUS[gpu_index:]
+        else:
+            gpu_type_ids = [args.gpu_id]
+    else:
+        gpu_type_ids = TARGET_GPUS
+
     payload = {
         "cloudType": "SECURE",
         "containerDiskInGb": args.container_disk_size,
@@ -94,7 +108,7 @@ def create_pod(args):
         "dataCenterPriority": "availability",
         "env": env_dict,
         "gpuCount": args.gpu_count,
-        "gpuTypeIds": [args.gpu_id] if args.gpu_id else TARGET_GPUS,
+        "gpuTypeIds": gpu_type_ids,
         "gpuTypePriority": "custom",
         "name": args.name,
         "volumeInGb": 0,
