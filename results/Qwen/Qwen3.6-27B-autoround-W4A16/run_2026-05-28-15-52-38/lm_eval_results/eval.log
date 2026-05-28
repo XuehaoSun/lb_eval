@@ -1,0 +1,52 @@
+2026-05-28:15:52:24 INFO     [_cli.run:388] Selected Tasks: ['piqa', 'mmlu', 'hellaswag']
+2026-05-28:15:52:25 INFO     [evaluator:214] Setting random seed to 42 | Setting numpy seed to 42 | Setting torch manual seed to 42 | Setting fewshot manual seed to 42
+2026-05-28:15:52:25 INFO     [evaluator:239] Initializing hf model, with arguments: {'pretrained': '/root/_work/1/s/auto_quant/output/runs/Qwen3.6-27B-AutoRound-W4A16-RTN/quantized_model', 'dtype': 'bfloat16', 'trust_remote_code': True}
+/root/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py:187: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12080). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+  return torch._C._cuda_getDeviceCount() > 0
+2026-05-28:15:52:29 INFO     [models.huggingface:286] Using device 'cuda:0'
+2026-05-28:15:52:30 INFO     [models.huggingface:579] Model parallel was set to False, max memory was not set, and device map was set to {'': 'cuda:0'}
+/root/.venv/lib/python3.12/site-packages/transformers/quantizers/auto.py:262: UserWarning: You passed `quantization_config` or equivalent parameters to `from_pretrained` but the model you're loading already has a `quantization_config` attribute. The `quantization_config` from the model will be used.However, loading attributes (e.g. ['backend']) will be overwritten with the one you passed to `from_pretrained`. The rest will be ignored.
+  warnings.warn(warning_msg)
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[33;1m2026-05-28 15:52:30 WARNING modeling_utils.py L4606: `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.[0m
+[33;1m2026-05-28 15:52:30 WARNING backend.py L1186: Better backend is found, please install all the following requirements to enable it.[0m
+[33;1m2026-05-28 15:52:30 WARNING backend.py L1186: `pip install -v "gptqmodel>=2.0" --no-build-isolation`[0m
+Traceback (most recent call last):
+  File "/root/.venv/bin/lm_eval", line 10, in <module>
+    sys.exit(cli_evaluate())
+             ^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/__main__.py", line 10, in cli_evaluate
+    parser.execute(args)
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/_cli/harness.py", line 60, in execute
+    args.func(args)
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/_cli/run.py", line 391, in _execute
+    results = simple_evaluate(
+              ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/utils.py", line 575, in _wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/evaluator.py", line 242, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_obj(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/api/model.py", line 169, in create_from_arg_obj
+    return cls(**arg_dict, **additional_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/models/huggingface.py", line 365, in __init__
+    self._create_model(
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/models/huggingface.py", line 814, in _create_model
+    self._model = self.AUTO_MODEL_CLASS.from_pretrained(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 405, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4296, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4377, in _load_pretrained_model
+    caching_allocator_warmup(model, expanded_device_map, load_config.hf_quantizer)
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 5058, in caching_allocator_warmup
+    _ = torch.empty(int(byte_count // 2), dtype=torch.float16, device=device, requires_grad=False)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 491, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: The NVIDIA driver on your system is too old (found version 12080). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver.
