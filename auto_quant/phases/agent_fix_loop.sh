@@ -165,16 +165,13 @@ run_openclaw_fix() {
     fi
 
     local timeout="${AGENT_TIMEOUT:-600}"
+    local session_id="fix_${phase_name:-unknown}_$$_$(date +%s)"
 
-    # Write prompt to temp file for openclaw input
-    local prompt_tmp
-    prompt_tmp=$(mktemp /tmp/fix_prompt_XXXXXX.txt)
-    printf '%s\n' "${prompt}" > "${prompt_tmp}"
-
-    log_info "Calling openclaw agent (timeout=${timeout}s)..."
-    timeout "${timeout}" openclaw run \
-        --prompt-file "${prompt_tmp}" \
-        --working-dir "${RUN_OUTPUT_DIR}" \
+    log_info "Calling openclaw agent (session=${session_id}, timeout=${timeout}s)..."
+    timeout "${timeout}" openclaw agent --local \
+        --session-id "${session_id}" \
+        --message "${prompt}" \
+        --timeout "${timeout}" \
         2>&1 | tee "${log_file}" || {
         local rc=$?
         if [ $rc -eq 124 ]; then
@@ -183,7 +180,6 @@ run_openclaw_fix() {
         fi
     }
 
-    rm -f "${prompt_tmp}"
     return 0
 }
 

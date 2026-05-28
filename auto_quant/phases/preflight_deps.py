@@ -147,16 +147,16 @@ def check_custom_code_deps(model_id: str, config: dict) -> list[str]:
 
 
 def install_packages(packages: list[str]) -> bool:
-    """Attempt to install packages via pip."""
+    """Attempt to install packages via uv pip."""
     if not packages:
         return True
 
-    cmd = [sys.executable, "-m", "pip", "install"] + packages
+    cmd = ["uv", "pip", "install"] + packages
     logger.info(f"Installing: {' '.join(packages)}")
 
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
-        logger.error(f"pip install failed:\n{result.stderr[-500:]}")
+        logger.error(f"uv pip install failed:\n{result.stderr[-500:]}")
         return False
 
     logger.info("Installation successful")

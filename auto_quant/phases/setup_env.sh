@@ -45,24 +45,24 @@ resolve_install_spec() {
 AR_SPEC=$(resolve_install_spec "auto-round" \
     "https://github.com/intel/auto-round.git" "${AUTO_ROUND_REF}")
 echo "[setup_env] Installing: ${AR_SPEC}"
-pip install ${AR_SPEC} 2>&1 | tail -5
+uv pip install ${AR_SPEC} 2>&1 | tail -5
 
 # ═══ Step 2: Transformers version override ═══
 if [ "$TRANSFORMERS_REF" != "auto" ]; then
     TF_SPEC=$(resolve_install_spec "transformers" \
         "https://github.com/huggingface/transformers.git" "${TRANSFORMERS_REF}")
     echo "[setup_env] Overriding transformers: ${TF_SPEC}"
-    pip install ${TF_SPEC} 2>&1 | tail -3
+    uv pip install ${TF_SPEC} 2>&1 | tail -3
 fi
 
 # ═══ Step 3: Install lm_eval ═══
-pip install "lm-eval>=${LM_EVAL_VERSION}" 2>&1 | tail -3
+uv pip install "lm-eval>=${LM_EVAL_VERSION}" 2>&1 | tail -3
 
 # ═══ Step 4: llm_compressor export deps ═══
 if [ "$EXPORT_FORMAT" == "llm_compressor" ]; then
     echo "[setup_env] Installing llm_compressor + compressed-tensors..."
-    pip install "llmcompressor @ git+https://github.com/vllm-project/llm-compressor.git@main" 2>&1 | tail -3
-    pip install "compressed-tensors @ git+https://github.com/vllm-project/compressed-tensors.git@main" 2>&1 | tail -3
+    uv pip install "llmcompressor @ git+https://github.com/vllm-project/llm-compressor.git@main" 2>&1 | tail -3
+    uv pip install "compressed-tensors @ git+https://github.com/vllm-project/compressed-tensors.git@main" 2>&1 | tail -3
 fi
 
 # ═══ Step 5: vllm eval backend ═══
@@ -74,16 +74,16 @@ if [ "$EVAL_BACKEND" == "vllm" ]; then
     VLLM_SPEC="${VLLM_SPEC:-vllm}"
 
     echo "[setup_env] Installing ${VLLM_SPEC} (torch constraint: ${TORCH_VER})..."
-    pip install "${VLLM_SPEC}" -c /tmp/torch_constraint.txt 2>&1 | tail -5 || {
+    uv pip install "${VLLM_SPEC}" -c /tmp/torch_constraint.txt 2>&1 | tail -5 || {
         echo "[WARN] Constraint install failed, trying --no-deps"
-        pip install "${VLLM_SPEC}" --no-deps 2>&1 | tail -3
-        pip install ray outlines msgspec partial-json compressed-tensors 2>&1 | tail -3
+        uv pip install "${VLLM_SPEC}" --no-deps 2>&1 | tail -3
+        uv pip install ray outlines msgspec partial-json compressed-tensors 2>&1 | tail -3
     }
-    pip install "lm-eval[api]" 2>&1 | tail -3
+    uv pip install "lm-eval[api]" 2>&1 | tail -3
 fi
 
 # ═══ Step 6: Auxiliary deps ═══
-pip install loguru hf_transfer sentencepiece protobuf accelerate datasets 2>&1 | tail -3 || true
+uv pip install loguru hf_transfer sentencepiece protobuf accelerate datasets 2>&1 | tail -3 || true
 
 # ═══ Step 7: Model-specific dependency pre-flight ═══
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
