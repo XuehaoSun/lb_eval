@@ -78,6 +78,12 @@ agent_fix_loop() {
         if [ -d "${LESSONS_DIR}" ]; then
             lessons=$(search_lessons "${phase_name}" "${error_tail}" 2>/dev/null || true)
         fi
+        if [ -n "${lessons}" ]; then
+            log_info "Found matching lessons for ${phase_name}:"
+            echo "${lessons}" | sed 's/^/  /'
+        else
+            log_info "No matching lessons found for ${phase_name}"
+        fi
 
         # 4. Build agent prompt
         local fix_prompt
