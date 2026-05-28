@@ -195,10 +195,13 @@ save_lesson() {
     local lessons_file="${LESSONS_DIR}/${phase}.jsonl"
     mkdir -p "${LESSONS_DIR}"
 
-    python3 - "${phase}" "${status}" "${solution_note}" "${MODEL_ID:-unknown}" "${SCHEME:-W4A16}" "${METHOD:-RTN}" "${lessons_file}" <<'PYEOF'
+    # Pass error_context via env var (not stdin, which conflicts with heredoc)
+    LESSON_ERROR_CONTEXT="${error_context}" python3 - "${phase}" "${status}" "${solution_note}" "${MODEL_ID:-unknown}" "${SCHEME:-W4A16}" "${METHOD:-RTN}" "${lessons_file}" <<'PYEOF'
 import json
 import sys
+import os
 import datetime
+import re
 
 phase = sys.argv[1]
 status = sys.argv[2]
@@ -208,8 +211,7 @@ scheme = sys.argv[5]
 method = sys.argv[6]
 lessons_file = sys.argv[7]
 
-# Read error context from stdin
-error_context = sys.stdin.read() if not sys.stdin.isatty() else ""
+error_context = os.environ.get("LESSON_ERROR_CONTEXT", "")
 
 # Extract signature (first error/exception line)
 error_signature = ""
@@ -222,7 +224,6 @@ if not error_signature:
     error_signature = error_context.strip().splitlines()[-1][:150] if error_context.strip() else "unknown error"
 
 # Extract keywords
-import re
 words = re.findall(r'[a-zA-Z]{4,}', error_signature.lower())
 keywords = list(dict.fromkeys(words))[:5]  # unique, ordered
 
@@ -232,7 +233,7 @@ error_traceback = "\n".join(traceback_lines)
 
 lesson = {
     "id": f"lesson-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}",
-    "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+    "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     "phase": phase,
     "error_signature": error_signature,
     "error_traceback": error_traceback,
@@ -251,8 +252,6 @@ with open(lessons_file, "a") as f:
 
 print(f"[lesson] Saved: [{status}] {error_signature[:80]}")
 PYEOF
-    # Pipe error context to stdin
-    echo "${error_context}" | python3 - "${phase}" "${status}" "${solution_note}" "${MODEL_ID:-unknown}" "${SCHEME:-W4A16}" "${METHOD:-RTN}" "${lessons_file}" 2>/dev/null || true
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -265,12 +264,13 @@ search_lessons() {
     local lessons_file="${LESSONS_DIR}/${phase}.jsonl"
     [ ! -f "${lessons_file}" ] && return 0
 
-    echo "${error_text}" | python3 - "${lessons_file}" <<'PYEOF'
+    LESSON_SEARCH_ERROR="${error_text}" python3 - "${lessons_file}" <<'PYEOF'
 import json
 import sys
+import os
 
 lessons_file = sys.argv[1]
-error_lower = sys.stdin.read().lower()
+error_lower = os.environ.get("LESSON_SEARCH_ERROR", "").lower()
 
 results = []
 try:
@@ -325,7 +325,7 @@ push_lessons_to_git() {
     [ ! -d "${repo_dir}/.git" ] && return 0
 
     cd "${repo_dir}"
-    git add lessons/ 2>/dev/null || true
+    git add --force lessons/ 2>/dev/null || true
     if ! git diff --cached --quiet lessons/ 2>/dev/null; then
         git commit -m "lessons: update from ${MODEL_ID:-unknown} ${SCHEME:-} ${METHOD:-}" || true
         # Use token-authenticated URL if available

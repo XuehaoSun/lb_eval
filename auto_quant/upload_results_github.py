@@ -518,7 +518,7 @@ def main() -> int:
     # but also check for them directly in runtime_output_dir in case logs_dir differs)
     logs_target = run_dir / "logs"
     logs_target.mkdir(parents=True, exist_ok=True)
-    for exec_log_name in ("quant_exec.log", "eval_exec.log"):
+    for exec_log_name in ("quant_exec.log", "eval_exec.log", "auto.log"):
         exec_log_src = runtime_output_dir / exec_log_name
         exec_log_dst = logs_target / exec_log_name
         if exec_log_src.is_file() and not exec_log_dst.exists():
@@ -593,7 +593,8 @@ def main() -> int:
             print(f"  - {rel_path}")
         return 0
 
-    run_git(["add", *rel_paths], repo_dir)
+    # Use --force to override .gitignore (e.g. *.log files must be uploaded)
+    run_git(["add", "--force", *rel_paths], repo_dir)
     diff_result = run_git(["diff", "--cached", "--quiet"], repo_dir, check=False)
     if diff_result.returncode == 0:
         print("[github-upload] No changes to commit.")

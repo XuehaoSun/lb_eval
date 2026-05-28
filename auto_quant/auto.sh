@@ -273,7 +273,12 @@ if [[ -d "${OPENCLAW_SESSIONS_DIR}" ]]; then
         [[ -f "$_jsonl" ]] || continue
         # Only copy sessions created during this pipeline run (mtime > PIPELINE_START)
         if [[ $(stat -c %Y "$_jsonl" 2>/dev/null || echo 0) -ge ${PIPELINE_START} ]]; then
-            cp "$_jsonl" "${RUN_OUTPUT_DIR}/" 2>/dev/null && ((_session_count++)) || true
+            # Rename to session_* prefix so upload script can find them
+            _basename="$(basename "$_jsonl")"
+            if [[ "$_basename" != session_* ]]; then
+                _basename="session_${_basename}"
+            fi
+            cp "$_jsonl" "${RUN_OUTPUT_DIR}/${_basename}" 2>/dev/null && ((_session_count++)) || true
         fi
     done
     if [[ $_session_count -gt 0 ]]; then
