@@ -1,0 +1,135 @@
+=== Phase 2: Quantization ===
+  model=Qwen/Qwen3.6-27B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3.6-27B-AutoRound-W4A16-RTN/quantized_model
+00:49:32 [INFO] Model: Qwen/Qwen3.6-27B
+00:49:32 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+00:49:32 [INFO] Iters: 0 (RTN)
+00:49:32 [INFO] Export format: auto_round
+00:49:32 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-27B-AutoRound-W4A16-RTN/quantized_model
+00:49:32 [INFO] Device map: auto
+00:49:32 [INFO] Loading tokenizer...
+00:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/config.json "HTTP/1.1 200 OK"
+00:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+00:49:32 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+00:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/tokenizer_config.json "HTTP/1.1 200 OK"
+00:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/tokenizer_config.json "HTTP/1.1 200 OK"
+00:49:32 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:49:32 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:49:33 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B "HTTP/1.1 200 OK"
+00:49:33 [INFO] Loading model...
+00:49:33 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:49:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/config.json "HTTP/1.1 200 OK"
+00:49:33 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:49:33 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:49:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:49:33 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B/revision/main "HTTP/1.1 200 OK"
+[33;1m2026-05-29 00:49:33 WARNING modeling_qwen3_5.py L426: The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d[0m
+00:49:33 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:49:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/generation_config.json "HTTP/1.1 200 OK"
+00:49:34 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:49:34 [INFO] Architecture: Qwen3_5ForCausalLM (model_type=qwen3_5_text, moe=False)
+00:49:34 [INFO] Ignore layers: lm_head
+00:49:34 [INFO] Configuring AutoRound...
+[38;20m2026-05-29 00:49:34 INFO autoround.py L178: using MLLM mode for multimodal model.[0m
+[38;20m2026-05-29 00:49:34 INFO base.py L517: using torch.bfloat16 for quantization tuning[0m
+00:49:36 [INFO] Starting quantization...
+[33;1m2026-05-29 00:49:36 WARNING modeling_utils.py L4606: `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.[0m
+[33;1m2026-05-29 00:49:36 WARNING base.py L1791: this API is deprecated, please use `quantize_and_save` instead[0m
+[38;20m2026-05-29 00:49:37 INFO base.py L1401: RTN mode detected (iters=0): force blockwise quantization to avoid layer-wise full-model materialization.[0m
+  0%|          | 0/64 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/64 [00:00<?, ?it/s][38;20m2026-05-29 00:49:43 INFO offload.py L703: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_rt7vmrgz[0m
+[38;20m2026-05-29 00:49:44 INFO device.py L1692: 'peak_ram': 1.94GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.1:   2%|▏         | 1/64 [00:07<07:43,  7.35s/it][38;20m2026-05-29 00:49:45 INFO device.py L1692: 'peak_ram': 2.66GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.2:   3%|▎         | 2/64 [00:08<04:27,  4.32s/it][38;20m2026-05-29 00:49:47 INFO device.py L1692: 'peak_ram': 3.38GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.3:   5%|▍         | 3/64 [00:09<03:22,  3.33s/it][38;20m2026-05-29 00:49:50 INFO device.py L1692: 'peak_ram': 4.11GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.4:   6%|▋         | 4/64 [00:13<03:15,  3.26s/it][38;20m2026-05-29 00:49:51 INFO device.py L1692: 'peak_ram': 4.81GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.5:   8%|▊         | 5/64 [00:14<02:49,  2.87s/it][38;20m2026-05-29 00:49:52 INFO device.py L1692: 'peak_ram': 5.53GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.6:   9%|▉         | 6/64 [00:15<02:31,  2.61s/it][38;20m2026-05-29 00:49:53 INFO device.py L1692: 'peak_ram': 6.23GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.7:  11%|█         | 7/64 [00:16<02:17,  2.41s/it][38;20m2026-05-29 00:49:55 INFO device.py L1692: 'peak_ram': 6.94GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.8:  12%|█▎        | 8/64 [00:18<02:06,  2.25s/it][38;20m2026-05-29 00:49:56 INFO device.py L1692: 'peak_ram': 7.66GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.9:  14%|█▍        | 9/64 [00:19<01:58,  2.15s/it][38;20m2026-05-29 00:49:57 INFO device.py L1692: 'peak_ram': 8.36GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.10:  16%|█▌        | 10/64 [00:20<01:51,  2.07s/it][38;20m2026-05-29 00:49:59 INFO device.py L1692: 'peak_ram': 9.08GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.11:  17%|█▋        | 11/64 [00:21<01:45,  2.00s/it][38;20m2026-05-29 00:50:00 INFO device.py L1692: 'peak_ram': 9.79GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.12:  19%|█▉        | 12/64 [00:23<01:40,  1.93s/it][38;20m2026-05-29 00:50:01 INFO device.py L1692: 'peak_ram': 10.51GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.13:  20%|██        | 13/64 [00:24<01:35,  1.88s/it][38;20m2026-05-29 00:50:02 INFO device.py L1692: 'peak_ram': 11.22GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.14:  22%|██▏       | 14/64 [00:25<01:32,  1.84s/it][38;20m2026-05-29 00:50:04 INFO device.py L1692: 'peak_ram': 11.93GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.15:  23%|██▎       | 15/64 [00:27<01:28,  1.80s/it][38;20m2026-05-29 00:50:05 INFO device.py L1692: 'peak_ram': 12.65GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.16:  25%|██▌       | 16/64 [00:28<01:24,  1.77s/it][38;20m2026-05-29 00:50:06 INFO device.py L1692: 'peak_ram': 13.36GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.17:  27%|██▋       | 17/64 [00:29<01:21,  1.74s/it][38;20m2026-05-29 00:50:08 INFO device.py L1692: 'peak_ram': 13.36GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.18:  28%|██▊       | 18/64 [00:30<01:19,  1.72s/it][38;20m2026-05-29 00:50:09 INFO device.py L1692: 'peak_ram': 13.36GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.19:  30%|██▉       | 19/64 [00:32<01:16,  1.70s/it][38;20m2026-05-29 00:50:10 INFO device.py L1692: 'peak_ram': 13.36GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.20:  31%|███▏      | 20/64 [00:33<01:13,  1.67s/it][38;20m2026-05-29 00:50:11 INFO device.py L1692: 'peak_ram': 13.36GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.21:  33%|███▎      | 21/64 [00:34<01:11,  1.66s/it][38;20m2026-05-29 00:50:13 INFO device.py L1692: 'peak_ram': 13.36GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.22:  34%|███▍      | 22/64 [00:36<01:08,  1.64s/it][38;20m2026-05-29 00:50:14 INFO device.py L1692: 'peak_ram': 13.98GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.23:  36%|███▌      | 23/64 [00:37<01:06,  1.62s/it][38;20m2026-05-29 00:50:15 INFO device.py L1692: 'peak_ram': 14.7GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.24:  38%|███▊      | 24/64 [00:38<01:04,  1.61s/it][38;20m2026-05-29 00:50:17 INFO device.py L1692: 'peak_ram': 14.7GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.25:  39%|███▉      | 25/64 [00:40<01:02,  1.60s/it][38;20m2026-05-29 00:50:18 INFO device.py L1692: 'peak_ram': 14.7GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.26:  41%|████      | 26/64 [00:41<01:00,  1.59s/it][38;20m2026-05-29 00:50:19 INFO device.py L1692: 'peak_ram': 14.7GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.27:  42%|████▏     | 27/64 [00:42<00:58,  1.58s/it][38;20m2026-05-29 00:50:21 INFO device.py L1692: 'peak_ram': 14.7GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.28:  44%|████▍     | 28/64 [00:43<00:56,  1.57s/it][38;20m2026-05-29 00:50:22 INFO device.py L1692: 'peak_ram': 14.7GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.29:  45%|████▌     | 29/64 [00:45<00:54,  1.56s/it][38;20m2026-05-29 00:50:23 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.30:  47%|████▋     | 30/64 [00:46<00:52,  1.55s/it][38;20m2026-05-29 00:50:25 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.31:  48%|████▊     | 31/64 [00:47<00:51,  1.55s/it][38;20m2026-05-29 00:50:26 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.32:  50%|█████     | 32/64 [00:49<00:49,  1.55s/it][38;20m2026-05-29 00:50:27 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.33:  52%|█████▏    | 33/64 [00:50<00:47,  1.54s/it][38;20m2026-05-29 00:50:29 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.34:  53%|█████▎    | 34/64 [00:52<00:46,  1.54s/it][38;20m2026-05-29 00:50:30 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.35:  55%|█████▍    | 35/64 [00:53<00:44,  1.53s/it][38;20m2026-05-29 00:50:31 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.36:  56%|█████▋    | 36/64 [00:54<00:42,  1.52s/it][38;20m2026-05-29 00:50:33 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.37:  58%|█████▊    | 37/64 [00:56<00:41,  1.53s/it][38;20m2026-05-29 00:50:35 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.38:  59%|█████▉    | 38/64 [00:58<00:39,  1.54s/it][38;20m2026-05-29 00:50:37 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.39:  61%|██████    | 39/64 [01:00<00:38,  1.54s/it][38;20m2026-05-29 00:50:38 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.40:  62%|██████▎   | 40/64 [01:01<00:37,  1.55s/it][38;20m2026-05-29 00:50:40 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.41:  64%|██████▍   | 41/64 [01:03<00:35,  1.55s/it][38;20m2026-05-29 00:50:42 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.42:  66%|██████▌   | 42/64 [01:05<00:34,  1.56s/it][38;20m2026-05-29 00:50:44 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.43:  67%|██████▋   | 43/64 [01:07<00:32,  1.57s/it][38;20m2026-05-29 00:50:46 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.44:  69%|██████▉   | 44/64 [01:09<00:31,  1.57s/it][38;20m2026-05-29 00:50:47 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.45:  70%|███████   | 45/64 [01:10<00:29,  1.57s/it][38;20m2026-05-29 00:50:49 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.46:  72%|███████▏  | 46/64 [01:12<00:28,  1.57s/it][38;20m2026-05-29 00:50:51 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.47:  73%|███████▎  | 47/64 [01:14<00:26,  1.58s/it][38;20m2026-05-29 00:50:52 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.48:  75%|███████▌  | 48/64 [01:15<00:25,  1.58s/it][38;20m2026-05-29 00:50:54 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.49:  77%|███████▋  | 49/64 [01:17<00:23,  1.59s/it][38;20m2026-05-29 00:50:56 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.50:  78%|███████▊  | 50/64 [01:19<00:22,  1.59s/it][38;20m2026-05-29 00:50:58 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.51:  80%|███████▉  | 51/64 [01:21<00:20,  1.59s/it][38;20m2026-05-29 00:50:59 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.52:  81%|████████▏ | 52/64 [01:22<00:19,  1.59s/it][38;20m2026-05-29 00:51:01 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.53:  83%|████████▎ | 53/64 [01:24<00:17,  1.59s/it][38;20m2026-05-29 00:51:03 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.54:  84%|████████▍ | 54/64 [01:25<00:15,  1.59s/it][38;20m2026-05-29 00:51:04 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.55:  86%|████████▌ | 55/64 [01:27<00:14,  1.59s/it][38;20m2026-05-29 00:51:06 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.56:  88%|████████▊ | 56/64 [01:29<00:12,  1.59s/it][38;20m2026-05-29 00:51:08 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.57:  89%|████████▉ | 57/64 [01:30<00:11,  1.60s/it][38;20m2026-05-29 00:51:09 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.58:  91%|█████████ | 58/64 [01:32<00:09,  1.60s/it][38;20m2026-05-29 00:51:11 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.59:  92%|█████████▏| 59/64 [01:34<00:07,  1.60s/it][38;20m2026-05-29 00:51:13 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.60:  94%|█████████▍| 60/64 [01:35<00:06,  1.60s/it][38;20m2026-05-29 00:51:14 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.61:  95%|█████████▌| 61/64 [01:37<00:04,  1.60s/it][38;20m2026-05-29 00:51:16 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.62:  97%|█████████▋| 62/64 [01:39<00:03,  1.60s/it][38;20m2026-05-29 00:51:17 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.63:  98%|█████████▊| 63/64 [01:40<00:01,  1.60s/it][38;20m2026-05-29 00:51:19 INFO device.py L1692: 'peak_ram': 15.32GB, 'peak_vram': 0.65GB[0m
+Quantizing model.layers.63: 100%|██████████| 64/64 [02:13<00:00,  2.08s/it]
+00:51:50 [INFO] Quantization completed in 133.6s
+00:51:50 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-05-29 00:51:50 WARNING formats.py L166: some layers are skipped quantization (shape not divisible by 32): [0m
+packing:   0%|          | 0/497 [00:00<?, ?it/s]packing: 100%|██████████| 497/497 [00:54<00:00,  9.17it/s]
+[38;20m2026-05-29 00:53:02 INFO missing_tensors.py L236: Found 348 tensor(s) in the source checkpoint that are absent from the saved output (e.g., MTP parameters): model.visual.blocks.[0-26].attn.proj, model.visual.blocks.[0-26].attn.qkv, model.visual.blocks.[0-26].mlp.linear_fc1, model.visual.blocks.[0-26].mlp.linear_fc2, model.visual.blocks.[0-26].norm1, model.visual.blocks.[0-26].norm2, model.visual.merger.linear_fc1, model.visual.merger.linear_fc2, model.visual.merger.norm, model.visual.patch_embed.proj, model.visual.pos_embed, mtp.fc, mtp.layers.0.input_layernorm, mtp.layers.0.mlp.down_proj, mtp.layers.0.mlp.gate_proj, mtp.layers.0.mlp.up_proj, mtp.layers.0.post_attention_layernorm, mtp.layers.0.self_attn.k_norm, mtp.layers.0.self_attn.k_proj, mtp.layers.0.self_attn.o_proj, mtp.layers.0.self_attn.q_norm, mtp.layers.0.self_attn.q_proj, mtp.layers.0.self_attn.v_proj, mtp.norm, mtp.pre_fc_norm_embedding, mtp.pre_fc_norm_hidden. Copying them now...
+[0m
+Loading missing tensors:   0%|          | 0/4 [00:00<?, ?shard/s]
+  model-00008-of-00015.safetensors:   0%|          | 0/270 [00:00<?, ?tensor/s][A
+                                                                               [A
+  model-00007-of-00015.safetensors:   0%|          | 0/63 [00:00<?, ?tensor/s][A
+                                                                              [A
+  model-00013-of-00015.safetensors:   0%|          | 0/7 [00:00<?, ?tensor/s][A
+                                                                             [A
+  model-00015-of-00015.safetensors:   0%|          | 0/8 [00:00<?, ?tensor/s][A
+                                                                             [ALoading missing tensors: 100%|██████████| 4/4 [00:00<00:00, 468.98shard/s]
+[38;20m2026-05-29 00:53:02 INFO missing_tensors.py L644: Processing config.json to update quantization_config for missing tensors...[0m
+[38;20m2026-05-29 00:53:02 INFO missing_tensors.py L637: Updated block_name_to_quantize: ['model.layers', 'model.visual.blocks', 'mtp.layers'][0m
+[38;20m2026-05-29 00:53:02 INFO missing_tensors.py L667: Applying WOQ[RTN] to 119 missing Linear weight(s) (per-layer overrides from extra_config applied)...[0m
+WOQ[RTN] quantizing missing weights:   0%|          | 0/119 [00:00<?, ?weight/s]WOQ[RTN] quantizing missing weights: 100%|██████████| 119/119 [00:22<00:00,  5.26weight/s]
+[38;20m2026-05-29 00:53:25 INFO missing_tensors.py L730: Successfully packed 119 weight(s) into WOQ format (357 packed tensor(s) created).[0m
+[38;20m2026-05-29 00:53:25 INFO missing_tensors.py L370: Successfully wrote 586 missing tensor(s) to 'model_extra_tensors.safetensors' in /root/_work/1/s/auto_quant/output/runs/Qwen3.6-27B-AutoRound-W4A16-RTN/quantized_model.[0m
+00:53:25 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:53:25 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/config.json "HTTP/1.1 200 OK"
+00:53:25 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/Qwen3.6-27B-AutoRound-W4A16-RTN/quant_summary.json
+00:53:25 [INFO] === Phase 2: DONE ===

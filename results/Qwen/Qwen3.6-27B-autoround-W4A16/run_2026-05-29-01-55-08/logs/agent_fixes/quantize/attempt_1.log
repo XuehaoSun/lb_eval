@@ -1,0 +1,20 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the error:
+- AutoRound fails because model parameters are on the "meta device" (offloaded to CPU)
+- The warning confirms: `Some parameters are on the meta device because they were offloaded to the cpu`
+- The fix is to load the model fully on GPU or CPU, not with meta device offloading
+
+Let me examine the quantize script to understand the flow:
+**FIX_PLAN:**
+1. The error `AutoRound does not support parameters on meta device` means `device_map="auto"` is offloading some layers to CPU/meta
+2. Since we have 1 GPU, switch `device_map` from `"auto"` to `"cuda"` to keep all weights on GPU
+3. If that still fails (OOM), fall back to `"cpu"` as the error message suggests
+The error is clear: the model has some parameters on meta device (due to `device_map="auto"` with only 1 GPU). AutoRound requires all parameters accessible.
+
+Fix: change `device_map` to `"cpu"` so the full model stays on CPU (AutoRound will handle weight quantization in-place). This is the recommended path per the error message.
+**FIX_PLAN:**
+1. The error `"AutoRound does not support parameters on meta device"` occurs because `device_map="auto"` offloads some weights to the meta device (CPU offloading), and AutoRound can't handle that
+2. Change model loading to use `device_map="cpu"` instead of `"auto"` so all weights stay on CPU — which AutoRound explicitly supports per the error message
+3. Also add `low_cpu_mem_usage=True` to reduce RAM overhead during CPU loading
+
+**Fix applied:** Changed `device_map=args.device_map` → `device_map="cpu"` in `phases/quantize.py`, and committed. The phase script will now load the full 27B model on CPU RAM before AutoRound quantizes it in-place.
