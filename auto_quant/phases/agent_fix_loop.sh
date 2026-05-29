@@ -18,7 +18,7 @@
 [[ -n "${_AGENT_FIX_LOOP_SOURCED:-}" ]] && return 0
 _AGENT_FIX_LOOP_SOURCED=1
 
-MAX_FIX_ATTEMPTS="${MAX_FIX_ATTEMPTS:-3}"
+MAX_FIX_ATTEMPTS="${MAX_FIX_ATTEMPTS:-10}"
 LESSONS_DIR="${LESSONS_DIR:-${LB_EVAL_REPO_DIR:-$(dirname "$0")/../lessons}}"
 
 # ═══════════════════════════════════════════════════════════════════

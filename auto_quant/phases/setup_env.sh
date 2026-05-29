@@ -138,7 +138,8 @@ major_minor = driver_cuda.split('.')
 cuda_major = int(major_minor[0])
 cuda_minor = int(major_minor[1]) if len(major_minor) > 1 else 0
 
-# PyTorch available CUDA builds: cu118, cu121, cu124, cu126
+# PyTorch available CUDA builds (as of 2.11): cu118, cu121, cu124, cu126, cu128, cu130
+# Use the highest cu_tag that the driver supports (driver CUDA >= cu_tag)
 if cuda_major < 11 or (cuda_major == 11 and cuda_minor < 8):
     cu_tag = "cu118"
 elif cuda_major == 11:
@@ -149,8 +150,12 @@ elif cuda_major == 12 and cuda_minor < 4:
     cu_tag = "cu121"
 elif cuda_major == 12 and cuda_minor < 6:
     cu_tag = "cu124"
-else:
+elif cuda_major == 12 and cuda_minor < 8:
     cu_tag = "cu126"
+elif cuda_major == 12 and cuda_minor < 10:
+    cu_tag = "cu128"
+else:
+    cu_tag = "cu128"  # cu130 only if torch is compiled for it; cu128 is safest max
 
 index_url = f"https://download.pytorch.org/whl/{cu_tag}"
 print(f"[setup_env] torch {torch_version} CUDA mismatch with driver (CUDA {driver_cuda})")
