@@ -104,6 +104,10 @@ export_format = task.get("export_format", "auto_round")
 auto_round_ref = task.get("auto_round_ref", "latest")
 transformers_ref = task.get("transformers_ref", "auto")
 request_filename = task.get("request_filename", "")
+# If request_filename not in JSON, derive from the JSON filename itself
+if not request_filename:
+    import os
+    request_filename = os.path.basename(sys.argv[1])
 
 # Normalize method from iters
 iters = task.get("iters", None)

@@ -200,3 +200,30 @@ stages:
               status: ""
               TOKEN: $(TOKEN)
               HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
+
+          # Safety net: update status based on Eval result
+          # Write "Finished" only if Eval succeeded
+          - task: Bash@3
+            displayName: "Write-back Status Finished"
+            condition: eq(stageDependencies.Eval.Eval.result, 'Succeeded')
+            inputs:
+              filePath: .azure-pipelines/scripts/git_update.sh
+            env:
+              requestJson: $(REQUEST_JSON)
+              commitMessage: "Commit from Azure DevOps update Status Finished"
+              status: "Finished"
+              TOKEN: $(TOKEN)
+              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
+
+          # Write "Failed" if Eval did not succeed
+          - task: Bash@3
+            displayName: "Write-back Status Failed"
+            condition: ne(stageDependencies.Eval.Eval.result, 'Succeeded')
+            inputs:
+              filePath: .azure-pipelines/scripts/git_update.sh
+            env:
+              requestJson: $(REQUEST_JSON)
+              commitMessage: "Commit from Azure DevOps update Status Failed"
+              status: "Failed"
+              TOKEN: $(TOKEN)
+              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
