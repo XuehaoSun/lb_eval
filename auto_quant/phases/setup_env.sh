@@ -85,6 +85,96 @@ fi
 # ═══ Step 6: Auxiliary deps ═══
 uv pip install loguru hf_transfer sentencepiece protobuf accelerate datasets 2>&1 | tail -3 || true
 
+# ═══ Step 6.5: Verify torch+CUDA driver compatibility ═══
+# If torch was pre-installed with a CUDA version newer than the driver supports,
+# reinstall a compatible version automatically.
+echo "[setup_env] Checking torch/CUDA driver compatibility..."
+python3 - <<'PYEOF'
+import subprocess, sys, re
+
+try:
+    import torch
+except ImportError:
+    print("[setup_env] torch not installed, installing default...")
+    subprocess.run(["uv", "pip", "install", "torch"], check=True)
+    import torch
+
+torch_version = torch.__version__
+cuda_available = torch.cuda.is_available()
+
+if cuda_available:
+    print(f"[setup_env] torch={torch_version}, CUDA available — OK")
+    sys.exit(0)
+
+# CUDA not available — check if it's a driver mismatch
+# Try to get the driver-supported CUDA version via nvidia-smi
+try:
+    result = subprocess.run(["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
+                           capture_output=True, text=True, timeout=10)
+    if result.returncode != 0:
+        print("[setup_env] No NVIDIA GPU detected, CPU-only mode")
+        sys.exit(0)
+    driver_version = result.stdout.strip().split('\n')[0]
+    print(f"[setup_env] NVIDIA driver: {driver_version}")
+except (FileNotFoundError, subprocess.TimeoutExpired):
+    print("[setup_env] nvidia-smi not found, assuming no GPU")
+    sys.exit(0)
+
+# Get driver-supported CUDA version
+try:
+    result = subprocess.run(["nvidia-smi"], capture_output=True, text=True, timeout=10)
+    cuda_match = re.search(r"CUDA Version:\s*([\d.]+)", result.stdout)
+    if not cuda_match:
+        print("[setup_env] Could not determine driver CUDA version, skipping")
+        sys.exit(0)
+    driver_cuda = cuda_match.group(1)  # e.g. "12.1"
+    print(f"[setup_env] Driver supports CUDA: {driver_cuda}")
+except Exception:
+    sys.exit(0)
+
+# Determine which torch CUDA build to install
+# Map driver CUDA major.minor to PyTorch index URL suffix
+major_minor = driver_cuda.split('.')
+cuda_major = int(major_minor[0])
+cuda_minor = int(major_minor[1]) if len(major_minor) > 1 else 0
+
+# PyTorch available CUDA builds: cu118, cu121, cu124, cu126
+if cuda_major < 11 or (cuda_major == 11 and cuda_minor < 8):
+    cu_tag = "cu118"
+elif cuda_major == 11:
+    cu_tag = "cu118"
+elif cuda_major == 12 and cuda_minor < 1:
+    cu_tag = "cu118"
+elif cuda_major == 12 and cuda_minor < 4:
+    cu_tag = "cu121"
+elif cuda_major == 12 and cuda_minor < 6:
+    cu_tag = "cu124"
+else:
+    cu_tag = "cu126"
+
+index_url = f"https://download.pytorch.org/whl/{cu_tag}"
+print(f"[setup_env] torch {torch_version} CUDA mismatch with driver (CUDA {driver_cuda})")
+print(f"[setup_env] Reinstalling torch with {cu_tag} from {index_url}...")
+
+# Reinstall torch + torchaudio + torchvision with correct CUDA
+subprocess.run(
+    ["uv", "pip", "install", "--reinstall", "torch", "torchaudio", "torchvision",
+     "--index-url", index_url],
+    check=False
+)
+
+# Verify
+import importlib
+importlib.invalidate_caches()
+result = subprocess.run(
+    [sys.executable, "-c", "import torch; print(f'torch={torch.__version__}, cuda={torch.cuda.is_available()}')"],
+    capture_output=True, text=True
+)
+print(f"[setup_env] After reinstall: {result.stdout.strip()}")
+if "cuda=True" not in result.stdout:
+    print("[WARN] CUDA still not available after torch reinstall")
+PYEOF
+
 # ═══ Step 7: Model-specific dependency pre-flight ═══
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -n "${MODEL_ID:-}" ]; then

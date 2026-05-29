@@ -262,39 +262,62 @@ PYEOF
 
 # ═══════════════════════════════════════════════════════════════════
 # search_lessons — find matching lessons for an error
+# Searches both the phase-specific file AND all other .jsonl files
 # ═══════════════════════════════════════════════════════════════════
 search_lessons() {
     local phase="$1"
     local error_text="$2"
 
-    local lessons_file="${LESSONS_DIR}/${phase}.jsonl"
-    [ ! -f "${lessons_file}" ] && return 0
+    [ ! -d "${LESSONS_DIR}" ] && return 0
 
-    LESSON_SEARCH_ERROR="${error_text}" python3 - "${lessons_file}" <<'PYEOF'
+    LESSON_SEARCH_ERROR="${error_text}" LESSON_SEARCH_PHASE="${phase}" python3 - "${LESSONS_DIR}" <<'PYEOF'
 import json
 import sys
 import os
+from pathlib import Path
 
-lessons_file = sys.argv[1]
+lessons_dir = Path(sys.argv[1])
 error_lower = os.environ.get("LESSON_SEARCH_ERROR", "").lower()
+phase = os.environ.get("LESSON_SEARCH_PHASE", "")
 
 results = []
-try:
-    with open(lessons_file) as f:
-        for line in f:
-            if not line.strip():
-                continue
-            lesson = json.loads(line)
-            keywords = lesson.get("error_keywords", [])
-            hits = sum(1 for kw in keywords if kw.lower() in error_lower)
-            if hits >= 2 or (hits >= 1 and len(keywords) <= 2):
-                lesson["_score"] = hits
-                results.append(lesson)
-except (FileNotFoundError, json.JSONDecodeError):
-    pass
 
-results.sort(key=lambda x: (x.get("verified_count", 0), x.get("_score", 0)), reverse=True)
-for r in results[:3]:
+# Search ALL .jsonl files (phase-specific first, then others)
+jsonl_files = sorted(lessons_dir.glob("*.jsonl"))
+# Prioritize current phase file
+phase_file = lessons_dir / f"{phase}.jsonl"
+if phase_file in jsonl_files:
+    jsonl_files.remove(phase_file)
+    jsonl_files.insert(0, phase_file)
+
+for fpath in jsonl_files:
+    try:
+        with open(fpath) as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                lesson = json.loads(line)
+                keywords = lesson.get("error_keywords", [])
+                hits = sum(1 for kw in keywords if kw.lower() in error_lower)
+                if hits >= 2 or (hits >= 1 and len(keywords) <= 2):
+                    # Boost score if phase matches
+                    bonus = 2 if lesson.get("phase") == phase else 0
+                    lesson["_score"] = hits + bonus
+                    results.append(lesson)
+    except (FileNotFoundError, json.JSONDecodeError):
+        continue
+
+# Deduplicate by error_signature
+seen = set()
+unique = []
+for r in results:
+    sig = r.get("error_signature", "")
+    if sig not in seen:
+        seen.add(sig)
+        unique.append(r)
+
+unique.sort(key=lambda x: (x.get("verified_count", 0), x.get("_score", 0)), reverse=True)
+for r in unique[:3]:
     print(f'[{r["status"]}] (verified x{r["verified_count"]}) {r["error_signature"][:100]}')
     print(f'  Fix: {r["solution"]}')
     print()
