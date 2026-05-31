@@ -98,7 +98,7 @@ with open(sys.argv[1]) as f:
 
 # Extract fields with defaults
 model = task.get("model", "")
-scheme = task.get("scheme", task.get("quant_type", "W4A16"))
+scheme = task.get("scheme", task.get("quant_scheme", task.get("quant_type", "W4A16")))
 method = task.get("method", "RTN")
 export_format = task.get("export_format", "auto_round")
 auto_round_ref = task.get("auto_round_ref", "latest")
@@ -108,6 +108,18 @@ request_filename = task.get("request_filename", "")
 if not request_filename:
     import os
     request_filename = os.path.basename(sys.argv[1])
+
+# Normalize scheme from various request formats
+scheme_map = {
+    "INT4 (W4A16)": "W4A16",
+    "INT8 (W8A16)": "W8A16",
+    "INT4 (W4A8)": "W4A8",
+    "int4": "W4A16",
+    "int8": "W8A16",
+    "nvfp4": "NVFP4",
+    "mxfp4": "MXFP4",
+}
+scheme = scheme_map.get(scheme, scheme)
 
 # Normalize method from iters
 iters = task.get("iters", None)
