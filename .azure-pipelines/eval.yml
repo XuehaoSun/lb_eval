@@ -201,29 +201,27 @@ stages:
               TOKEN: $(TOKEN)
               HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
 
-          # Safety net: update status based on Eval result
-          # Write "Finished" only if Eval succeeded
-          - task: Bash@3
-            displayName: "Write-back Status Finished"
-            condition: eq(stageDependencies.Eval.Eval.result, 'Succeeded')
-            inputs:
-              filePath: .azure-pipelines/scripts/git_update.sh
-            env:
-              requestJson: $(REQUEST_JSON)
-              commitMessage: "Commit from Azure DevOps update Status Finished"
+      # Safety net: write-back final status based on Eval stage result
+      - job: Write_Status_Finished
+        dependsOn: Verify_Cleanup
+        condition: eq(stageDependencies.Eval.Eval.result, 'Succeeded')
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - checkout: self
+          - template: template/git-status-template.yml
+            parameters:
               status: "Finished"
-              TOKEN: $(TOKEN)
-              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
+              requestJson: "$(REQUEST_JSON)"
 
-          # Write "Failed" if Eval did not succeed
-          - task: Bash@3
-            displayName: "Write-back Status Failed"
-            condition: ne(stageDependencies.Eval.Eval.result, 'Succeeded')
-            inputs:
-              filePath: .azure-pipelines/scripts/git_update.sh
-            env:
-              requestJson: $(REQUEST_JSON)
-              commitMessage: "Commit from Azure DevOps update Status Failed"
+      - job: Write_Status_Failed
+        dependsOn: Verify_Cleanup
+        condition: ne(stageDependencies.Eval.Eval.result, 'Succeeded')
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - checkout: self
+          - template: template/git-status-template.yml
+            parameters:
               status: "Failed"
-              TOKEN: $(TOKEN)
-              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
+              requestJson: "$(REQUEST_JSON)"
