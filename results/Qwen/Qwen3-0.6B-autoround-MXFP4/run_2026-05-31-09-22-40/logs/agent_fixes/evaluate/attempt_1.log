@@ -1,0 +1,12 @@
+[34m[tools][39m [33mtools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.[39m
+**FIX_PLAN:**
+1. Upgrade `auto-round` and `transformers` packages to fix backend compatibility issue
+2. Re-run the evaluate phase to verify the fix
+
+The error shows "No compatible backend found" for MXFP量化 layer — upgrading auto-round should provide the needed backend support.
+Upgraded auto-round (0.12→0.13) and transformers (5.5→5.9). The error was a compatibility issue with MXFP quantization backend that was fixed in the newer auto-round. Let me verify:
+**FIX_PLAN:**
+1. Upgrade auto-round (0.12.2→0.13.0) and transformers (5.5.4→5.9.0) to get fixes for MXFP backend compatibility
+2. Re-run evaluate phase
+
+Installed: `auto-round 0.13.0`, `transformers 5.9.0`. Phase will be re-run to verify.
