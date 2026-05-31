@@ -38,16 +38,16 @@ logger = logging.getLogger(__name__)
 # It internally resolves bits, group_size, sym, data_type etc.
 SCHEME_MAP = {
     "W4A16": "W4A16",
-    "MXFP4": "MX_FP4",
-    "NVFP4": "NV_FP4",
-    "MXFP8": "MX_FP8",
+    "MXFP4": "MXFP4",
+    "NVFP4": "NVFP4",
+    "MXFP8": "MXFP8",
     "W8A16": "W8A16",
     "W4A16_ASYM": "W4A16_ASYM",
 }
 
 # Scheme with RCEIL suffix for auto_round export (better rounding for MX formats)
 SCHEME_MAP_AUTOROUND_EXPORT = {
-    "MXFP4": "MX_FP4_RCEIL",
+    "MXFP4": "MXFP4_RCEIL",
 }
 
 # ═══ Ignore layers strategy (from Qwen quantization recipes) ═══
