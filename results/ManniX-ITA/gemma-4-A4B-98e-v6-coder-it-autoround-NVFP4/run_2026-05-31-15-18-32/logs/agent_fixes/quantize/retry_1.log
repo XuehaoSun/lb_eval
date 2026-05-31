@@ -1,0 +1,101 @@
+=== Phase 2: Quantization ===
+  model=ManniX-ITA/gemma-4-A4B-98e-v6-coder-it
+  scheme=NVFP4
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gemma-4-A4B-98e-v6-coder-it-AutoRound-NVFP4-RTN/quantized_model
+15:18:08 [INFO] Model: ManniX-ITA/gemma-4-A4B-98e-v6-coder-it
+15:18:08 [INFO] Scheme: NVFP4 → AutoRound scheme='NVFP4'
+15:18:08 [INFO] Iters: 0 (RTN)
+15:18:08 [INFO] Export format: auto_round
+15:18:08 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gemma-4-A4B-98e-v6-coder-it-AutoRound-NVFP4-RTN/quantized_model
+15:18:08 [INFO] Device map: auto
+15:18:08 [INFO] Loading tokenizer...
+15:18:09 [INFO] HTTP Request: HEAD https://huggingface.co/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+15:18:09 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+15:18:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/0be043249d18b430c26cada1374cb081deade3d9/config.json "HTTP/1.1 200 OK"
+15:18:09 [INFO] HTTP Request: HEAD https://huggingface.co/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+15:18:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/0be043249d18b430c26cada1374cb081deade3d9/tokenizer_config.json "HTTP/1.1 200 OK"
+15:18:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+15:18:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+15:18:11 [INFO] HTTP Request: GET https://huggingface.co/api/models/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it "HTTP/1.1 200 OK"
+15:18:11 [INFO] Loading model...
+15:18:11 [INFO] HTTP Request: HEAD https://huggingface.co/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+15:18:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/0be043249d18b430c26cada1374cb081deade3d9/config.json "HTTP/1.1 200 OK"
+15:18:15 [INFO] HTTP Request: HEAD https://huggingface.co/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+15:18:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/0be043249d18b430c26cada1374cb081deade3d9/generation_config.json "HTTP/1.1 200 OK"
+15:18:15 [INFO] HTTP Request: HEAD https://huggingface.co/ManniX-ITA/gemma-4-A4B-98e-v6-coder-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+15:18:15 [INFO] Architecture: Gemma4ForConditionalGeneration (model_type=gemma4, moe=False)
+15:18:15 [INFO] Ignore layers: lm_head,self_attn
+15:18:15 [INFO] Configuring AutoRound...
+[38;20m2026-05-31 15:18:15 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+[33;1m2026-05-31 15:18:15 WARNING logging.py L340: reset enable_torch_compile to `False` as nvfp4 is enabled[0m
+15:18:15 [INFO] Starting quantization...
+[38;20m2026-05-31 15:18:15 INFO replace_modules.py L120: Experts (before replacement) [model.language_model.layers.0.experts] (Gemma4TextExperts):
+Gemma4TextExperts(
+  (act_fn): GELUTanh()
+)[0m
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-05-31 15:18:15 INFO device.py L1838: Before applying custom replacements 'peak_ram': 1.2GB, 'peak_vram': 38.11GB[0m
+[38;20m2026-05-31 15:18:21 INFO moe_experts_interface.py L655: [MoE Prep] Unfused 30 MOE experts modules[0m
+[38;20m2026-05-31 15:18:22 INFO device.py L1838: After applying custom replacements 'peak_ram': 33.82GB, 'peak_vram': 38.11GB[0m
+[38;20m2026-05-31 15:18:22 INFO replace_modules.py L93: Prepared 30 MOE modules for quantization[0m
+[38;20m2026-05-31 15:18:22 INFO replace_modules.py L120: Experts (after replacement) [model.language_model.layers.0.experts] (Gemma4TextExperts):
+Gemma4TextExperts(
+  (act_fn): GELUTanh()
+  (0-97): 98 x _ExpertContainer(
+    (down_proj): Linear(in_features=704, out_features=2816, bias=False)
+    (gate_proj): Linear(in_features=2816, out_features=704, bias=False)
+    (up_proj): Linear(in_features=2816, out_features=704, bias=False)
+  )
+)[0m
+[33;1m2026-05-31 15:18:22 WARNING special_model_handler.py L383: Applying a monkey patch to Gemma4 to reduce RAM usage. This patch has only been validated with limited Transformers versions. Proceed with caution.[0m
+[38;20m2026-05-31 15:18:22 INFO utils.py L1069: Ignored layers: lm_head, lm_head, model.language_model.layers.[0-29].self_attn.k_proj, model.language_model.layers.[0-29].self_attn.o_proj, model.language_model.layers.[0-29].self_attn.q_proj, model.language_model.layers.[0-4,6-10,12-16,18-22,24-28].self_attn.v_proj, model.vision_tower.encoder.layers.[0-26].self_attn.k_proj.linear, model.vision_tower.encoder.layers.[0-26].self_attn.o_proj.linear, model.vision_tower.encoder.layers.[0-26].self_attn.q_proj.linear, model.vision_tower.encoder.layers.[0-26].self_attn.v_proj.linear, self_attn[0m
+[33;1m2026-05-31 15:18:22 WARNING utils.py L539: reset `quant_lm_head` to false as quantizing lm_head with tied weights has not been supported currently[0m
+15:18:23 [ERROR] Quantization failed: processor should not be None
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 278, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 179, in quantize
+    autoround.quantize()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 1149, in quantize
+    return self._quantize_impl()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 1177, in _quantize_impl
+    self._quantize_via_rtn_blockwise()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 935, in _quantize_via_rtn_blockwise
+    all_inputs = self.cache_inter_data(to_cache_block_names, self.nsamples)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 155, in cache_inter_data
+    return self.calibration.cache_inter_data(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/calibration/llm.py", line 239, in cache_inter_data
+    c.calib(nsamples, calib_bs)
+  File "/root/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 168, in calib
+    return self.calibration.calib(nsamples, bs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/calibration/mllm.py", line 73, in calib
+    c.template_obj = get_template(
+                     ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm/template.py", line 192, in get_template
+    template.processor.post_init(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm/processor.py", line 104, in post_init
+    assert processor is not None, "processor should not be None"
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: processor should not be None

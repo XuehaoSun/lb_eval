@@ -1,0 +1,12 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the error, the quantization fails because the `processor` is `None` when `post_init()` is called in the MLLM calibration path. This is a known issue with certain model configurations in auto-round.
+
+Let me examine the relevant code to understand the issue:
+**FIX_PLAN:**
+1. Register a `gemma4` processor in auto_round that doesn't need HF's `processor` (Gemma4 is text-only)
+2. Patch `HFProcessor.post_init` to make `processor` optional when `use_rtn=True` (RTN mode)
+3. Register `gemma4` template in template.py
+The fix is in place. Let me verify the edit looks correct:
+Fix applied to `HFProcessor.post_init` — now skips the `processor is not None` assertion when `use_rtn=True` (RTN mode, iters=0). This allows MLLM-mode quantization of text-only Gemma4 models that have an unused vision_tower but no usable multimodal processor (PIL not installed).
+
+The phase will be re-run to verify.

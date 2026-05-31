@@ -1,0 +1,11 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+FIX_PLAN:
+1. Investigate quantize.py to find device/load arguments being passed to AutoRound
+2. Modify to force CPU loading or fix device map so no params end up on meta device
+3. Re-run quantization
+**FIX_PLAN**
+1. Change model loading from `device_map="auto"` to `device_map="cuda"` so all parameters stay on GPU (AutoRound can't handle meta-device offloading)
+2. Add `\"disable_exclude_parameters_from_loss\": True` to `ar_kwargs` (common fix for meta-device errors in AutoRound)
+
+Let me check how `device_map` is passed in and make the targeted fix:
+Fix applied. The change forces full model onto GPU (`device_map="cuda"` instead of `"auto"`) to prevent any layers landing on meta device. The script will be re-run automatically.
