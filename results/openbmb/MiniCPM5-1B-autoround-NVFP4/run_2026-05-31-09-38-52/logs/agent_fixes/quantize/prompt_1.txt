@@ -1,0 +1,119 @@
+You are fixing a failed "quantize" phase in the quantization pipeline.
+
+## Error Output (last 100 lines):
+09:27:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/tokenizer.json "HTTP/1.1 200 OK"
+09:27:49 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+09:27:49 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+09:27:49 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+09:27:49 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+09:27:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/special_tokens_map.json "HTTP/1.1 200 OK"
+09:27:49 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/special_tokens_map.json "HTTP/1.1 200 OK"
+09:27:49 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+09:27:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/chat_template.jinja "HTTP/1.1 200 OK"
+09:27:49 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/chat_template.jinja "HTTP/1.1 200 OK"
+09:27:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/openbmb/MiniCPM5-1B "HTTP/1.1 200 OK"
+09:27:50 [INFO] Loading model...
+09:27:50 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+09:27:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/config.json "HTTP/1.1 200 OK"
+09:27:50 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+09:27:50 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+09:27:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/model.safetensors.index.json "HTTP/1.1 200 OK"
+09:27:50 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/model.safetensors.index.json "HTTP/1.1 200 OK"
+09:27:50 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/model-00000-of-00001.safetensors "HTTP/1.1 302 Found"
+09:27:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/openbmb/MiniCPM5-1B/xet-read-token/4e9de7a0778dc1c362e983e6858f0e77542cbdca "HTTP/1.1 200 OK"
+09:27:58 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+09:27:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/generation_config.json "HTTP/1.1 200 OK"
+09:27:58 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/generation_config.json "HTTP/1.1 200 OK"
+09:27:58 [INFO] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+09:27:58 [INFO] Architecture: LlamaForCausalLM (model_type=llama, moe=False)
+09:27:58 [INFO] Ignore layers: lm_head,self_attn
+09:27:58 [INFO] Configuring AutoRound...
+[38;20m2026-05-31 09:27:59 INFO entry.py L591: Using LLM mode.[0m
+[33;1m2026-05-31 09:27:59 WARNING logging.py L340: reset enable_torch_compile to `False` as nvfp4 is enabled[0m
+09:27:59 [INFO] Starting quantization...
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[33;1m2026-05-31 09:27:59 WARNING data_driven.py L929: quantize layers outside blocks for static activation quantizaiton will significantly increase calibration time[0m
+[38;20m2026-05-31 09:27:59 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+09:28:00 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+09:28:00 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+09:28:00 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+09:28:00 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+09:28:00 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+09:28:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+09:28:00 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+09:28:01 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+09:28:01 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+09:28:01 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+09:28:01 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+09:28:01 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+09:28:01 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+09:28:01 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+09:28:01 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/xet-read-token/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 50479.41 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:08<00:00, 1130.80 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:03<00:00, 2810.21 examples/s]
+Casting the dataset:   0%|          | 0/1208 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1208/1208 [00:02<00:00, 432.32 examples/s]
+09:28:19 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+09:28:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+09:28:19 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+09:28:19 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+09:28:19 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+09:28:19 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+09:28:20 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+09:28:20 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+09:28:20 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+  0%|          | 0/24 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/24 [00:00<?, ?it/s]09:28:23 [ERROR] Quantization failed: No quantization function found for dtype=nv_fp, bits=16, sym=True, group_size=16
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 283, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 184, in quantize
+    autoround.quantize()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 1149, in quantize
+    return self._quantize_impl()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 1177, in _quantize_impl
+    self._quantize_via_rtn_blockwise()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 1044, in _quantize_via_rtn_blockwise
+    self.quantizer.quantize_block(block, block_input_ids, input_others, block_name=block_name)
+  File "/root/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/algorithms/quantization/rtn/quantizer.py", line 153, in quantize_block
+    self.quantize_layer_outside_block(m.global_name)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/algorithms/quantization/base.py", line 402, in quantize_layer_outside_block
+    self.quantize_layer_via_rtn(layer_name, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/algorithms/quantization/base.py", line 326, in quantize_layer_via_rtn
+    layer = WrapperLinear(
+            ^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/wrapper.py", line 119, in __init__
+    self._init_tuning_params_and_quant_func()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/wrapper.py", line 176, in _init_tuning_params_and_quant_func
+    self.weight_quant_func, self.data_type = get_quant_func(
+                                             ^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/data_type/utils.py", line 173, in get_quant_func
+    raise ValueError(
+ValueError: No quantization function found for dtype=nv_fp, bits=16, sym=True, group_size=16
+Quantizing model.layers.0:   0%|          | 0/24 [00:02<?, ?it/s]
+
+## Historical Lessons:
+No lessons available yet.
+
+## Your Task:
+1. First output a brief FIX_PLAN (3 lines max) describing what you will do
+2. Then execute the fix (modify files, install packages, adjust parameters)
+3. The phase script will be re-run after your fix to verify
+
+## Constraints:
+- Do NOT reinstall or downgrade torch (it will break CUDA)
+- Do NOT modify the evaluation tasks or expected output format
+- Keep fixes minimal and targeted
+- If you need to install a package, use: pip install <package>
+- If unsupported model architecture, try: pip install -U auto-round transformers
+- Working directory: /root/_work/1/s/auto_quant/output/runs/MiniCPM5-1B-AutoRound-NVFP4-RTN
