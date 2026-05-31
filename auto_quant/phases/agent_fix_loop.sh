@@ -104,7 +104,13 @@ agent_fix_loop() {
 
         if [ $exit_code -eq 0 ]; then
             log_ok "${phase_name} fixed on attempt ${attempt}"
-            save_lesson "${phase_name}" "${error_tail}" "fixed" "Agent fixed on attempt ${attempt}"
+            # Extract agent's fix summary (first lines containing FIX_PLAN or actual commands)
+            local fix_summary=""
+            if [ -f "${agent_log}" ]; then
+                fix_summary=$(grep -A3 "FIX_PLAN\|Fix applied\|Installing\|pip install\|Changing\|Setting" "${agent_log}" | head -5 | tr '\n' '; ')
+            fi
+            fix_summary="${fix_summary:-Agent fixed on attempt ${attempt}}"
+            save_lesson "${phase_name}" "${error_tail}" "fixed" "${fix_summary}"
             return 0
         fi
 
@@ -257,6 +263,7 @@ with open(lessons_file, "a") as f:
     f.write(json.dumps(lesson, ensure_ascii=False) + "\n")
 
 print(f"[lesson] Saved: [{status}] {error_signature[:80]}")
+print(f"[lesson]   Solution: {solution_note}")
 PYEOF
 }
 
@@ -281,7 +288,9 @@ for fpath in sorted(lessons_dir.glob("*.jsonl")):
                 if not line.strip():
                     continue
                 lesson = json.loads(line)
-                lessons.append(lesson)
+                # Only load lessons with actionable solutions (fixed, verified, or seed lessons)
+                if lesson.get("status") in ("fixed", "seed", "verified"):
+                    lessons.append(lesson)
     except (FileNotFoundError, json.JSONDecodeError):
         continue
 
@@ -297,13 +306,12 @@ for les in lessons:
 # Sort by verified_count (most reliable first), cap at 10 to avoid huge prompts
 unique.sort(key=lambda x: x.get("verified_count", 0), reverse=True)
 for i, les in enumerate(unique[:10], 1):
-    status = les.get("status", "unknown")
     verified = les.get("verified_count", 0)
     phase = les.get("phase", "?")
     sig = les.get("error_signature", "")[:120]
     solution = les.get("solution", "")
     notes = les.get("notes", "")
-    print(f"Lesson {i} [phase={phase}, status={status}, verified={verified}x]:")
+    print(f"Lesson {i} [phase={phase}, verified={verified}x]:")
     print(f"  Error: {sig}")
     print(f"  Solution: {solution}")
     if notes:
@@ -337,20 +345,52 @@ maybe_compact_lessons() {
 push_lessons_to_git() {
     maybe_compact_lessons
 
-    local repo_dir="${LB_EVAL_REPO_DIR:-}"
-    [ -z "${repo_dir}" ] && return 0
-    [ ! -d "${repo_dir}/.git" ] && return 0
+    local lessons_dir="${LESSONS_DIR:-}"
+    [ -z "${lessons_dir}" ] && return 0
+    [ ! -d "${lessons_dir}" ] && return 0
 
-    cd "${repo_dir}"
-    git add --force lessons/ 2>/dev/null || true
-    if ! git diff --cached --quiet lessons/ 2>/dev/null; then
-        git commit -m "lessons: update from ${MODEL_ID:-unknown} ${SCHEME:-} ${METHOD:-}" || true
-        # Use token-authenticated URL if available
-        local push_url="origin"
-        if [[ -n "${GIT_TOKEN:-}" && -n "${GIT_REPO:-}" ]]; then
-            push_url="${GIT_REPO/https:\/\//https://x-access-token:${GIT_TOKEN}@}"
-        fi
-        git push "${push_url}" "${GIT_BRANCH:-main}" 2>/dev/null || log_warn "Failed to push lessons"
+    # Check if any lessons exist to push
+    local has_lessons=false
+    for f in "${lessons_dir}"/*.jsonl; do
+        [ -f "$f" ] && has_lessons=true && break
+    done
+    [ "${has_lessons}" = false ] && return 0
+
+    # Need GIT_TOKEN and GIT_REPO to push
+    if [[ -z "${GIT_TOKEN:-}" || -z "${GIT_REPO:-}" ]]; then
+        log_warn "push_lessons: GIT_TOKEN or GIT_REPO not set, skipping"
+        return 0
     fi
+
+    local branch="${GIT_BRANCH:-main}"
+    local auth_url="${GIT_REPO/https:\/\//https://x-access-token:${GIT_TOKEN}@}"
+    local tmp_clone="${RUN_OUTPUT_DIR}/.lessons_push_tmp"
+
+    # Clone fresh (shallow, only the branch we need)
+    rm -rf "${tmp_clone}"
+    log_info "push_lessons: cloning repo for lessons push..."
+    if ! git clone --depth 1 --branch "${branch}" "${auth_url}" "${tmp_clone}" 2>/dev/null; then
+        log_warn "push_lessons: git clone failed"
+        return 0
+    fi
+
+    # Copy lessons into the clone
+    mkdir -p "${tmp_clone}/auto_quant/lessons"
+    cp -f "${lessons_dir}"/*.jsonl "${tmp_clone}/auto_quant/lessons/" 2>/dev/null || true
+
+    # Commit and push
+    cd "${tmp_clone}"
+    git config user.name "${GIT_USER_NAME:-auto-pipeline}"
+    git config user.email "${GIT_USER_EMAIL:-auto@pipeline.local}"
+    git add --force auto_quant/lessons/ 2>/dev/null || true
+
+    if ! git diff --cached --quiet auto_quant/lessons/ 2>/dev/null; then
+        git commit -m "lessons: update from ${MODEL_ID:-unknown} ${SCHEME:-} ${METHOD:-}" || true
+        git push origin "${branch}" 2>/dev/null && log_ok "push_lessons: pushed successfully" || log_warn "push_lessons: git push failed"
+    else
+        log_info "push_lessons: no changes to push"
+    fi
+
     cd - > /dev/null
+    rm -rf "${tmp_clone}"
 }

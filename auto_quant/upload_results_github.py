@@ -582,6 +582,17 @@ def main() -> int:
     print(f"[github-upload] Derived pipeline status: {pipeline_status}")
     write_back_status(repo_dir, args.request_filename, pipeline_status, copied)
 
+    # ═══ Copy lessons into repo (same commit as results) ═══
+    lessons_dir = Path(os.environ.get("LESSONS_DIR", ""))
+    if lessons_dir.is_dir():
+        repo_lessons_dir = repo_dir / "auto_quant" / "lessons"
+        repo_lessons_dir.mkdir(parents=True, exist_ok=True)
+        for jsonl_file in sorted(lessons_dir.glob("*.jsonl")):
+            dst = repo_lessons_dir / jsonl_file.name
+            shutil.copy2(jsonl_file, dst)
+            copied.append(str(dst))
+        print(f"[github-upload] Included lessons from {lessons_dir}")
+
     rel_paths = [str(Path(path).relative_to(repo_dir)) for path in copied]
     if not rel_paths:
         print("[github-upload] No artifacts found to upload.")

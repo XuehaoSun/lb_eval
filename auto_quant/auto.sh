@@ -166,9 +166,10 @@ QUANTIZED_MODEL_DIR="${RUN_OUTPUT_DIR}/quantized_model"
 EVAL_OUTPUT_DIR="${RUN_OUTPUT_DIR}/lm_eval_results"
 LOG_DIR="${RUN_OUTPUT_DIR}/logs"
 
-# lb_eval repo
+# lb_eval repo (for upload_results_github.py clone target)
 LB_EVAL_REPO_DIR="${GIT_RESULTS_REPO_DIR:-${SCRIPT_DIR}/lb_eval}"
-LESSONS_DIR="${LB_EVAL_REPO_DIR}/lessons"
+# Lessons are stored alongside phases in the checkout, not inside the clone target
+LESSONS_DIR="${SCRIPT_DIR}/lessons"
 GIT_BRANCH="${GIT_BRANCH:-main}"
 
 # Export for child scripts
@@ -350,9 +351,6 @@ if [[ "$SKIP_UPLOAD" != "true" ]]; then
         --git-user-email "${GIT_USER_EMAIL:-auto@pipeline.local}" \
         2>&1 | tee "${LOG_DIR}/upload_github.log" || log_warn "GitHub upload failed"
 fi
-
-# ═══ Push lessons ═══
-push_lessons_to_git
 
 # ═══ Summary ═══
 log_step "Pipeline Summary"
