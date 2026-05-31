@@ -1,0 +1,122 @@
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+[setup_env] Installing: auto-round
+ + transformers==5.9.0
+ + triton==3.7.0
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+[setup_env] Checking torch/CUDA driver compatibility...
+/root/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py:187: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12040). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+  return torch._C._cuda_getDeviceCount() > 0
+[setup_env] NVIDIA driver: 550.127.05
+[setup_env] Driver supports CUDA: 12.4
+[setup_env] torch 2.12.0+cu130 CUDA mismatch with driver (CUDA 12.4)
+[setup_env] Reinstalling torch with cu124 from https://download.pytorch.org/whl/cu124...
+Using Python 3.12.13 environment at: /root/.venv
+Resolved 28 packages in 355ms
+Downloading torch (732.8MiB)
+Downloading nvidia-nccl-cu12 (179.9MiB)
+Downloading nvidia-cufft-cu12 (201.7MiB)
+Downloading nvidia-cuda-nvrtc-cu12 (23.5MiB)
+Downloading nvidia-cuda-cupti-cu12 (13.2MiB)
+Downloading nvidia-nvjitlink-cu12 (20.1MiB)
+Downloading nvidia-curand-cu12 (53.7MiB)
+Downloading nvidia-cusparse-cu12 (197.8MiB)
+Downloading nvidia-cublas-cu12 (346.6MiB)
+Downloading nvidia-cusolver-cu12 (122.0MiB)
+Downloading nvidia-cusparselt-cu12 (143.1MiB)
+Downloading nvidia-cudnn-cu12 (634.0MiB)
+Downloading torchaudio (3.3MiB)
+Downloading triton (158.9MiB)
+Downloading torchvision (6.9MiB)
+Downloading sympy (5.9MiB)
+Downloading numpy (15.9MiB)
+Downloading pillow (6.8MiB)
+Downloading networkx (2.0MiB)
+ Downloaded torchaudio
+ Downloaded torchvision
+ Downloaded nvidia-cuda-cupti-cu12
+ Downloaded pillow
+ Downloaded networkx
+ Downloaded nvidia-nvjitlink-cu12
+ Downloaded nvidia-cuda-nvrtc-cu12
+ Downloaded triton
+ Downloaded numpy
+ Downloaded sympy
+ Downloaded nvidia-cusolver-cu12
+ Downloaded nvidia-curand-cu12
+ Downloaded nvidia-nccl-cu12
+ Downloaded nvidia-cusparselt-cu12
+ Downloaded nvidia-cusparse-cu12
+ Downloaded nvidia-cufft-cu12
+ Downloaded nvidia-cublas-cu12
+ Downloaded nvidia-cudnn-cu12
+ Downloaded torch
+Prepared 28 packages in 21.21s
+Uninstalled 12 packages in 809ms
+Installed 28 packages in 3.23s
+ ~ filelock==3.29.0
+ - fsspec==2026.2.0
+ + fsspec==2026.4.0
+ ~ jinja2==3.1.6
+ ~ markupsafe==3.0.3
+ ~ mpmath==1.3.0
+ ~ networkx==3.6.1
+ - numpy==2.4.6
+ + numpy==2.4.4
+ + nvidia-cublas-cu12==12.4.5.8
+ + nvidia-cuda-cupti-cu12==12.4.127
+ + nvidia-cuda-nvrtc-cu12==12.4.127
+ + nvidia-cuda-runtime-cu12==12.4.127
+ + nvidia-cudnn-cu12==9.1.0.70
+ + nvidia-cufft-cu12==11.2.1.3
+ + nvidia-curand-cu12==10.3.5.147
+ + nvidia-cusolver-cu12==11.6.1.9
+ + nvidia-cusparse-cu12==12.3.1.170
+ + nvidia-cusparselt-cu12==0.6.2
+ + nvidia-nccl-cu12==2.21.5
+ + nvidia-nvjitlink-cu12==12.4.127
+ + nvidia-nvtx-cu12==12.4.127
+ + pillow==12.2.0
+ - setuptools==81.0.0
+ + setuptools==70.2.0
+ - sympy==1.14.0
+ + sympy==1.13.1
+ - torch==2.12.0
+ + torch==2.6.0+cu124
+ + torchaudio==2.6.0+cu124
+ + torchvision==0.21.0+cu124
+ - triton==3.7.0
+ + triton==3.2.0
+ ~ typing-extensions==4.15.0
+[setup_env] After reinstall: torch=2.6.0+cu124, cuda=True
+[setup_env] Running pre-flight dependency check for openbmb/MiniCPM5-1B...
+08:00:22 [preflight] Pre-flight check for: openbmb/MiniCPM5-1B
+08:00:23 [preflight] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:00:23 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/config.json "HTTP/1.1 200 OK"
+08:00:23 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/openbmb/MiniCPM5-1B/4e9de7a0778dc1c362e983e6858f0e77542cbdca/config.json "HTTP/1.1 200 OK"
+08:00:23 [preflight]   model_type: llama
+08:00:23 [preflight]   auto_map: no
+08:00:23 [preflight]   transformers_version: 5.6.2
+08:00:24 [preflight] HTTP Request: HEAD https://huggingface.co/openbmb/MiniCPM5-1B/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+08:00:24 [preflight] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+08:00:24 [preflight]   ✓ All dependencies satisfied
+
+[setup_env] Verification:
+  torch=2.6.0+cu124, cuda=True
+  auto_round=0.13.0
+  transformers=5.9.0
+  lm_eval=0.4.12
+
+=== Phase 1: DONE ===
