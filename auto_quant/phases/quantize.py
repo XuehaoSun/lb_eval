@@ -162,14 +162,9 @@ def quantize(args):
         "disable_opt_rtn": True,
     }
 
-    # Set ignore layers via layer_config (bits=16 keeps them in full precision)
-    layer_config = {}
-    for layer_name in ignore_layers.split(","):
-        layer_name = layer_name.strip()
-        if layer_name:
-            layer_config[layer_name] = {"bits": 16}
-    if layer_config:
-        ar_kwargs["layer_config"] = layer_config
+    # Use ignore_layers to completely skip quantization for sensitive layers
+    if ignore_layers:
+        ar_kwargs["ignore_layers"] = ignore_layers
 
     # Only pass seqlen/nsamples if tuning (iters > 0)
     if iters > 0:
