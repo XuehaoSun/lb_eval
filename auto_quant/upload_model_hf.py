@@ -755,6 +755,11 @@ def main() -> int:
             if not args.shared_ledger_repo.strip():
                 print("ERROR: shared ledger enabled but HF_SHARED_LEDGER_REPO is empty")
                 return 1
+            if not args.shared_ledger_token:
+                print("[HF] WARN: shared ledger token is empty, falling back to local ledger")
+                shared_enabled = False
+
+        if shared_enabled:
             _, repo_url, _ = upload_with_shared_ledger(api, args, candidates, upload_size_bytes)
         else:
             _, repo_url, _ = upload_with_local_ledger(api, args, candidates, upload_size_bytes)
