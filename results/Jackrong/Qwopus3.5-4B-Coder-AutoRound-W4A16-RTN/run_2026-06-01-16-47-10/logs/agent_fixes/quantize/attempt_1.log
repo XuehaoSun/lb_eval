@@ -1,0 +1,45 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[31m[tools] edit failed: Could not find the exact text in /root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py. The old text must match exactly including all whitespace and newlines.[39m
+[31mCurrent file contents:[39m
+[31m# Copyright (c) 2025 Intel Corporation[39m
+[31m#[39m
+[31m# Licensed under the Apache License, Version 2.0 (the "License");[39m
+[31m# you may not use this file except in compliance with the License.[39m
+[31m# You may obtain a copy of the License at[39m
+[31m#[39m
+[31m#    http://www.apache.org/licenses/LICENSE-2.0[39m
+[31m#[39m
+[31m# Unless required by applicable law or agreed to in writing, software[39m
+[31m# distributed under the License is distributed on an "AS IS" BASIS,[39m
+[31m# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.[39m
+[31m# See the License for the specific language governing permissions and[39m
+[31m# limitations under the License.[39m
+[31mfrom __future__ import annotations[39m
+[31m[39m
+[31mimport importlib[39m
+[31mimport os[39m
+[31mimport re[39m
+[31mimport sys[39m
+[31mfrom dataclasses import dataclass[39m
+[31mfrom functools import lru_cache, wraps[39m
+[31mfrom typing import Any[39m
+[31m[39m
+[31mimport torch[39m
+[31mimport transformers[39m
+[31mfr[39m
+[31m... (truncated)[39m
+**FIX_PLAN:**
+1. Check current auto-round version and reinstall from main branch (fixes regex group reference bug)
+2. Re-run the quantization phase to verify the fix
+The bug is in `re.sub(r"\(.*\)", "", source_pattern)` — it strips content inside parentheses, removing the capturing group `(.+)`, but the replacement template still contains `\1` which becomes an invalid group reference. This is an auto-round bug.
+
+**FIX_PLAN:**
+1. Upgrade auto-round to latest main branch (contains fix for this regex bug)
+2. Re-run the quantize phase
+The fix is in place. Here's the summary:
+
+**Problem**: The regex pattern `'^model\\.(?:(?!language_model\\.)(.+))\$'` was being incorrectly processed by `re.sub(r"\(.*\)", "", source_pattern)` which stripped too much (the `.+` capture group and content), leaving just `'model\\.$'`. When used in `re.subn()`, the target pattern `'model.language_model.\\1'` referenced group 1 which no longer existed.
+
+**Fix**: Removed the `re.sub(r"\(.*\)", "", source_pattern)` line that was destroying the capture group. The pattern now correctly matches and captures, e.g., `'model.layers.0'` → `'model.language_model.layers.0'`.
+
+The phase script will re-run automatically.
