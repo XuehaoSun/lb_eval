@@ -1,0 +1,128 @@
+You are fixing a failed "quantize" phase in the quantization pipeline.
+
+## Error Output (last 100 lines):
+  model=Qwen/Qwen3.6-27B
+  scheme=MXFP4
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3.6-27B-AutoRound-MXFP4-RTN/quantized_model
+02:22:47 [INFO] Model: Qwen/Qwen3.6-27B
+02:22:47 [INFO] Scheme: MXFP4 → AutoRound scheme='MXFP4_RCEIL'
+02:22:47 [INFO] Iters: 0 (RTN)
+02:22:47 [INFO] Export format: auto_round
+02:22:47 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-27B-AutoRound-MXFP4-RTN/quantized_model
+02:22:47 [INFO] Device map: auto
+02:22:47 [INFO] Loading tokenizer...
+02:22:47 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+02:22:47 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+02:22:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/config.json "HTTP/1.1 200 OK"
+02:22:47 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+02:22:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/tokenizer_config.json "HTTP/1.1 200 OK"
+02:22:47 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/tokenizer_config.json "HTTP/1.1 200 OK"
+02:22:47 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+02:22:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/tokenizer_config.json "HTTP/1.1 200 OK"
+02:22:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+02:22:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+02:22:47 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/vocab.json "HTTP/1.1 307 Temporary Redirect"
+02:22:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/vocab.json "HTTP/1.1 200 OK"
+02:22:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/vocab.json "HTTP/1.1 200 OK"
+02:22:48 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/merges.txt "HTTP/1.1 307 Temporary Redirect"
+02:22:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/merges.txt "HTTP/1.1 200 OK"
+02:22:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/merges.txt "HTTP/1.1 200 OK"
+02:22:48 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+02:22:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B/xet-read-token/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9 "HTTP/1.1 200 OK"
+02:22:48 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+02:22:48 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+02:22:48 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+02:22:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/chat_template.jinja "HTTP/1.1 200 OK"
+02:22:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/chat_template.jinja "HTTP/1.1 200 OK"
+02:22:49 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B "HTTP/1.1 200 OK"
+02:22:49 [INFO] Loading model...
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/config.json "HTTP/1.1 200 OK"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model.safetensors.index.json "HTTP/1.1 200 OK"
+02:22:49 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model.safetensors.index.json "HTTP/1.1 200 OK"
+02:22:49 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3.6-27B/revision/main "HTTP/1.1 200 OK"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00001-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00004-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00005-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00002-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00003-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00008-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00007-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:49 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00006-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:56 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00009-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00012-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00011-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00010-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00013-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00014-of-00015.safetensors "HTTP/1.1 302 Found"
+02:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/model-00015-of-00015.safetensors "HTTP/1.1 302 Found"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+02:23:08 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+02:23:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/generation_config.json "HTTP/1.1 200 OK"
+02:23:08 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3.6-27B/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/generation_config.json "HTTP/1.1 200 OK"
+02:23:08 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3.6-27B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+02:23:09 [WARNING] Some parameters are on the meta device because they were offloaded to the cpu.
+02:23:09 [INFO] Architecture: Qwen3_5ForCausalLM (model_type=qwen3_5_text, moe=False)
+02:23:09 [INFO] Ignore layers: lm_head,self_attn
+02:23:09 [INFO] Configuring AutoRound...
+[38;20m2026-06-01 02:23:09 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+02:23:09 [ERROR] Quantization failed: AutoRound does not support parameters on meta device. Please use more GPUs by setting `--device 0,1,2,3` or just place the model on CPU.
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 278, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 174, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 315, in __new__
+    return _get_compressor_class(model_type, ZeroShotCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/zero_shot.py", line 59, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 109, in __init__
+    raise RuntimeError(
+RuntimeError: AutoRound does not support parameters on meta device. Please use more GPUs by setting `--device 0,1,2,3` or just place the model on CPU.
+
+## Historical Lessons (from past runs — decide which are relevant):
+Lesson 1 [phase=quantize, verified=5x]:
+  Error: auto_round error or auto-round related exception
+  Solution: If auto-round raises an error (import error, API change, compatibility issue, missing method, etc.), upgrade to the latest main branch: uv pip install --reinstall "auto-round @ git+https://github.com/intel/auto-round.git@main" This often fixes issues with new model architectures or recently added features. After reinstall, verify: python -c "import auto_round; print(auto_round.__version__)"
+  Notes: auto-round is actively developed. PyPI releases may lag behind fixes for new models. Always try main branch first before other workarounds.
+
+Lesson 2 [phase=evaluate, verified=3x]:
+  Error: RuntimeError: The NVIDIA driver on your system is too old (found version XXXXX)
+  Solution: Reinstall PyTorch with a CUDA version matching the NVIDIA driver. Steps: 1) Run nvidia-smi to check driver-supported CUDA version (look for "CUDA Version: X.Y"). 2) Map to PyTorch index-url tag. Available: cu118, cu121, cu124, cu126, cu128, cu130. 3) Reinstall: uv pip install --reinstall torch torchaudio torchvision --index-url https://download.pytorch.org/whl/<cu_tag>. Common mappings: CUDA 11.8 -> cu118, CUDA 12.0~12.3 -> cu121, CUDA 12.4~12.5 -> cu124, CUDA 12.6~12.7 -> cu126, CUDA 12.8~12.9 -> cu128, CUDA 13.0+ -> cu130. Do NOT force CPU-only (device_map=cpu). Do NOT upgrade the NVIDIA driver. After reinstall, verify: python -c "import torch; print(torch.cuda.is_available())" should be True.
+  Notes: This is an infrastructure issue caused by pre-installed torch compiled for a newer CUDA than the driver supports. The correct fix is always to reinstall torch with --index-url pointing to the compatible CUDA wheel, never to skip GPU.
+Review the lessons above and apply the most relevant fix for the current error.
+
+## Your Task:
+1. First output a brief FIX_PLAN (3 lines max) describing what you will do
+2. Then execute the fix (modify files, install packages, adjust parameters)
+3. The phase script will be re-run after your fix to verify
+
+## Constraints:
+- Do NOT reinstall or downgrade torch (it will break CUDA)
+- Do NOT modify the evaluation tasks or expected output format
+- Keep fixes minimal and targeted
+- If you need to install a package, use: pip install <package>
+- If unsupported model architecture, try: pip install -U auto-round transformers
+- Working directory: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-27B-AutoRound-MXFP4-RTN
