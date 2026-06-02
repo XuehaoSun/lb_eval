@@ -143,6 +143,7 @@ def quantize(args):
     arch_name = type(model).__name__
     model_type = getattr(model.config, "model_type", "unknown")
     moe = is_moe_model(model)
+    del model
     logger.info(f"Architecture: {arch_name} (model_type={model_type}, moe={moe})")
 
     # Determine ignore layers based on scheme and model type (MoE vs dense)
@@ -153,13 +154,13 @@ def quantize(args):
     # Build AutoRound — scheme-based API (auto-round >= 0.13)
     logger.info("Configuring AutoRound...")
     ar_kwargs = {
-        "model": model,
+        "model": args.model,
         "tokenizer": tokenizer,
         "scheme": ar_scheme,
         "iters": iters,
         "low_gpu_mem_usage": True,
-        "enable_torch_compile": True,
-        "disable_opt_rtn": True,
+        # "enable_torch_compile": True,
+        # "disable_opt_rtn": True,
     }
 
     # Use ignore_layers to completely skip quantization for sensitive layers
