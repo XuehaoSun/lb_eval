@@ -1,0 +1,13 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+**FIX_PLAN:**
+1. Reinstall auto-round from main branch to fix the `NEED_SETUP_CACHE_CLASSES_MAPPING` import error
+2. Verify the installation
+3. Re-run quantization phase
+
+The error is an import compatibility issue between the custom `modeling_decilm.py` and the installed transformers version. Per Lesson 1 (verified 5x), upgrading auto-round from main branch resolves such issues.
+**FIX_PLAN:**
+1. The error: `modeling_decilm.py` (cached custom HuggingFace module) imports `NEED_SETUP_CACHE_CLASSES_MAPPING` which doesn't exist in transformers 5.9.0
+2. This is a cached local copy that's out of sync with the installed transformers version
+3. Fix: Clear the cached transformers module for this model, then re-run
+
+I already cleared it above. The phase script should now re-download a compatible version or handle the import differently. Ready for re-run.

@@ -1,0 +1,632 @@
+
+═══════ Pipeline: ConicCat/Llama3_3-Nemo-Super-Writer-49B | W4A16/RTN/auto_round ═══════
+
+
+═══════ Pipeline: ConicCat/Llama3_3-Nemo-Super-Writer-49B | W4A16/RTN/auto_round ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+[setup_env] Installing: auto-round
+[setup_env] Installing: auto-round
+ + transformers==5.9.0
+ + triton==3.7.0
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + transformers==5.9.0
+ + triton==3.7.0
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] torch=2.12.0+cu130, CUDA available — OK
+[setup_env] torch=2.12.0+cu130, CUDA available — OK
+[setup_env] Running pre-flight dependency check for ConicCat/Llama3_3-Nemo-Super-Writer-49B...
+[setup_env] Running pre-flight dependency check for ConicCat/Llama3_3-Nemo-Super-Writer-49B...
+06:57:14 [preflight] Pre-flight check for: ConicCat/Llama3_3-Nemo-Super-Writer-49B
+06:57:14 [preflight] Pre-flight check for: ConicCat/Llama3_3-Nemo-Super-Writer-49B
+06:57:14 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:14 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:57:14 [preflight] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:57:14 [preflight] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:57:14 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:14 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:14 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:14 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:14 [preflight]   model_type: nemotron-nas
+06:57:14 [preflight]   auto_map: yes
+06:57:14 [preflight]   transformers_version: 4.48.3
+06:57:14 [preflight]   model_type: nemotron-nas
+06:57:14 [preflight]   auto_map: yes
+06:57:14 [preflight]   transformers_version: 4.48.3
+06:57:15 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+06:57:15 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/block_config.py "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/block_config.py "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/block_config.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/block_config.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/block_config.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/block_config.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- block_config.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- block_config.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__modeling_rope_utils.py "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__modeling_rope_utils.py "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_rope_utils.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_rope_utils.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_rope_utils.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_rope_utils.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_rope_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_rope_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__configuration_llama.py "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__configuration_llama.py "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__configuration_llama.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__configuration_llama.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__configuration_llama.py "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__configuration_llama.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__configuration_llama.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- configuration_decilm.py
+- block_config.py
+- transformers_4_44_2__modeling_rope_utils.py
+- transformers_4_44_2__configuration_llama.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__configuration_llama.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- configuration_decilm.py
+- block_config.py
+- transformers_4_44_2__modeling_rope_utils.py
+- transformers_4_44_2__configuration_llama.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:16 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:16 [preflight]   ✓ All dependencies satisfied
+06:57:16 [preflight]   ✓ All dependencies satisfied
+
+[setup_env] Verification:
+
+[setup_env] Verification:
+  torch=2.12.0+cu130, cuda=True
+  torch=2.12.0+cu130, cuda=True
+  auto_round=0.13.0
+  transformers=5.9.0
+  auto_round=0.13.0
+  transformers=5.9.0
+  lm_eval=0.4.12
+  lm_eval=0.4.12
+
+=== Phase 1: DONE ===
+
+=== Phase 1: DONE ===
+[auto_v3] setup_env succeeded
+[auto_v3] setup_env succeeded
+
+═══════ Phase: quantize ═══════
+
+
+═══════ Phase: quantize ═══════
+
+=== Phase 2: Quantization ===
+  model=ConicCat/Llama3_3-Nemo-Super-Writer-49B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/quantized_model
+=== Phase 2: Quantization ===
+  model=ConicCat/Llama3_3-Nemo-Super-Writer-49B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/quantized_model
+06:57:28 [INFO] Model: ConicCat/Llama3_3-Nemo-Super-Writer-49B
+06:57:28 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+06:57:28 [INFO] Iters: 0 (RTN)
+06:57:28 [INFO] Export format: auto_round
+06:57:28 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/quantized_model
+06:57:28 [INFO] Device map: auto
+06:57:28 [INFO] Loading tokenizer...
+06:57:28 [INFO] Model: ConicCat/Llama3_3-Nemo-Super-Writer-49B
+06:57:28 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+06:57:28 [INFO] Iters: 0 (RTN)
+06:57:28 [INFO] Export format: auto_round
+06:57:28 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/quantized_model
+06:57:28 [INFO] Device map: auto
+06:57:28 [INFO] Loading tokenizer...
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:57:29 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:57:29 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/tokenizer_config.json "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/tokenizer_config.json "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/tokenizer_config.json "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/tokenizer_config.json "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:57:29 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:57:29 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+06:57:29 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+06:57:29 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/xet-read-token/9febc9340ba9441bb05adc245e43dc6c5b615956 "HTTP/1.1 200 OK"
+06:57:29 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/xet-read-token/9febc9340ba9441bb05adc245e43dc6c5b615956 "HTTP/1.1 200 OK"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/special_tokens_map.json "HTTP/1.1 200 OK"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/special_tokens_map.json "HTTP/1.1 200 OK"
+06:57:30 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/special_tokens_map.json "HTTP/1.1 200 OK"
+06:57:30 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/special_tokens_map.json "HTTP/1.1 200 OK"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+06:57:30 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B "HTTP/1.1 200 OK"
+06:57:31 [INFO] Loading model...
+06:57:31 [INFO] Loading model...
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/modeling_decilm.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/modeling_decilm.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__activations.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__activations.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__activations.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__activations.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__activations.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__activations.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__activations.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__activations.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__cache_utils.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__cache_utils.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__cache_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__cache_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__cache_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__cache_utils.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__cache_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__cache_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__modeling_outputs.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__modeling_outputs.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_outputs.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_outputs.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_outputs.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_outputs.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_outputs.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_outputs.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__pytorch_utils.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__pytorch_utils.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__pytorch_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__pytorch_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__pytorch_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__pytorch_utils.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__pytorch_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__pytorch_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/variable_cache.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/variable_cache.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/variable_cache.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/variable_cache.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/variable_cache.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/variable_cache.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- variable_cache.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- variable_cache.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__modeling_attn_mask_utils.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/transformers_4_44_2__modeling_attn_mask_utils.py "HTTP/1.1 307 Temporary Redirect"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_attn_mask_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_attn_mask_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_attn_mask_utils.py "HTTP/1.1 200 OK"
+06:57:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/transformers_4_44_2__modeling_attn_mask_utils.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_attn_mask_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- modeling_decilm.py
+- transformers_4_44_2__activations.py
+- transformers_4_44_2__cache_utils.py
+- transformers_4_44_2__modeling_outputs.py
+- transformers_4_44_2__pytorch_utils.py
+- variable_cache.py
+- transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py
+- transformers_4_44_2__modeling_attn_mask_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_attn_mask_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- modeling_decilm.py
+- transformers_4_44_2__activations.py
+- transformers_4_44_2__cache_utils.py
+- transformers_4_44_2__modeling_outputs.py
+- transformers_4_44_2__pytorch_utils.py
+- variable_cache.py
+- transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py
+- transformers_4_44_2__modeling_attn_mask_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+06:57:31 [ERROR] Quantization failed: cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING' from 'transformers.generation.utils' (/root/.venv/lib/python3.12/site-packages/transformers/generation/utils.py)
+06:57:31 [ERROR] Quantization failed: cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING' from 'transformers.generation.utils' (/root/.venv/lib/python3.12/site-packages/transformers/generation/utils.py)
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 279, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 135, in quantize
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 140, in patched
+    return underlying_func(klass, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 379, in from_pretrained
+    model_class = get_class_from_dynamic_module(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 627, in get_class_from_dynamic_module
+    return get_class_in_module(class_name, final_module, force_reload=force_download)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 309, in get_class_in_module
+    module_spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/root/.cache/huggingface/modules/transformers_modules/ConicCat/Llama3_3_hyphen_Nemo_hyphen_Super_hyphen_Writer_hyphen_49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py", line 30, in <module>
+    from transformers.generation.utils import NEED_SETUP_CACHE_CLASSES_MAPPING, GenerationMixin, GenerateOutput
+ImportError: cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING' from 'transformers.generation.utils' (/root/.venv/lib/python3.12/site-packages/transformers/generation/utils.py)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 279, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 135, in quantize
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 140, in patched
+    return underlying_func(klass, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 379, in from_pretrained
+    model_class = get_class_from_dynamic_module(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 627, in get_class_from_dynamic_module
+    return get_class_in_module(class_name, final_module, force_reload=force_download)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 309, in get_class_in_module
+    module_spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/root/.cache/huggingface/modules/transformers_modules/ConicCat/Llama3_3_hyphen_Nemo_hyphen_Super_hyphen_Writer_hyphen_49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py", line 30, in <module>
+    from transformers.generation.utils import NEED_SETUP_CACHE_CLASSES_MAPPING, GenerationMixin, GenerateOutput
+ImportError: cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING' from 'transformers.generation.utils' (/root/.venv/lib/python3.12/site-packages/transformers/generation/utils.py)
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Calling openclaw agent (session=fix_quantize_395_1780469852, timeout=600s)...
+[auto_v3] Calling openclaw agent (session=fix_quantize_395_1780469852, timeout=600s)...
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+**FIX_PLAN:**
+1. Reinstall auto-round from main branch to fix the `NEED_SETUP_CACHE_CLASSES_MAPPING` import error
+2. Verify the installation
+3. Re-run quantization phase
+
+The error is an import compatibility issue between the custom `modeling_decilm.py` and the installed transformers version. Per Lesson 1 (verified 5x), upgrading auto-round from main branch resolves such issues.
+**FIX_PLAN:**
+1. Reinstall auto-round from main branch to fix the `NEED_SETUP_CACHE_CLASSES_MAPPING` import error
+2. Verify the installation
+3. Re-run quantization phase
+
+The error is an import compatibility issue between the custom `modeling_decilm.py` and the installed transformers version. Per Lesson 1 (verified 5x), upgrading auto-round from main branch resolves such issues.
+**FIX_PLAN:**
+1. The error: `modeling_decilm.py` (cached custom HuggingFace module) imports `NEED_SETUP_CACHE_CLASSES_MAPPING` which doesn't exist in transformers 5.9.0
+2. This is a cached local copy that's out of sync with the installed transformers version
+3. Fix: Clear the cached transformers module for this model, then re-run
+
+I already cleared it above. The phase script should now re-download a compatible version or handle the import differently. Ready for re-run.
+**FIX_PLAN:**
+1. The error: `modeling_decilm.py` (cached custom HuggingFace module) imports `NEED_SETUP_CACHE_CLASSES_MAPPING` which doesn't exist in transformers 5.9.0
+2. This is a cached local copy that's out of sync with the installed transformers version
+3. Fix: Clear the cached transformers module for this model, then re-run
+
+I already cleared it above. The phase script should now re-download a compatible version or handle the import differently. Ready for re-run.
+[auto_v3] Re-running quantize after agent fix...
+[auto_v3] Re-running quantize after agent fix...
+=== Phase 2: Quantization ===
+=== Phase 2: Quantization ===
+  model=ConicCat/Llama3_3-Nemo-Super-Writer-49B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/quantized_model
+  model=ConicCat/Llama3_3-Nemo-Super-Writer-49B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/quantized_model
+07:04:36 [INFO] Model: ConicCat/Llama3_3-Nemo-Super-Writer-49B
+07:04:36 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:04:36 [INFO] Iters: 0 (RTN)
+07:04:36 [INFO] Export format: auto_round
+07:04:36 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/quantized_model
+07:04:36 [INFO] Device map: auto
+07:04:36 [INFO] Loading tokenizer...
+07:04:36 [INFO] Model: ConicCat/Llama3_3-Nemo-Super-Writer-49B
+07:04:36 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:04:36 [INFO] Iters: 0 (RTN)
+07:04:36 [INFO] Export format: auto_round
+07:04:36 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/quantized_model
+07:04:36 [INFO] Device map: auto
+07:04:36 [INFO] Loading tokenizer...
+07:04:36 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:04:36 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:04:36 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:04:36 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:04:36 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+07:04:36 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+07:04:36 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+07:04:36 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+07:04:36 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+07:04:36 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_rope_utils.py
+- block_config.py
+- transformers_4_44_2__configuration_llama.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__modeling_rope_utils.py
+- block_config.py
+- transformers_4_44_2__configuration_llama.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/tokenizer_config.json "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/tokenizer_config.json "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:04:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:04:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B "HTTP/1.1 200 OK"
+07:04:37 [INFO] Loading model...
+07:04:37 [INFO] Loading model...
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/config.json "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/configuration_decilm.py "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/configuration_decilm.py "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/modeling_decilm.py "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B/resolve/main/modeling_decilm.py "HTTP/1.1 307 Temporary Redirect"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py "HTTP/1.1 200 OK"
+07:04:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ConicCat/Llama3_3-Nemo-Super-Writer-49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__cache_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__cache_utils.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__pytorch_utils.py
+- variable_cache.py
+- transformers_4_44_2__modeling_attn_mask_utils.py
+- transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py
+- transformers_4_44_2__modeling_outputs.py
+- transformers_4_44_2__activations.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ConicCat/Llama3_3-Nemo-Super-Writer-49B:
+- transformers_4_44_2__pytorch_utils.py
+- variable_cache.py
+- transformers_4_44_2__modeling_attn_mask_utils.py
+- transformers_4_44_2__modeling_flash_attention_utils_backward_compat.py
+- transformers_4_44_2__modeling_outputs.py
+- transformers_4_44_2__activations.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+07:04:37 [ERROR] Quantization failed: cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING' from 'transformers.generation.utils' (/root/.venv/lib/python3.12/site-packages/transformers/generation/utils.py)
+07:04:37 [ERROR] Quantization failed: cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING' from 'transformers.generation.utils' (/root/.venv/lib/python3.12/site-packages/transformers/generation/utils.py)
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 279, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 135, in quantize
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 140, in patched
+    return underlying_func(klass, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 379, in from_pretrained
+    model_class = get_class_from_dynamic_module(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 627, in get_class_from_dynamic_module
+    return get_class_in_module(class_name, final_module, force_reload=force_download)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 309, in get_class_in_module
+    module_spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/root/.cache/huggingface/modules/transformers_modules/ConicCat/Llama3_3_hyphen_Nemo_hyphen_Super_hyphen_Writer_hyphen_49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py", line 30, in <module>
+    from transformers.generation.utils import NEED_SETUP_CACHE_CLASSES_MAPPING, GenerationMixin, GenerateOutput
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 279, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 135, in quantize
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 140, in patched
+    return underlying_func(klass, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 379, in from_pretrained
+    model_class = get_class_from_dynamic_module(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 627, in get_class_from_dynamic_module
+    return get_class_in_module(class_name, final_module, force_reload=force_download)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 309, in get_class_in_module
+    module_spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/root/.cache/huggingface/modules/transformers_modules/ConicCat/Llama3_3_hyphen_Nemo_hyphen_Super_hyphen_Writer_hyphen_49B/9febc9340ba9441bb05adc245e43dc6c5b615956/modeling_decilm.py", line 30, in <module>
+    from transformers.generation.utils import NEED_SETUP_CACHE_CLASSES_MAPPING, GenerationMixin, GenerateOutput
+ImportError: cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING' from 'transformers.generation.utils' (/root/.venv/lib/python3.12/site-packages/transformers/generation/utils.py)
+ImportError: cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING' from 'transformers.generation.utils' (/root/.venv/lib/python3.12/site-packages/transformers/generation/utils.py)
+[lesson] Saved: [still_failing] 06:57:31 [ERROR] Quantization failed: cannot import name 'NEED_SETUP_CACHE_CLASS
+[lesson]   Solution: Attempt 1 did not resolve
+[lesson] Saved: [still_failing] 06:57:31 [ERROR] Quantization failed: cannot import name 'NEED_SETUP_CACHE_CLASS
+[lesson]   Solution: Attempt 1 did not resolve
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[lesson] Saved: [drift] 07:04:37 [ERROR] Quantization failed: cannot import name 'NEED_SETUP_CACHE_CLASS
+[lesson]   Solution: Same error repeated 2 times
+[lesson] Saved: [drift] 07:04:37 [ERROR] Quantization failed: cannot import name 'NEED_SETUP_CACHE_CLASS
+[lesson]   Solution: Same error repeated 2 times
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] Pipeline failed at: quantize (466s)
+[auto_v3] Pipeline failed at: quantize (466s)
+[auto_v3] Collected 1 openclaw session(s)
+[auto_v3] Collected 1 openclaw session(s)
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/session_fix_quantize_395_1780469852.md
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/session_fix_quantize_395_1780469852.md
+[auto_v3] Generating run report...
+[auto_v3] Generating run report...
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/run_report.md
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/Llama3_3-Nemo-Super-Writer-49B-AutoRound-W4A16-RTN/run_report.md
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: ConicCat/Llama3_3-Nemo-Super-Writer-49B
+[github-upload] artifact name: Llama3_3-Nemo-Super-Writer-49B-autoround-W4A16
+[github-upload] result org: ConicCat
+[github-upload] branch: main
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: ConicCat/Llama3_3-Nemo-Super-Writer-49B
+[github-upload] artifact name: Llama3_3-Nemo-Super-Writer-49B-autoround-W4A16
+[github-upload] result org: ConicCat
+[github-upload] branch: main
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
