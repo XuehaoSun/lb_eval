@@ -32,8 +32,10 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [preflight] %(message)s",
     datefmt="%H:%M:%S",
+    force=True,
 )
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 # Known model_type → extra packages mapping
 # These are architectures that need specific packages beyond transformers

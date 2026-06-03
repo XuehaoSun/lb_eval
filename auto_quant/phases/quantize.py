@@ -30,8 +30,10 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     datefmt="%H:%M:%S",
+    force=True,
 )
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 # ═══ Scheme → AutoRound scheme string mapping ═══
 # AutoRound natively accepts these as the `scheme` parameter.
@@ -159,6 +161,7 @@ def quantize(args):
         "scheme": ar_scheme,
         "iters": iters,
         "low_gpu_mem_usage": True,
+        "device_map": args.device_map,
         # "enable_torch_compile": True,
         # "disable_opt_rtn": True,
     }
