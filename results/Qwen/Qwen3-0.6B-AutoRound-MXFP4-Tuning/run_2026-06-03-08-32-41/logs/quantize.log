@@ -1,0 +1,214 @@
+=== Phase 2: Quantization ===
+  model=Qwen/Qwen3-0.6B
+  scheme=MXFP4
+  iters=200
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3-0.6B-AutoRound-MXFP4-Tuning/quantized_model
+08:06:45 [INFO] Model: Qwen/Qwen3-0.6B
+08:06:45 [INFO] Scheme: MXFP4 → AutoRound scheme='MXFP4_RCEIL'
+08:06:45 [INFO] Iters: 200 (TUNING)
+08:06:45 [INFO] Export format: auto_round
+08:06:45 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3-0.6B-AutoRound-MXFP4-Tuning/quantized_model
+08:06:45 [INFO] Device map: auto
+08:06:45 [INFO] Loading tokenizer...
+08:06:45 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:45 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+08:06:45 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+08:06:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/tokenizer_config.json "HTTP/1.1 200 OK"
+08:06:45 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/tokenizer_config.json "HTTP/1.1 200 OK"
+08:06:45 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-0.6B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+08:06:45 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-0.6B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:06:45 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/vocab.json "HTTP/1.1 307 Temporary Redirect"
+08:06:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/vocab.json "HTTP/1.1 200 OK"
+08:06:45 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/vocab.json "HTTP/1.1 200 OK"
+08:06:45 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/merges.txt "HTTP/1.1 307 Temporary Redirect"
+08:06:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/merges.txt "HTTP/1.1 200 OK"
+08:06:46 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/merges.txt "HTTP/1.1 200 OK"
+08:06:46 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+08:06:46 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-0.6B/xet-read-token/c1899de289a04d12100db370d81485cdf75e47ca "HTTP/1.1 200 OK"
+08:06:46 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+08:06:46 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+08:06:46 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+08:06:46 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-0.6B "HTTP/1.1 200 OK"
+08:06:46 [INFO] Loading model...
+08:06:46 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:47 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/generation_config.json "HTTP/1.1 200 OK"
+08:06:53 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/generation_config.json "HTTP/1.1 200 OK"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+08:06:53 [INFO] Architecture: Qwen3ForCausalLM (model_type=qwen3, moe=False)
+08:06:53 [INFO] Ignore layers: lm_head,self_attn
+08:06:53 [INFO] Configuring AutoRound...
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a1fe09d-2422aca15fe84b0b2067b9d0;c69ba1cd-b96c-4595-b35b-dcf4f3f95757)
+
+Entry Not Found for url: https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/model_index.json.
+[38;20m2026-06-03 08:06:53 INFO entry.py L591: Using LLM mode.[0m
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a1fe09d-0919dfe43032cdcd6d5ba8e9;d6d02699-faa1-429f-b740-351ab6deb406)
+
+Entry Not Found for url: https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/model_index.json.
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:53 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a1fe09e-5ee3223b748cd86e536c907b;95daaca4-ccdb-47d2-9417-cb9c98a922a9)
+
+Entry Not Found for url: https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/model_index.json.
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/tokenizer_config.json "HTTP/1.1 200 OK"
+08:06:54 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-0.6B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+08:06:54 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-0.6B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:06:55 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-0.6B "HTTP/1.1 200 OK"
+08:06:55 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:06:55 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/generation_config.json "HTTP/1.1 200 OK"
+08:06:55 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+08:06:55 [INFO] Starting quantization...
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-06-03 08:06:55 INFO utils.py L1069: Ignored layers: lm_head, lm_head, model.layers.[0-27].self_attn.k_proj, model.layers.[0-27].self_attn.o_proj, model.layers.[0-27].self_attn.q_proj, model.layers.[0-27].self_attn.v_proj, self_attn[0m
+[33;1m2026-06-03 08:06:55 WARNING utils.py L539: reset `quant_lm_head` to false as quantizing lm_head with tied weights has not been supported currently[0m
+[38;20m2026-06-03 08:06:56 INFO data_driven.py L662: start to cache block inputs[0m
+[38;20m2026-06-03 08:06:56 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+08:06:56 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+08:06:56 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+08:06:56 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+08:06:56 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/xet-read-token/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 46676.09 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:08<00:00, 1162.98 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:03<00:00, 2515.76 examples/s]
+Casting the dataset:   0%|          | 0/1216 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1216/1216 [00:03<00:00, 387.57 examples/s]
+08:07:14 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+08:07:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+08:07:14 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+08:07:14 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+08:07:14 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+08:07:14 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+08:07:14 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+08:07:14 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:07:14 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-06-03 08:07:15 INFO data_driven.py L685: caching done[0m
+  0%|          | 0/28 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/28 [00:00<?, ?it/s][38;20m2026-06-03 08:07:39 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.001100 -> iter 175: 0.000731[0m
+[38;20m2026-06-03 08:07:42 INFO device.py L1840: 'peak_ram': 3.99GB, 'peak_vram': 4.86GB[0m
+Quantizing model.layers.1:   4%|▎         | 1/28 [00:26<12:03, 26.78s/it][38;20m2026-06-03 08:08:06 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.003394 -> iter 128: 0.001963[0m
+[38;20m2026-06-03 08:08:08 INFO device.py L1840: 'peak_ram': 4.05GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.2:   7%|▋         | 2/28 [00:53<11:32, 26.63s/it][38;20m2026-06-03 08:08:34 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 1.125966 -> iter 190: 0.019102[0m
+[38;20m2026-06-03 08:08:36 INFO device.py L1840: 'peak_ram': 4.12GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.3:  11%|█         | 3/28 [01:21<11:17, 27.10s/it][38;20m2026-06-03 08:09:00 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.074510 -> iter 147: 0.023697[0m
+[38;20m2026-06-03 08:09:02 INFO device.py L1840: 'peak_ram': 4.14GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.4:  14%|█▍        | 4/28 [01:47<10:43, 26.79s/it][38;20m2026-06-03 08:09:26 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.114742 -> iter 199: 0.025952[0m
+[38;20m2026-06-03 08:09:28 INFO device.py L1840: 'peak_ram': 4.23GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.4:  18%|█▊        | 5/28 [02:13<10:12, 26.65s/it]Quantizing model.layers.5:  18%|█▊        | 5/28 [02:13<10:12, 26.65s/it]Quantizing model.layers.5:  18%|█▊        | 5/28 [02:29<10:12, 26.65s/it][38;20m2026-06-03 08:09:51 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.091928 -> iter 120: 0.032003[0m
+[38;20m2026-06-03 08:09:53 INFO device.py L1840: 'peak_ram': 4.25GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.6:  21%|██▏       | 6/28 [02:38<09:46, 26.65s/it][38;20m2026-06-03 08:10:17 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.153470 -> iter 95: 0.037457[0m
+[38;20m2026-06-03 08:10:19 INFO device.py L1840: 'peak_ram': 4.33GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.7:  25%|██▌       | 7/28 [03:04<09:19, 26.65s/it][38;20m2026-06-03 08:10:42 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.084908 -> iter 199: 0.036861[0m
+[38;20m2026-06-03 08:10:44 INFO device.py L1840: 'peak_ram': 4.35GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.8:  29%|██▊       | 8/28 [03:29<08:52, 26.65s/it][38;20m2026-06-03 08:11:07 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.082462 -> iter 70: 0.049023[0m
+[38;20m2026-06-03 08:11:09 INFO device.py L1840: 'peak_ram': 4.43GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.9:  32%|███▏      | 9/28 [03:53<08:26, 26.65s/it][38;20m2026-06-03 08:11:32 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.070412 -> iter 190: 0.051867[0m
+[38;20m2026-06-03 08:11:34 INFO device.py L1840: 'peak_ram': 4.47GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.9:  36%|███▌      | 10/28 [04:19<07:45, 25.84s/it]Quantizing model.layers.10:  36%|███▌      | 10/28 [04:19<07:45, 25.84s/it]Quantizing model.layers.10:  36%|███▌      | 10/28 [04:30<07:45, 25.84s/it][38;20m2026-06-03 08:12:01 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.140014 -> iter 112: 0.075134[0m
+[38;20m2026-06-03 08:12:03 INFO device.py L1840: 'peak_ram': 4.55GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.11:  39%|███▉      | 11/28 [04:48<07:19, 25.84s/it][38;20m2026-06-03 08:12:29 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.132667 -> iter 186: 0.098492[0m
+[38;20m2026-06-03 08:12:31 INFO device.py L1840: 'peak_ram': 4.6GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.12:  43%|████▎     | 12/28 [05:16<06:53, 25.84s/it][38;20m2026-06-03 08:12:54 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.145147 -> iter 182: 0.106423[0m
+[38;20m2026-06-03 08:12:56 INFO device.py L1840: 'peak_ram': 4.64GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.13:  46%|████▋     | 13/28 [05:40<06:27, 25.84s/it][38;20m2026-06-03 08:13:19 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.149869 -> iter 151: 0.128533[0m
+[38;20m2026-06-03 08:13:21 INFO device.py L1840: 'peak_ram': 4.7GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.14:  50%|█████     | 14/28 [06:05<06:01, 25.84s/it][38;20m2026-06-03 08:13:44 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.169326 -> iter 134: 0.133127[0m
+[38;20m2026-06-03 08:13:46 INFO device.py L1840: 'peak_ram': 4.76GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.14:  54%|█████▎    | 15/28 [06:30<05:38, 26.02s/it]Quantizing model.layers.15:  54%|█████▎    | 15/28 [06:30<05:38, 26.02s/it]Quantizing model.layers.15:  54%|█████▎    | 15/28 [06:49<05:38, 26.02s/it][38;20m2026-06-03 08:14:08 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.239824 -> iter 11: 0.167421[0m
+[38;20m2026-06-03 08:14:10 INFO device.py L1840: 'peak_ram': 4.82GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.16:  57%|█████▋    | 16/28 [06:55<05:12, 26.02s/it][38;20m2026-06-03 08:14:35 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.413243 -> iter 150: 0.298515[0m
+[38;20m2026-06-03 08:14:37 INFO device.py L1840: 'peak_ram': 4.91GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.17:  61%|██████    | 17/28 [07:21<04:46, 26.02s/it][38;20m2026-06-03 08:15:03 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.511569 -> iter 25: 0.408501[0m
+[38;20m2026-06-03 08:15:05 INFO device.py L1840: 'peak_ram': 4.94GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.18:  64%|██████▍   | 18/28 [07:50<04:20, 26.02s/it][38;20m2026-06-03 08:15:29 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 0.822869 -> iter 87: 0.606977[0m
+[38;20m2026-06-03 08:15:31 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.19:  68%|██████▊   | 19/28 [08:16<03:54, 26.02s/it][38;20m2026-06-03 08:15:55 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 1.160969 -> iter 40: 0.870260[0m
+[38;20m2026-06-03 08:15:57 INFO device.py L1840: 'peak_ram': 5.08GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.19:  71%|███████▏  | 20/28 [08:42<03:28, 26.12s/it]Quantizing model.layers.20:  71%|███████▏  | 20/28 [08:42<03:28, 26.12s/it]Quantizing model.layers.20:  71%|███████▏  | 20/28 [08:59<03:28, 26.12s/it][38;20m2026-06-03 08:16:21 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 1.478988 -> iter 195: 1.307517[0m
+[38;20m2026-06-03 08:16:23 INFO device.py L1840: 'peak_ram': 5.12GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.21:  75%|███████▌  | 21/28 [09:08<03:02, 26.12s/it][38;20m2026-06-03 08:16:46 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 2.476452 -> iter 163: 1.895295[0m
+[38;20m2026-06-03 08:16:48 INFO device.py L1840: 'peak_ram': 5.19GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.22:  79%|███████▊  | 22/28 [09:32<02:36, 26.12s/it][38;20m2026-06-03 08:17:14 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 3.180425 -> iter 116: 2.622195[0m
+[38;20m2026-06-03 08:17:16 INFO device.py L1840: 'peak_ram': 5.29GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.23:  82%|████████▏ | 23/28 [10:01<02:10, 26.12s/it][38;20m2026-06-03 08:17:43 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 4.555483 -> iter 83: 3.321149[0m
+[38;20m2026-06-03 08:17:45 INFO device.py L1840: 'peak_ram': 5.32GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.24:  86%|████████▌ | 24/28 [10:29<01:44, 26.12s/it][38;20m2026-06-03 08:18:08 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 5.193502 -> iter 57: 4.463213[0m
+[38;20m2026-06-03 08:18:10 INFO device.py L1840: 'peak_ram': 5.37GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.24:  89%|████████▉ | 25/28 [10:55<01:18, 26.33s/it]Quantizing model.layers.25:  89%|████████▉ | 25/28 [10:55<01:18, 26.33s/it]Quantizing model.layers.25:  89%|████████▉ | 25/28 [11:09<01:18, 26.33s/it][38;20m2026-06-03 08:18:35 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 7.063778 -> iter 172: 5.834077[0m
+[38;20m2026-06-03 08:18:37 INFO device.py L1840: 'peak_ram': 5.43GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.26:  93%|█████████▎| 26/28 [11:22<00:52, 26.33s/it][38;20m2026-06-03 08:19:01 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 7.909697 -> iter 169: 7.399127[0m
+[38;20m2026-06-03 08:19:03 INFO device.py L1840: 'peak_ram': 5.46GB, 'peak_vram': 4.87GB[0m
+Quantizing model.layers.27:  96%|█████████▋| 27/28 [11:48<00:26, 26.33s/it][38;20m2026-06-03 08:19:27 INFO quantizer.py L315: Unquantized layers: ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj'][0m
+[38;20mquantized 3/7 layers in the block, loss iter 0: 19.812408 -> iter 53: 13.125442[0m
+[38;20m2026-06-03 08:19:29 INFO device.py L1840: 'peak_ram': 5.57GB, 'peak_vram': 4.87GB[0m
+Quantizing done: 100%|██████████| 28/28 [12:14<00:00, 26.33s/it]           Quantizing done: 100%|██████████| 28/28 [12:14<00:00, 26.22s/it]
+[38;20m2026-06-03 08:19:29 INFO device.py L1840: 'peak_ram': 5.57GB, 'peak_vram': 4.87GB[0m
+[38;20m2026-06-03 08:19:29 INFO data_driven.py L750: quantization tuning time 734.1933557987213[0m
+[38;20m2026-06-03 08:19:29 INFO data_driven.py L769: Summary: quantized 84/197 in the model, unquantized layers: lm_head, model.layers.[0-27].self_attn.k_proj, model.layers.[0-27].self_attn.o_proj, model.layers.[0-27].self_attn.q_proj, model.layers.[0-27].self_attn.v_proj[0m
+08:19:29 [INFO] Quantization completed in 753.8s
+08:19:29 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-03 08:19:29 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+packing:   0%|          | 0/196 [00:00<?, ?it/s]packing: 100%|██████████| 196/196 [00:02<00:00, 94.84it/s]
+[33;1m2026-06-03 08:19:31 WARNING export_to_nvfp_mx.py L271: /root/_work/1/s/auto_quant/output/runs/Qwen3-0.6B-AutoRound-MXFP4-Tuning/quantized_model already exists, this may cause model conflict[0m
+08:19:32 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:19:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-0.6B/c1899de289a04d12100db370d81485cdf75e47ca/config.json "HTTP/1.1 200 OK"
+08:19:32 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/Qwen3-0.6B-AutoRound-MXFP4-Tuning/quant_summary.json
+08:19:32 [INFO] === Phase 2: DONE ===
