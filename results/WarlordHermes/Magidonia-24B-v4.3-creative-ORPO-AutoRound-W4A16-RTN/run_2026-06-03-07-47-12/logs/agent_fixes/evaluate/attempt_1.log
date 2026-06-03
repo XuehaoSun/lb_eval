@@ -1,0 +1,21 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the error: `HfHubHTTPError: Server error '504 Gateway Time-out'` when trying to access HuggingFace dataset `cais/mmlu`. This is a transient network timeout, not a quantization issue.
+
+**FIX_PLAN:**
+1. Configure huggingface_hub with retry/timeout settings to handle transient 504 errors
+2. Set HF_HUB_ENABLE_HF_TRANSFER for faster downloads (optional)
+3. Retry the evaluate phase
+
+Let me check the current environment and apply the fix:
+**FIX_PLAN:**
+1. The `high_school_european_history` subset of MMLU is not cached locally
+2. HuggingFace is timing out when trying to download it during task initialization
+3. Pre-download the missing subset using `datasets.load_dataset` directly to avoid the network timeout
+
+Let me download the missing subset:
+**FIX_PLAN:**
+1. The `cais/mmlu` dataset was missing the `high_school_european_history` subset in the local cache (44/45 subsets present)
+2. `lm_eval` failed with a 504 Gateway Timeout when trying to fetch the missing subset metadata from HuggingFace
+3. Downloaded the missing subset directly — it's now cached and lm_eval can access it without network calls
+
+The phase should now re-run successfully. The 504 was a transient HuggingFace server error; the dataset itself is fine and the subset downloads without issue.
