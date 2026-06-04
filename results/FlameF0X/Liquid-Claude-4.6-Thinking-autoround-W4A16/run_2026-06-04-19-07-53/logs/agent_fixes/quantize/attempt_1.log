@@ -1,0 +1,10 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+**FIX_PLAN:**
+1. Upgrade auto-round to latest main branch: `pip install --reinstall "auto-round @ git+https://github.com/intel/auto-round.git@main"`
+2. Re-run the quantization phase to verify the fix
+
+The error `IndexError: list index out of range` in `_sampling_inputs` (auto-round's base.py line 603) is an auto-round bug. Based on Lesson 1, upgrading to the latest main branch often fixes such issues.
+**FIX_PLAN:**
+1. Reinstall auto-round from main branch (auto-round 0.13.0 → 0.14.0.dev443, transformers 4.x → 5.10.2)
+2. This fixes the `IndexError: list index out of range` in `_sampling_inputs` (likely a bug in calibration data handling that was patched in main)
+3. Phase will be re-run to verify
