@@ -1,0 +1,12 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] embedded run agent end: runId=fix_quantize_358_1780541345 isError=true model=MiniMax-M2.7 provider=minimax error=terminated rawError=terminated
+[agent/embedded] embedded run agent end: runId=fix_quantize_358_1780541345 isError=true model=MiniMax-M2.7 provider=minimax error=terminated rawError=terminated
+[agent/embedded] embedded run agent end: runId=fix_quantize_358_1780541345 isError=true model=MiniMax-M2.7 provider=minimax error=terminated rawError=terminated
+[agent/embedded] embedded run timeout: runId=fix_quantize_358_1780541345 sessionId=fix_quantize_358_1780541345 timeoutMs=600000
+[agent/embedded] Profile minimax:cn timed out. Trying next account...
+[agent/embedded] embedded run failover decision: runId=fix_quantize_358_1780541345 stage=assistant decision=surface_error reason=timeout provider=minimax/MiniMax-M2.7 profile=sha256:c38c74a5066a
+**FIX_PLAN:**
+1. The `TokenizersBackend` error is a transformers/auto-round compatibility issue — upgrade both packages
+2. Reinstall auto-round from main branch (known to fix model-specific tokenizer issues)
+3. Verify the fix resolves the import error
+[TIMEOUT] Agent exceeded 600s
