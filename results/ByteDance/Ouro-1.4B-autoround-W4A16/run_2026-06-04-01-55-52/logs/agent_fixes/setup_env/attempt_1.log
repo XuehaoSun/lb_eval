@@ -1,0 +1,21 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the error: `AttributeError: module 'torch' has no attribute 'float8_e8m0fnu'` triggered during `auto_round`'s `monkey_patch_transformers()`. This is a compatibility issue between the installed transformers and torch versions.
+
+**FIX_PLAN:**
+1. Upgrade auto-round to latest main branch (fixes transformers compatibility issues)
+2. Verify the installation
+3. Re-run setup_env phase
+
+Let me apply the fix:
+The reinstall pulled in torch=2.12.0+cu130 which is incompatible with the CUDA 12.4 driver. I need to reinstall the correct CUDA version to match the driver.
+**FIX_PLAN:**
+1. Reinstalled auto-round from main branch (fa48924) → 0.14.0.dev442+gfa48924
+2. Restored torch to 2.6.0+cu124 (was accidentally upgraded to cu130) to match NVIDIA driver 12.4
+3. Downgraded transformers 5.10.1 → 4.45.0 (5.x uses `torch.float8_e8m0fnu` which only exists in torch 2.12+)
+
+**Verification passed:**
+```
+torch=2.6.0+cu124, cuda=True, auto_round=0.14.0
+```
+
+The phase script should now pass the `setup_env` step.
