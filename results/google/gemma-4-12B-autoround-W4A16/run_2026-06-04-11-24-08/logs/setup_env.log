@@ -1,0 +1,82 @@
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+[setup_env] Installing: auto-round
+ + transformers==5.10.1
+ + triton==3.7.0
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+[setup_env] Checking torch/CUDA driver compatibility...
+/root/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py:187: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12080). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+  return torch._C._cuda_getDeviceCount() > 0
+[setup_env] NVIDIA driver: 570.195.03
+[setup_env] Driver supports CUDA: 12.8
+[setup_env] torch 2.12.0+cu130 CUDA mismatch with driver (CUDA 12.8)
+[setup_env] Reinstalling torch with cu128 from https://download.pytorch.org/whl/cu128...
+Using Python 3.12.13 environment at: /root/.venv
+Resolved 33 packages in 2.77s
+Downloading networkx (2.0MiB)
+Downloading sympy (6.0MiB)
+Downloading cuda-bindings (11.6MiB)
+Downloading torchvision (7.7MiB)
+Downloading torch (782.3MiB)
+Downloading triton (179.6MiB)
+Downloading nvidia-nccl-cu12 (283.0MiB)
+Downloading pillow (6.8MiB)
+Downloading numpy (15.9MiB)
+Downloading torchaudio (1.6MiB)
+Downloading nvidia-cuda-nvrtc-cu12 (84.0MiB)
+ Downloaded torchaudio
+ Downloaded torchvision
+Downloading nvidia-cusparse-cu12 (274.9MiB)
+ Downloaded cuda-bindings
+ Downloaded networkx
+ Downloaded sympy
+ Downloaded pillow
+ Downloaded numpy
+Downloading nvidia-nvjitlink-cu12 (37.4MiB)
+ Downloaded triton
+Downloading nvidia-cufft-cu12 (184.2MiB)
+Downloading nvidia-cuda-cupti-cu12 (9.8MiB)
+  × Failed to download `nvidia-cudnn-cu12==9.19.0.56`
+  ├─▶ Request failed after 3 retries in 125.4s
+  ├─▶ Failed to fetch:
+  │   `https://pypi.nvidia.com/nvidia-cudnn-cu12/nvidia_cudnn_cu12-9.19.0.56-py3-none-manylinux_2_27_x86_64.whl`
+  ├─▶ error sending request for url
+  │   (https://pypi.nvidia.com/nvidia-cudnn-cu12/nvidia_cudnn_cu12-9.19.0.56-py3-none-manylinux_2_27_x86_64.whl)
+  ╰─▶ operation timed out
+  help: `nvidia-cudnn-cu12` (v9.19.0.56) was included because `torch`
+        (v2.11.0+cu128) depends on `nvidia-cudnn-cu12`
+[setup_env] After reinstall: torch=2.12.0+cu130, cuda=False
+[WARN] CUDA still not available after torch reinstall
+[setup_env] Running pre-flight dependency check for google/gemma-4-12B...
+11:07:46 [preflight] Pre-flight check for: google/gemma-4-12B
+11:07:47 [preflight] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+11:07:47 [preflight] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+11:07:47 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-12B/0c9850654599d822abc394e06d35e86e2435cffc/config.json "HTTP/1.1 200 OK"
+11:07:47 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-12B/0c9850654599d822abc394e06d35e86e2435cffc/config.json "HTTP/1.1 200 OK"
+11:07:47 [preflight]   model_type: gemma4_unified
+11:07:47 [preflight]   auto_map: no
+11:07:47 [preflight]   transformers_version: 5.10.0.dev0
+11:07:49 [preflight] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+11:07:49 [preflight]   ✓ All dependencies satisfied
+
+[setup_env] Verification:
+/root/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py:187: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12080). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+  return torch._C._cuda_getDeviceCount() > 0
+  torch=2.12.0+cu130, cuda=False
+  auto_round=0.13.0
+  transformers=5.10.1
+  lm_eval=0.4.12
+
+=== Phase 1: DONE ===
