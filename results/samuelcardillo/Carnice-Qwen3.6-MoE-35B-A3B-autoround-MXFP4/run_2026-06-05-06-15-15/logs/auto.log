@@ -1,0 +1,832 @@
+
+═══════ Pipeline: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B | MXFP4/TUNING/auto_round ═══════
+
+
+═══════ Pipeline: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B | MXFP4/TUNING/auto_round ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+[setup_env] Installing: auto-round
+[setup_env] Installing: auto-round
+ + transformers==5.10.2
+ + triton==3.7.0
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + transformers==5.10.2
+ + triton==3.7.0
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] torch=2.12.0+cu130, CUDA available — OK
+[setup_env] torch=2.12.0+cu130, CUDA available — OK
+[setup_env] Running pre-flight dependency check for samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B...
+[setup_env] Running pre-flight dependency check for samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B...
+06:11:30 [preflight] Pre-flight check for: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+06:11:30 [preflight] Pre-flight check for: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+06:11:31 [preflight] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:11:31 [preflight] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:11:31 [preflight] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:11:31 [preflight] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:11:31 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:11:31 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:11:31 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:11:31 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:11:31 [preflight]   model_type: qwen3_5_moe
+06:11:31 [preflight]   auto_map: no
+06:11:31 [preflight]   model_type: qwen3_5_moe
+06:11:31 [preflight]   auto_map: no
+06:11:31 [preflight]   transformers_version: not specified
+06:11:31 [preflight]   transformers_version: not specified
+06:11:31 [preflight] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+06:11:31 [preflight] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+06:11:31 [preflight]   ✓ All dependencies satisfied
+06:11:31 [preflight]   ✓ All dependencies satisfied
+
+[setup_env] Verification:
+
+[setup_env] Verification:
+  torch=2.12.0+cu130, cuda=True
+  torch=2.12.0+cu130, cuda=True
+  auto_round=0.13.0
+  transformers=5.10.2
+  auto_round=0.13.0
+  transformers=5.10.2
+  lm_eval=0.4.12
+  lm_eval=0.4.12
+
+=== Phase 1: DONE ===
+
+=== Phase 1: DONE ===
+[auto_v3] setup_env succeeded
+[auto_v3] setup_env succeeded
+
+═══════ Phase: quantize ═══════
+
+
+═══════ Phase: quantize ═══════
+
+=== Phase 2: Quantization ===
+=== Phase 2: Quantization ===
+  model=samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+  scheme=MXFP4
+  iters=200
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/quantized_model
+  model=samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+  scheme=MXFP4
+  iters=200
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/quantized_model
+06:11:43 [INFO] Model: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+06:11:43 [INFO] Scheme: MXFP4 → AutoRound scheme='MXFP4_RCEIL'
+06:11:43 [INFO] Iters: 200 (TUNING)
+06:11:43 [INFO] Export format: auto_round
+06:11:43 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/quantized_model
+06:11:43 [INFO] Device map: auto
+06:11:43 [INFO] Loading tokenizer...
+06:11:43 [INFO] Model: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+06:11:43 [INFO] Scheme: MXFP4 → AutoRound scheme='MXFP4_RCEIL'
+06:11:43 [INFO] Iters: 200 (TUNING)
+06:11:43 [INFO] Export format: auto_round
+06:11:43 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/quantized_model
+06:11:43 [INFO] Device map: auto
+06:11:43 [INFO] Loading tokenizer...
+06:11:43 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:11:43 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:11:43 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:11:43 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:11:43 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:11:43 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:11:43 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:11:43 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:11:43 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:11:43 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:11:43 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:11:43 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:11:44 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:11:44 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:11:44 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:11:44 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:11:44 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:11:44 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:11:44 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:11:44 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:11:44 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+06:11:44 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+06:11:44 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/xet-read-token/d86a0cea3cd6794a294ad72a08598294249c761e "HTTP/1.1 200 OK"
+06:11:44 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/xet-read-token/d86a0cea3cd6794a294ad72a08598294249c761e "HTTP/1.1 200 OK"
+06:11:45 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+06:11:45 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+06:11:45 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+06:11:45 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+06:11:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+06:11:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+06:11:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+06:11:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+06:11:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/chat_template.jinja "HTTP/1.1 200 OK"
+06:11:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/chat_template.jinja "HTTP/1.1 200 OK"
+06:11:46 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/chat_template.jinja "HTTP/1.1 200 OK"
+06:11:46 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/chat_template.jinja "HTTP/1.1 200 OK"
+06:11:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B "HTTP/1.1 200 OK"
+06:11:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B "HTTP/1.1 200 OK"
+06:11:47 [INFO] Loading model...
+06:11:47 [INFO] Loading model...
+06:11:47 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:11:47 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:11:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:11:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:11:48 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+06:11:48 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+06:11:48 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+06:11:48 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+06:11:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:11:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:11:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:11:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:11:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/revision/main "HTTP/1.1 200 OK"
+06:11:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/revision/main "HTTP/1.1 200 OK"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00001-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00001-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00004-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00004-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00007-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00007-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00002-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00002-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00003-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00003-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00008-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00008-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00005-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00005-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00006-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00006-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00009-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00009-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00010-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00010-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:59 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00011-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:59 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00011-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:59 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00012-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:59 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00012-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:59 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00013-of-00026.safetensors "HTTP/1.1 302 Found"
+06:11:59 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00013-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00014-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00014-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00015-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00015-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00016-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00016-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:08 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00017-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:08 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00017-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00018-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00018-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00019-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00019-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:21 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00020-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:21 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00020-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:24 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00021-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:24 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00021-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:24 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00022-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:24 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00022-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:25 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00023-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:25 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00023-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:26 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00024-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:26 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00024-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:27 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00025-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:27 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00025-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:36 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00026-of-00026.safetensors "HTTP/1.1 302 Found"
+06:12:36 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/d86a0cea3cd6794a294ad72a08598294249c761e/model-00026-of-00026.safetensors "HTTP/1.1 302 Found"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+06:13:13 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+06:13:13 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+06:13:13 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:13 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:13 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:13 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+06:13:14 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+06:13:14 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+06:13:14 [INFO] Ignore layers: lm_head,mlp.gate,self_attn
+06:13:14 [INFO] Ignore layers: lm_head,mlp.gate,self_attn
+06:13:14 [INFO] Configuring AutoRound...
+06:13:14 [INFO] Configuring AutoRound...
+[38;20m2026-06-05 06:13:14 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+[38;20m2026-06-05 06:13:14 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a2268fa-199dbd951a6edeee179e7a88;24a3b592-99cf-4842-bdd8-dcb7465f1aad)
+
+Entry Not Found for url: https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a2268fa-199dbd951a6edeee179e7a88;24a3b592-99cf-4842-bdd8-dcb7465f1aad)
+
+Entry Not Found for url: https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model_index.json.
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/revision/main "HTTP/1.1 200 OK"
+06:13:15 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/revision/main "HTTP/1.1 200 OK"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:17 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:17 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:13:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:13:17 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:17 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:13:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:13:17 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:13:17 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:13:17 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:13:17 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:13:18 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B "HTTP/1.1 200 OK"
+06:13:18 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B "HTTP/1.1 200 OK"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:13:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:13:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:13:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/chat_template.jinja "HTTP/1.1 200 OK"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/chat_template.jinja "HTTP/1.1 200 OK"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:13:20 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:13:21 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:21 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:13:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:13:21 [ERROR] Quantization failed: Can't load image processor for 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B' is the correct path to a directory containing a preprocessor_config.json file
+06:13:21 [ERROR] Quantization failed: Can't load image processor for 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B' is the correct path to a directory containing a preprocessor_config.json file
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 252, in __new__
+    return _get_compressor_class(model_type, DataDrivenCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 441, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1691, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 252, in __new__
+    return _get_compressor_class(model_type, DataDrivenCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1820, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 441, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1691, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1820, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 575, in from_pretrained
+    raise initial_exception
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 562, in from_pretrained
+    config_dict, _ = ImageProcessingMixin.get_image_processor_dict(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/image_processing_base.py", line 334, in get_image_processor_dict
+    raise OSError(
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 575, in from_pretrained
+    raise initial_exception
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 562, in from_pretrained
+    config_dict, _ = ImageProcessingMixin.get_image_processor_dict(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/image_processing_base.py", line 334, in get_image_processor_dict
+    raise OSError(
+OSError: Can't load image processor for 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B' is the correct path to a directory containing a preprocessor_config.json file
+OSError: Can't load image processor for 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B' is the correct path to a directory containing a preprocessor_config.json file
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Calling openclaw agent (session=fix_quantize_329_1780640002, timeout=600s)...
+[auto_v3] Calling openclaw agent (session=fix_quantize_329_1780640002, timeout=600s)...
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] read tool called without path: toolCallId=call_function_342xap680vpr_1 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_function_342xap680vpr_1 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_function_342xap680vpr_2 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_function_342xap680vpr_2 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_function_5a26hnubj71w_1 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_function_5a26hnubj71w_1 argsType=object
+The error shows auto-round is trying to load an image processor (`preprocessor_config.json`) for a model (`Carnice-Qwen3.6-MoE-35B-A3B`) that appears to be an LLM (MoE text model), not a true MLLM. The model repo may have processor config files that trick auto-round into thinking it needs multimodal processing.
+
+**FIX_PLAN:**
+1. Upgrade auto-round from main branch to get latest fixes
+2. Also install pillow + torchvision (per Lesson 4) — they may be needed by Qwen2VLImageProcessor even if not truly multimodal
+3. Re-run quantization
+The error shows auto-round is trying to load an image processor (`preprocessor_config.json`) for a model (`Carnice-Qwen3.6-MoE-35B-A3B`) that appears to be an LLM (MoE text model), not a true MLLM. The model repo may have processor config files that trick auto-round into thinking it needs multimodal processing.
+
+**FIX_PLAN:**
+1. Upgrade auto-round from main branch to get latest fixes
+2. Also install pillow + torchvision (per Lesson 4) — they may be needed by Qwen2VLImageProcessor even if not truly multimodal
+3. Re-run quantization
+**FIX_PLAN:**
+1. Install `pillow` + `torchvision` (required by Qwen2VLImageProcessor per Lesson 4)
+2. Upgrade auto-round from main branch (fixes image processor loading for new MLLM models per Lessons 1 & 3)
+3. Re-verify: `python3 -c "import auto_round; print(auto_round.__version__)"` and `import transformers; print(transformers.__version__)`
+**FIX_PLAN:**
+1. Install `pillow` + `torchvision` (required by Qwen2VLImageProcessor per Lesson 4)
+2. Upgrade auto-round from main branch (fixes image processor loading for new MLLM models per Lessons 1 & 3)
+3. Re-verify: `python3 -c "import auto_round; print(auto_round.__version__)"` and `import transformers; print(transformers.__version__)`
+FIX_PLAN:
+1. Install missing pillow and torchvision (Lesson 4 - required by Qwen2VLImageProcessor)
+2. Upgrade auto-round and transformers to latest versions from main branch
+3. Re-run quantize.py to verify
+
+The error is `Can't load image processor` — this happens because auto-round's MLLM detection is incorrectly triggered for a text-only Qwen3 MoE model. The latest main branch auto-round has fixes for newer model architectures.
+FIX_PLAN:
+1. Install missing pillow and torchvision (Lesson 4 - required by Qwen2VLImageProcessor)
+2. Upgrade auto-round and transformers to latest versions from main branch
+3. Re-run quantize.py to verify
+
+The error is `Can't load image processor` — this happens because auto-round's MLLM detection is incorrectly triggered for a text-only Qwen3 MoE model. The latest main branch auto-round has fixes for newer model architectures.
+[auto_v3] Re-running quantize after agent fix...
+[auto_v3] Re-running quantize after agent fix...
+=== Phase 2: Quantization ===
+  model=samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+  scheme=MXFP4
+  iters=200
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/quantized_model
+=== Phase 2: Quantization ===
+  model=samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+  scheme=MXFP4
+  iters=200
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/quantized_model
+06:14:46 [INFO] Model: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+06:14:46 [INFO] Scheme: MXFP4 → AutoRound scheme='MXFP4_RCEIL'
+06:14:46 [INFO] Iters: 200 (TUNING)
+06:14:46 [INFO] Export format: auto_round
+06:14:46 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/quantized_model
+06:14:46 [INFO] Device map: auto
+06:14:46 [INFO] Loading tokenizer...
+06:14:46 [INFO] Model: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+06:14:46 [INFO] Scheme: MXFP4 → AutoRound scheme='MXFP4_RCEIL'
+06:14:46 [INFO] Iters: 200 (TUNING)
+06:14:46 [INFO] Export format: auto_round
+06:14:46 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/quantized_model
+06:14:46 [INFO] Device map: auto
+06:14:46 [INFO] Loading tokenizer...
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:14:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:14:46 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:14:46 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:14:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:14:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:14:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B "HTTP/1.1 200 OK"
+06:14:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B "HTTP/1.1 200 OK"
+06:14:48 [INFO] Loading model...
+06:14:48 [INFO] Loading model...
+06:14:48 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:48 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:14:48 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:14:48 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+06:14:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:48 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+06:14:48 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+06:14:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+06:14:49 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+06:14:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:14:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:14:49 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/revision/main "HTTP/1.1 200 OK"
+06:14:49 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/revision/main "HTTP/1.1 200 OK"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+06:14:55 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+06:14:55 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+06:14:55 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:55 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:55 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+06:14:55 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+06:14:55 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+06:14:55 [INFO] Ignore layers: lm_head,mlp.gate,self_attn
+06:14:55 [INFO] Configuring AutoRound...
+06:14:55 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+06:14:55 [INFO] Ignore layers: lm_head,mlp.gate,self_attn
+06:14:55 [INFO] Configuring AutoRound...
+[38;20m2026-06-05 06:14:56 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+[38;20m2026-06-05 06:14:56 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a226960-506d16733e54446b601658ba;62082765-612e-40cd-9f27-1f2ed20dead4)
+
+Entry Not Found for url: https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a226960-506d16733e54446b601658ba;62082765-612e-40cd-9f27-1f2ed20dead4)
+
+Entry Not Found for url: https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model_index.json.
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:56 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:14:56 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:56 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:14:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/model.safetensors.index.json "HTTP/1.1 200 OK"
+06:14:57 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/revision/main "HTTP/1.1 200 OK"
+06:14:57 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/revision/main "HTTP/1.1 200 OK"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:14:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:14:59 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:59 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:14:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:14:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:14:59 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:14:59 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:14:59 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:14:59 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+06:15:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B "HTTP/1.1 200 OK"
+06:15:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B "HTTP/1.1 200 OK"
+06:15:00 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:15:00 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/tokenizer_config.json "HTTP/1.1 200 OK"
+06:15:01 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: GET https://huggingface.co/api/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:15:01 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/chat_template.jinja "HTTP/1.1 200 OK"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/chat_template.jinja "HTTP/1.1 200 OK"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:15:02 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+06:15:03 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:15:03 [INFO] HTTP Request: HEAD https://huggingface.co/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+06:15:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:15:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B/d86a0cea3cd6794a294ad72a08598294249c761e/config.json "HTTP/1.1 200 OK"
+06:15:03 [ERROR] Quantization failed: Can't load image processor for 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B' is the correct path to a directory containing a preprocessor_config.json file
+06:15:03 [ERROR] Quantization failed: Can't load image processor for 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B' is the correct path to a directory containing a preprocessor_config.json file
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 252, in __new__
+    return _get_compressor_class(model_type, DataDrivenCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 252, in __new__
+    return _get_compressor_class(model_type, DataDrivenCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 441, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1691, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1820, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 575, in from_pretrained
+    raise initial_exception
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 441, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1691, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1820, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 575, in from_pretrained
+    raise initial_exception
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 562, in from_pretrained
+    config_dict, _ = ImageProcessingMixin.get_image_processor_dict(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/image_processing_base.py", line 334, in get_image_processor_dict
+    raise OSError(
+OSError: Can't load image processor for 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B' is the correct path to a directory containing a preprocessor_config.json file
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 562, in from_pretrained
+    config_dict, _ = ImageProcessingMixin.get_image_processor_dict(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/image_processing_base.py", line 334, in get_image_processor_dict
+    raise OSError(
+OSError: Can't load image processor for 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B' is the correct path to a directory containing a preprocessor_config.json file
+[lesson] Saved: [still_failing] 404 Client Error. (Request ID: Root=1-6a2268fa-199dbd951a6edeee179e7a88;24a3b592
+[lesson]   Solution: Attempt 1 did not resolve
+[lesson] Saved: [still_failing] 404 Client Error. (Request ID: Root=1-6a2268fa-199dbd951a6edeee179e7a88;24a3b592
+[lesson]   Solution: Attempt 1 did not resolve
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[lesson] Saved: [drift] 404 Client Error. (Request ID: Root=1-6a226960-506d16733e54446b601658ba;62082765
+[lesson]   Solution: Same error repeated 2 times
+[lesson] Saved: [drift] 404 Client Error. (Request ID: Root=1-6a226960-506d16733e54446b601658ba;62082765
+[lesson]   Solution: Same error repeated 2 times
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] Pipeline failed at: quantize (245s)
+[auto_v3] Pipeline failed at: quantize (245s)
+[auto_v3] Collected 1 openclaw session(s)
+[auto_v3] Collected 1 openclaw session(s)
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/session_fix_quantize_329_1780640002.md
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/session_fix_quantize_329_1780640002.md
+[auto_v3] Generating run report...
+[auto_v3] Generating run report...
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/run_report.md
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/Carnice-Qwen3.6-MoE-35B-A3B-AutoRound-MXFP4-Tuning/run_report.md
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+[github-upload] artifact name: Carnice-Qwen3.6-MoE-35B-A3B-autoround-MXFP4
+[github-upload] result org: samuelcardillo
+[github-upload] branch: main
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: samuelcardillo/Carnice-Qwen3.6-MoE-35B-A3B
+[github-upload] artifact name: Carnice-Qwen3.6-MoE-35B-A3B-autoround-MXFP4
+[github-upload] result org: samuelcardillo
+[github-upload] branch: main
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
