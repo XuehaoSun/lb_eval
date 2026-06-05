@@ -1,0 +1,16 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+**FIX_PLAN:**
+1. The error is CUDA OOM — the GPU has only 298 MiB free when trying to load the 20B model
+2. Set `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` to reduce fragmentation and increase memory headroom
+3. Re-run the quantization phase
+The error is CUDA OOM during model loading. The GPU has 23.64 GiB but only 298 MiB free when trying to load a 20B MoE model. The recommended fix from the error message is to set `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`. Let me also check if we can add `max_memory` control to the quantize script to limit memory usage.
+Fix applied. The change adds `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` at the start of quantize.py to help with memory fragmentation during model loading. This is the fix explicitly recommended in the error message.
+
+**FIX_PLAN:**
+1. Add `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` env var to quantize.py to reduce memory fragmentation
+2. The phase will be re-run by agent_fix_loop.sh to verify
+
+**Change made:**
+- `/root/_work/1/s/auto_quant/phases/quantize.py` — Added `os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")` before any torch operations
+
+The error explicitly suggested this fix: *"If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True"*. The 4.01 GiB reserved-but-unallocated memory indicates fragmentation preventing efficient re-use.

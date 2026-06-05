@@ -1,0 +1,91 @@
+=== Phase 2: Quantization ===
+  model=openai/gpt-oss-20b
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gpt-oss-20b-AutoRound-W4A16-RTN/quantized_model
+07:34:08 [INFO] Model: openai/gpt-oss-20b
+07:34:08 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:34:08 [INFO] Iters: 0 (RTN)
+07:34:08 [INFO] Export format: auto_round
+07:34:08 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gpt-oss-20b-AutoRound-W4A16-RTN/quantized_model
+07:34:08 [INFO] Device map: auto
+07:34:08 [INFO] Loading tokenizer...
+07:34:09 [INFO] Loading model...
+MXFP4 quantization requires Triton and kernels installed: CUDA requires Triton >= 3.4.0, XPU requires Triton >= 3.5.0, we will default to dequantizing the model to bf16
+07:34:09 [INFO] We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+07:34:34 [WARNING] Some parameters are on the meta device because they were offloaded to the cpu.
+07:34:34 [INFO] Architecture: GptOssForCausalLM (model_type=gpt_oss, moe=True)
+07:34:34 [INFO] Ignore layers: lm_head
+07:34:34 [INFO] Configuring AutoRound...
+[38;20m2026-06-05 07:34:34 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+404 Client Error. (Request ID: Root=1-6a227c0a-335a19c361e4748968cc403f;eff91ae7-bf5e-452f-927c-bf577abf7725)
+
+Entry Not Found for url: https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json.
+[38;20m2026-06-05 07:34:34 INFO entry.py L591: Using LLM mode.[0m
+404 Client Error. (Request ID: Root=1-6a227c0a-699d6583635c9af747a7ea7f;2667d9d0-d67d-44ec-8ed0-9375581fa2fe)
+
+Entry Not Found for url: https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a227c0a-3bc73c1213630c0b1fd684fe;b7efce50-098d-4484-beb0-ca113ace800c)
+
+Entry Not Found for url: https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json.
+07:35:12 [INFO] Starting quantization...
+[38;20m2026-06-05 07:35:12 INFO replace_modules.py L120: Experts (before replacement) [model.layers.0.mlp.experts] (GptOssExperts):
+GptOssExperts()[0m
+[38;20m2026-06-05 07:35:12 INFO device.py L1871: [Memory Monitor] Before applying custom replacements: 'peak_ram': 46.11GB[0m
+[38;20m2026-06-05 07:35:12 INFO replace_modules.py L360: Found 24 modules to replace[0m
+Replacing modules:   0%|          | 0/24 [00:00<?, ?it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+Replacing modules: 100%|██████████| 24/24 [00:00<00:00, 225.49it/s]
+[38;20m2026-06-05 07:35:12 INFO replace_modules.py L387: Replaced 24 modules[0m
+[38;20m2026-06-05 07:35:12 INFO device.py L1874: [Memory Monitor] After applying custom replacements: 'peak_ram': 46.12GB[0m
+[38;20m2026-06-05 07:35:12 INFO replace_modules.py L120: Experts (after replacement) [model.layers.0.mlp.experts] (ModuleList):
+ModuleList(
+  (0-31): 32 x GPTOssSingleExpert(
+    (gate_proj): Linear(in_features=2880, out_features=2880, bias=True)
+    (up_proj): Linear(in_features=2880, out_features=2880, bias=True)
+    (down_proj): Linear(in_features=2880, out_features=2880, bias=True)
+  )
+)[0m
+[38;20m2026-06-05 07:35:12 INFO utils.py L964: Ignored layers: lm_head, lm_head[0m
+[38;20m2026-06-05 07:35:13 INFO base.py L663: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-05 07:35:13 INFO data_driven.py L1089: start to compute imatrix[0m
+[38;20m2026-06-05 07:35:13 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 57628.39 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:06<00:00, 1451.12 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:03<00:00, 2626.65 examples/s]
+Casting the dataset:   0%|          | 0/1186 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1186/1186 [00:03<00:00, 358.04 examples/s]
+[38;20m2026-06-05 07:35:31 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+  0%|          | 0/24 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/24 [00:00<?, ?it/s][33;1m2026-06-05 07:35:54 WARNING logging.py L328: MoE layer detected: optimized RTN is disabled for efficiency. Use `--enable_opt_rtn` to force-enable it for MoE layers.[0m
+[38;20m2026-06-05 07:35:57 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_w8aij6oe[0m
+[38;20m2026-06-05 07:36:01 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.27GB[0m
+Quantizing model.layers.1:   4%|▍         | 1/24 [00:26<10:20, 26.99s/it][38;20m2026-06-05 07:36:25 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.29GB[0m
+Quantizing model.layers.2:   8%|▊         | 2/24 [00:51<09:21, 25.54s/it][38;20m2026-06-05 07:36:50 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.29GB[0m
+Quantizing model.layers.3:  12%|█▎        | 3/24 [01:15<08:48, 25.16s/it][38;20m2026-06-05 07:37:17 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.29GB[0m
+Quantizing model.layers.4:  17%|█▋        | 4/24 [01:42<08:34, 25.75s/it][38;20m2026-06-05 07:37:43 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.29GB[0m
+Quantizing model.layers.4:  21%|██        | 5/24 [02:08<08:08, 25.73s/it]Quantizing model.layers.5:  21%|██        | 5/24 [02:08<08:08, 25.73s/it]Quantizing model.layers.5:  21%|██        | 5/24 [02:19<08:08, 25.73s/it][38;20m2026-06-05 07:38:08 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.29GB[0m
+Quantizing model.layers.6:  25%|██▌       | 6/24 [02:33<07:43, 25.73s/it][38;20m2026-06-05 07:38:36 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.29GB[0m
+Quantizing model.layers.7:  29%|██▉       | 7/24 [03:01<07:17, 25.73s/it][38;20m2026-06-05 07:39:00 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.29GB[0m
+Quantizing model.layers.8:  33%|███▎      | 8/24 [03:25<06:51, 25.73s/it][38;20m2026-06-05 07:39:25 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.9:  38%|███▊      | 9/24 [03:50<06:25, 25.73s/it][38;20m2026-06-05 07:39:49 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.9:  42%|████▏     | 10/24 [04:14<05:55, 25.41s/it]Quantizing model.layers.10:  42%|████▏     | 10/24 [04:14<05:55, 25.41s/it]Quantizing model.layers.10:  42%|████▏     | 10/24 [04:28<05:55, 25.41s/it][38;20m2026-06-05 07:40:11 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.11:  46%|████▌     | 11/24 [04:36<05:30, 25.41s/it][38;20m2026-06-05 07:40:34 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.12:  50%|█████     | 12/24 [04:59<05:04, 25.41s/it][38;20m2026-06-05 07:40:59 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.13:  54%|█████▍    | 13/24 [05:24<04:39, 25.41s/it][38;20m2026-06-05 07:41:25 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.14:  58%|█████▊    | 14/24 [05:50<04:14, 25.41s/it][38;20m2026-06-05 07:41:48 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.15:  62%|██████▎   | 15/24 [06:13<03:48, 25.41s/it][38;20m2026-06-05 07:42:11 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.15:  67%|██████▋   | 16/24 [06:36<03:16, 24.54s/it]Quantizing model.layers.16:  67%|██████▋   | 16/24 [06:36<03:16, 24.54s/it]Quantizing model.layers.16:  67%|██████▋   | 16/24 [06:48<03:16, 24.54s/it][38;20m2026-06-05 07:42:34 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.3GB[0m
+Quantizing model.layers.17:  71%|███████   | 17/24 [06:59<02:51, 24.54s/it][38;20m2026-06-05 07:42:57 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.31GB[0m
+Quantizing model.layers.18:  75%|███████▌  | 18/24 [07:22<02:27, 24.54s/it][38;20m2026-06-05 07:43:19 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.31GB[0m
+Quantizing model.layers.19:  79%|███████▉  | 19/24 [07:44<02:02, 24.54s/it][38;20m2026-06-05 07:43:47 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.31GB[0m
+Quantizing model.layers.20:  83%|████████▎ | 20/24 [08:13<01:38, 24.54s/it][38;20m2026-06-05 07:44:14 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.31GB[0m
+Quantizing model.layers.20:  88%|████████▊ | 21/24 [08:39<01:13, 24.55s/it]Quantizing model.layers.21:  88%|████████▊ | 21/24 [08:39<01:13, 24.55s/it]Quantizing model.layers.21:  88%|████████▊ | 21/24 [08:49<01:13, 24.55s/it][38;20m2026-06-05 07:44:35 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.31GB[0m
+Quantizing model.layers.22:  92%|█████████▏| 22/24 [09:00<00:49, 24.55s/it][38;20m2026-06-05 07:44:56 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.31GB[0m
+Quantizing model.layers.23:  96%|█████████▌| 23/24 [09:21<00:24, 24.55s/it][38;20m2026-06-05 07:45:18 INFO device.py L1840: 'peak_ram': 54.15GB, 'peak_vram': 14.31GB[0m
+Quantizing model.layers.23: 100%|██████████| 24/24 [09:43<00:00, 24.32s/it]
+07:45:39 [INFO] Quantization completed in 626.4s
+07:45:39 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-05 07:45:39 WARNING logging.py L328: some layers are skipped quantization (shape not divisible by 32): [0m
+packing:   0%|          | 0/2401 [00:00<?, ?it/s]packing: 100%|██████████| 2401/2401 [00:53<00:00, 44.69it/s]
+[33;1m2026-06-05 07:46:32 WARNING export.py L344: /root/_work/1/s/auto_quant/output/runs/gpt-oss-20b-AutoRound-W4A16-RTN/quantized_model already exists, this may cause model conflict[0m
+07:46:38 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/gpt-oss-20b-AutoRound-W4A16-RTN/quant_summary.json
+07:46:38 [INFO] === Phase 2: DONE ===

@@ -1,0 +1,18 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+## FIX_PLAN
+
+**Issue:** `torch.float8_e8m0fnu` attribute error — transformers version is incompatible with torch 2.6.0+cu124.
+
+**Fix:** Upgrade transformers to a version that handles this dtype gracefully, then reinstall auto-round from main branch.
+
+**Commands:**
+1. `pip install -U transformers`
+2. `pip install --reinstall "auto-round @ git+https://github.com/intel/auto-round.git@main"`
+Fix complete:
+
+**Summary:** The error `torch.float8_e8m0fnu` was caused by transformers 5.10.2 being incompatible with torch 2.6.0+cu124. I downgraded transformers to 4.57.6 which doesn't use this dtype, resolving the import error while maintaining compatibility with the model.
+
+**Verification:**
+- `torch=2.6.0+cu124, cuda=True` ✓
+- `auto_round=0.14.0` (git main branch) ✓
+- `import auto_round` succeeds ✓
