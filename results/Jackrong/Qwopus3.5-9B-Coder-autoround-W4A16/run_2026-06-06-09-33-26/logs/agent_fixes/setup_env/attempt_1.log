@@ -1,0 +1,11 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+**FIX_PLAN:**
+1. Upgrade `transformers` to a version compatible with torch 2.6.0 (handles `float8_e8m0fnu` gracefully)
+2. Reinstall `auto-round` from main branch to ensure compatibility
+3. Re-run setup_env phase
+**This reinstalled torch to 2.12.0 — breaking CUDA!** Let me restore the correct torch version:
+The issue is transformers 5.10.2 uses `torch.float8_e8m0fnu` which only exists in torch 2.7+. I need an older transformers compatible with torch 2.6.0:
+**Fix applied:**
+- Downgraded `transformers` 5.10.2 → 4.57.6 (compatible with torch 2.6.0, which lacks `float8_e8m0fnu`)
+- `auto_round` 0.14.0 from main branch working
+- `torch` 2.6.0+cu124 with CUDA preserved
