@@ -322,7 +322,7 @@ def write_back_status(repo_dir: Path, request_filename: str, new_status: str,
             print(f"[github-upload] WARNING: failed to write-back status for {match_path}: {exc}")
 
 
-def detect_artifact_name(model_id: str, scheme: str, quant_summary: dict | None) -> str:
+def detect_artifact_name(model_id: str, scheme: str, quant_summary: dict | None, method: str = "") -> str:
     if quant_summary:
         hf_repo = quant_summary.get("hf_repo")
         if isinstance(hf_repo, str) and hf_repo.strip():
@@ -331,7 +331,10 @@ def detect_artifact_name(model_id: str, scheme: str, quant_summary: dict | None)
     model_short = model_id.split("/", 1)[-1] if "/" in model_id else model_id
     if looks_like_quantized_artifact(model_short):
         return sanitize_name(model_short)
-    return sanitize_name(f"{model_short}-autoround-{scheme}")
+    # Build name matching HF_REPO_NAME format: {model}-AutoRound-{SCHEME}-{METHOD_SUFFIX}
+    method_upper = (method or "RTN").strip().upper()
+    method_suffix = "Tuning" if method_upper == "TUNING" else "RTN"
+    return sanitize_name(f"{model_short}-AutoRound-{scheme}-{method_suffix}")
 
 
 def resolve_repo_dir(repo_dir_arg: str, clone_dir_arg: str, repo_url: str, token: str | None) -> Path:
@@ -369,6 +372,7 @@ def main() -> int:
     parser.add_argument("model_id", help="Original model id, e.g. Qwen/Qwen3-0.6B")
     parser.add_argument("--pipeline", default="", help="Pipeline label: auto_quant or auto_eval")
     parser.add_argument("--scheme", default="W4A16", help="Quantization scheme label")
+    parser.add_argument("--method", default=os.environ.get("METHOD", "RTN"), help="Quantization method: RTN or TUNING")
     parser.add_argument("--quant-num-gpus", default="", help="Quantization GPU count")
     parser.add_argument("--eval-num-gpus", default="", help="Evaluation GPU count")
     parser.add_argument(
@@ -462,7 +466,7 @@ def main() -> int:
     quant_summary = load_json(quant_summary_path) or load_json(summary_path)
     accuracy = load_json(accuracy_path)
 
-    artifact_name = detect_artifact_name(args.model_id, args.scheme, quant_summary)
+    artifact_name = detect_artifact_name(args.model_id, args.scheme, quant_summary, args.method)
     org = args.model_id.split("/", 1)[0] if "/" in args.model_id else "unknown"
     timestamp = file_timestamp()
 

@@ -342,6 +342,7 @@ if [[ "$SKIP_UPLOAD" != "true" ]]; then
         "${RUN_OUTPUT_DIR}" \
         "${MODEL_ID}" \
         --scheme "${SCHEME}" \
+        --method "${METHOD}" \
         --model-output-dir "${QUANTIZED_MODEL_DIR}" \
         --repo-dir "${LB_EVAL_REPO_DIR}" \
         --git-repo "${GIT_REPO:-}" \
