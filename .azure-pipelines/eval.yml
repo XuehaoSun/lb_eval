@@ -103,11 +103,13 @@ stages:
 # ====================================================================
   - stage: Eval
     displayName: Evaluation
-    pool: "$(POOL_NAME)"
     dependsOn: [Start_Pod]
     jobs:
       - job: Eval
         timeoutInMinutes: 2880
+        pool:
+          name: "$(POOL_NAME)"
+          demands: Agent.Name -equals lb-agent-$(Build.BuildId)
         steps:
           - checkout: self
             clean: true
