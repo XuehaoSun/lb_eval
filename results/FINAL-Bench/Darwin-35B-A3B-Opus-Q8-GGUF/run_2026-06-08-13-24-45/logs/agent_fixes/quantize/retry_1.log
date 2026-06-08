@@ -1,0 +1,53 @@
+=== Phase 2: Quantization ===
+  model=FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF
+  scheme=W4A16
+  iters=200
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Darwin-35B-A3B-Opus-Q8-GGUF-AutoRound-W4A16-Tuning/quantized_model
+13:24:33 [INFO] Model: FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF
+13:24:33 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+13:24:33 [INFO] Iters: 200 (TUNING)
+13:24:33 [INFO] Export format: auto_round
+13:24:33 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Darwin-35B-A3B-Opus-Q8-GGUF-AutoRound-W4A16-Tuning/quantized_model
+13:24:33 [INFO] Device map: auto
+13:24:33 [INFO] Loading tokenizer...
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/da3e607ab5f201058197d7e29b57785950c9e8c0/config.json "HTTP/1.1 200 OK"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/tokenizer_config.json "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/tokenizer_config.json "HTTP/1.1 404 Not Found"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+13:24:33 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+13:24:33 [INFO] HTTP Request: GET https://huggingface.co/api/models/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] HTTP Request: GET https://huggingface.co/api/models/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/tokenizer.json "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/tokenizer_config.json "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] Loading model...
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/da3e607ab5f201058197d7e29b57785950c9e8c0/config.json "HTTP/1.1 200 OK"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+13:24:33 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/model.safetensors.index.json "HTTP/1.1 404 Not Found"
+13:24:34 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/pytorch_model.bin "HTTP/1.1 404 Not Found"
+13:24:34 [INFO] HTTP Request: HEAD https://huggingface.co/FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF/resolve/main/pytorch_model.bin.index.json "HTTP/1.1 404 Not Found"
+13:24:34 [ERROR] Quantization failed: FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF does not appear to have a file named pytorch_model.bin or model.safetensors.
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 137, in quantize
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 140, in patched
+    return underlying_func(klass, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 404, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4216, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 747, in _get_resolved_checkpoint_files
+    raise OSError(
+OSError: FINAL-Bench/Darwin-35B-A3B-Opus-Q8-GGUF does not appear to have a file named pytorch_model.bin or model.safetensors.
