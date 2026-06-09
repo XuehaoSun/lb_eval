@@ -1,0 +1,306 @@
+=== Phase 2: Quantization ===
+  model=allenai/Olmo-3.1-32B-Instruct-SFT
+  scheme=W4A16
+  iters=200
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Olmo-3.1-32B-Instruct-SFT-AutoRound-W4A16-Tuning/quantized_model
+07:47:45 [INFO] Model: allenai/Olmo-3.1-32B-Instruct-SFT
+07:47:45 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:47:45 [INFO] Iters: 200 (TUNING)
+07:47:45 [INFO] Export format: auto_round
+07:47:45 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Olmo-3.1-32B-Instruct-SFT-AutoRound-W4A16-Tuning/quantized_model
+07:47:45 [INFO] Device map: auto
+07:47:45 [INFO] Loading tokenizer...
+07:47:45 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:47:45 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:47:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:47:46 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:47:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/tokenizer_config.json "HTTP/1.1 200 OK"
+07:47:46 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/tokenizer_config.json "HTTP/1.1 200 OK"
+07:47:46 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:47:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/tokenizer_config.json "HTTP/1.1 200 OK"
+07:47:46 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:47:46 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:47:46 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+07:47:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/tokenizer.json "HTTP/1.1 200 OK"
+07:47:47 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/tokenizer.json "HTTP/1.1 200 OK"
+07:47:47 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+07:47:47 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+07:47:48 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+07:47:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/special_tokens_map.json "HTTP/1.1 200 OK"
+07:47:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/special_tokens_map.json "HTTP/1.1 200 OK"
+07:47:48 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+07:47:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/chat_template.jinja "HTTP/1.1 200 OK"
+07:47:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/chat_template.jinja "HTTP/1.1 200 OK"
+07:47:49 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT "HTTP/1.1 200 OK"
+07:47:49 [INFO] Loading model...
+07:47:49 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:47:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:47:49 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+07:47:49 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+07:47:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:47:49 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:47:49 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/revision/main "HTTP/1.1 200 OK"
+07:47:49 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00001-of-00029.safetensors "HTTP/1.1 302 Found"
+07:47:50 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00008-of-00029.safetensors "HTTP/1.1 302 Found"
+07:47:50 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00004-of-00029.safetensors "HTTP/1.1 302 Found"
+07:47:50 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00002-of-00029.safetensors "HTTP/1.1 302 Found"
+07:47:50 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00005-of-00029.safetensors "HTTP/1.1 302 Found"
+07:47:50 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00003-of-00029.safetensors "HTTP/1.1 302 Found"
+07:47:50 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00007-of-00029.safetensors "HTTP/1.1 302 Found"
+07:47:50 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00006-of-00029.safetensors "HTTP/1.1 302 Found"
+07:47:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/xet-read-token/152782ecc41a86c5cbe3fb6afa68bd90934de48a "HTTP/1.1 200 OK"
+07:47:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/xet-read-token/152782ecc41a86c5cbe3fb6afa68bd90934de48a "HTTP/1.1 200 OK"
+07:47:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/xet-read-token/152782ecc41a86c5cbe3fb6afa68bd90934de48a "HTTP/1.1 200 OK"
+07:47:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/xet-read-token/152782ecc41a86c5cbe3fb6afa68bd90934de48a "HTTP/1.1 200 OK"
+07:47:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/xet-read-token/152782ecc41a86c5cbe3fb6afa68bd90934de48a "HTTP/1.1 200 OK"
+07:47:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/xet-read-token/152782ecc41a86c5cbe3fb6afa68bd90934de48a "HTTP/1.1 200 OK"
+07:47:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/xet-read-token/152782ecc41a86c5cbe3fb6afa68bd90934de48a "HTTP/1.1 200 OK"
+07:47:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/xet-read-token/152782ecc41a86c5cbe3fb6afa68bd90934de48a "HTTP/1.1 200 OK"
+07:48:02 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00009-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:02 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00010-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:02 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00011-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:03 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00012-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:03 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00013-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:04 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00014-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:04 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00015-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:04 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00016-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:16 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00017-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:16 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00018-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:17 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00019-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:17 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00020-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:18 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00021-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:18 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00022-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:18 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00023-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:24 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00024-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:26 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00025-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:29 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00026-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:29 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00027-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:30 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00028-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:30 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/152782ecc41a86c5cbe3fb6afa68bd90934de48a/model-00029-of-00029.safetensors "HTTP/1.1 302 Found"
+07:48:51 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/generation_config.json "HTTP/1.1 200 OK"
+07:48:51 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/generation_config.json "HTTP/1.1 200 OK"
+07:48:51 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:48:51 [WARNING] Some parameters are on the meta device because they were offloaded to the cpu.
+07:48:51 [INFO] Architecture: Olmo3ForCausalLM (model_type=olmo3, moe=False)
+07:48:51 [INFO] Ignore layers: lm_head
+07:48:51 [INFO] Configuring AutoRound...
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a27c564-7845781e18059514668d6e06;8d21c820-e852-4142-ac6c-66a4570efd35)
+
+Entry Not Found for url: https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/model_index.json.
+[38;20m2026-06-09 07:48:52 INFO entry.py L591: Using LLM mode.[0m
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a27c564-784685760ffdea11468d0462;29192d3c-ca51-41c9-96b1-f430bc818339)
+
+Entry Not Found for url: https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/model_index.json.
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a27c564-21538b2a17f1193e36145a3e;5c0ad1ae-57dc-41d4-8c60-0de040895013)
+
+Entry Not Found for url: https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/model_index.json.
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/tokenizer_config.json "HTTP/1.1 200 OK"
+07:48:54 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/tokenizer_config.json "HTTP/1.1 200 OK"
+07:48:54 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:48:54 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:48:54 [INFO] HTTP Request: GET https://huggingface.co/api/models/allenai/Olmo-3.1-32B-Instruct-SFT "HTTP/1.1 200 OK"
+07:48:55 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+07:48:55 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:48:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/generation_config.json "HTTP/1.1 200 OK"
+07:48:55 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:49:15 [INFO] Starting quantization...
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-06-09 07:49:15 INFO utils.py L1069: Ignored layers: lm_head, lm_head[0m
+[38;20m2026-06-09 07:49:15 INFO base.py L662: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-09 07:49:15 INFO data_driven.py L662: start to cache block inputs[0m
+[38;20m2026-06-09 07:49:15 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+07:49:16 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+07:49:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+07:49:16 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+07:49:17 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+07:49:17 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+07:49:17 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+07:49:17 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+07:49:18 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+07:49:18 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:49:18 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+07:49:18 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+07:49:18 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+07:49:18 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+07:49:18 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+07:49:18 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/xet-read-token/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 84063.62 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:06<00:00, 1539.49 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:02<00:00, 3698.03 examples/s]
+Casting the dataset:   0%|          | 0/1191 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1191/1191 [00:01<00:00, 798.99 examples/s]
+07:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+07:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+07:49:32 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+07:49:33 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+07:49:33 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+07:49:33 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+07:49:33 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+07:49:33 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:49:34 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-06-09 07:49:35 INFO data_driven.py L685: caching done[0m
+  0%|          | 0/64 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/64 [00:00<?, ?it/s]/root/.venv/lib/python3.12/site-packages/torch/autograd/graph.py:882: UserWarning: Flash Attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:124.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[38;20mquantized 7/7 layers in the block, loss iter 0: 0.000008 -> iter 175: 0.000002[0m
+[38;20m2026-06-09 07:50:44 INFO device.py L1840: 'peak_ram': 70.32GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.1:   2%|▏         | 1/64 [01:09<1:12:28, 69.03s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000042 -> iter 182: 0.000014[0m
+[38;20m2026-06-09 07:51:47 INFO device.py L1840: 'peak_ram': 70.32GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.1:   3%|▎         | 2/64 [02:11<1:08:10, 65.98s/it]Quantizing model.layers.2:   3%|▎         | 2/64 [02:11<1:08:10, 65.98s/it]Quantizing model.layers.2:   3%|▎         | 2/64 [02:28<1:08:10, 65.98s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000060 -> iter 182: 0.000026[0m
+[38;20m2026-06-09 07:52:49 INFO device.py L1840: 'peak_ram': 70.32GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.3:   5%|▍         | 3/64 [03:14<1:07:04, 65.98s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000085 -> iter 165: 0.000036[0m
+[38;20m2026-06-09 07:53:53 INFO device.py L1840: 'peak_ram': 70.32GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.3:   6%|▋         | 4/64 [04:17<1:04:12, 64.21s/it]Quantizing model.layers.4:   6%|▋         | 4/64 [04:17<1:04:12, 64.21s/it]Quantizing model.layers.4:   6%|▋         | 4/64 [04:28<1:04:12, 64.21s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000106 -> iter 116: 0.000052[0m
+[38;20m2026-06-09 07:54:59 INFO device.py L1840: 'peak_ram': 70.32GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.5:   8%|▊         | 5/64 [05:23<1:03:08, 64.21s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000195 -> iter 170: 0.000083[0m
+[38;20m2026-06-09 07:56:03 INFO device.py L1840: 'peak_ram': 70.32GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.5:   9%|▉         | 6/64 [06:28<1:02:29, 64.65s/it]Quantizing model.layers.6:   9%|▉         | 6/64 [06:28<1:02:29, 64.65s/it]Quantizing model.layers.6:   9%|▉         | 6/64 [06:38<1:02:29, 64.65s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000229 -> iter 190: 0.000094[0m
+[38;20m2026-06-09 07:57:09 INFO device.py L1840: 'peak_ram': 70.34GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.7:  11%|█         | 7/64 [07:34<1:01:25, 64.65s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000239 -> iter 181: 0.000125[0m
+[38;20m2026-06-09 07:58:12 INFO device.py L1840: 'peak_ram': 70.34GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.7:  12%|█▎        | 8/64 [08:36<1:00:13, 64.52s/it]Quantizing model.layers.8:  12%|█▎        | 8/64 [08:36<1:00:13, 64.52s/it]Quantizing model.layers.8:  12%|█▎        | 8/64 [08:48<1:00:13, 64.52s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000301 -> iter 154: 0.000168[0m
+[38;20m2026-06-09 07:59:17 INFO device.py L1840: 'peak_ram': 70.37GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.9:  14%|█▍        | 9/64 [09:41<59:08, 64.52s/it]  [38;20mquantized 7/7 layers in the block, loss iter 0: 0.000394 -> iter 165: 0.000213[0m
+[38;20m2026-06-09 08:00:21 INFO device.py L1840: 'peak_ram': 70.37GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.9:  16%|█▌        | 10/64 [10:46<58:05, 64.55s/it]Quantizing model.layers.10:  16%|█▌        | 10/64 [10:46<58:05, 64.55s/it]Quantizing model.layers.10:  16%|█▌        | 10/64 [10:58<58:05, 64.55s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000467 -> iter 160: 0.000263[0m
+[38;20m2026-06-09 08:01:25 INFO device.py L1840: 'peak_ram': 70.37GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.11:  17%|█▋        | 11/64 [11:49<57:01, 64.55s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000508 -> iter 177: 0.000292[0m
+[38;20m2026-06-09 08:02:30 INFO device.py L1840: 'peak_ram': 70.38GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.11:  19%|█▉        | 12/64 [12:54<55:51, 64.45s/it]Quantizing model.layers.12:  19%|█▉        | 12/64 [12:54<55:51, 64.45s/it]Quantizing model.layers.12:  19%|█▉        | 12/64 [13:08<55:51, 64.45s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000656 -> iter 191: 0.000355[0m
+[38;20m2026-06-09 08:03:35 INFO device.py L1840: 'peak_ram': 70.4GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.13:  20%|██        | 13/64 [13:59<54:46, 64.45s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000665 -> iter 160: 0.000405[0m
+[38;20m2026-06-09 08:04:38 INFO device.py L1840: 'peak_ram': 70.4GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.13:  22%|██▏       | 14/64 [15:03<53:38, 64.37s/it]Quantizing model.layers.14:  22%|██▏       | 14/64 [15:03<53:38, 64.37s/it]Quantizing model.layers.14:  22%|██▏       | 14/64 [15:18<53:38, 64.37s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000734 -> iter 192: 0.000497[0m
+[38;20m2026-06-09 08:05:43 INFO device.py L1840: 'peak_ram': 70.43GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.15:  23%|██▎       | 15/64 [16:08<52:33, 64.37s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000854 -> iter 159: 0.000525[0m
+[38;20m2026-06-09 08:06:49 INFO device.py L1840: 'peak_ram': 70.43GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.15:  25%|██▌       | 16/64 [17:14<51:47, 64.74s/it]Quantizing model.layers.16:  25%|██▌       | 16/64 [17:14<51:47, 64.74s/it]Quantizing model.layers.16:  25%|██▌       | 16/64 [17:28<51:47, 64.74s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.001007 -> iter 192: 0.000646[0m
+[38;20m2026-06-09 08:07:53 INFO device.py L1840: 'peak_ram': 70.44GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.17:  27%|██▋       | 17/64 [18:17<50:42, 64.74s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.001114 -> iter 195: 0.000707[0m
+[38;20m2026-06-09 08:08:58 INFO device.py L1840: 'peak_ram': 70.44GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.17:  28%|██▊       | 18/64 [19:22<49:33, 64.64s/it]Quantizing model.layers.18:  28%|██▊       | 18/64 [19:22<49:33, 64.64s/it]Quantizing model.layers.18:  28%|██▊       | 18/64 [19:38<49:33, 64.64s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.001217 -> iter 195: 0.000759[0m
+[38;20m2026-06-09 08:10:02 INFO device.py L1840: 'peak_ram': 70.45GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.19:  30%|██▉       | 19/64 [20:27<48:28, 64.64s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.001204 -> iter 172: 0.000792[0m
+[38;20m2026-06-09 08:11:07 INFO device.py L1840: 'peak_ram': 70.45GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.19:  31%|███▏      | 20/64 [21:31<47:22, 64.60s/it]Quantizing model.layers.20:  31%|███▏      | 20/64 [21:31<47:22, 64.60s/it]Quantizing model.layers.20:  31%|███▏      | 20/64 [21:48<47:22, 64.60s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.001378 -> iter 199: 0.000915[0m
+[38;20m2026-06-09 08:12:13 INFO device.py L1840: 'peak_ram': 70.46GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.21:  33%|███▎      | 21/64 [22:37<46:17, 64.60s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.001705 -> iter 116: 0.001080[0m
+[38;20m2026-06-09 08:13:16 INFO device.py L1840: 'peak_ram': 70.46GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.21:  34%|███▍      | 22/64 [23:41<45:14, 64.64s/it]Quantizing model.layers.22:  34%|███▍      | 22/64 [23:41<45:14, 64.64s/it]Quantizing model.layers.22:  34%|███▍      | 22/64 [23:51<45:14, 64.64s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.001899 -> iter 189: 0.001249[0m
+[38;20m2026-06-09 08:14:21 INFO device.py L1840: 'peak_ram': 70.46GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.23:  36%|███▌      | 23/64 [24:45<44:10, 64.64s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.002025 -> iter 146: 0.001387[0m
+[38;20m2026-06-09 08:15:25 INFO device.py L1840: 'peak_ram': 70.46GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.23:  38%|███▊      | 24/64 [25:50<43:03, 64.58s/it]Quantizing model.layers.24:  38%|███▊      | 24/64 [25:50<43:03, 64.58s/it]Quantizing model.layers.24:  38%|███▊      | 24/64 [26:01<43:03, 64.58s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.002369 -> iter 160: 0.001538[0m
+[38;20m2026-06-09 08:16:29 INFO device.py L1840: 'peak_ram': 70.48GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.25:  39%|███▉      | 25/64 [26:54<41:58, 64.58s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.002734 -> iter 172: 0.001831[0m
+[38;20m2026-06-09 08:17:35 INFO device.py L1840: 'peak_ram': 70.48GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.25:  41%|████      | 26/64 [27:59<40:54, 64.60s/it]Quantizing model.layers.26:  41%|████      | 26/64 [27:59<40:54, 64.60s/it]Quantizing model.layers.26:  41%|████      | 26/64 [28:10<40:54, 64.60s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.003046 -> iter 128: 0.002205[0m
+[38;20m2026-06-09 08:18:37 INFO device.py L1840: 'peak_ram': 70.49GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.27:  42%|████▏     | 27/64 [29:01<39:50, 64.60s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.003815 -> iter 199: 0.002463[0m
+[38;20m2026-06-09 08:19:40 INFO device.py L1840: 'peak_ram': 70.51GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.27:  44%|████▍     | 28/64 [30:05<38:25, 64.04s/it]Quantizing model.layers.28:  44%|████▍     | 28/64 [30:05<38:25, 64.04s/it]Quantizing model.layers.28:  44%|████▍     | 28/64 [30:19<38:25, 64.04s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.003772 -> iter 191: 0.002801[0m
+[38;20m2026-06-09 08:20:43 INFO device.py L1840: 'peak_ram': 70.51GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.29:  45%|████▌     | 29/64 [31:07<37:21, 64.04s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.004169 -> iter 182: 0.003003[0m
+[38;20m2026-06-09 08:21:49 INFO device.py L1840: 'peak_ram': 70.51GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.29:  47%|████▋     | 30/64 [32:13<36:19, 64.11s/it]Quantizing model.layers.30:  47%|████▋     | 30/64 [32:13<36:19, 64.11s/it]Quantizing model.layers.30:  47%|████▋     | 30/64 [32:29<36:19, 64.11s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.004042 -> iter 164: 0.003424[0m
+[38;20m2026-06-09 08:22:50 INFO device.py L1840: 'peak_ram': 70.54GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.31:  48%|████▊     | 31/64 [33:14<35:15, 64.11s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.004438 -> iter 170: 0.003588[0m
+[38;20m2026-06-09 08:23:53 INFO device.py L1840: 'peak_ram': 70.54GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.31:  50%|█████     | 32/64 [34:17<33:50, 63.46s/it]Quantizing model.layers.32:  50%|█████     | 32/64 [34:17<33:50, 63.46s/it]Quantizing model.layers.32:  50%|█████     | 32/64 [34:29<33:50, 63.46s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.004538 -> iter 102: 0.003787[0m
+[38;20m2026-06-09 08:24:54 INFO device.py L1840: 'peak_ram': 70.54GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.33:  52%|█████▏    | 33/64 [35:18<32:47, 63.46s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.005106 -> iter 181: 0.004061[0m
+[38;20m2026-06-09 08:25:58 INFO device.py L1840: 'peak_ram': 70.54GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.33:  53%|█████▎    | 34/64 [36:22<31:36, 63.21s/it]Quantizing model.layers.34:  53%|█████▎    | 34/64 [36:22<31:36, 63.21s/it]Quantizing model.layers.34:  53%|█████▎    | 34/64 [36:39<31:36, 63.21s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.005468 -> iter 179: 0.003950[0m
+[38;20m2026-06-09 08:27:03 INFO device.py L1840: 'peak_ram': 70.56GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.35:  55%|█████▍    | 35/64 [37:27<30:33, 63.21s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.005576 -> iter 199: 0.004116[0m
+[38;20m2026-06-09 08:28:06 INFO device.py L1840: 'peak_ram': 70.56GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.35:  56%|█████▋    | 36/64 [38:30<29:36, 63.43s/it]Quantizing model.layers.36:  56%|█████▋    | 36/64 [38:30<29:36, 63.43s/it]Quantizing model.layers.36:  56%|█████▋    | 36/64 [38:41<29:36, 63.43s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.005644 -> iter 191: 0.004374[0m
+[38;20m2026-06-09 08:29:09 INFO device.py L1840: 'peak_ram': 70.56GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.37:  58%|█████▊    | 37/64 [39:33<28:32, 63.43s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.005980 -> iter 154: 0.004178[0m
+[38;20m2026-06-09 08:30:12 INFO device.py L1840: 'peak_ram': 70.56GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.37:  59%|█████▉    | 38/64 [40:36<27:26, 63.32s/it]Quantizing model.layers.38:  59%|█████▉    | 38/64 [40:36<27:26, 63.32s/it]Quantizing model.layers.38:  59%|█████▉    | 38/64 [40:49<27:26, 63.32s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.006584 -> iter 180: 0.004878[0m
+[38;20m2026-06-09 08:31:14 INFO device.py L1840: 'peak_ram': 70.59GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.39:  61%|██████    | 39/64 [41:38<26:22, 63.32s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.006793 -> iter 191: 0.004946[0m
+[38;20m2026-06-09 08:32:18 INFO device.py L1840: 'peak_ram': 70.59GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.39:  62%|██████▎   | 40/64 [42:42<25:16, 63.19s/it]Quantizing model.layers.40:  62%|██████▎   | 40/64 [42:42<25:16, 63.19s/it]Quantizing model.layers.40:  62%|██████▎   | 40/64 [42:59<25:16, 63.19s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.006254 -> iter 128: 0.005253[0m
+[38;20m2026-06-09 08:33:22 INFO device.py L1840: 'peak_ram': 70.61GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.41:  64%|██████▍   | 41/64 [43:47<24:13, 63.19s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.007168 -> iter 148: 0.005450[0m
+[38;20m2026-06-09 08:34:26 INFO device.py L1840: 'peak_ram': 70.61GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.41:  66%|██████▌   | 42/64 [44:51<23:17, 63.52s/it]Quantizing model.layers.42:  66%|██████▌   | 42/64 [44:51<23:17, 63.52s/it]Quantizing model.layers.42:  66%|██████▌   | 42/64 [45:01<23:17, 63.52s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.007107 -> iter 112: 0.005596[0m
+[38;20m2026-06-09 08:35:29 INFO device.py L1840: 'peak_ram': 70.62GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.43:  67%|██████▋   | 43/64 [45:54<22:13, 63.52s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.008270 -> iter 103: 0.005804[0m
+[38;20m2026-06-09 08:36:31 INFO device.py L1840: 'peak_ram': 70.62GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.43:  69%|██████▉   | 44/64 [46:55<21:02, 63.15s/it]Quantizing model.layers.44:  69%|██████▉   | 44/64 [46:55<21:02, 63.15s/it]Quantizing model.layers.44:  69%|██████▉   | 44/64 [47:09<21:02, 63.15s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.007744 -> iter 163: 0.006236[0m
+[38;20m2026-06-09 08:37:33 INFO device.py L1840: 'peak_ram': 70.62GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.45:  70%|███████   | 45/64 [47:57<19:59, 63.15s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.008126 -> iter 95: 0.006416[0m
+[38;20m2026-06-09 08:38:37 INFO device.py L1840: 'peak_ram': 70.62GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.45:  72%|███████▏  | 46/64 [49:01<18:55, 63.08s/it]Quantizing model.layers.46:  72%|███████▏  | 46/64 [49:01<18:55, 63.08s/it]Quantizing model.layers.46:  72%|███████▏  | 46/64 [49:11<18:55, 63.08s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.008719 -> iter 138: 0.006437[0m
+[38;20m2026-06-09 08:39:39 INFO device.py L1840: 'peak_ram': 70.64GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.47:  73%|███████▎  | 47/64 [50:03<17:52, 63.08s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.008561 -> iter 127: 0.006839[0m
+[38;20m2026-06-09 08:40:41 INFO device.py L1840: 'peak_ram': 70.64GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.47:  75%|███████▌  | 48/64 [51:06<16:45, 62.84s/it]Quantizing model.layers.48:  75%|███████▌  | 48/64 [51:06<16:45, 62.84s/it]Quantizing model.layers.48:  75%|███████▌  | 48/64 [51:19<16:45, 62.84s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.008950 -> iter 163: 0.007032[0m
+[38;20m2026-06-09 08:41:44 INFO device.py L1840: 'peak_ram': 70.67GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.49:  77%|███████▋  | 49/64 [52:08<15:42, 62.84s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.009671 -> iter 187: 0.007454[0m
+[38;20m2026-06-09 08:42:47 INFO device.py L1840: 'peak_ram': 70.67GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.49:  78%|███████▊  | 50/64 [53:11<14:38, 62.78s/it]Quantizing model.layers.50:  78%|███████▊  | 50/64 [53:11<14:38, 62.78s/it]Quantizing model.layers.50:  78%|███████▊  | 50/64 [53:21<14:38, 62.78s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.010871 -> iter 181: 0.007999[0m
+[38;20m2026-06-09 08:43:51 INFO device.py L1840: 'peak_ram': 70.67GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.51:  80%|███████▉  | 51/64 [54:16<13:36, 62.78s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.010244 -> iter 110: 0.008095[0m
+[38;20m2026-06-09 08:44:53 INFO device.py L1840: 'peak_ram': 70.67GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.51:  81%|████████▏ | 52/64 [55:17<12:34, 62.89s/it]Quantizing model.layers.52:  81%|████████▏ | 52/64 [55:17<12:34, 62.89s/it]Quantizing model.layers.52:  81%|████████▏ | 52/64 [55:29<12:34, 62.89s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.010763 -> iter 160: 0.008737[0m
+[38;20m2026-06-09 08:45:56 INFO device.py L1840: 'peak_ram': 70.67GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.53:  83%|████████▎ | 53/64 [56:20<11:31, 62.89s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.012299 -> iter 171: 0.009285[0m
+[38;20m2026-06-09 08:46:58 INFO device.py L1840: 'peak_ram': 70.71GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.53:  84%|████████▍ | 54/64 [57:23<10:28, 62.85s/it]Quantizing model.layers.54:  84%|████████▍ | 54/64 [57:23<10:28, 62.85s/it]Quantizing model.layers.54:  84%|████████▍ | 54/64 [57:39<10:28, 62.85s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.012542 -> iter 154: 0.009424[0m
+[38;20m2026-06-09 08:48:00 INFO device.py L1840: 'peak_ram': 70.72GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.55:  86%|████████▌ | 55/64 [58:24<09:25, 62.85s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.013201 -> iter 112: 0.009963[0m
+[38;20m2026-06-09 08:49:03 INFO device.py L1840: 'peak_ram': 70.72GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.55:  88%|████████▊ | 56/64 [59:27<08:21, 62.67s/it]Quantizing model.layers.56:  88%|████████▊ | 56/64 [59:27<08:21, 62.67s/it]Quantizing model.layers.56:  88%|████████▊ | 56/64 [59:39<08:21, 62.67s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.012138 -> iter 168: 0.010426[0m
+[38;20m2026-06-09 08:50:05 INFO device.py L1840: 'peak_ram': 70.72GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.57:  89%|████████▉ | 57/64 [1:00:29<07:18, 62.67s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.015849 -> iter 135: 0.011158[0m
+[38;20m2026-06-09 08:51:08 INFO device.py L1840: 'peak_ram': 70.72GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.57:  91%|█████████ | 58/64 [1:01:32<06:15, 62.63s/it]Quantizing model.layers.58:  91%|█████████ | 58/64 [1:01:32<06:15, 62.63s/it]Quantizing model.layers.58:  91%|█████████ | 58/64 [1:01:49<06:15, 62.63s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.015375 -> iter 176: 0.011229[0m
+[38;20m2026-06-09 08:52:10 INFO device.py L1840: 'peak_ram': 70.73GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.59:  92%|█████████▏| 59/64 [1:02:34<05:13, 62.63s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.015792 -> iter 136: 0.011370[0m
+[38;20m2026-06-09 08:53:13 INFO device.py L1840: 'peak_ram': 70.73GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.59:  94%|█████████▍| 60/64 [1:03:38<04:10, 62.64s/it]Quantizing model.layers.60:  94%|█████████▍| 60/64 [1:03:38<04:10, 62.64s/it]Quantizing model.layers.60:  94%|█████████▍| 60/64 [1:03:49<04:10, 62.64s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.017685 -> iter 180: 0.012866[0m
+[38;20m2026-06-09 08:54:17 INFO device.py L1840: 'peak_ram': 70.74GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.61:  95%|█████████▌| 61/64 [1:04:42<03:07, 62.64s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.018884 -> iter 100: 0.013970[0m
+[38;20m2026-06-09 08:55:22 INFO device.py L1840: 'peak_ram': 70.74GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.61:  97%|█████████▋| 62/64 [1:05:46<02:06, 63.17s/it]Quantizing model.layers.62:  97%|█████████▋| 62/64 [1:05:46<02:06, 63.17s/it]Quantizing model.layers.62:  97%|█████████▋| 62/64 [1:05:59<02:06, 63.17s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.019984 -> iter 196: 0.015260[0m
+[38;20m2026-06-09 08:56:25 INFO device.py L1840: 'peak_ram': 70.76GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.63:  98%|█████████▊| 63/64 [1:06:49<01:03, 63.17s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.020347 -> iter 115: 0.016059[0m
+[38;20m2026-06-09 08:57:28 INFO device.py L1840: 'peak_ram': 70.76GB, 'peak_vram': 81.84GB[0m
+Quantizing model.layers.63: 100%|██████████| 64/64 [1:07:53<00:00, 63.18s/it]Quantizing done: 100%|██████████| 64/64 [1:07:53<00:00, 63.18s/it]           Quantizing done: 100%|██████████| 64/64 [1:07:53<00:00, 63.65s/it]
+[38;20m2026-06-09 08:57:29 INFO device.py L1840: 'peak_ram': 70.76GB, 'peak_vram': 81.84GB[0m
+[38;20m2026-06-09 08:57:29 INFO data_driven.py L750: quantization tuning time 4073.8975853919983[0m
+[38;20m2026-06-09 08:57:29 INFO data_driven.py L769: Summary: quantized 448/449 in the model, unquantized layers: lm_head[0m
+08:57:29 [INFO] Quantization completed in 4094.1s
+08:57:29 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-09 08:57:29 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+packing:   0%|          | 0/449 [00:00<?, ?it/s]packing: 100%|██████████| 449/449 [00:36<00:00, 12.41it/s]
+[33;1m2026-06-09 08:58:05 WARNING export.py L344: /root/_work/1/s/auto_quant/output/runs/Olmo-3.1-32B-Instruct-SFT-AutoRound-W4A16-Tuning/quantized_model already exists, this may cause model conflict[0m
+08:58:16 [INFO] HTTP Request: HEAD https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:58:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/allenai/Olmo-3.1-32B-Instruct-SFT/152782ecc41a86c5cbe3fb6afa68bd90934de48a/config.json "HTTP/1.1 200 OK"
+08:58:16 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/Olmo-3.1-32B-Instruct-SFT-AutoRound-W4A16-Tuning/quant_summary.json
+08:58:16 [INFO] === Phase 2: DONE ===
