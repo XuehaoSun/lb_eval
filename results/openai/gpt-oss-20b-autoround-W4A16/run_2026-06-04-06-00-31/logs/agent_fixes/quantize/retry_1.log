@@ -1,147 +1,0 @@
-=== Phase 2: Quantization ===
-  model=openai/gpt-oss-20b
-  scheme=W4A16
-  iters=0
-  export_format=auto_round
-  output_dir=/root/_work/1/s/auto_quant/output/runs/gpt-oss-20b-AutoRound-W4A16-RTN/quantized_model
-05:55:13 [INFO] Model: openai/gpt-oss-20b
-05:55:13 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
-05:55:13 [INFO] Iters: 0 (RTN)
-05:55:13 [INFO] Export format: auto_round
-05:55:13 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gpt-oss-20b-AutoRound-W4A16-RTN/quantized_model
-05:55:13 [INFO] Device map: auto
-05:55:13 [INFO] Loading tokenizer...
-05:55:13 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-05:55:13 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-05:55:13 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-05:55:13 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
-05:55:13 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/tokenizer_config.json "HTTP/1.1 200 OK"
-05:55:14 [INFO] HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-20b/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
-05:55:14 [INFO] HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-20b/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
-05:55:15 [INFO] HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-20b "HTTP/1.1 200 OK"
-05:55:15 [INFO] Loading model...
-05:55:15 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:55:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-[transformers] MXFP4 quantization requires the `kernels` package: `pip install kernels>=0.12.0`. We will default to dequantizing the model to bf16.
-05:56:14 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/generation_config.json "HTTP/1.1 200 OK"
-05:56:14 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
-05:56:14 [WARNING] Some parameters are on the meta device because they were offloaded to the cpu.
-05:56:14 [INFO] Architecture: GptOssForCausalLM (model_type=gpt_oss, moe=True)
-05:56:14 [INFO] Ignore layers: lm_head
-05:56:14 [INFO] Configuring AutoRound...
-[38;20m2026-06-04 05:56:14 INFO entry.py L447: Auto-routing to model-free quantization (iters=0, disable_opt_rtn=True, supported scheme). Pass disable_model_free=True to use the regular flow.[0m
-05:56:14 [INFO] Starting quantization...
-[38;20m2026-06-04 05:56:14 INFO model_free.py L1539: Format '<built-in function format>' is not supported by model-free mode; falling back to the regular AutoRound flow.[0m
-[38;20m2026-06-04 05:56:14 INFO model_free.py L1543: fallbacked_init_kwargs: {'enable_adam': False, 'enable_alg_ext': False, 'disable_opt_rtn': True, 'model': 'openai/gpt-oss-20b', 'iters': 0, 'tokenizer': TokenizersBackend(name_or_path='openai/gpt-oss-20b', vocab_size=199998, model_max_length=1000000000000000019884624838656, padding_side='right', truncation_side='right', special_tokens={'bos_token': '<|startoftext|>', 'eos_token': '<|return|>', 'pad_token': '<|endoftext|>'}, added_tokens_decoder={
-	199998: AddedToken("<|startoftext|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	199999: AddedToken("<|endoftext|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200000: AddedToken("<|reserved_200000|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200001: AddedToken("<|reserved_200001|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200002: AddedToken("<|return|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200003: AddedToken("<|constrain|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200004: AddedToken("<|reserved_200004|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200005: AddedToken("<|channel|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200006: AddedToken("<|start|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200007: AddedToken("<|end|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200008: AddedToken("<|message|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200009: AddedToken("<|reserved_200009|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200010: AddedToken("<|reserved_200010|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200011: AddedToken("<|reserved_200011|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200012: AddedToken("<|call|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200013: AddedToken("<|reserved_200013|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200014: AddedToken("<|reserved_200014|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200015: AddedToken("<|reserved_200015|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200016: AddedToken("<|reserved_200016|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200017: AddedToken("<|reserved_200017|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-	200018: AddedToken("<|endofprompt|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
-}), 'scheme': 'W4A16', 'layer_config': None, 'ignore_layers': 'lm_head', 'device_map': 'auto', 'quant_lm_head': False}[0m
-05:56:14 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
-404 Client Error. (Request ID: Root=1-6a21137f-7fbd568f758ceca43d7760b3;0eef2317-cd77-47b8-945e-3fbea35f6bae)
-
-Entry Not Found for url: https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json.
-[38;20m2026-06-04 05:56:15 INFO entry.py L591: Using LLM mode.[0m
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
-404 Client Error. (Request ID: Root=1-6a21137f-3e48f95a58518df645a02b5c;5a8a3174-11f9-4c35-8f64-5e8695df2e69)
-
-Entry Not Found for url: https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json.
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-05:56:15 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
-404 Client Error. (Request ID: Root=1-6a21137f-06310053013ca9a2539ac500;04d81672-c487-4b9c-9f94-835726f33512)
-
-Entry Not Found for url: https://huggingface.co/openai/gpt-oss-20b/resolve/main/model_index.json.
-05:56:16 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-05:56:17 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-[38;20m2026-06-04 05:56:17 INFO model.py L371: Detected MXFP4 quantized model, using Mxfp4Config(dequantized=True) for loading.[0m
-05:56:18 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:18 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-05:56:18 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:18 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/tokenizer_config.json "HTTP/1.1 200 OK"
-05:56:18 [INFO] HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-20b/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
-05:56:18 [INFO] HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-20b/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
-05:56:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/openai/gpt-oss-20b "HTTP/1.1 200 OK"
-05:56:20 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-05:56:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/config.json "HTTP/1.1 200 OK"
-05:58:22 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
-05:58:22 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/gpt-oss-20b/6cee5e81ee83917806bbde320786a8fb61efebee/generation_config.json "HTTP/1.1 200 OK"
-05:58:23 [INFO] HTTP Request: HEAD https://huggingface.co/openai/gpt-oss-20b/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
-[38;20m2026-06-04 05:58:23 INFO replace_modules.py L120: Experts (before replacement) [model.layers.0.mlp.experts] (GptOssExperts):
-GptOssExperts()[0m
-[38;20m2026-06-04 05:58:23 INFO device.py L1871: [Memory Monitor] Before applying custom replacements: 'peak_ram': 38.72GB[0m
-[38;20m2026-06-04 05:58:23 INFO replace_modules.py L360: Found 24 modules to replace[0m
-Replacing modules:   0%|          | 0/24 [00:00<?, ?it/s][transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Replacing modules: 100%|██████████| 24/24 [00:00<00:00, 428.95it/s]
-[38;20m2026-06-04 05:58:23 INFO replace_modules.py L387: Replaced 24 modules[0m
-[38;20m2026-06-04 05:58:23 INFO device.py L1874: [Memory Monitor] After applying custom replacements: 'peak_ram': 38.73GB[0m
-[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
-[38;20m2026-06-04 05:58:23 INFO replace_modules.py L120: Experts (after replacement) [model.layers.0.mlp.experts] (ModuleList):
-ModuleList(
-  (0-31): 32 x GPTOssSingleExpert(
-    (gate_proj): Linear(in_features=2880, out_features=2880, bias=True)
-    (up_proj): Linear(in_features=2880, out_features=2880, bias=True)
-    (down_proj): Linear(in_features=2880, out_features=2880, bias=True)
-  )
-)[0m
-[38;20m2026-06-04 05:58:23 INFO utils.py L1069: Ignored layers: lm_head, lm_head[0m
-  0%|          | 0/24 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/24 [00:00<?, ?it/s][38;20m2026-06-04 05:58:25 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_bdubsx0v[0m
-[38;20m2026-06-04 05:58:27 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.1:   4%|▍         | 1/24 [00:03<01:21,  3.54s/it][38;20m2026-06-04 05:58:30 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.2:   8%|▊         | 2/24 [00:06<01:14,  3.38s/it][38;20m2026-06-04 05:58:33 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.3:  12%|█▎        | 3/24 [00:09<01:09,  3.29s/it][38;20m2026-06-04 05:58:37 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.4:  17%|█▋        | 4/24 [00:13<01:07,  3.35s/it][38;20m2026-06-04 05:58:41 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.5:  21%|██        | 5/24 [00:17<01:04,  3.42s/it][38;20m2026-06-04 05:58:44 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.6:  25%|██▌       | 6/24 [00:20<01:01,  3.40s/it][38;20m2026-06-04 05:58:47 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.7:  29%|██▉       | 7/24 [00:23<00:58,  3.41s/it][38;20m2026-06-04 05:58:51 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.8:  33%|███▎      | 8/24 [00:27<00:54,  3.41s/it][38;20m2026-06-04 05:58:54 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.9:  38%|███▊      | 9/24 [00:30<00:50,  3.40s/it][38;20m2026-06-04 05:58:58 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.10:  42%|████▏     | 10/24 [00:34<00:47,  3.41s/it][38;20m2026-06-04 05:59:01 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.11:  46%|████▌     | 11/24 [00:37<00:44,  3.41s/it][38;20m2026-06-04 05:59:05 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.12:  50%|█████     | 12/24 [00:40<00:40,  3.41s/it][38;20m2026-06-04 05:59:08 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.13:  54%|█████▍    | 13/24 [00:44<00:37,  3.39s/it][38;20m2026-06-04 05:59:11 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.14:  58%|█████▊    | 14/24 [00:47<00:33,  3.39s/it][38;20m2026-06-04 05:59:15 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.15:  62%|██████▎   | 15/24 [00:50<00:30,  3.40s/it][38;20m2026-06-04 05:59:18 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.16:  67%|██████▋   | 16/24 [00:54<00:27,  3.39s/it][38;20m2026-06-04 05:59:21 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.17:  71%|███████   | 17/24 [00:57<00:23,  3.39s/it][38;20m2026-06-04 05:59:25 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.18:  75%|███████▌  | 18/24 [01:00<00:20,  3.38s/it][38;20m2026-06-04 05:59:28 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.19:  79%|███████▉  | 19/24 [01:04<00:16,  3.38s/it][38;20m2026-06-04 05:59:31 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.20:  83%|████████▎ | 20/24 [01:07<00:13,  3.39s/it][38;20m2026-06-04 05:59:35 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.21:  88%|████████▊ | 21/24 [01:11<00:10,  3.39s/it][38;20m2026-06-04 05:59:38 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.22:  92%|█████████▏| 22/24 [01:14<00:06,  3.38s/it][38;20m2026-06-04 05:59:41 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.23:  96%|█████████▌| 23/24 [01:17<00:03,  3.38s/it][38;20m2026-06-04 05:59:45 INFO device.py L1840: 'peak_ram': 38.99GB, 'peak_vram': 1.83GB[0m
-Quantizing model.layers.23: 100%|██████████| 24/24 [01:39<00:00,  4.13s/it]
-06:00:03 [INFO] Quantization completed in 228.4s
-06:00:03 [INFO] Saving quantized model (auto_round format)...
-[33;1m2026-06-04 06:00:03 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
-packing:   0%|          | 0/2401 [00:00<?, ?it/s]packing: 100%|██████████| 2401/2401 [00:12<00:00, 187.16it/s]
-[33;1m2026-06-04 06:00:16 WARNING export.py L344: /root/_work/1/s/auto_quant/output/runs/gpt-oss-20b-AutoRound-W4A16-RTN/quantized_model already exists, this may cause model conflict[0m
-/root/_work/1/s/auto_quant/phases/quantize_wrapper.sh: line 30:  1369 Killed                  python3 "${SCRIPT_DIR}/quantize.py" --model "${MODEL_ID}" --scheme "${SCHEME}" --iters "${ITERS}" --export_format "${EXPORT_FORMAT}" --output_dir "${QUANTIZED_MODEL_DIR}" --device_map "${DEVICE_MAP}" --num_gpus "${NUM_GPUS:-1}"
