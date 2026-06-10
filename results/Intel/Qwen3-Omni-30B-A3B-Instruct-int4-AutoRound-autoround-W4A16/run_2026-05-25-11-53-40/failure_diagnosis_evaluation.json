@@ -1,8 +1,0 @@
-{
-  "failure_category": "library_incompatible",
-  "root_cause": "transformers 5.10.0.dev0 has IndentationError in distributed/utils.py (line 43), and Qwen3-Omni MoE architecture is too slow for practical evaluation with HF backend",
-  "key_error": "IndentationError: expected an indented block after 'try' statement on line 43 in /root/.openclaw/workspace/quantized/runs/Intel_Qwen3-Omni-30B-A3B-Instruct-int4-AutoRound-W4A16-RTN/venv/lib/python3.12/site-packages/transformers/distributed/utils.py, line 44: from torch.distributed.checkpoint.hf_storage import _HuggingFaceStorageWriter as HuggingFaceStorageWriter",
-  "retryable": false,
-  "suggested_fix": "Fix requires: 1) Use stable transformers version (e.g., 4.52.0) instead of 5.10.0.dev0 which has broken distributed/utils.py; 2) Even with fixed transformers, Qwen3-Omni MoE model is too slow (~4s/sample) for practical evaluation - would need GPU cluster or much longer timeout; 3) Alternatively use vLLM backend but auto-round quantization is not supported by vLLM",
-  "confidence": 0.9
-}
