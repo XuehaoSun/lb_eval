@@ -1,0 +1,210 @@
+# Session: fix_quantize_359_1781051835
+
+- **Session ID:** `fix_quantize_359_1781051835`
+- **Timestamp:** 2026-06-10 00:37:18 UTC
+- **Working Dir:** `/root/.openclaw/workspace`
+
+## Step 1: Quantization
+
+### [2026-06-10 00:37:18 UTC] USER
+
+You are fixing a failed "quantize" phase in the quantization pipeline.
+
+## Error Output (last 100 lines):
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+00:32:49 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/xet-read-token/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]
+Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 84934.34 examples/s]
+
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]
+Map: 100%|██████████| 10000/10000 [00:05<00:00, 1971.30 examples/s]
+
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]
+Filter: 100%|██████████| 10000/10000 [00:02<00:00, 4726.04 examples/s]
+
+Casting the dataset:   0%|          | 0/1229 [00:00<?, ? examples/s]
+Casting the dataset: 100%|██████████| 1229/1229 [00:01<00:00, 1047.69 examples/s]
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:32:59 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:00 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-06-10 00:33:02 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:04 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:04 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+
+  0%|          | 0/40 [00:00<?, ?it/s]
+Quantizing model.layers.0:   0%|          | 0/40 [00:00<?, ?it/s][33;1m2026-06-10 00:33:09 WARNING logging.py L340: MoE layer detected: optimized RTN is disabled for efficiency. Use `--enable_opt_rtn` to force-enable it for MoE layers.[0m
+[38;20m2026-06-10 00:33:10 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_msdz4fx_[0m
+[38;20m2026-06-10 00:33:10 INFO device.py L1840: 'peak_ram': 8.73GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.1:   2%|▎         | 1/40 [00:06<04:03,  6.24s/it][38;20m2026-06-10 00:33:16 INFO device.py L1840: 'peak_ram': 8.97GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.2:   5%|▌         | 2/40 [00:11<03:43,  5.89s/it][38;20m2026-06-10 00:33:21 INFO device.py L1840: 'peak_ram': 10.45GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.3:   8%|▊         | 3/40 [00:17<03:30,  5.70s/it][38;20m2026-06-10 00:33:26 INFO device.py L1840: 'peak_ram': 11.46GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.4:  10%|█         | 4/40 [00:22<03:18,  5.51s/it][38;20m2026-06-10 00:33:31 INFO device.py L1840: 'peak_ram': 12.88GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.5:  12%|█▎        | 5/40 [00:27<03:11,  5.47s/it][38;20m2026-06-10 00:33:37 INFO device.py L1840: 'peak_ram': 13.98GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.6:  15%|█▌        | 6/40 [00:33<03:07,  5.51s/it][38;20m2026-06-10 00:33:42 INFO device.py L1840: 'peak_ram': 15.29GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.7:  18%|█▊        | 7/40 [00:38<03:01,  5.49s/it][38;20m2026-06-10 00:33:47 INFO device.py L1840: 'peak_ram': 16.52GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.8:  20%|██        | 8/40 [00:43<02:53,  5.42s/it][38;20m2026-06-10 00:33:53 INFO device.py L1840: 'peak_ram': 17.81GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.9:  22%|██▎       | 9/40 [00:48<02:47,  5.41s/it][38;20m2026-06-10 00:33:58 INFO device.py L1840: 'peak_ram': 19.09GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.10:  25%|██▌       | 10/40 [00:54<02:43,  5.44s/it][38;20m2026-06-10 00:34:04 INFO device.py L1840: 'peak_ram': 20.41GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.11:  28%|██▊       | 11/40 [00:59<02:37,  5.43s/it][38;20m2026-06-10 00:34:09 INFO device.py L1840: 'peak_ram': 21.62GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.12:  30%|███       | 12/40 [01:04<02:31,  5.39s/it][38;20m2026-06-10 00:34:14 INFO device.py L1840: 'peak_ram': 22.92GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.13:  32%|███▎      | 13/40 [01:10<02:25,  5.39s/it][38;20m2026-06-10 00:34:20 INFO device.py L1840: 'peak_ram': 24.2GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.14:  35%|███▌      | 14/40 [01:15<02:20,  5.40s/it][38;20m2026-06-10 00:34:25 INFO device.py L1840: 'peak_ram': 25.48GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.15:  38%|███▊      | 15/40 [01:20<02:14,  5.40s/it][38;20m2026-06-10 00:34:30 INFO device.py L1840: 'peak_ram': 26.73GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.16:  40%|████      | 16/40 [01:25<02:08,  5.37s/it][38;20m2026-06-10 00:34:35 INFO device.py L1840: 'peak_ram': 28.03GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.17:  42%|████▎     | 17/40 [01:31<02:03,  5.37s/it][38;20m2026-06-10 00:34:41 INFO device.py L1840: 'peak_ram': 29.31GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.18:  45%|████▌     | 18/40 [01:36<01:58,  5.38s/it][38;20m2026-06-10 00:34:46 INFO device.py L1840: 'peak_ram': 30.59GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.19:  48%|████▊     | 19/40 [01:42<01:53,  5.38s/it][38;20m2026-06-10 00:34:51 INFO device.py L1840: 'peak_ram': 31.84GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.20:  50%|█████     | 20/40 [01:47<01:47,  5.36s/it][38;20m2026-06-10 00:34:57 INFO device.py L1840: 'peak_ram': 33.14GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.21:  52%|█████▎    | 21/40 [01:53<01:42,  5.39s/it][38;20m2026-06-10 00:35:03 INFO device.py L1840: 'peak_ram': 34.42GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.22:  55%|█████▌    | 22/40 [01:59<01:37,  5.41s/it][38;20m2026-06-10 00:35:09 INFO device.py L1840: 'peak_ram': 35.7GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.22:  57%|█████▊    | 23/40 [02:05<01:32,  5.43s/it]
+Quantizing model.layers.23:  57%|█████▊    | 23/40 [02:05<01:32,  5.43s/it][38;20m2026-06-10 00:35:15 INFO device.py L1840: 'peak_ram': 36.95GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.24:  60%|██████    | 24/40 [02:10<01:26,  5.43s/it][38;20m2026-06-10 00:35:20 INFO device.py L1840: 'peak_ram': 38.25GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:16<01:21,  5.43s/it]
+Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:18<01:21,  5.43s/it][38;20m2026-06-10 00:35:26 INFO device.py L1840: 'peak_ram': 39.53GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.26:  65%|██████▌   | 26/40 [02:22<01:16,  5.43s/it][38;20m2026-06-10 00:35:32 INFO device.py L1840: 'peak_ram': 40.81GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.27:  68%|██████▊   | 27/40 [02:28<01:10,  5.43s/it][38;20m2026-06-10 00:35:38 INFO device.py L1840: 'peak_ram': 42.07GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.28:  70%|███████   | 28/40 [02:33<01:05,  5.43s/it][38;20m2026-06-10 00:35:44 INFO device.py L1840: 'peak_ram': 43.36GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.29:  72%|███████▎  | 29/40 [02:39<00:59,  5.43s/it][38;20m2026-06-10 00:35:50 INFO device.py L1840: 'peak_ram': 44.64GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.30:  75%|███████▌  | 30/40 [02:45<00:54,  5.43s/it][38;20m2026-06-10 00:35:55 INFO device.py L1840: 'peak_ram': 45.92GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.31:  78%|███████▊  | 31/40 [02:51<00:48,  5.43s/it][38;20m2026-06-10 00:36:01 INFO device.py L1840: 'peak_ram': 47.18GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.32:  80%|████████  | 32/40 [02:56<00:43,  5.43s/it][38;20m2026-06-10 00:36:07 INFO device.py L1840: 'peak_ram': 48.47GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.33:  82%|████████▎ | 33/40 [03:02<00:38,  5.43s/it][38;20m2026-06-10 00:36:13 INFO device.py L1840: 'peak_ram': 49.75GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.34:  85%|████████▌ | 34/40 [03:08<00:32,  5.43s/it][38;20m2026-06-10 00:36:19 INFO device.py L1840: 'peak_ram': 51.03GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.35:  88%|████████▊ | 35/40 [03:14<00:27,  5.43s/it][38;20m2026-06-10 00:36:24 INFO device.py L1840: 'peak_ram': 52.29GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.36:  90%|█████████ | 36/40 [03:20<00:21,  5.43s/it][38;20m2026-06-10 00:36:31 INFO device.py L1840: 'peak_ram': 53.58GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.37:  92%|█████████▎| 37/40 [03:27<00:16,  5.43s/it][38;20m2026-06-10 00:36:37 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.38:  95%|█████████▌| 38/40 [03:33<00:10,  5.43s/it][38;20m2026-06-10 00:36:43 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.39:  98%|█████████▊| 39/40 [03:39<00:05,  5.43s/it][38;20m2026-06-10 00:36:49 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+
+Quantizing model.layers.39: 100%|██████████| 40/40 [03:44<00:00,  5.62s/it]
+00:37:12 [INFO] Quantization completed in 269.5s
+00:37:12 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-10 00:37:12 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+00:37:12 [ERROR] Quantization failed: invalid group reference 1 at position 22
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 190, in quantize
+    autoround.save_quantized(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 1369, in save_quantized
+    reverted_block_name = revert_checkpoint_conversion_mapping(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 1188, in revert_checkpoint_conversion_mapping
+    name, n_replace = re.subn(source_pattern, target_pattern, name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 197, in subn
+    return _compile(pattern, flags).subn(repl, string, count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 334, in _compile_template
+    return _sre.template(pattern, _parser.parse_template(repl, pattern))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1069, in parse_template
+    addgroup(int(this[1:]), len(this) - 1)
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1014, in addgroup
+    raise s.error("invalid group reference %d" % index, pos)
+re.error: invalid group reference 1 at position 22
+
+## Historical Lessons (from past runs — decide which are relevant):
+Lesson 1 [phase=quantize, verified=5x]:
+  Error: auto_round error or auto-round related exception
+  Solution: If auto-round raises an error (import error, API change, compatibility issue, missing method, etc.), upgrade to the latest main branch: uv pip install --reinstall "auto-round @ git+https://github.com/intel/auto-round.git@main" This often fixes issues with new model architectures or recently added features. After reinstall, verify: python -c "import auto_round; print(auto_round.__version__)"
+  Notes: auto-round is actively developed. PyPI releases may lag behind fixes for new models. Always try main branch first before other workarounds.
+
+Lesson 2 [phase=evaluate, verified=3x]:
+  Error: RuntimeError: The NVIDIA driver on your system is too old (found version XXXXX)
+  Solution: Reinstall PyTorch with a CUDA version matching the NVIDIA driver. Steps: 1) Run nvidia-smi to check driver-supported CUDA version (look for "CUDA Version: X.Y"). 2) Map to PyTorch index-url tag. Available: cu118, cu121, cu124, cu126, cu128, cu130. 3) Reinstall: uv pip install --reinstall torch torchaudio torchvision --index-url https://download.pytorch.org/whl/<cu_tag>. Common mappings: CUDA 11.8 -> cu118, CUDA 12.0~12.3 -> cu121, CUDA 12.4~12.5 -> cu124, CUDA 12.6~12.7 -> cu126, CUDA 12.8~12.9 -> cu128, CUDA 13.0+ -> cu130. Do NOT force CPU-only (device_map=cpu). Do NOT upgrade the NVIDIA driver. After reinstall, verify: python -c "import torch; print(torch.cuda.is_available())" should be True.
+  Notes: This is an infrastructure issue caused by pre-installed torch compiled for a newer CUDA than the driver supports. The correct fix is always to reinstall torch with --index-url pointing to the compatible CUDA wheel, never to skip GPU.
+
+Lesson 3 [phase=quantize, verified=1x]:
+  Error: 16:28:11 [ERROR] Quantization failed: invalid group reference 1 at position 22
+  Solution: **FIX_PLAN:**;1. Check current auto-round version and reinstall from main branch (fixes regex group reference bug);2. Re-run the quantization phase to verify the fix;The bug is in `re.sub(r"\(.*\)", "", source_pattern)` — it strips content inside parentheses, removing the capturing group `(.+)`, but the replacement template still contains `\1` which becomes an invalid group reference. This is an auto-round bug.;--;
+
+Lesson 4 [phase=quantize, verified=1x]:
+  Error: 03:50:38 [ERROR] Quantization failed:
+  Solution: **FIX_PLAN:**;1. Install missing PIL (pillow) and torchvision packages required by Qwen2VLImageProcessor;2. Re-run the quantization phase to verify the fix;;--;
+
+Lesson 5 [phase=setup_env, verified=1x]:
+  Error: Traceback (most recent call last):
+  Solution: ## FIX_PLAN;The error `torch.float8_e8m0fnu` is a torch dtype compatibility issue with transformers. The installed torch 2.6.0+cu124 doesn't have this dtype, but the current transformers version tries to use it during import.;;**Fix:** Upgrade transformers to a version compatible with torch 2.6.0 that handles this dtype gracefully, then reinstall auto-round from main branch.;--;
+Review the lessons above and apply the most relevant fix for the current error.
+
+## Your Task:
+1. First output a brief FIX_PLAN (3 lines max) describing what you will do
+2. Then execute the fix (modify files, install packages, adjust parameters)
+3. The phase script will be re-run after your fix to verify
+
+## Constraints:
+- Do NOT reinstall or downgrade torch (it will break CUDA)
+- Do NOT modify the evaluation tasks or expected output format
+- Keep fixes minimal and targeted
+- If you need to install a package, use: pip install <package>
+- If unsupported model architecture, try: pip install -U auto-round transformers
+- Working directory: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN
+
+### [2026-06-10 00:37:21 UTC] ASSISTANT
+
+### [2026-06-10 00:37:26 UTC] ASSISTANT
+
+### [2026-06-10 00:37:34 UTC] ASSISTANT
+
+### [2026-06-10 00:37:45 UTC] ASSISTANT

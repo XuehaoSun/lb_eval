@@ -1,0 +1,1054 @@
+
+═══════ Pipeline: 0xSero/Qwen3.6-28B | W4A16/RTN/auto_round ═══════
+
+
+═══════ Pipeline: 0xSero/Qwen3.6-28B | W4A16/RTN/auto_round ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+[setup_env] Installing: auto-round
+[setup_env] Installing: auto-round
+ + transformers==5.10.2
+ + triton==3.7.0
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + transformers==5.10.2
+ + triton==3.7.0
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] torch=2.12.0+cu130, CUDA available — OK
+[setup_env] torch=2.12.0+cu130, CUDA available — OK
+[setup_env] Running pre-flight dependency check for 0xSero/Qwen3.6-28B...
+[setup_env] Running pre-flight dependency check for 0xSero/Qwen3.6-28B...
+00:31:41 [preflight] Pre-flight check for: 0xSero/Qwen3.6-28B
+00:31:41 [preflight] Pre-flight check for: 0xSero/Qwen3.6-28B
+00:31:41 [preflight] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:41 [preflight] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:41 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:31:41 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:31:41 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:31:41 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:31:41 [preflight]   model_type: qwen3_5_moe
+00:31:41 [preflight]   auto_map: no
+00:31:41 [preflight]   transformers_version: not specified
+00:31:41 [preflight]   model_type: qwen3_5_moe
+00:31:41 [preflight]   auto_map: no
+00:31:41 [preflight]   transformers_version: not specified
+00:31:42 [preflight] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+00:31:42 [preflight] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+00:31:42 [preflight]   ✓ All dependencies satisfied
+00:31:42 [preflight]   ✓ All dependencies satisfied
+
+[setup_env] Verification:
+
+[setup_env] Verification:
+  torch=2.12.0+cu130, cuda=True
+  torch=2.12.0+cu130, cuda=True
+  auto_round=0.13.0
+  transformers=5.10.2
+  auto_round=0.13.0
+  transformers=5.10.2
+  lm_eval=0.4.12
+  lm_eval=0.4.12
+
+=== Phase 1: DONE ===
+
+=== Phase 1: DONE ===
+[auto_v3] setup_env succeeded
+[auto_v3] setup_env succeeded
+
+═══════ Phase: quantize ═══════
+
+
+═══════ Phase: quantize ═══════
+
+=== Phase 2: Quantization ===
+  model=0xSero/Qwen3.6-28B
+=== Phase 2: Quantization ===
+  model=0xSero/Qwen3.6-28B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/quantized_model
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/quantized_model
+00:31:51 [INFO] Model: 0xSero/Qwen3.6-28B
+00:31:51 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+00:31:51 [INFO] Iters: 0 (RTN)
+00:31:51 [INFO] Export format: auto_round
+00:31:51 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/quantized_model
+00:31:51 [INFO] Device map: auto
+00:31:51 [INFO] Loading tokenizer...
+00:31:51 [INFO] Model: 0xSero/Qwen3.6-28B
+00:31:51 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+00:31:51 [INFO] Iters: 0 (RTN)
+00:31:51 [INFO] Export format: auto_round
+00:31:51 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/quantized_model
+00:31:51 [INFO] Device map: auto
+00:31:51 [INFO] Loading tokenizer...
+00:31:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+00:31:51 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+00:31:51 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+00:31:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:31:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:31:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:31:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:31:51 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:31:51 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:31:52 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:52 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:31:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:31:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:31:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:31:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:31:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:31:52 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+00:31:52 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+00:31:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/xet-read-token/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb "HTTP/1.1 200 OK"
+00:31:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/xet-read-token/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb "HTTP/1.1 200 OK"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/chat_template.jinja "HTTP/1.1 200 OK"
+00:31:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/chat_template.jinja "HTTP/1.1 200 OK"
+00:31:54 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/chat_template.jinja "HTTP/1.1 200 OK"
+00:31:54 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/chat_template.jinja "HTTP/1.1 200 OK"
+00:31:55 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B "HTTP/1.1 200 OK"
+00:31:55 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B "HTTP/1.1 200 OK"
+00:31:55 [INFO] Loading model...
+00:31:55 [INFO] Loading model...
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:31:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:31:56 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:31:56 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:31:57 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/revision/main "HTTP/1.1 200 OK"
+00:31:57 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/revision/main "HTTP/1.1 200 OK"
+00:31:57 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model-00001-of-00002.safetensors "HTTP/1.1 302 Found"
+00:31:57 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model-00001-of-00002.safetensors "HTTP/1.1 302 Found"
+00:31:57 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model-00002-of-00002.safetensors "HTTP/1.1 302 Found"
+00:31:57 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model-00002-of-00002.safetensors "HTTP/1.1 302 Found"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+00:32:36 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:36 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:36 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:32:36 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:32:37 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:32:37 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:32:37 [WARNING] Some parameters are on the meta device because they were offloaded to the cpu.
+00:32:37 [WARNING] Some parameters are on the meta device because they were offloaded to the cpu.
+00:32:37 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+00:32:37 [INFO] Ignore layers: lm_head
+00:32:37 [INFO] Configuring AutoRound...
+00:32:37 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+00:32:37 [INFO] Ignore layers: lm_head
+00:32:37 [INFO] Configuring AutoRound...
+[38;20m2026-06-10 00:32:37 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-10 00:32:37 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a28b0a5-1c6f9942117809ca1c754003;d3a91485-3e56-4dc5-b4db-6675cbfb7b74)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a28b0a5-1c6f9942117809ca1c754003;d3a91485-3e56-4dc5-b4db-6675cbfb7b74)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+[38;20m2026-06-10 00:32:37 INFO entry.py L591: Using LLM mode.[0m
+[38;20m2026-06-10 00:32:37 INFO entry.py L591: Using LLM mode.[0m
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a28b0a6-438aeb9756d9521d251606c1;c068b76b-9f1e-4f62-8f95-78bb186c93e4)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a28b0a6-438aeb9756d9521d251606c1;c068b76b-9f1e-4f62-8f95-78bb186c93e4)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a28b0a6-7c6c26e3691bf46728229e59;0da9ff41-57aa-4632-8d01-2ed35a3bfb74)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a28b0a6-7c6c26e3691bf46728229e59;0da9ff41-57aa-4632-8d01-2ed35a3bfb74)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:38 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:32:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:32:40 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:32:40 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:32:40 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:32:40 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:32:41 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B "HTTP/1.1 200 OK"
+00:32:41 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B "HTTP/1.1 200 OK"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:32:41 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:32:42 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/revision/main "HTTP/1.1 200 OK"
+00:32:42 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/revision/main "HTTP/1.1 200 OK"
+00:32:42 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:42 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:32:42 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:32:42 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:32:42 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:32:42 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:32:42 [INFO] Starting quantization...
+00:32:42 [INFO] Starting quantization...
+[38;20m2026-06-10 00:32:42 INFO replace_modules.py L120: Experts (before replacement) [model.layers.0.mlp.experts] (Qwen3_5MoeExperts):
+Qwen3_5MoeExperts(
+  (act_fn): SiLUActivation()
+)[0m
+[38;20m2026-06-10 00:32:42 INFO replace_modules.py L120: Experts (before replacement) [model.layers.0.mlp.experts] (Qwen3_5MoeExperts):
+Qwen3_5MoeExperts(
+  (act_fn): SiLUActivation()
+)[0m
+[38;20m2026-06-10 00:32:42 INFO device.py L1871: [Memory Monitor] Before applying custom replacements: 'peak_ram': 1.27GB[0m
+[38;20m2026-06-10 00:32:42 INFO device.py L1871: [Memory Monitor] Before applying custom replacements: 'peak_ram': 1.27GB[0m
+[38;20m2026-06-10 00:32:42 INFO replace_modules.py L360: Found 40 modules to replace[0m
+[38;20m2026-06-10 00:32:42 INFO replace_modules.py L360: Found 40 modules to replace[0m
+Replacing modules:   0%|          | 0/40 [00:00<?, ?it/s]Replacing modules:   0%|          | 0/40 [00:00<?, ?it/s]Replacing modules: 100%|██████████| 40/40 [00:01<00:00, 30.23it/s]
+Replacing modules: 100%|██████████| 40/40 [00:01<00:00, 30.23it/s]
+[38;20m2026-06-10 00:32:43 INFO replace_modules.py L387: Replaced 40 modules[0m
+[38;20m2026-06-10 00:32:43 INFO replace_modules.py L387: Replaced 40 modules[0m
+[38;20m2026-06-10 00:32:43 INFO device.py L1874: [Memory Monitor] After applying custom replacements: 'peak_ram': 1.35GB[0m
+[38;20m2026-06-10 00:32:43 INFO device.py L1874: [Memory Monitor] After applying custom replacements: 'peak_ram': 1.35GB[0m
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-06-10 00:32:45 INFO replace_modules.py L120: Experts (after replacement) [model.layers.0.mlp.experts] (SequentialQwen3_5MoeExperts):
+SequentialQwen3_5MoeExperts(
+  (0-204): 205 x Qwen3_5MoeMLP(
+    (gate_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (up_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (down_proj): Linear(in_features=512, out_features=2048, bias=False)
+    (act_fn): SiLUActivation()
+  )
+)[0m
+[38;20m2026-06-10 00:32:45 INFO replace_modules.py L120: Experts (after replacement) [model.layers.0.mlp.experts] (SequentialQwen3_5MoeExperts):
+SequentialQwen3_5MoeExperts(
+  (0-204): 205 x Qwen3_5MoeMLP(
+    (gate_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (up_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (down_proj): Linear(in_features=512, out_features=2048, bias=False)
+    (act_fn): SiLUActivation()
+  )
+)[0m
+[38;20m2026-06-10 00:32:45 INFO base.py L572: Using predefined ignore_layers: model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-10 00:32:45 INFO base.py L572: Using predefined ignore_layers: model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-10 00:32:45 INFO utils.py L1069: Ignored layers: lm_head, lm_head, model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-10 00:32:45 INFO utils.py L1069: Ignored layers: lm_head, lm_head, model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-10 00:32:46 INFO base.py L662: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-10 00:32:46 INFO base.py L662: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-10 00:32:46 INFO data_driven.py L1089: start to compute imatrix[0m
+[38;20m2026-06-10 00:32:46 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+[38;20m2026-06-10 00:32:46 INFO data_driven.py L1089: start to compute imatrix[0m
+[38;20m2026-06-10 00:32:46 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+00:32:47 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:32:47 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:32:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:32:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:32:47 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:32:47 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:32:47 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:32:47 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:32:47 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:32:47 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:32:47 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:32:47 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:32:48 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+00:32:48 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+00:32:49 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/xet-read-token/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:32:49 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/xet-read-token/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 84934.34 examples/s]
+Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 84934.34 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:05<00:00, 1971.30 examples/s]
+Map: 100%|██████████| 10000/10000 [00:05<00:00, 1971.30 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:02<00:00, 4726.04 examples/s]
+Filter: 100%|██████████| 10000/10000 [00:02<00:00, 4726.04 examples/s]
+Casting the dataset:   0%|          | 0/1229 [00:00<?, ? examples/s]Casting the dataset:   0%|          | 0/1229 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1229/1229 [00:01<00:00, 1047.69 examples/s]
+Casting the dataset: 100%|██████████| 1229/1229 [00:01<00:00, 1047.69 examples/s]
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:32:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:32:59 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:32:59 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:00 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:00 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+00:33:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-06-10 00:33:02 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+[38;20m2026-06-10 00:33:02 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:02 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:33:03 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:03 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:33:04 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:04 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:33:04 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:33:04 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+  0%|          | 0/40 [00:00<?, ?it/s]  0%|          | 0/40 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/40 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/40 [00:00<?, ?it/s][33;1m2026-06-10 00:33:09 WARNING logging.py L340: MoE layer detected: optimized RTN is disabled for efficiency. Use `--enable_opt_rtn` to force-enable it for MoE layers.[0m
+[33;1m2026-06-10 00:33:09 WARNING logging.py L340: MoE layer detected: optimized RTN is disabled for efficiency. Use `--enable_opt_rtn` to force-enable it for MoE layers.[0m
+[38;20m2026-06-10 00:33:10 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_msdz4fx_[0m
+[38;20m2026-06-10 00:33:10 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_msdz4fx_[0m
+[38;20m2026-06-10 00:33:10 INFO device.py L1840: 'peak_ram': 8.73GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:10 INFO device.py L1840: 'peak_ram': 8.73GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.1:   2%|▎         | 1/40 [00:06<04:03,  6.24s/it]Quantizing model.layers.1:   2%|▎         | 1/40 [00:06<04:03,  6.24s/it][38;20m2026-06-10 00:33:16 INFO device.py L1840: 'peak_ram': 8.97GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:16 INFO device.py L1840: 'peak_ram': 8.97GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.2:   5%|▌         | 2/40 [00:11<03:43,  5.89s/it]Quantizing model.layers.2:   5%|▌         | 2/40 [00:11<03:43,  5.89s/it][38;20m2026-06-10 00:33:21 INFO device.py L1840: 'peak_ram': 10.45GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:21 INFO device.py L1840: 'peak_ram': 10.45GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.3:   8%|▊         | 3/40 [00:17<03:30,  5.70s/it]Quantizing model.layers.3:   8%|▊         | 3/40 [00:17<03:30,  5.70s/it][38;20m2026-06-10 00:33:26 INFO device.py L1840: 'peak_ram': 11.46GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:26 INFO device.py L1840: 'peak_ram': 11.46GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.4:  10%|█         | 4/40 [00:22<03:18,  5.51s/it]Quantizing model.layers.4:  10%|█         | 4/40 [00:22<03:18,  5.51s/it][38;20m2026-06-10 00:33:31 INFO device.py L1840: 'peak_ram': 12.88GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:31 INFO device.py L1840: 'peak_ram': 12.88GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.5:  12%|█▎        | 5/40 [00:27<03:11,  5.47s/it]Quantizing model.layers.5:  12%|█▎        | 5/40 [00:27<03:11,  5.47s/it][38;20m2026-06-10 00:33:37 INFO device.py L1840: 'peak_ram': 13.98GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:37 INFO device.py L1840: 'peak_ram': 13.98GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.6:  15%|█▌        | 6/40 [00:33<03:07,  5.51s/it]Quantizing model.layers.6:  15%|█▌        | 6/40 [00:33<03:07,  5.51s/it][38;20m2026-06-10 00:33:42 INFO device.py L1840: 'peak_ram': 15.29GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:42 INFO device.py L1840: 'peak_ram': 15.29GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.7:  18%|█▊        | 7/40 [00:38<03:01,  5.49s/it]Quantizing model.layers.7:  18%|█▊        | 7/40 [00:38<03:01,  5.49s/it][38;20m2026-06-10 00:33:47 INFO device.py L1840: 'peak_ram': 16.52GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:47 INFO device.py L1840: 'peak_ram': 16.52GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.8:  20%|██        | 8/40 [00:43<02:53,  5.42s/it]Quantizing model.layers.8:  20%|██        | 8/40 [00:43<02:53,  5.42s/it][38;20m2026-06-10 00:33:53 INFO device.py L1840: 'peak_ram': 17.81GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.9:  22%|██▎       | 9/40 [00:48<02:47,  5.41s/it][38;20m2026-06-10 00:33:53 INFO device.py L1840: 'peak_ram': 17.81GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.9:  22%|██▎       | 9/40 [00:48<02:47,  5.41s/it][38;20m2026-06-10 00:33:58 INFO device.py L1840: 'peak_ram': 19.09GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:33:58 INFO device.py L1840: 'peak_ram': 19.09GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.10:  25%|██▌       | 10/40 [00:54<02:43,  5.44s/it]Quantizing model.layers.10:  25%|██▌       | 10/40 [00:54<02:43,  5.44s/it][38;20m2026-06-10 00:34:04 INFO device.py L1840: 'peak_ram': 20.41GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:04 INFO device.py L1840: 'peak_ram': 20.41GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.11:  28%|██▊       | 11/40 [00:59<02:37,  5.43s/it]Quantizing model.layers.11:  28%|██▊       | 11/40 [00:59<02:37,  5.43s/it][38;20m2026-06-10 00:34:09 INFO device.py L1840: 'peak_ram': 21.62GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:09 INFO device.py L1840: 'peak_ram': 21.62GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.12:  30%|███       | 12/40 [01:04<02:31,  5.39s/it]Quantizing model.layers.12:  30%|███       | 12/40 [01:04<02:31,  5.39s/it][38;20m2026-06-10 00:34:14 INFO device.py L1840: 'peak_ram': 22.92GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:14 INFO device.py L1840: 'peak_ram': 22.92GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.13:  32%|███▎      | 13/40 [01:10<02:25,  5.39s/it]Quantizing model.layers.13:  32%|███▎      | 13/40 [01:10<02:25,  5.39s/it][38;20m2026-06-10 00:34:20 INFO device.py L1840: 'peak_ram': 24.2GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:20 INFO device.py L1840: 'peak_ram': 24.2GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.14:  35%|███▌      | 14/40 [01:15<02:20,  5.40s/it]Quantizing model.layers.14:  35%|███▌      | 14/40 [01:15<02:20,  5.40s/it][38;20m2026-06-10 00:34:25 INFO device.py L1840: 'peak_ram': 25.48GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:25 INFO device.py L1840: 'peak_ram': 25.48GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.15:  38%|███▊      | 15/40 [01:20<02:14,  5.40s/it]Quantizing model.layers.15:  38%|███▊      | 15/40 [01:20<02:14,  5.40s/it][38;20m2026-06-10 00:34:30 INFO device.py L1840: 'peak_ram': 26.73GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:30 INFO device.py L1840: 'peak_ram': 26.73GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.16:  40%|████      | 16/40 [01:25<02:08,  5.37s/it]Quantizing model.layers.16:  40%|████      | 16/40 [01:25<02:08,  5.37s/it][38;20m2026-06-10 00:34:35 INFO device.py L1840: 'peak_ram': 28.03GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:35 INFO device.py L1840: 'peak_ram': 28.03GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.17:  42%|████▎     | 17/40 [01:31<02:03,  5.37s/it]Quantizing model.layers.17:  42%|████▎     | 17/40 [01:31<02:03,  5.37s/it][38;20m2026-06-10 00:34:41 INFO device.py L1840: 'peak_ram': 29.31GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:41 INFO device.py L1840: 'peak_ram': 29.31GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.18:  45%|████▌     | 18/40 [01:36<01:58,  5.38s/it]Quantizing model.layers.18:  45%|████▌     | 18/40 [01:36<01:58,  5.38s/it][38;20m2026-06-10 00:34:46 INFO device.py L1840: 'peak_ram': 30.59GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:46 INFO device.py L1840: 'peak_ram': 30.59GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.19:  48%|████▊     | 19/40 [01:42<01:53,  5.38s/it]Quantizing model.layers.19:  48%|████▊     | 19/40 [01:42<01:53,  5.38s/it][38;20m2026-06-10 00:34:51 INFO device.py L1840: 'peak_ram': 31.84GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:51 INFO device.py L1840: 'peak_ram': 31.84GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.20:  50%|█████     | 20/40 [01:47<01:47,  5.36s/it]Quantizing model.layers.20:  50%|█████     | 20/40 [01:47<01:47,  5.36s/it][38;20m2026-06-10 00:34:57 INFO device.py L1840: 'peak_ram': 33.14GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:34:57 INFO device.py L1840: 'peak_ram': 33.14GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.21:  52%|█████▎    | 21/40 [01:53<01:42,  5.39s/it]Quantizing model.layers.21:  52%|█████▎    | 21/40 [01:53<01:42,  5.39s/it][38;20m2026-06-10 00:35:03 INFO device.py L1840: 'peak_ram': 34.42GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:03 INFO device.py L1840: 'peak_ram': 34.42GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.22:  55%|█████▌    | 22/40 [01:59<01:37,  5.41s/it]Quantizing model.layers.22:  55%|█████▌    | 22/40 [01:59<01:37,  5.41s/it][38;20m2026-06-10 00:35:09 INFO device.py L1840: 'peak_ram': 35.7GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:09 INFO device.py L1840: 'peak_ram': 35.7GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.22:  57%|█████▊    | 23/40 [02:05<01:32,  5.43s/it]Quantizing model.layers.22:  57%|█████▊    | 23/40 [02:05<01:32,  5.43s/it]Quantizing model.layers.23:  57%|█████▊    | 23/40 [02:05<01:32,  5.43s/it]Quantizing model.layers.23:  57%|█████▊    | 23/40 [02:05<01:32,  5.43s/it][38;20m2026-06-10 00:35:15 INFO device.py L1840: 'peak_ram': 36.95GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:15 INFO device.py L1840: 'peak_ram': 36.95GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.24:  60%|██████    | 24/40 [02:10<01:26,  5.43s/it]Quantizing model.layers.24:  60%|██████    | 24/40 [02:10<01:26,  5.43s/it][38;20m2026-06-10 00:35:20 INFO device.py L1840: 'peak_ram': 38.25GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:20 INFO device.py L1840: 'peak_ram': 38.25GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:16<01:21,  5.43s/it]Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:16<01:21,  5.43s/it]Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:18<01:21,  5.43s/it]Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:18<01:21,  5.43s/it][38;20m2026-06-10 00:35:26 INFO device.py L1840: 'peak_ram': 39.53GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:26 INFO device.py L1840: 'peak_ram': 39.53GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.26:  65%|██████▌   | 26/40 [02:22<01:16,  5.43s/it]Quantizing model.layers.26:  65%|██████▌   | 26/40 [02:22<01:16,  5.43s/it][38;20m2026-06-10 00:35:32 INFO device.py L1840: 'peak_ram': 40.81GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:32 INFO device.py L1840: 'peak_ram': 40.81GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.27:  68%|██████▊   | 27/40 [02:28<01:10,  5.43s/it]Quantizing model.layers.27:  68%|██████▊   | 27/40 [02:28<01:10,  5.43s/it][38;20m2026-06-10 00:35:38 INFO device.py L1840: 'peak_ram': 42.07GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:38 INFO device.py L1840: 'peak_ram': 42.07GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.28:  70%|███████   | 28/40 [02:33<01:05,  5.43s/it]Quantizing model.layers.28:  70%|███████   | 28/40 [02:33<01:05,  5.43s/it][38;20m2026-06-10 00:35:44 INFO device.py L1840: 'peak_ram': 43.36GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:44 INFO device.py L1840: 'peak_ram': 43.36GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.29:  72%|███████▎  | 29/40 [02:39<00:59,  5.43s/it]Quantizing model.layers.29:  72%|███████▎  | 29/40 [02:39<00:59,  5.43s/it][38;20m2026-06-10 00:35:50 INFO device.py L1840: 'peak_ram': 44.64GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:50 INFO device.py L1840: 'peak_ram': 44.64GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.30:  75%|███████▌  | 30/40 [02:45<00:54,  5.43s/it]Quantizing model.layers.30:  75%|███████▌  | 30/40 [02:45<00:54,  5.43s/it][38;20m2026-06-10 00:35:55 INFO device.py L1840: 'peak_ram': 45.92GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:35:55 INFO device.py L1840: 'peak_ram': 45.92GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.31:  78%|███████▊  | 31/40 [02:51<00:48,  5.43s/it]Quantizing model.layers.31:  78%|███████▊  | 31/40 [02:51<00:48,  5.43s/it][38;20m2026-06-10 00:36:01 INFO device.py L1840: 'peak_ram': 47.18GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:36:01 INFO device.py L1840: 'peak_ram': 47.18GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.32:  80%|████████  | 32/40 [02:56<00:43,  5.43s/it]Quantizing model.layers.32:  80%|████████  | 32/40 [02:56<00:43,  5.43s/it][38;20m2026-06-10 00:36:07 INFO device.py L1840: 'peak_ram': 48.47GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:36:07 INFO device.py L1840: 'peak_ram': 48.47GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.33:  82%|████████▎ | 33/40 [03:02<00:38,  5.43s/it]Quantizing model.layers.33:  82%|████████▎ | 33/40 [03:02<00:38,  5.43s/it][38;20m2026-06-10 00:36:13 INFO device.py L1840: 'peak_ram': 49.75GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:36:13 INFO device.py L1840: 'peak_ram': 49.75GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.34:  85%|████████▌ | 34/40 [03:08<00:32,  5.43s/it]Quantizing model.layers.34:  85%|████████▌ | 34/40 [03:08<00:32,  5.43s/it][38;20m2026-06-10 00:36:19 INFO device.py L1840: 'peak_ram': 51.03GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:36:19 INFO device.py L1840: 'peak_ram': 51.03GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.35:  88%|████████▊ | 35/40 [03:14<00:27,  5.43s/it]Quantizing model.layers.35:  88%|████████▊ | 35/40 [03:14<00:27,  5.43s/it][38;20m2026-06-10 00:36:24 INFO device.py L1840: 'peak_ram': 52.29GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:36:24 INFO device.py L1840: 'peak_ram': 52.29GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.36:  90%|█████████ | 36/40 [03:20<00:21,  5.43s/it]Quantizing model.layers.36:  90%|█████████ | 36/40 [03:20<00:21,  5.43s/it][38;20m2026-06-10 00:36:31 INFO device.py L1840: 'peak_ram': 53.58GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:36:31 INFO device.py L1840: 'peak_ram': 53.58GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.37:  92%|█████████▎| 37/40 [03:27<00:16,  5.43s/it]Quantizing model.layers.37:  92%|█████████▎| 37/40 [03:27<00:16,  5.43s/it][38;20m2026-06-10 00:36:37 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.38:  95%|█████████▌| 38/40 [03:33<00:10,  5.43s/it][38;20m2026-06-10 00:36:37 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.38:  95%|█████████▌| 38/40 [03:33<00:10,  5.43s/it][38;20m2026-06-10 00:36:43 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:36:43 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.39:  98%|█████████▊| 39/40 [03:39<00:05,  5.43s/it]Quantizing model.layers.39:  98%|█████████▊| 39/40 [03:39<00:05,  5.43s/it][38;20m2026-06-10 00:36:49 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:36:49 INFO device.py L1840: 'peak_ram': 54.04GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.39: 100%|██████████| 40/40 [03:44<00:00,  5.62s/it]
+Quantizing model.layers.39: 100%|██████████| 40/40 [03:44<00:00,  5.62s/it]
+00:37:12 [INFO] Quantization completed in 269.5s
+00:37:12 [INFO] Saving quantized model (auto_round format)...
+00:37:12 [INFO] Quantization completed in 269.5s
+00:37:12 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-10 00:37:12 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+[33;1m2026-06-10 00:37:12 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+00:37:12 [ERROR] Quantization failed: invalid group reference 1 at position 22
+00:37:12 [ERROR] Quantization failed: invalid group reference 1 at position 22
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 190, in quantize
+    autoround.save_quantized(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 1369, in save_quantized
+    reverted_block_name = revert_checkpoint_conversion_mapping(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 1188, in revert_checkpoint_conversion_mapping
+    name, n_replace = re.subn(source_pattern, target_pattern, name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 197, in subn
+    return _compile(pattern, flags).subn(repl, string, count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 334, in _compile_template
+    return _sre.template(pattern, _parser.parse_template(repl, pattern))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1069, in parse_template
+    addgroup(int(this[1:]), len(this) - 1)
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1014, in addgroup
+    raise s.error("invalid group reference %d" % index, pos)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 190, in quantize
+    autoround.save_quantized(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 1369, in save_quantized
+    reverted_block_name = revert_checkpoint_conversion_mapping(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 1188, in revert_checkpoint_conversion_mapping
+    name, n_replace = re.subn(source_pattern, target_pattern, name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 197, in subn
+    return _compile(pattern, flags).subn(repl, string, count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 334, in _compile_template
+    return _sre.template(pattern, _parser.parse_template(repl, pattern))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1069, in parse_template
+    addgroup(int(this[1:]), len(this) - 1)
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1014, in addgroup
+    raise s.error("invalid group reference %d" % index, pos)
+re.error: invalid group reference 1 at position 22
+re.error: invalid group reference 1 at position 22
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Calling openclaw agent (session=fix_quantize_359_1781051835, timeout=600s)...
+[auto_v3] Calling openclaw agent (session=fix_quantize_359_1781051835, timeout=600s)...
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] embedded run agent end: runId=fix_quantize_359_1781051835 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"usage limit exceeded (2056)"},"request_id":"sha256:64038cc203b9"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_359_1781051835 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"usage limit exceeded (2056)"},"request_id":"sha256:64038cc203b9"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_359_1781051835 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"usage limit exceeded (2056)"},"request_id":"sha256:56c0b5d25c2d"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_359_1781051835 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"usage limit exceeded (2056)"},"request_id":"sha256:56c0b5d25c2d"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_359_1781051835 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"usage limit exceeded (2056)"},"request_id":"sha256:bcfa975adeed"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_359_1781051835 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"usage limit exceeded (2056)"},"request_id":"sha256:bcfa975adeed"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_359_1781051835 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"usage limit exceeded (2056)"},"request_id":"sha256:9de851a2b237"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_359_1781051835 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"usage limit exceeded (2056)"},"request_id":"sha256:9de851a2b237"}
+[agent/embedded] auth profile failure state updated: runId=fix_quantize_359_1781051835 profile=sha256:c38c74a5066a provider=minimax reason=rate_limit window=cooldown reused=false
+[agent/embedded] auth profile failure state updated: runId=fix_quantize_359_1781051835 profile=sha256:c38c74a5066a provider=minimax reason=rate_limit window=cooldown reused=false
+[agent/embedded] embedded run failover decision: runId=fix_quantize_359_1781051835 stage=assistant decision=surface_error reason=rate_limit provider=minimax/MiniMax-M2.7 profile=sha256:c38c74a5066a
+[agent/embedded] embedded run failover decision: runId=fix_quantize_359_1781051835 stage=assistant decision=surface_error reason=rate_limit provider=minimax/MiniMax-M2.7 profile=sha256:c38c74a5066a
+⚠️ API rate limit reached. Please try again later.
+⚠️ API rate limit reached. Please try again later.
+[auto_v3] Re-running quantize after agent fix...
+[auto_v3] Re-running quantize after agent fix...
+=== Phase 2: Quantization ===
+=== Phase 2: Quantization ===
+  model=0xSero/Qwen3.6-28B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/quantized_model
+  model=0xSero/Qwen3.6-28B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/quantized_model
+00:37:49 [INFO] Model: 0xSero/Qwen3.6-28B
+00:37:49 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+00:37:49 [INFO] Iters: 0 (RTN)
+00:37:49 [INFO] Export format: auto_round
+00:37:49 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/quantized_model
+00:37:49 [INFO] Model: 0xSero/Qwen3.6-28B
+00:37:49 [INFO] Device map: auto
+00:37:49 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+00:37:49 [INFO] Iters: 0 (RTN)
+00:37:49 [INFO] Export format: auto_round
+00:37:49 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/quantized_model
+00:37:49 [INFO] Loading tokenizer...
+00:37:49 [INFO] Device map: auto
+00:37:49 [INFO] Loading tokenizer...
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+00:37:49 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+00:37:49 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:37:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:37:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:37:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:37:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:37:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:37:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B "HTTP/1.1 200 OK"
+00:37:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B "HTTP/1.1 200 OK"
+00:37:51 [INFO] Loading model...
+00:37:51 [INFO] Loading model...
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:37:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:37:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/revision/main "HTTP/1.1 200 OK"
+00:37:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/revision/main "HTTP/1.1 200 OK"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:38:02 [WARNING] Some parameters are on the meta device because they were offloaded to the cpu.
+00:38:02 [WARNING] Some parameters are on the meta device because they were offloaded to the cpu.
+00:38:02 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+00:38:02 [INFO] Ignore layers: lm_head
+00:38:02 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+00:38:02 [INFO] Ignore layers: lm_head
+00:38:02 [INFO] Configuring AutoRound...
+00:38:02 [INFO] Configuring AutoRound...
+[38;20m2026-06-10 00:38:02 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-10 00:38:02 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a28b1eb-6103af090026ae9c51579d97;94121601-404e-489c-9ad9-5a5f9a5c2941)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a28b1eb-6103af090026ae9c51579d97;94121601-404e-489c-9ad9-5a5f9a5c2941)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+[38;20m2026-06-10 00:38:03 INFO entry.py L591: Using LLM mode.[0m
+[38;20m2026-06-10 00:38:03 INFO entry.py L591: Using LLM mode.[0m
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a28b1eb-5c887dd74529973174dd614a;4b48db32-3d72-4fd3-b587-68a1bbbc92f9)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a28b1eb-5c887dd74529973174dd614a;4b48db32-3d72-4fd3-b587-68a1bbbc92f9)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+00:38:03 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a28b1eb-1bc9e64239ab605e3cf15ff7;990c41d8-3ac7-4c4a-9342-176288eaadbd)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a28b1eb-1bc9e64239ab605e3cf15ff7;990c41d8-3ac7-4c4a-9342-176288eaadbd)
+
+Entry Not Found for url: https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model_index.json.
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:04 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:05 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:05 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:05 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:38:05 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:38:05 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:05 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:05 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:38:05 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/tokenizer_config.json "HTTP/1.1 200 OK"
+00:38:05 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:38:05 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+00:38:05 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:38:05 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:38:06 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B "HTTP/1.1 200 OK"
+00:38:06 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B "HTTP/1.1 200 OK"
+00:38:06 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:06 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:06 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:06 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/config.json "HTTP/1.1 200 OK"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+00:38:07 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/revision/main "HTTP/1.1 200 OK"
+00:38:07 [INFO] HTTP Request: GET https://huggingface.co/api/models/0xSero/Qwen3.6-28B/revision/main "HTTP/1.1 200 OK"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/0xSero/Qwen3.6-28B/07b01f733fd14e9f5cf8dd7fdc84de29e4b837eb/generation_config.json "HTTP/1.1 200 OK"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:38:07 [INFO] HTTP Request: HEAD https://huggingface.co/0xSero/Qwen3.6-28B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+00:38:07 [INFO] Starting quantization...
+00:38:07 [INFO] Starting quantization...
+[38;20m2026-06-10 00:38:07 INFO replace_modules.py L120: Experts (before replacement) [model.layers.0.mlp.experts] (Qwen3_5MoeExperts):
+Qwen3_5MoeExperts(
+  (act_fn): SiLUActivation()
+)[0m
+[38;20m2026-06-10 00:38:07 INFO replace_modules.py L120: Experts (before replacement) [model.layers.0.mlp.experts] (Qwen3_5MoeExperts):
+Qwen3_5MoeExperts(
+  (act_fn): SiLUActivation()
+)[0m
+[38;20m2026-06-10 00:38:07 INFO device.py L1871: [Memory Monitor] Before applying custom replacements: 'peak_ram': 1.19GB[0m
+[38;20m2026-06-10 00:38:07 INFO device.py L1871: [Memory Monitor] Before applying custom replacements: 'peak_ram': 1.19GB[0m
+[38;20m2026-06-10 00:38:07 INFO replace_modules.py L360: Found 40 modules to replace[0m
+[38;20m2026-06-10 00:38:07 INFO replace_modules.py L360: Found 40 modules to replace[0m
+Replacing modules:   0%|          | 0/40 [00:00<?, ?it/s]Replacing modules:   0%|          | 0/40 [00:00<?, ?it/s]Replacing modules: 100%|██████████| 40/40 [00:01<00:00, 30.24it/s]
+[38;20m2026-06-10 00:38:09 INFO replace_modules.py L387: Replaced 40 modules[0m
+Replacing modules: 100%|██████████| 40/40 [00:01<00:00, 30.24it/s]
+[38;20m2026-06-10 00:38:09 INFO replace_modules.py L387: Replaced 40 modules[0m
+[38;20m2026-06-10 00:38:09 INFO device.py L1874: [Memory Monitor] After applying custom replacements: 'peak_ram': 1.27GB[0m
+[38;20m2026-06-10 00:38:09 INFO device.py L1874: [Memory Monitor] After applying custom replacements: 'peak_ram': 1.27GB[0m
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-06-10 00:38:10 INFO replace_modules.py L120: Experts (after replacement) [model.layers.0.mlp.experts] (SequentialQwen3_5MoeExperts):
+SequentialQwen3_5MoeExperts(
+  (0-204): 205 x Qwen3_5MoeMLP(
+    (gate_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (up_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (down_proj): Linear(in_features=512, out_features=2048, bias=False)
+    (act_fn): SiLUActivation()
+  )
+)[0m
+[38;20m2026-06-10 00:38:10 INFO replace_modules.py L120: Experts (after replacement) [model.layers.0.mlp.experts] (SequentialQwen3_5MoeExperts):
+SequentialQwen3_5MoeExperts(
+  (0-204): 205 x Qwen3_5MoeMLP(
+    (gate_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (up_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (down_proj): Linear(in_features=512, out_features=2048, bias=False)
+    (act_fn): SiLUActivation()
+  )
+)[0m
+[38;20m2026-06-10 00:38:10 INFO base.py L572: Using predefined ignore_layers: model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-10 00:38:10 INFO base.py L572: Using predefined ignore_layers: model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-10 00:38:10 INFO utils.py L1069: Ignored layers: lm_head, lm_head, model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-10 00:38:10 INFO utils.py L1069: Ignored layers: lm_head, lm_head, model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-10 00:38:11 INFO base.py L662: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-10 00:38:11 INFO base.py L662: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-10 00:38:12 INFO data_driven.py L1089: start to compute imatrix[0m
+[38;20m2026-06-10 00:38:12 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+[38;20m2026-06-10 00:38:12 INFO data_driven.py L1089: start to compute imatrix[0m
+[38;20m2026-06-10 00:38:12 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+00:38:12 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:38:12 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:38:12 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:38:12 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:38:12 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:12 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:13 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:13 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:13 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:38:13 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:38:13 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:38:13 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:38:13 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:38:13 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:38:13 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:38:13 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:38:13 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+00:38:13 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+00:38:14 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:38:14 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:38:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:38:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:38:14 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:14 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:14 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:14 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:14 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:38:14 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+00:38:15 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:38:15 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:38:15 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:38:15 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:38:15 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:38:15 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+00:38:15 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+00:38:15 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-06-10 00:38:17 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+[38;20m2026-06-10 00:38:17 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+00:38:17 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:38:17 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:38:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:38:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:38:17 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:17 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:18 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:18 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:18 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:38:18 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:38:18 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:38:18 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:38:18 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:38:18 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+00:38:18 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:38:18 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+00:38:18 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:18 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:18 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:18 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+00:38:19 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:38:19 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+00:38:19 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+00:38:19 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+  0%|          | 0/40 [00:00<?, ?it/s]  0%|          | 0/40 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/40 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/40 [00:00<?, ?it/s][33;1m2026-06-10 00:38:24 WARNING logging.py L340: MoE layer detected: optimized RTN is disabled for efficiency. Use `--enable_opt_rtn` to force-enable it for MoE layers.[0m
+[33;1m2026-06-10 00:38:24 WARNING logging.py L340: MoE layer detected: optimized RTN is disabled for efficiency. Use `--enable_opt_rtn` to force-enable it for MoE layers.[0m
+[38;20m2026-06-10 00:38:24 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_rfvby83f[0m
+[38;20m2026-06-10 00:38:24 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_rfvby83f[0m
+[38;20m2026-06-10 00:38:25 INFO device.py L1840: 'peak_ram': 8.66GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:38:25 INFO device.py L1840: 'peak_ram': 8.66GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.1:   2%|▎         | 1/40 [00:06<03:57,  6.10s/it]Quantizing model.layers.1:   2%|▎         | 1/40 [00:06<03:57,  6.10s/it][38;20m2026-06-10 00:38:31 INFO device.py L1840: 'peak_ram': 8.89GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:38:31 INFO device.py L1840: 'peak_ram': 8.89GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.2:   5%|▌         | 2/40 [00:11<03:40,  5.80s/it]Quantizing model.layers.2:   5%|▌         | 2/40 [00:11<03:40,  5.80s/it][38;20m2026-06-10 00:38:36 INFO device.py L1840: 'peak_ram': 10.43GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.3:   8%|▊         | 3/40 [00:16<03:29,  5.65s/it][38;20m2026-06-10 00:38:36 INFO device.py L1840: 'peak_ram': 10.43GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.3:   8%|▊         | 3/40 [00:16<03:29,  5.65s/it][38;20m2026-06-10 00:38:41 INFO device.py L1840: 'peak_ram': 11.33GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:38:41 INFO device.py L1840: 'peak_ram': 11.33GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.4:  10%|█         | 4/40 [00:21<03:16,  5.46s/it]Quantizing model.layers.4:  10%|█         | 4/40 [00:21<03:16,  5.46s/it][38;20m2026-06-10 00:38:46 INFO device.py L1840: 'peak_ram': 12.88GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:38:46 INFO device.py L1840: 'peak_ram': 12.88GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.5:  12%|█▎        | 5/40 [00:27<03:10,  5.43s/it]Quantizing model.layers.5:  12%|█▎        | 5/40 [00:27<03:10,  5.43s/it][38;20m2026-06-10 00:38:51 INFO device.py L1840: 'peak_ram': 13.91GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:38:51 INFO device.py L1840: 'peak_ram': 13.91GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.6:  15%|█▌        | 6/40 [00:32<03:04,  5.43s/it]Quantizing model.layers.6:  15%|█▌        | 6/40 [00:32<03:04,  5.43s/it][38;20m2026-06-10 00:38:57 INFO device.py L1840: 'peak_ram': 15.34GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:38:57 INFO device.py L1840: 'peak_ram': 15.34GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.7:  18%|█▊        | 7/40 [00:37<02:58,  5.41s/it]Quantizing model.layers.7:  18%|█▊        | 7/40 [00:37<02:58,  5.41s/it][38;20m2026-06-10 00:39:02 INFO device.py L1840: 'peak_ram': 16.44GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:02 INFO device.py L1840: 'peak_ram': 16.44GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.8:  20%|██        | 8/40 [00:42<02:50,  5.34s/it]Quantizing model.layers.8:  20%|██        | 8/40 [00:42<02:50,  5.34s/it][38;20m2026-06-10 00:39:07 INFO device.py L1840: 'peak_ram': 17.74GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:07 INFO device.py L1840: 'peak_ram': 17.74GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.9:  22%|██▎       | 9/40 [00:48<02:45,  5.34s/it]Quantizing model.layers.9:  22%|██▎       | 9/40 [00:48<02:45,  5.34s/it][38;20m2026-06-10 00:39:12 INFO device.py L1840: 'peak_ram': 19.01GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:12 INFO device.py L1840: 'peak_ram': 19.01GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.10:  25%|██▌       | 10/40 [00:53<02:40,  5.35s/it]Quantizing model.layers.10:  25%|██▌       | 10/40 [00:53<02:40,  5.35s/it][38;20m2026-06-10 00:39:18 INFO device.py L1840: 'peak_ram': 20.39GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:18 INFO device.py L1840: 'peak_ram': 20.39GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.11:  28%|██▊       | 11/40 [00:58<02:35,  5.35s/it]Quantizing model.layers.11:  28%|██▊       | 11/40 [00:58<02:35,  5.35s/it][38;20m2026-06-10 00:39:23 INFO device.py L1840: 'peak_ram': 21.55GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:23 INFO device.py L1840: 'peak_ram': 21.55GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.12:  30%|███       | 12/40 [01:03<02:28,  5.31s/it]Quantizing model.layers.12:  30%|███       | 12/40 [01:03<02:28,  5.31s/it][38;20m2026-06-10 00:39:28 INFO device.py L1840: 'peak_ram': 22.85GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:28 INFO device.py L1840: 'peak_ram': 22.85GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.13:  32%|███▎      | 13/40 [01:09<02:23,  5.32s/it]Quantizing model.layers.13:  32%|███▎      | 13/40 [01:09<02:23,  5.32s/it][38;20m2026-06-10 00:39:33 INFO device.py L1840: 'peak_ram': 24.12GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:33 INFO device.py L1840: 'peak_ram': 24.12GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.14:  35%|███▌      | 14/40 [01:14<02:18,  5.33s/it]Quantizing model.layers.14:  35%|███▌      | 14/40 [01:14<02:18,  5.33s/it][38;20m2026-06-10 00:39:39 INFO device.py L1840: 'peak_ram': 25.47GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:39 INFO device.py L1840: 'peak_ram': 25.47GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.15:  38%|███▊      | 15/40 [01:19<02:13,  5.33s/it]Quantizing model.layers.15:  38%|███▊      | 15/40 [01:19<02:13,  5.33s/it][38;20m2026-06-10 00:39:44 INFO device.py L1840: 'peak_ram': 26.66GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:44 INFO device.py L1840: 'peak_ram': 26.66GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.16:  40%|████      | 16/40 [01:24<02:07,  5.30s/it]Quantizing model.layers.16:  40%|████      | 16/40 [01:24<02:07,  5.30s/it][38;20m2026-06-10 00:39:49 INFO device.py L1840: 'peak_ram': 27.96GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:49 INFO device.py L1840: 'peak_ram': 27.96GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.17:  42%|████▎     | 17/40 [01:30<02:02,  5.31s/it]Quantizing model.layers.17:  42%|████▎     | 17/40 [01:30<02:02,  5.31s/it][38;20m2026-06-10 00:39:55 INFO device.py L1840: 'peak_ram': 29.24GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:39:55 INFO device.py L1840: 'peak_ram': 29.24GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.18:  45%|████▌     | 18/40 [01:35<01:57,  5.33s/it]Quantizing model.layers.18:  45%|████▌     | 18/40 [01:35<01:57,  5.33s/it][38;20m2026-06-10 00:40:00 INFO device.py L1840: 'peak_ram': 30.52GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:00 INFO device.py L1840: 'peak_ram': 30.52GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.19:  48%|████▊     | 19/40 [01:41<01:52,  5.33s/it]Quantizing model.layers.19:  48%|████▊     | 19/40 [01:41<01:52,  5.33s/it][38;20m2026-06-10 00:40:05 INFO device.py L1840: 'peak_ram': 31.77GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.20:  50%|█████     | 20/40 [01:46<01:46,  5.31s/it][38;20m2026-06-10 00:40:05 INFO device.py L1840: 'peak_ram': 31.77GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.20:  50%|█████     | 20/40 [01:46<01:46,  5.31s/it][38;20m2026-06-10 00:40:11 INFO device.py L1840: 'peak_ram': 33.11GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:11 INFO device.py L1840: 'peak_ram': 33.11GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.21:  52%|█████▎    | 21/40 [01:52<01:41,  5.34s/it]Quantizing model.layers.21:  52%|█████▎    | 21/40 [01:52<01:41,  5.34s/it][38;20m2026-06-10 00:40:17 INFO device.py L1840: 'peak_ram': 34.38GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:17 INFO device.py L1840: 'peak_ram': 34.38GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.22:  55%|█████▌    | 22/40 [01:58<01:36,  5.38s/it]Quantizing model.layers.22:  55%|█████▌    | 22/40 [01:58<01:36,  5.38s/it][38;20m2026-06-10 00:40:23 INFO device.py L1840: 'peak_ram': 35.67GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:23 INFO device.py L1840: 'peak_ram': 35.67GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.22:  57%|█████▊    | 23/40 [02:04<01:31,  5.40s/it]Quantizing model.layers.22:  57%|█████▊    | 23/40 [02:04<01:31,  5.40s/it]Quantizing model.layers.23:  57%|█████▊    | 23/40 [02:04<01:31,  5.40s/it]Quantizing model.layers.23:  57%|█████▊    | 23/40 [02:04<01:31,  5.40s/it][38;20m2026-06-10 00:40:29 INFO device.py L1840: 'peak_ram': 36.89GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:29 INFO device.py L1840: 'peak_ram': 36.89GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.24:  60%|██████    | 24/40 [02:09<01:26,  5.40s/it]Quantizing model.layers.24:  60%|██████    | 24/40 [02:09<01:26,  5.40s/it][38;20m2026-06-10 00:40:34 INFO device.py L1840: 'peak_ram': 38.25GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:34 INFO device.py L1840: 'peak_ram': 38.25GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:15<01:21,  5.40s/it]Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:15<01:21,  5.40s/it]Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:19<01:21,  5.40s/it]Quantizing model.layers.25:  62%|██████▎   | 25/40 [02:19<01:21,  5.40s/it][38;20m2026-06-10 00:40:40 INFO device.py L1840: 'peak_ram': 39.46GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.26:  65%|██████▌   | 26/40 [02:21<01:15,  5.40s/it][38;20m2026-06-10 00:40:40 INFO device.py L1840: 'peak_ram': 39.46GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.26:  65%|██████▌   | 26/40 [02:21<01:15,  5.40s/it][38;20m2026-06-10 00:40:46 INFO device.py L1840: 'peak_ram': 40.77GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:46 INFO device.py L1840: 'peak_ram': 40.77GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.27:  68%|██████▊   | 27/40 [02:27<01:10,  5.40s/it]Quantizing model.layers.27:  68%|██████▊   | 27/40 [02:27<01:10,  5.40s/it][38;20m2026-06-10 00:40:52 INFO device.py L1840: 'peak_ram': 42.02GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:52 INFO device.py L1840: 'peak_ram': 42.02GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.28:  70%|███████   | 28/40 [02:32<01:04,  5.40s/it]Quantizing model.layers.28:  70%|███████   | 28/40 [02:32<01:04,  5.40s/it][38;20m2026-06-10 00:40:58 INFO device.py L1840: 'peak_ram': 43.35GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:40:58 INFO device.py L1840: 'peak_ram': 43.35GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.29:  72%|███████▎  | 29/40 [02:38<00:59,  5.40s/it]Quantizing model.layers.29:  72%|███████▎  | 29/40 [02:38<00:59,  5.40s/it][38;20m2026-06-10 00:41:04 INFO device.py L1840: 'peak_ram': 44.59GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:41:04 INFO device.py L1840: 'peak_ram': 44.59GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.30:  75%|███████▌  | 30/40 [02:44<00:54,  5.40s/it]Quantizing model.layers.30:  75%|███████▌  | 30/40 [02:44<00:54,  5.40s/it][38;20m2026-06-10 00:41:10 INFO device.py L1840: 'peak_ram': 45.93GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:41:10 INFO device.py L1840: 'peak_ram': 45.93GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.31:  78%|███████▊  | 31/40 [02:50<00:48,  5.40s/it]Quantizing model.layers.31:  78%|███████▊  | 31/40 [02:50<00:48,  5.40s/it][38;20m2026-06-10 00:41:15 INFO device.py L1840: 'peak_ram': 47.12GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:41:15 INFO device.py L1840: 'peak_ram': 47.12GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.32:  80%|████████  | 32/40 [02:55<00:43,  5.40s/it]Quantizing model.layers.32:  80%|████████  | 32/40 [02:55<00:43,  5.40s/it][38;20m2026-06-10 00:41:21 INFO device.py L1840: 'peak_ram': 48.45GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.33:  82%|████████▎ | 33/40 [03:01<00:37,  5.40s/it][38;20m2026-06-10 00:41:21 INFO device.py L1840: 'peak_ram': 48.45GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.33:  82%|████████▎ | 33/40 [03:01<00:37,  5.40s/it][38;20m2026-06-10 00:41:27 INFO device.py L1840: 'peak_ram': 49.7GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:41:27 INFO device.py L1840: 'peak_ram': 49.7GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.34:  85%|████████▌ | 34/40 [03:08<00:32,  5.40s/it]Quantizing model.layers.34:  85%|████████▌ | 34/40 [03:08<00:32,  5.40s/it][38;20m2026-06-10 00:41:33 INFO device.py L1840: 'peak_ram': 51.04GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:41:33 INFO device.py L1840: 'peak_ram': 51.04GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.35:  88%|████████▊ | 35/40 [03:13<00:27,  5.40s/it]Quantizing model.layers.35:  88%|████████▊ | 35/40 [03:13<00:27,  5.40s/it][38;20m2026-06-10 00:41:38 INFO device.py L1840: 'peak_ram': 52.22GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:41:38 INFO device.py L1840: 'peak_ram': 52.22GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.36:  90%|█████████ | 36/40 [03:19<00:21,  5.40s/it]Quantizing model.layers.36:  90%|█████████ | 36/40 [03:19<00:21,  5.40s/it][38;20m2026-06-10 00:41:45 INFO device.py L1840: 'peak_ram': 53.56GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.37:  92%|█████████▎| 37/40 [03:25<00:16,  5.40s/it][38;20m2026-06-10 00:41:45 INFO device.py L1840: 'peak_ram': 53.56GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.37:  92%|█████████▎| 37/40 [03:25<00:16,  5.40s/it][38;20m2026-06-10 00:41:51 INFO device.py L1840: 'peak_ram': 53.56GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:41:51 INFO device.py L1840: 'peak_ram': 53.56GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.38:  95%|█████████▌| 38/40 [03:31<00:10,  5.40s/it]Quantizing model.layers.38:  95%|█████████▌| 38/40 [03:31<00:10,  5.40s/it][38;20m2026-06-10 00:41:56 INFO device.py L1840: 'peak_ram': 53.56GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:41:56 INFO device.py L1840: 'peak_ram': 53.56GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.39:  98%|█████████▊| 39/40 [03:37<00:05,  5.40s/it]Quantizing model.layers.39:  98%|█████████▊| 39/40 [03:37<00:05,  5.40s/it][38;20m2026-06-10 00:42:02 INFO device.py L1840: 'peak_ram': 53.56GB, 'peak_vram': 26.32GB[0m
+[38;20m2026-06-10 00:42:02 INFO device.py L1840: 'peak_ram': 53.56GB, 'peak_vram': 26.32GB[0m
+Quantizing model.layers.39: 100%|██████████| 40/40 [03:43<00:00,  5.58s/it]
+Quantizing model.layers.39: 100%|██████████| 40/40 [03:43<00:00,  5.58s/it]
+00:42:28 [INFO] Quantization completed in 260.3s
+00:42:28 [INFO] Saving quantized model (auto_round format)...
+00:42:28 [INFO] Quantization completed in 260.3s
+00:42:28 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-10 00:42:28 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+[33;1m2026-06-10 00:42:28 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+00:42:28 [ERROR] Quantization failed: invalid group reference 1 at position 22
+00:42:28 [ERROR] Quantization failed: invalid group reference 1 at position 22
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 190, in quantize
+    autoround.save_quantized(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 1369, in save_quantized
+    reverted_block_name = revert_checkpoint_conversion_mapping(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 1188, in revert_checkpoint_conversion_mapping
+    name, n_replace = re.subn(source_pattern, target_pattern, name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 197, in subn
+    return _compile(pattern, flags).subn(repl, string, count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 334, in _compile_template
+    return _sre.template(pattern, _parser.parse_template(repl, pattern))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1069, in parse_template
+    addgroup(int(this[1:]), len(this) - 1)
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1014, in addgroup
+    raise s.error("invalid group reference %d" % index, pos)
+re.error: invalid group reference 1 at position 22
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 190, in quantize
+    autoround.save_quantized(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 1369, in save_quantized
+    reverted_block_name = revert_checkpoint_conversion_mapping(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 1188, in revert_checkpoint_conversion_mapping
+    name, n_replace = re.subn(source_pattern, target_pattern, name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 197, in subn
+    return _compile(pattern, flags).subn(repl, string, count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/__init__.py", line 334, in _compile_template
+    return _sre.template(pattern, _parser.parse_template(repl, pattern))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1069, in parse_template
+    addgroup(int(this[1:]), len(this) - 1)
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/re/_parser.py", line 1014, in addgroup
+    raise s.error("invalid group reference %d" % index, pos)
+re.error: invalid group reference 1 at position 22
+[lesson] Saved: [still_failing] 00:37:12 [ERROR] Quantization failed: invalid group reference 1 at position 22
+[lesson]   Solution: Attempt 1 did not resolve
+[lesson] Saved: [still_failing] 00:37:12 [ERROR] Quantization failed: invalid group reference 1 at position 22
+[lesson]   Solution: Attempt 1 did not resolve
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[lesson] Saved: [drift] 00:42:28 [ERROR] Quantization failed: invalid group reference 1 at position 22
+[lesson]   Solution: Same error repeated 2 times
+[lesson] Saved: [drift] 00:42:28 [ERROR] Quantization failed: invalid group reference 1 at position 22
+[lesson]   Solution: Same error repeated 2 times
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] Pipeline failed at: quantize (674s)
+[auto_v3] Pipeline failed at: quantize (674s)
+[auto_v3] Collected 1 openclaw session(s)
+[auto_v3] Collected 1 openclaw session(s)
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/session_fix_quantize_359_1781051835.md
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/session_fix_quantize_359_1781051835.md
+[auto_v3] Generating run report...
+[auto_v3] Generating run report...
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/run_report.md
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-28B-AutoRound-W4A16-RTN/run_report.md
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: 0xSero/Qwen3.6-28B
+[github-upload] artifact name: Qwen3.6-28B-AutoRound-W4A16-RTN
+[github-upload] result org: 0xSero
+[github-upload] branch: main
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: 0xSero/Qwen3.6-28B
+[github-upload] artifact name: Qwen3.6-28B-AutoRound-W4A16-RTN
+[github-upload] result org: 0xSero
+[github-upload] branch: main
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
