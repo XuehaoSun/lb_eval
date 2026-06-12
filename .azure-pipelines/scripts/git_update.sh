@@ -9,7 +9,7 @@ RETRY_BASE_SLEEP=3       # seconds; doubles each attempt
 function prepare_repo() {
     workspace=$(pwd)
     git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
-    git clone https://huggingface.co/datasets/Intel/ld_results
+    git clone https://huggingface.co/datasets/Intel/ld_results ld_results
     cd lb_eval_backup
     git checkout main
 }
@@ -44,6 +44,8 @@ function push_results() {
     rm -rf "${workspace}/lb_eval_backup"
 
     cd "$workspace/ld_results"
+    git config --global user.email "inc.maintainers@intel.com"
+    git config --global user.name "INC4AI"
     git add . && git commit -m "${commitMessage}" || echo "[git_update] Nothing to commit"
     git remote set-url origin https://INC4AI:${HUGGINGFACE_TOKEN}@huggingface.co/datasets/Intel/ld_results
     run_git_push
