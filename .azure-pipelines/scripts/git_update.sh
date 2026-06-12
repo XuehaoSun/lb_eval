@@ -12,19 +12,22 @@ function prepare_repo() {
     git clone --depth 1 --filter=blob:none --sparse \
         "https://github.com/XuehaoSun/lb_eval.git" lb_eval_backup
     cd lb_eval_backup
-    git sparse-checkout set status results
 }
 
 function get_status() {
     if [ "${status}" ]; then
+        # Status update needs the existing JSON to sed in-place, so check it out.
+        git sparse-checkout set status
         cd "$workspace/lb_eval_backup/status"
         sed -i "s/\"status\":.*/\"status\": \"${status}\",/g" "${requestJson}"
     else
         # ── Push results ────────────────────────────────────────────
+        # Results are write-only: no need to download existing content,
+        # just create the dir and drop the new files in.
         model_name=$(echo "${requestJson}" | awk -F '_eval' '{print $1}')
         mkdir -p "$workspace/lb_eval_backup/results/${model_name}"
         find "${BUILD_SOURCESDIRECTORY}/evaluation" -name "results_*.json" \
-            -exec cp {} "results/${model_name}" \; 2>/dev/null || true
+            -exec cp {} "$workspace/lb_eval_backup/results/${model_name}" \; 2>/dev/null || true
         push_hf_dataset
         # NOTE: pending_requests/ files are intentionally kept — the dispatcher
         # uses status/ (not pending_requests/) for scheduling decisions.
