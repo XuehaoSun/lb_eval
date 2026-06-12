@@ -194,19 +194,6 @@ stages:
                   --pool "$(POOL_NAME)" \
                   --agent "$(AGENT_NAME)"
 
-          - task: Bash@3
-            displayName: "Push Results"
-            condition: always()
-            inputs:
-              filePath: .azure-pipelines/scripts/git_update.sh
-            name: gitUpdateResults
-            env:
-              requestJson: $(REQUEST_JSON)
-              commitMessage: "Commit from Azure DevOps update Results"
-              status: ""
-              TOKEN: $(TOKEN)
-              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
-
           # Safety net: write-back final status based on Eval stage result
           - task: Bash@3
             displayName: "Write Status (Finished)"

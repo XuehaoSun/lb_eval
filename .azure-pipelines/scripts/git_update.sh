@@ -21,16 +21,7 @@ function get_status() {
         cd "$workspace/lb_eval_backup/status"
         sed -i "s/\"status\":.*/\"status\": \"${status}\",/g" "${requestJson}"
     else
-        # ── Push results ────────────────────────────────────────────
-        # Results are write-only: no need to download existing content,
-        # just create the dir and drop the new files in.
-        model_name=$(echo "${requestJson}" | awk -F '_eval' '{print $1}')
-        mkdir -p "$workspace/lb_eval_backup/results/${model_name}"
-        find "${BUILD_SOURCESDIRECTORY}/evaluation" -name "results_*.json" \
-            -exec cp {} "$workspace/lb_eval_backup/results/${model_name}" \; 2>/dev/null || true
         push_hf_dataset
-        # NOTE: pending_requests/ files are intentionally kept — the dispatcher
-        # uses status/ (not pending_requests/) for scheduling decisions.
     fi
 }
 
@@ -60,6 +51,7 @@ function run_git_push() {
 }
 
 function push_hf_dataset() {
+    local model_name=$(echo "${requestJson}" | jq -r '.model_name')
     local local_data_path="$workspace/lb_eval_backup/results/${model_name}"
     local target_data_path="${model_name}"
     if [ ! -d "${local_data_path}" ]; then
