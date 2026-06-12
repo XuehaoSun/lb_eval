@@ -41,7 +41,7 @@ stages:
             inputs:
               targetType: "inline"
               script: |
-                pip install requests
+                pip install requests huggingface_hub
 
           - task: Bash@3
             displayName: "Create RunPod Instance"
@@ -146,6 +146,8 @@ stages:
     condition: always()
     jobs:
       - job: Verify_Cleanup
+        variables:
+          evalResult: $[ stageDependencies.Eval.Eval.result ]
         pool:
           vmImage: "ubuntu-latest"
         steps:
@@ -162,7 +164,7 @@ stages:
             inputs:
               targetType: "inline"
               script: |
-                pip install requests
+                pip install requests huggingface_hub
 
           - task: Bash@3
             displayName: "Terminate RunPod Instance"
@@ -193,6 +195,8 @@ stages:
                   --agent "$(AGENT_NAME)"
 
           - task: Bash@3
+            displayName: "Push Results"
+            condition: always()
             inputs:
               filePath: .azure-pipelines/scripts/git_update.sh
             name: gitUpdateResults
@@ -203,27 +207,29 @@ stages:
               TOKEN: $(TOKEN)
               HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
 
-      # Safety net: write-back final status based on Eval stage result
-      - job: Write_Status_Finished
-        dependsOn: Verify_Cleanup
-        condition: eq(stageDependencies.Eval.Eval.result, 'Succeeded')
-        pool:
-          vmImage: "ubuntu-latest"
-        steps:
-          - checkout: self
-          - template: template/git-status-template.yml
-            parameters:
+          # Safety net: write-back final status based on Eval stage result
+          - task: Bash@3
+            displayName: "Write Status (Finished)"
+            condition: eq(variables.evalResult, 'Succeeded')
+            inputs:
+              filePath: .azure-pipelines/scripts/git_update.sh
+            name: gitUpdateStatusFinished
+            env:
+              requestJson: $(REQUEST_JSON)
+              commitMessage: "Commit from Azure DevOps update Status Finished"
               status: "Finished"
-              requestJson: "$(REQUEST_JSON)"
+              TOKEN: $(TOKEN)
+              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)
 
-      - job: Write_Status_Failed
-        dependsOn: Verify_Cleanup
-        condition: ne(stageDependencies.Eval.Eval.result, 'Succeeded')
-        pool:
-          vmImage: "ubuntu-latest"
-        steps:
-          - checkout: self
-          - template: template/git-status-template.yml
-            parameters:
+          - task: Bash@3
+            displayName: "Write Status (Failed)"
+            condition: ne(variables.evalResult, 'Succeeded')
+            inputs:
+              filePath: .azure-pipelines/scripts/git_update.sh
+            name: gitUpdateStatusFailed
+            env:
+              requestJson: $(REQUEST_JSON)
+              commitMessage: "Commit from Azure DevOps update Status Failed"
               status: "Failed"
-              requestJson: "$(REQUEST_JSON)"
+              TOKEN: $(TOKEN)
+              HUGGINGFACE_TOKEN: $(HUGGINGFACE_TOKEN)

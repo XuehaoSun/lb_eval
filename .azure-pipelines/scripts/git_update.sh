@@ -4,14 +4,15 @@ set -x
 # ── Configuration ───────────────────────────────────────────────────
 MAX_GIT_RETRIES=5        # more retries for parallel-push resilience
 RETRY_BASE_SLEEP=3       # seconds; doubles each attempt
+HF_REPO_NAME="Intel/ld_results"
 
 # ── Helpers ─────────────────────────────────────────────────────────
 function prepare_repo() {
     workspace=$(pwd)
-    git clone https://github.com/XuehaoSun/lb_eval.git lb_eval_backup
-    git clone https://huggingface.co/datasets/Intel/ld_results ld_results
+    git clone --depth 1 --filter=blob:none --sparse \
+        "https://github.com/XuehaoSun/lb_eval.git" lb_eval_backup
     cd lb_eval_backup
-    git checkout main
+    git sparse-checkout set status results
 }
 
 function get_status() {
@@ -21,14 +22,10 @@ function get_status() {
     else
         # ── Push results ────────────────────────────────────────────
         model_name=$(echo "${requestJson}" | awk -F '_eval' '{print $1}')
-        mkdir -p "$workspace/lb_eval_backup/results/${model_name}" \
-                 "$workspace/ld_results/${model_name}"
+        mkdir -p "$workspace/lb_eval_backup/results/${model_name}"
         find "${BUILD_SOURCESDIRECTORY}/evaluation" -name "results_*.json" \
             -exec cp {} "results/${model_name}" \; 2>/dev/null || true
-
-        rsync -avP "$workspace/lb_eval_backup/results/${model_name}/" \
-                   "$workspace/ld_results/${model_name}/" 2>/dev/null || true
-
+        push_hf_dataset
         # NOTE: pending_requests/ files are intentionally kept — the dispatcher
         # uses status/ (not pending_requests/) for scheduling decisions.
     fi
@@ -42,14 +39,6 @@ function push_results() {
     git add . && git commit -m "${commitMessage}" || echo "[git_update] Nothing to commit"
     run_git_push
     rm -rf "${workspace}/lb_eval_backup"
-
-    cd "$workspace/ld_results"
-    git config --global user.email "inc.maintainers@intel.com"
-    git config --global user.name "INC4AI"
-    git add . && git commit -m "${commitMessage}" || echo "[git_update] Nothing to commit"
-    git remote set-url origin https://INC4AI:${HUGGINGFACE_TOKEN}@huggingface.co/datasets/Intel/ld_results
-    run_git_push
-    rm -rf "${workspace}/ld_results"
 }
 
 function run_git_push() {
@@ -65,6 +54,17 @@ function run_git_push() {
     done
     echo "[git_update] ERROR: push failed after ${MAX_GIT_RETRIES} attempts"
     return 1
+}
+
+function push_hf_dataset() {
+    local local_data_path="$workspace/lb_eval_backup/results/${model_name}"
+    local target_data_path="${model_name}"
+    if [ ! -d "${local_data_path}" ]; then
+        echo "[git_update] Skipping HF upload: ${local_data_path} does not exist"
+        return 0
+    fi
+    hf auth login --token ${HUGGINGFACE_TOKEN}
+    hf upload ${HF_REPO_NAME} "${local_data_path}" "${target_data_path}" --repo-type=dataset
 }
 
 function main() {
