@@ -45,7 +45,7 @@ function push_results() {
 
     cd "$workspace/ld_results"
     git add . && git commit -m "${commitMessage}" || echo "[git_update] Nothing to commit"
-    git remote set-url origin "https://lvkaokao:${HUGGINGFACE_TOKEN}@huggingface.co/datasets/Intel/ld_results"
+    git remote set-url origin https://INC4AI:${HUGGINGFACE_TOKEN}@huggingface.co/datasets/Intel/ld_results
     run_git_push
     rm -rf "${workspace}/ld_results"
 }
