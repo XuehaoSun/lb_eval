@@ -1,0 +1,694 @@
+
+═══════ Pipeline: google/gemma-4-31B-it | W4A16/RTN/auto_round ═══════
+
+
+═══════ Pipeline: google/gemma-4-31B-it | W4A16/RTN/auto_round ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+[setup_env] Installing: auto-round
+[setup_env] Installing: auto-round
+ + triton==3.7.0
+ + typing-inspection==0.4.2
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + triton==3.7.0
+ + typing-inspection==0.4.2
+ + urllib3==2.7.0
+ + xxhash==3.7.0
+ + yarl==1.24.2
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + loguru==0.7.3
+ + protobuf==7.35.1
+ + sentencepiece==0.2.1
+ + loguru==0.7.3
+ + protobuf==7.35.1
+ + sentencepiece==0.2.1
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] torch=2.12.0+cu130, CUDA available — OK
+[setup_env] torch=2.12.0+cu130, CUDA available — OK
+[setup_env] Running pre-flight dependency check for google/gemma-4-31B-it...
+[setup_env] Running pre-flight dependency check for google/gemma-4-31B-it...
+07:51:51 [preflight] Pre-flight check for: google/gemma-4-31B-it
+07:51:51 [preflight] Pre-flight check for: google/gemma-4-31B-it
+07:51:51 [preflight] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+07:51:51 [preflight] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+07:51:52 [preflight] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:51:52 [preflight] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:51:52 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:51:52 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:51:52 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:51:52 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:51:52 [preflight]   model_type: gemma4
+07:51:52 [preflight]   auto_map: no
+07:51:52 [preflight]   model_type: gemma4
+07:51:52 [preflight]   auto_map: no
+07:51:52 [preflight]   transformers_version: 5.5.0.dev0
+07:51:52 [preflight]   transformers_version: 5.5.0.dev0
+07:51:53 [preflight] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+07:51:53 [preflight] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:51:53 [preflight] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:51:53 [preflight] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:51:53 [preflight]   ✓ All dependencies satisfied
+07:51:53 [preflight]   ✓ All dependencies satisfied
+
+[setup_env] Verification:
+
+[setup_env] Verification:
+  torch=2.12.0+cu130, cuda=True
+  torch=2.12.0+cu130, cuda=True
+  auto_round=0.13.1
+  transformers=5.12.0
+  auto_round=0.13.1
+  transformers=5.12.0
+  lm_eval=0.4.12
+  lm_eval=0.4.12
+
+=== Phase 1: DONE ===
+
+=== Phase 1: DONE ===
+[auto_v3] setup_env succeeded
+[auto_v3] setup_env succeeded
+
+═══════ Phase: quantize ═══════
+
+
+═══════ Phase: quantize ═══════
+
+=== Phase 2: Quantization ===
+  model=google/gemma-4-31B-it
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/quantized_model
+=== Phase 2: Quantization ===
+  model=google/gemma-4-31B-it
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/quantized_model
+07:52:13 [INFO] Model: google/gemma-4-31B-it
+07:52:13 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:52:13 [INFO] Iters: 0 (RTN)
+07:52:13 [INFO] Export format: auto_round
+07:52:13 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/quantized_model
+07:52:13 [INFO] Device map: auto
+07:52:13 [INFO] Loading tokenizer...
+07:52:13 [INFO] Model: google/gemma-4-31B-it
+07:52:13 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:52:13 [INFO] Iters: 0 (RTN)
+07:52:13 [INFO] Export format: auto_round
+07:52:13 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/quantized_model
+07:52:13 [INFO] Device map: auto
+07:52:13 [INFO] Loading tokenizer...
+07:52:13 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:52:13 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:52:13 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:52:13 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:52:13 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:52:13 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:52:13 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:52:13 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:52:13 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:52:13 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:52:13 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:52:13 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:52:13 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:52:13 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:52:14 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:52:14 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:52:14 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+07:52:14 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+07:52:15 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+07:52:15 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+07:52:16 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+07:52:16 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+07:52:16 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+07:52:16 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+07:52:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/chat_template.jinja "HTTP/1.1 200 OK"
+07:52:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/chat_template.jinja "HTTP/1.1 200 OK"
+07:52:16 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/chat_template.jinja "HTTP/1.1 200 OK"
+07:52:16 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/chat_template.jinja "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it "HTTP/1.1 200 OK"
+07:52:19 [INFO] Loading model...
+07:52:19 [INFO] Loading model...
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/revision/main "HTTP/1.1 200 OK"
+07:52:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/revision/main "HTTP/1.1 200 OK"
+07:52:20 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/3548789868c5356dbf307c98e6f609007b82b3eb/model-00001-of-00002.safetensors "HTTP/1.1 302 Found"
+07:52:20 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/3548789868c5356dbf307c98e6f609007b82b3eb/model-00001-of-00002.safetensors "HTTP/1.1 302 Found"
+07:52:20 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/3548789868c5356dbf307c98e6f609007b82b3eb/model-00002-of-00002.safetensors "HTTP/1.1 302 Found"
+07:52:20 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/3548789868c5356dbf307c98e6f609007b82b3eb/model-00002-of-00002.safetensors "HTTP/1.1 302 Found"
+07:53:44 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:44 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:44 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:53:44 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:53:44 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:53:44 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:53:44 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:53:44 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:53:44 [INFO] Architecture: Gemma4ForConditionalGeneration (model_type=gemma4, moe=False)
+07:53:44 [INFO] Ignore layers: lm_head
+07:53:44 [INFO] Configuring AutoRound...
+07:53:44 [INFO] Architecture: Gemma4ForConditionalGeneration (model_type=gemma4, moe=False)
+07:53:44 [INFO] Ignore layers: lm_head
+07:53:44 [INFO] Configuring AutoRound...
+[38;20m2026-06-14 07:53:44 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-14 07:53:44 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-14 07:53:44 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+[38;20m2026-06-14 07:53:44 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a2e5e09-6ae9321d077166ec34bc5c28;1b7f3911-63e7-41c3-9bcd-ee55130a9d94)
+
+Entry Not Found for url: https://huggingface.co/google/gemma-4-31B-it/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a2e5e09-6ae9321d077166ec34bc5c28;1b7f3911-63e7-41c3-9bcd-ee55130a9d94)
+
+Entry Not Found for url: https://huggingface.co/google/gemma-4-31B-it/resolve/main/model_index.json.
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:46 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+07:53:46 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+07:53:46 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+07:53:46 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+07:53:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:53:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:53:46 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/revision/main "HTTP/1.1 200 OK"
+07:53:46 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/revision/main "HTTP/1.1 200 OK"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:53:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:53:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:53:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:53:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:53:47 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:53:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it "HTTP/1.1 200 OK"
+07:53:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it "HTTP/1.1 200 OK"
+07:53:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:53:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:53:50 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:53:50 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:53:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:53:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/chat_template.jinja "HTTP/1.1 200 OK"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/chat_template.jinja "HTTP/1.1 200 OK"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+07:53:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+07:53:51 [ERROR] Quantization failed: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+07:53:51 [ERROR] Quantization failed: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 312, in __new__
+    return _get_compressor_class(model_type, CalibratedRTNCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 900, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2090, in __getattribute__
+    requires_backends(cls, cls._backends)
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2076, in requires_backends
+    raise ImportError("".join(failed))
+ImportError: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 312, in __new__
+    return _get_compressor_class(model_type, CalibratedRTNCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 900, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2090, in __getattribute__
+    requires_backends(cls, cls._backends)
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2076, in requires_backends
+    raise ImportError("".join(failed))
+ImportError: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Calling openclaw agent (session=fix_quantize_810_1781423633, timeout=600s)...
+[auto_v3] Calling openclaw agent (session=fix_quantize_810_1781423633, timeout=600s)...
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] embedded run agent end: runId=fix_quantize_810_1781423633 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"已达到 Token Plan 用量上限：请升级 Token Plan 套餐或购买积分补充用量。 (2056)"},"request_id":"sha256:14554f13bce9"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_810_1781423633 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"已达到 Token Plan 用量上限：请升级 Token Plan 套餐或购买积分补充用量。 (2056)"},"request_id":"sha256:14554f13bce9"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_810_1781423633 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"已达到 Token Plan 用量上限：请升级 Token Plan 套餐或购买积分补充用量。 (2056)"},"request_id":"sha256:3f5f6298e233"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_810_1781423633 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"已达到 Token Plan 用量上限：请升级 Token Plan 套餐或购买积分补充用量。 (2056)"},"request_id":"sha256:3f5f6298e233"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_810_1781423633 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"已达到 Token Plan 用量上限：请升级 Token Plan 套餐或购买积分补充用量。 (2056)"},"request_id":"sha256:604587c7265e"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_810_1781423633 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"已达到 Token Plan 用量上限：请升级 Token Plan 套餐或购买积分补充用量。 (2056)"},"request_id":"sha256:604587c7265e"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_810_1781423633 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"已达到 Token Plan 用量上限：请升级 Token Plan 套餐或购买积分补充用量。 (2056)"},"request_id":"sha256:f06bee5435f7"}
+[agent/embedded] embedded run agent end: runId=fix_quantize_810_1781423633 isError=true model=MiniMax-M2.7 provider=minimax error=⚠️ API rate limit reached. Please try again later. rawError=429 {"type":"error","error":{"type":"rate_limit_error","message":"已达到 Token Plan 用量上限：请升级 Token Plan 套餐或购买积分补充用量。 (2056)"},"request_id":"sha256:f06bee5435f7"}
+[agent/embedded] auth profile failure state updated: runId=fix_quantize_810_1781423633 profile=sha256:c38c74a5066a provider=minimax reason=rate_limit window=cooldown reused=false
+[agent/embedded] auth profile failure state updated: runId=fix_quantize_810_1781423633 profile=sha256:c38c74a5066a provider=minimax reason=rate_limit window=cooldown reused=false
+[agent/embedded] embedded run failover decision: runId=fix_quantize_810_1781423633 stage=assistant decision=surface_error reason=rate_limit provider=minimax/MiniMax-M2.7 profile=sha256:c38c74a5066a
+[agent/embedded] embedded run failover decision: runId=fix_quantize_810_1781423633 stage=assistant decision=surface_error reason=rate_limit provider=minimax/MiniMax-M2.7 profile=sha256:c38c74a5066a
+⚠️ API rate limit reached. Please try again later.
+⚠️ API rate limit reached. Please try again later.
+[auto_v3] Re-running quantize after agent fix...
+[auto_v3] Re-running quantize after agent fix...
+=== Phase 2: Quantization ===
+  model=google/gemma-4-31B-it
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/quantized_model
+=== Phase 2: Quantization ===
+  model=google/gemma-4-31B-it
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/quantized_model
+07:54:33 [INFO] Model: google/gemma-4-31B-it
+07:54:33 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:54:33 [INFO] Iters: 0 (RTN)
+07:54:33 [INFO] Export format: auto_round
+07:54:33 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/quantized_model
+07:54:33 [INFO] Device map: auto
+07:54:33 [INFO] Loading tokenizer...
+07:54:33 [INFO] Model: google/gemma-4-31B-it
+07:54:33 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:54:33 [INFO] Iters: 0 (RTN)
+07:54:33 [INFO] Export format: auto_round
+07:54:33 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/quantized_model
+07:54:33 [INFO] Device map: auto
+07:54:33 [INFO] Loading tokenizer...
+07:54:33 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:33 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:54:33 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:54:33 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+07:54:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:33 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:33 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:54:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:54:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:54:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:54:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:54:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:54:36 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it "HTTP/1.1 200 OK"
+07:54:36 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it "HTTP/1.1 200 OK"
+07:54:36 [INFO] Loading model...
+07:54:36 [INFO] Loading model...
+07:54:37 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:37 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:54:49 [INFO] Architecture: Gemma4ForConditionalGeneration (model_type=gemma4, moe=False)
+07:54:49 [INFO] Ignore layers: lm_head
+07:54:49 [INFO] Configuring AutoRound...
+07:54:49 [INFO] Architecture: Gemma4ForConditionalGeneration (model_type=gemma4, moe=False)
+07:54:49 [INFO] Ignore layers: lm_head
+07:54:49 [INFO] Configuring AutoRound...
+[38;20m2026-06-14 07:54:49 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-14 07:54:49 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-14 07:54:49 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+[38;20m2026-06-14 07:54:49 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+07:54:49 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a2e5e49-5ff0737e376e65ed77237180;5692d1ae-78c7-4de8-980d-07d9ff4115a4)
+
+Entry Not Found for url: https://huggingface.co/google/gemma-4-31B-it/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a2e5e49-5ff0737e376e65ed77237180;5692d1ae-78c7-4de8-980d-07d9ff4115a4)
+
+Entry Not Found for url: https://huggingface.co/google/gemma-4-31B-it/resolve/main/model_index.json.
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:54:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/model.safetensors.index.json "HTTP/1.1 200 OK"
+07:54:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/revision/main "HTTP/1.1 200 OK"
+07:54:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/revision/main "HTTP/1.1 200 OK"
+07:54:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:54:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/generation_config.json "HTTP/1.1 200 OK"
+07:54:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:54:51 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+07:54:52 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:52 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/config.json "HTTP/1.1 200 OK"
+07:54:52 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:52 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:54:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/tokenizer_config.json "HTTP/1.1 200 OK"
+07:54:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:54:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:54:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:54:52 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:54:55 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it "HTTP/1.1 200 OK"
+07:54:55 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it "HTTP/1.1 200 OK"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:54:55 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:54:55 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-31B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/processor_config.json "HTTP/1.1 200 OK"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+07:54:55 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+07:54:56 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+07:54:56 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+07:54:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/chat_template.jinja "HTTP/1.1 200 OK"
+07:54:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-31B-it/3548789868c5356dbf307c98e6f609007b82b3eb/chat_template.jinja "HTTP/1.1 200 OK"
+07:54:56 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+07:54:56 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-31B-it/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+07:54:56 [ERROR] Quantization failed: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+07:54:56 [ERROR] Quantization failed: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 312, in __new__
+    return _get_compressor_class(model_type, CalibratedRTNCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 900, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2090, in __getattribute__
+    requires_backends(cls, cls._backends)
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2076, in requires_backends
+    raise ImportError("".join(failed))
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 312, in __new__
+    return _get_compressor_class(model_type, CalibratedRTNCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 900, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2090, in __getattribute__
+    requires_backends(cls, cls._backends)
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py", line 2076, in requires_backends
+    raise ImportError("".join(failed))
+ImportError: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+ImportError: 
+Gemma4Processor requires the PIL library but it was not found in your environment. You can install it with pip:
+`pip install pillow`. Please note that you may need to restart your runtime after installation.
+
+[lesson] Saved: [still_failing] 404 Client Error. (Request ID: Root=1-6a2e5e09-6ae9321d077166ec34bc5c28;1b7f3911
+[lesson]   Solution: Attempt 1 did not resolve
+[lesson] Saved: [still_failing] 404 Client Error. (Request ID: Root=1-6a2e5e09-6ae9321d077166ec34bc5c28;1b7f3911
+[lesson]   Solution: Attempt 1 did not resolve
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[lesson] Saved: [drift] 404 Client Error. (Request ID: Root=1-6a2e5e49-5ff0737e376e65ed77237180;5692d1ae
+[lesson]   Solution: Same error repeated 2 times
+[lesson] Saved: [drift] 404 Client Error. (Request ID: Root=1-6a2e5e49-5ff0737e376e65ed77237180;5692d1ae
+[lesson]   Solution: Same error repeated 2 times
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] Pipeline failed at: quantize (240s)
+[auto_v3] Pipeline failed at: quantize (240s)
+[auto_v3] Collected 1 openclaw session(s)
+[auto_v3] Collected 1 openclaw session(s)
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/session_fix_quantize_810_1781423633.md
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/session_fix_quantize_810_1781423633.md
+[auto_v3] Generating run report...
+[auto_v3] Generating run report...
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/run_report.md
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/gemma-4-31B-it-AutoRound-W4A16-RTN/run_report.md
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: google/gemma-4-31B-it
+[github-upload] artifact name: gemma-4-31B-it-AutoRound-W4A16-RTN
+[github-upload] result org: google
+[github-upload] branch: main
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: google/gemma-4-31B-it
+[github-upload] artifact name: gemma-4-31B-it-AutoRound-W4A16-RTN
+[github-upload] result org: google
+[github-upload] branch: main
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
