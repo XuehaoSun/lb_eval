@@ -1,0 +1,195 @@
+=== Phase 2: Quantization ===
+  model=oopere/gemma-3-270m-14L-distilled
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gemma-3-270m-14L-distilled-AutoRound-W4A16-RTN/quantized_model
+08:06:22 [INFO] Model: oopere/gemma-3-270m-14L-distilled
+08:06:22 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+08:06:22 [INFO] Iters: 0 (RTN)
+08:06:22 [INFO] Export format: auto_round
+08:06:22 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gemma-3-270m-14L-distilled-AutoRound-W4A16-RTN/quantized_model
+08:06:22 [INFO] Device map: auto
+08:06:22 [INFO] Loading tokenizer...
+08:06:22 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+08:06:22 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+08:06:22 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:22 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:23 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/tokenizer_config.json "HTTP/1.1 200 OK"
+08:06:23 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/tokenizer_config.json "HTTP/1.1 200 OK"
+08:06:23 [INFO] HTTP Request: GET https://huggingface.co/api/models/oopere/gemma-3-270m-14L-distilled/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+08:06:23 [INFO] HTTP Request: GET https://huggingface.co/api/models/oopere/gemma-3-270m-14L-distilled/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:06:23 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+08:06:25 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+08:06:25 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+08:06:26 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+08:06:29 [INFO] HTTP Request: GET https://huggingface.co/api/models/oopere/gemma-3-270m-14L-distilled "HTTP/1.1 200 OK"
+08:06:29 [INFO] Loading model...
+08:06:30 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:30 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:30 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[transformers] [1mGemma3ForCausalLM LOAD REPORT[0m from: oopere/gemma-3-270m-14L-distilled
+Key                                                     | Status     |  | 
+--------------------------------------------------------+------------+--+-
+model.layers.{12, 13}.self_attn.o_proj.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.q_norm.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.q_proj.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.k_proj.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.post_attention_layernorm.weight   | UNEXPECTED |  | 
+model.layers.{12, 13}.mlp.gate_proj.weight              | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.v_proj.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.input_layernorm.weight            | UNEXPECTED |  | 
+model.layers.{12, 13}.mlp.down_proj.weight              | UNEXPECTED |  | 
+model.layers.{12, 13}.pre_feedforward_layernorm.weight  | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.k_norm.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.mlp.up_proj.weight                | UNEXPECTED |  | 
+model.layers.{12, 13}.post_feedforward_layernorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+08:06:49 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/generation_config.json "HTTP/1.1 200 OK"
+08:06:50 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/generation_config.json "HTTP/1.1 200 OK"
+08:06:50 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+08:06:50 [INFO] Architecture: Gemma3ForCausalLM (model_type=gemma3_text, moe=False)
+08:06:50 [INFO] Ignore layers: lm_head
+08:06:50 [INFO] Configuring AutoRound...
+[38;20m2026-06-14 08:06:50 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+08:06:50 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a2e611a-50ad76575286ebde292e93e0;8ac07cea-1015-4d07-93c9-f8dc9d41d01c)
+
+Entry Not Found for url: https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/model_index.json.
+[38;20m2026-06-14 08:06:51 INFO entry.py L591: Using LLM mode.[0m
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a2e611b-484a9c340532982e7fe173cd;0fab8391-3e02-4888-9b99-daa90c907525)
+
+Entry Not Found for url: https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/model_index.json.
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:51 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a2e611b-6a3907ac409155b46bf2e0ba;ddf17e9e-2c16-4070-ad6a-0745d5f73e3d)
+
+Entry Not Found for url: https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/model_index.json.
+08:06:52 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:52 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:52 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:06:52 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:52 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/tokenizer_config.json "HTTP/1.1 200 OK"
+08:06:53 [INFO] HTTP Request: GET https://huggingface.co/api/models/oopere/gemma-3-270m-14L-distilled/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+08:06:53 [INFO] HTTP Request: GET https://huggingface.co/api/models/oopere/gemma-3-270m-14L-distilled/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: GET https://huggingface.co/api/models/oopere/gemma-3-270m-14L-distilled "HTTP/1.1 200 OK"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+[transformers] [1mGemma3ForCausalLM LOAD REPORT[0m from: oopere/gemma-3-270m-14L-distilled
+Key                                                     | Status     |  | 
+--------------------------------------------------------+------------+--+-
+model.layers.{12, 13}.self_attn.o_proj.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.q_norm.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.q_proj.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.k_proj.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.post_attention_layernorm.weight   | UNEXPECTED |  | 
+model.layers.{12, 13}.mlp.gate_proj.weight              | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.v_proj.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.input_layernorm.weight            | UNEXPECTED |  | 
+model.layers.{12, 13}.mlp.down_proj.weight              | UNEXPECTED |  | 
+model.layers.{12, 13}.pre_feedforward_layernorm.weight  | UNEXPECTED |  | 
+model.layers.{12, 13}.self_attn.k_norm.weight           | UNEXPECTED |  | 
+model.layers.{12, 13}.mlp.up_proj.weight                | UNEXPECTED |  | 
+model.layers.{12, 13}.post_feedforward_layernorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+08:06:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/generation_config.json "HTTP/1.1 200 OK"
+08:06:57 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+08:06:57 [INFO] Starting quantization...
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-06-14 08:06:57 INFO utils.py L964: Ignored layers: lm_head, lm_head[0m
+[33;1m2026-06-14 08:06:57 WARNING utils.py L540: reset `quant_lm_head` to false as quantizing lm_head with tied weights has not been supported currently[0m
+[38;20m2026-06-14 08:06:57 INFO base.py L663: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-14 08:06:57 INFO data_driven.py L1089: start to compute imatrix[0m
+[38;20m2026-06-14 08:06:57 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+08:06:58 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+08:06:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+08:06:58 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+08:06:58 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+08:06:58 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+08:06:59 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+08:06:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+08:06:59 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+08:06:59 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:06:59 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+08:06:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+08:06:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+08:06:59 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+08:07:00 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 35539.17 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:08<00:00, 1242.58 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:06<00:00, 1653.18 examples/s]
+Casting the dataset:   0%|          | 0/1242 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1242/1242 [00:04<00:00, 291.56 examples/s]
+08:07:21 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+08:07:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+08:07:22 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+08:07:22 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+08:07:22 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+08:07:22 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+08:07:23 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+08:07:23 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:07:23 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-06-14 08:07:23 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+08:07:23 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+08:07:23 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+08:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+08:07:24 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+08:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+08:07:24 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+08:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+08:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+08:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+08:07:25 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+08:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+08:07:25 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+  0%|          | 0/12 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/12 [00:00<?, ?it/s][33;1m2026-06-14 08:07:29 WARNING logging.py L340: please use more data via setting `nsamples` to improve accuracy as calibration activations contain 0[0m
+[38;20m2026-06-14 08:07:29 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_l39okavz[0m
+[38;20m2026-06-14 08:07:30 INFO device.py L1840: 'peak_ram': 4.08GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.1:   8%|▊         | 1/12 [00:03<00:42,  3.90s/it][38;20m2026-06-14 08:07:32 INFO device.py L1840: 'peak_ram': 4.55GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.2:  17%|█▋        | 2/12 [00:06<00:32,  3.28s/it][38;20m2026-06-14 08:07:35 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.3:  25%|██▌       | 3/12 [00:09<00:27,  3.07s/it][38;20m2026-06-14 08:07:37 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.4:  33%|███▎      | 4/12 [00:11<00:23,  2.89s/it][38;20m2026-06-14 08:07:40 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.5:  42%|████▏     | 5/12 [00:13<00:19,  2.79s/it][38;20m2026-06-14 08:07:42 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.6:  50%|█████     | 6/12 [00:16<00:16,  2.72s/it][38;20m2026-06-14 08:07:44 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.7:  58%|█████▊    | 7/12 [00:18<00:13,  2.66s/it][38;20m2026-06-14 08:07:47 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.8:  67%|██████▋   | 8/12 [00:20<00:10,  2.62s/it][38;20m2026-06-14 08:07:49 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.9:  75%|███████▌  | 9/12 [00:23<00:07,  2.59s/it][38;20m2026-06-14 08:07:51 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.10:  83%|████████▎ | 10/12 [00:25<00:05,  2.57s/it][38;20m2026-06-14 08:07:54 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.11:  92%|█████████▏| 11/12 [00:28<00:02,  2.55s/it][38;20m2026-06-14 08:07:56 INFO device.py L1840: 'peak_ram': 4.99GB, 'peak_vram': 0.84GB[0m
+Quantizing model.layers.11: 100%|██████████| 12/12 [00:30<00:00,  2.52s/it]
+08:07:56 [INFO] Quantization completed in 59.3s
+08:07:56 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-14 08:07:56 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+packing:   0%|          | 0/84 [00:00<?, ?it/s]packing: 100%|██████████| 84/84 [00:00<00:00, 527.59it/s]
+[33;1m2026-06-14 08:07:56 WARNING export.py L344: /root/_work/1/s/auto_quant/output/runs/gemma-3-270m-14L-distilled-AutoRound-W4A16-RTN/quantized_model already exists, this may cause model conflict[0m
+[38;20m2026-06-14 08:07:57 INFO missing_tensors.py L336: Found 26 tensor(s) in the source checkpoint that are absent from the saved output (e.g., MTP parameters): model.layers.[12-13].input_layernorm, model.layers.[12-13].mlp.down_proj, model.layers.[12-13].mlp.gate_proj, model.layers.[12-13].mlp.up_proj, model.layers.[12-13].post_attention_layernorm, model.layers.[12-13].post_feedforward_layernorm, model.layers.[12-13].pre_feedforward_layernorm, model.layers.[12-13].self_attn.k_norm, model.layers.[12-13].self_attn.k_proj, model.layers.[12-13].self_attn.o_proj, model.layers.[12-13].self_attn.q_norm, model.layers.[12-13].self_attn.q_proj, model.layers.[12-13].self_attn.v_proj. Copying them now...
+[0m
+Loading missing tensors:   0%|          | 0/1 [00:00<?, ?shard/s]
+  model.safetensors:   0%|          | 0/26 [00:00<?, ?tensor/s][A
+                                                               [ALoading missing tensors: 100%|██████████| 1/1 [00:00<00:00, 571.51shard/s]
+[38;20m2026-06-14 08:07:57 INFO missing_tensors.py L823: Processing config.json to update quantization_config for missing tensors...[0m
+[38;20m2026-06-14 08:07:57 INFO missing_tensors.py L846: Applying WOQ[RTN] to 14 missing Linear weight(s) (per-layer overrides from extra_config applied)...[0m
+WOQ[RTN] quantizing missing weights:   0%|          | 0/14 [00:00<?, ?weight/s]WOQ[RTN] quantizing missing weights: 100%|██████████| 14/14 [00:00<00:00, 260.48weight/s]
+[38;20m2026-06-14 08:07:57 INFO missing_tensors.py L909: Successfully packed 14 weight(s) into WOQ format (42 packed tensor(s) created).[0m
+[38;20m2026-06-14 08:07:57 INFO missing_tensors.py L476: Successfully wrote 54 missing tensor(s) to 'model_extra_tensors.safetensors' in /root/_work/1/s/auto_quant/output/runs/gemma-3-270m-14L-distilled-AutoRound-W4A16-RTN/quantized_model.[0m
+08:07:57 [INFO] HTTP Request: HEAD https://huggingface.co/oopere/gemma-3-270m-14L-distilled/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:07:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/oopere/gemma-3-270m-14L-distilled/b1afdc6d656b1050b5ce9f9f7e829ac27c264014/config.json "HTTP/1.1 200 OK"
+08:07:57 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/gemma-3-270m-14L-distilled-AutoRound-W4A16-RTN/quant_summary.json
+08:07:57 [INFO] === Phase 2: DONE ===
