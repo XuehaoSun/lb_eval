@@ -1,0 +1,55 @@
+=== Phase 2: Quantization ===
+  model=liodon-ai/slm-10m
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/slm-10m-AutoRound-W4A16-RTN/quantized_model
+08:22:20 [INFO] Model: liodon-ai/slm-10m
+08:22:20 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+08:22:20 [INFO] Iters: 0 (RTN)
+08:22:20 [INFO] Export format: auto_round
+08:22:20 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/slm-10m-AutoRound-W4A16-RTN/quantized_model
+08:22:20 [INFO] Device map: auto
+08:22:20 [INFO] Loading tokenizer...
+08:22:20 [INFO] HTTP Request: HEAD https://huggingface.co/liodon-ai/slm-10m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:22:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/liodon-ai/slm-10m/6ebac9ecd8fafa6c98a38dd23cd9a9a61a175b0d/config.json "HTTP/1.1 200 OK"
+08:22:20 [INFO] HTTP Request: HEAD https://huggingface.co/liodon-ai/slm-10m/resolve/main/configuration_slm.py "HTTP/1.1 307 Temporary Redirect"
+08:22:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/liodon-ai/slm-10m/6ebac9ecd8fafa6c98a38dd23cd9a9a61a175b0d/configuration_slm.py "HTTP/1.1 200 OK"
+08:22:20 [INFO] HTTP Request: HEAD https://huggingface.co/liodon-ai/slm-10m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+08:22:20 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+08:22:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/liodon-ai/slm-10m/6ebac9ecd8fafa6c98a38dd23cd9a9a61a175b0d/config.json "HTTP/1.1 200 OK"
+08:22:20 [INFO] HTTP Request: HEAD https://huggingface.co/liodon-ai/slm-10m/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+08:22:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/liodon-ai/slm-10m/6ebac9ecd8fafa6c98a38dd23cd9a9a61a175b0d/tokenizer_config.json "HTTP/1.1 200 OK"
+08:22:20 [INFO] HTTP Request: GET https://huggingface.co/api/models/liodon-ai/slm-10m/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+08:22:20 [INFO] HTTP Request: GET https://huggingface.co/api/models/liodon-ai/slm-10m/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+08:22:21 [INFO] Loading model...
+08:22:21 [INFO] HTTP Request: HEAD https://huggingface.co/liodon-ai/slm-10m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+08:22:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/liodon-ai/slm-10m/6ebac9ecd8fafa6c98a38dd23cd9a9a61a175b0d/config.json "HTTP/1.1 200 OK"
+08:22:21 [INFO] HTTP Request: HEAD https://huggingface.co/liodon-ai/slm-10m/resolve/main/configuration_slm.py "HTTP/1.1 307 Temporary Redirect"
+08:22:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/liodon-ai/slm-10m/6ebac9ecd8fafa6c98a38dd23cd9a9a61a175b0d/configuration_slm.py "HTTP/1.1 200 OK"
+08:22:21 [INFO] HTTP Request: HEAD https://huggingface.co/liodon-ai/slm-10m/resolve/main/modeling_slm.py "HTTP/1.1 307 Temporary Redirect"
+08:22:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/liodon-ai/slm-10m/6ebac9ecd8fafa6c98a38dd23cd9a9a61a175b0d/modeling_slm.py "HTTP/1.1 200 OK"
+[transformers] Encountered exception while importing configuration_slm: No module named 'configuration_slm'
+08:22:21 [ERROR] Quantization failed: This modeling file requires the following packages that were not found in your environment: configuration_slm. Run `pip install configuration_slm`
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 137, in quantize
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 140, in patched
+    return underlying_func(klass, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 380, in from_pretrained
+    model_class = get_class_from_dynamic_module(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 612, in get_class_from_dynamic_module
+    final_module = get_cached_module_file(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 441, in get_cached_module_file
+    modules_needed = check_imports(resolved_module_file)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/dynamic_module_utils.py", line 258, in check_imports
+    raise ImportError(
+ImportError: This modeling file requires the following packages that were not found in your environment: configuration_slm. Run `pip install configuration_slm`
