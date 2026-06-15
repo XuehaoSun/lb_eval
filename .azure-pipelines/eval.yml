@@ -14,11 +14,13 @@ pool:
 variables:
   - name: POOL_NAME
     value: "LB_RunPod_GPU_Pool"
+  - name: LOCAL_POOL_NAME
+    value: "LB_GPU"
   - name: AGENT_NAME
     value: "lb-agent-$(Build.BuildId)"
 
 # ====================================================================
-# Stage 1: Start_Pod — create RunPod instance, register agent
+# Stage 1: Start_Pod — create RunPod instance (runpod only), write status
 # ====================================================================
 stages:
   - stage: Start_Pod
@@ -46,6 +48,7 @@ stages:
           - task: Bash@3
             displayName: "Create RunPod Instance"
             name: create_runpod
+            condition: eq(variables['AGENT_TYPE'], 'runpod')
             inputs:
               targetType: "inline"
               script: |
@@ -68,6 +71,7 @@ stages:
           - task: Bash@3
             displayName: "Wait for Pod to be Online"
             name: wait_for_pod
+            condition: eq(variables['AGENT_TYPE'], 'runpod')
             inputs:
               targetType: "inline"
               script: |
@@ -81,6 +85,7 @@ stages:
           - task: Bash@3
             displayName: "Wait for Agent to be Online"
             name: wait_for_agent
+            condition: eq(variables['AGENT_TYPE'], 'runpod')
             inputs:
               targetType: "inline"
               script: |
@@ -104,36 +109,26 @@ stages:
   - stage: Eval
     displayName: Evaluation
     dependsOn: [Start_Pod]
+    condition: eq(dependencies.Start_Pod.result, 'Succeeded')
     jobs:
-      - job: Eval
+      - job: Eval_RunPod
+        displayName: "Eval on RunPod Agent"
+        condition: eq(variables['AGENT_TYPE'], 'runpod')
         timeoutInMinutes: 2880
         pool:
           name: "$(POOL_NAME)"
           demands: Agent.Name -equals lb-agent-$(Build.BuildId)
         steps:
-          - checkout: self
-            clean: true
-            displayName: "Checkout Repo"
-            fetchDepth: 100
-
-          - task: Bash@3
-            inputs:
-              targetType: "inline"
-              script: |
-                echo "Running on GPU"
-                nvidia-smi
-                lscpu
-                cd .azure-pipelines/scripts
-                nohup uv run monitor_gpu.py daemon > monitor.log 2>&1 &
-            displayName: "Verify Hardware"
-
           - template: template/model-template.yml
 
-          - script: |
-              cd .azure-pipelines/scripts
-              uv run monitor_gpu.py stop
-            displayName: "GPU Monitor"
-            condition: always()
+      - job: Eval_Local
+        displayName: "Eval on Local Agent"
+        condition: eq(variables['AGENT_TYPE'], 'local')
+        timeoutInMinutes: 2880
+        pool:
+          name: "$(LOCAL_POOL_NAME)"
+        steps:
+          - template: template/model-template.yml
 
 # ====================================================================
 # Stage 3: Cleanup — terminate pod, deregister agent, push results
@@ -147,7 +142,8 @@ stages:
     jobs:
       - job: Verify_Cleanup
         variables:
-          evalResult: $[ stageDependencies.Eval.Eval.result ]
+          evalRunpodResult: $[ stageDependencies.Eval.Eval_RunPod.result ]
+          evalLocalResult: $[ stageDependencies.Eval.Eval_Local.result ]
         pool:
           vmImage: "ubuntu-latest"
         steps:
@@ -168,7 +164,7 @@ stages:
 
           - task: Bash@3
             displayName: "Terminate RunPod Instance"
-            condition: always()
+            condition: and(always(), eq(variables['AGENT_TYPE'], 'runpod'))
             inputs:
               targetType: "inline"
               script: |
@@ -181,7 +177,7 @@ stages:
 
           - task: Bash@3
             displayName: "Deregister Agent from Pool"
-            condition: always()
+            condition: and(always(), eq(variables['AGENT_TYPE'], 'runpod'))
             inputs:
               targetType: "inline"
               script: |
@@ -197,7 +193,7 @@ stages:
           # Safety net: write-back final status based on Eval stage result
           - task: Bash@3
             displayName: "Write Status (Finished)"
-            condition: eq(variables.evalResult, 'Succeeded')
+            condition: or(eq(variables.evalRunpodResult, 'Succeeded'), eq(variables.evalLocalResult, 'Succeeded'))
             inputs:
               filePath: .azure-pipelines/scripts/git_update.sh
             name: gitUpdateStatusFinished
@@ -210,7 +206,7 @@ stages:
 
           - task: Bash@3
             displayName: "Write Status (Failed)"
-            condition: ne(variables.evalResult, 'Succeeded')
+            condition: and(ne(variables.evalRunpodResult, 'Succeeded'), ne(variables.evalLocalResult, 'Succeeded'))
             inputs:
               filePath: .azure-pipelines/scripts/git_update.sh
             name: gitUpdateStatusFailed
