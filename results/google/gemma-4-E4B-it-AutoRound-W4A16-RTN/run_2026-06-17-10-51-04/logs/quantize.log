@@ -1,0 +1,219 @@
+=== Phase 2: Quantization ===
+  model=google/gemma-4-E4B-it
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gemma-4-E4B-it-AutoRound-W4A16-RTN/quantized_model
+10:24:24 [INFO] Model: google/gemma-4-E4B-it
+10:24:24 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+10:24:24 [INFO] Iters: 0 (RTN)
+10:24:24 [INFO] Export format: auto_round
+10:24:24 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gemma-4-E4B-it-AutoRound-W4A16-RTN/quantized_model
+10:24:24 [INFO] Device map: auto
+10:24:24 [INFO] Loading tokenizer...
+10:24:24 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+10:24:24 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+10:24:24 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:24:25 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+10:24:25 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/tokenizer_config.json "HTTP/1.1 200 OK"
+10:24:25 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/tokenizer_config.json "HTTP/1.1 200 OK"
+10:24:25 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:24:25 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:24:25 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+10:24:28 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+10:24:28 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+10:24:28 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+10:24:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/chat_template.jinja "HTTP/1.1 200 OK"
+10:24:29 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/chat_template.jinja "HTTP/1.1 200 OK"
+10:24:31 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it "HTTP/1.1 200 OK"
+10:24:31 [INFO] Loading model...
+10:24:31 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:24:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:24:31 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+10:25:09 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/generation_config.json "HTTP/1.1 200 OK"
+10:25:09 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/generation_config.json "HTTP/1.1 200 OK"
+10:25:10 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+10:25:10 [INFO] Architecture: Gemma4ForConditionalGeneration (model_type=gemma4, moe=False)
+10:25:10 [INFO] Ignore layers: lm_head
+10:25:10 [INFO] Configuring AutoRound...
+[38;20m2026-06-17 10:25:10 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-17 10:25:10 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+10:25:10 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:25:10 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a327606-07ef65747b6275d261f93fc0;0c1eae01-be47-4c68-84a2-4942d81f6d0f)
+
+Entry Not Found for url: https://huggingface.co/google/gemma-4-E4B-it/resolve/main/model_index.json.
+10:25:10 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:25:11 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:25:11 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:25:11 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:25:11 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+10:25:14 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:14 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/generation_config.json "HTTP/1.1 200 OK"
+10:25:15 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+10:25:15 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:25:15 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/tokenizer_config.json "HTTP/1.1 200 OK"
+10:25:15 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:25:16 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:25:18 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it "HTTP/1.1 200 OK"
+10:25:18 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:18 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:18 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:18 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:25:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+10:25:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+10:25:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/chat_template.jinja "HTTP/1.1 200 OK"
+10:25:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+10:25:20 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:25:20 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:20 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+10:25:20 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+10:25:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/chat_template.jinja "HTTP/1.1 200 OK"
+10:25:20 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+10:25:21 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:21 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:21 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:21 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:22 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:22 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:22 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:22 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:22 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:22 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:23 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:23 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:25:23 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:23 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/tokenizer_config.json "HTTP/1.1 200 OK"
+10:25:23 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:25:23 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:25:26 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-E4B-it "HTTP/1.1 200 OK"
+10:25:26 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:26 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:26 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:26 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:27 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:27 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:27 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:27 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:27 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:27 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:27 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:28 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+10:25:28 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/processor_config.json "HTTP/1.1 200 OK"
+10:25:28 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+10:25:28 [INFO] Starting quantization...
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[33;1m2026-06-17 10:25:28 WARNING special_model_handler.py L383: Applying a monkey patch to Gemma4 to reduce RAM usage. This patch has only been validated with limited Transformers versions. Proceed with caution.[0m
+[38;20m2026-06-17 10:25:28 INFO utils.py L964: Ignored layers: lm_head, lm_head[0m
+[33;1m2026-06-17 10:25:28 WARNING utils.py L540: reset `quant_lm_head` to false as quantizing lm_head with tied weights has not been supported currently[0m
+[38;20m2026-06-17 10:25:29 INFO base.py L663: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-17 10:25:29 INFO data_driven.py L1089: start to compute imatrix[0m
+[38;20m2026-06-17 10:25:29 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+10:25:29 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+10:25:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+10:25:29 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+10:25:30 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+10:25:30 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+10:25:30 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+10:25:31 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+10:25:31 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+10:25:31 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:25:31 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+10:25:32 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+10:25:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+10:25:32 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+10:25:32 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 47245.12 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:07<00:00, 1312.10 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:03<00:00, 2779.95 examples/s]
+Casting the dataset:   0%|          | 0/1243 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1243/1243 [00:03<00:00, 403.62 examples/s]
+10:25:50 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+10:25:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+10:25:50 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+10:25:51 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+10:25:51 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+10:25:51 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+10:25:52 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+10:25:52 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:25:52 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-06-17 10:25:53 INFO mllm.py L83: Using MLLM template: gemma4[0m
+[38;20m2026-06-17 10:25:53 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+10:25:53 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+10:25:53 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+10:25:53 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+10:25:54 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+10:25:54 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+10:25:54 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+10:25:55 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+10:25:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+10:25:55 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+10:25:55 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+10:25:55 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+10:25:55 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+[33;1m2026-06-17 10:25:57 WARNING logging.py L340: Please note that 'shared_kv_states' key is not currently used in quantization fine-tuning.[0m
+  0%|          | 0/42 [00:00<?, ?it/s]Quantizing model.language_model.layers.0:   0%|          | 0/42 [00:00<?, ?it/s][38;20m2026-06-17 10:26:31 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_ydhp74jj[0m
+[38;20m2026-06-17 10:26:31 INFO device.py L1840: 'peak_ram': 13.64GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.1:   2%|▏         | 1/42 [00:05<04:02,  5.92s/it][38;20m2026-06-17 10:26:36 INFO device.py L1840: 'peak_ram': 13.82GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.2:   5%|▍         | 2/42 [00:10<03:31,  5.28s/it][38;20m2026-06-17 10:26:41 INFO device.py L1840: 'peak_ram': 13.99GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.3:   7%|▋         | 3/42 [00:15<03:20,  5.13s/it][38;20m2026-06-17 10:26:45 INFO device.py L1840: 'peak_ram': 14.16GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.4:  10%|▉         | 4/42 [00:20<03:12,  5.05s/it][38;20m2026-06-17 10:26:50 INFO device.py L1840: 'peak_ram': 14.34GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.5:  12%|█▏        | 5/42 [00:25<03:06,  5.05s/it][38;20m2026-06-17 10:26:56 INFO device.py L1840: 'peak_ram': 14.67GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.6:  14%|█▍        | 6/42 [00:31<03:06,  5.17s/it][38;20m2026-06-17 10:27:01 INFO device.py L1840: 'peak_ram': 14.84GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.7:  17%|█▋        | 7/42 [00:35<02:59,  5.14s/it][38;20m2026-06-17 10:27:06 INFO device.py L1840: 'peak_ram': 15.01GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.8:  19%|█▉        | 8/42 [00:40<02:54,  5.12s/it][38;20m2026-06-17 10:27:11 INFO device.py L1840: 'peak_ram': 15.18GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.9:  21%|██▏       | 9/42 [00:45<02:48,  5.11s/it][38;20m2026-06-17 10:27:16 INFO device.py L1840: 'peak_ram': 15.34GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.10:  24%|██▍       | 10/42 [00:50<02:42,  5.09s/it][38;20m2026-06-17 10:27:21 INFO device.py L1840: 'peak_ram': 15.51GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.11:  26%|██▌       | 11/42 [00:55<02:37,  5.07s/it][38;20m2026-06-17 10:27:26 INFO device.py L1840: 'peak_ram': 15.72GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.12:  29%|██▊       | 12/42 [01:01<02:32,  5.10s/it][38;20m2026-06-17 10:27:31 INFO device.py L1840: 'peak_ram': 15.89GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.13:  31%|███       | 13/42 [01:06<02:27,  5.10s/it][38;20m2026-06-17 10:27:36 INFO device.py L1840: 'peak_ram': 16.07GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.14:  33%|███▎      | 14/42 [01:11<02:22,  5.09s/it][38;20m2026-06-17 10:27:41 INFO device.py L1840: 'peak_ram': 16.23GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.15:  36%|███▌      | 15/42 [01:16<02:17,  5.08s/it][38;20m2026-06-17 10:27:47 INFO device.py L1840: 'peak_ram': 16.4GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.16:  38%|███▊      | 16/42 [01:21<02:12,  5.09s/it][38;20m2026-06-17 10:27:51 INFO device.py L1840: 'peak_ram': 16.58GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.17:  40%|████      | 17/42 [01:26<02:06,  5.08s/it][38;20m2026-06-17 10:27:57 INFO device.py L1840: 'peak_ram': 16.81GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.18:  43%|████▎     | 18/42 [01:32<02:03,  5.13s/it][38;20m2026-06-17 10:28:03 INFO device.py L1840: 'peak_ram': 16.98GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.19:  45%|████▌     | 19/42 [01:37<01:58,  5.14s/it][38;20m2026-06-17 10:28:08 INFO device.py L1840: 'peak_ram': 17.12GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.20:  48%|████▊     | 20/42 [01:43<01:53,  5.15s/it][38;20m2026-06-17 10:28:14 INFO device.py L1840: 'peak_ram': 17.3GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.21:  50%|█████     | 21/42 [01:48<01:48,  5.16s/it][38;20m2026-06-17 10:28:19 INFO device.py L1840: 'peak_ram': 17.46GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.22:  52%|█████▏    | 22/42 [01:53<01:43,  5.16s/it][38;20m2026-06-17 10:28:24 INFO device.py L1840: 'peak_ram': 17.64GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.23:  55%|█████▍    | 23/42 [01:58<01:37,  5.15s/it][38;20m2026-06-17 10:28:29 INFO device.py L1840: 'peak_ram': 17.86GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.23:  57%|█████▋    | 24/42 [02:03<01:32,  5.16s/it]Quantizing model.language_model.layers.24:  57%|█████▋    | 24/42 [02:03<01:32,  5.16s/it][38;20m2026-06-17 10:28:34 INFO device.py L1840: 'peak_ram': 18.03GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.25:  60%|█████▉    | 25/42 [02:08<01:27,  5.16s/it][38;20m2026-06-17 10:28:39 INFO device.py L1840: 'peak_ram': 18.2GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.26:  62%|██████▏   | 26/42 [02:13<01:22,  5.16s/it]Quantizing model.language_model.layers.26:  62%|██████▏   | 26/42 [02:17<01:22,  5.16s/it][38;20m2026-06-17 10:28:44 INFO device.py L1840: 'peak_ram': 18.36GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.27:  64%|██████▍   | 27/42 [02:18<01:17,  5.16s/it][38;20m2026-06-17 10:28:49 INFO device.py L1840: 'peak_ram': 18.53GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.28:  67%|██████▋   | 28/42 [02:24<01:12,  5.16s/it][38;20m2026-06-17 10:28:55 INFO device.py L1840: 'peak_ram': 18.7GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.29:  69%|██████▉   | 29/42 [02:29<01:07,  5.16s/it][38;20m2026-06-17 10:29:00 INFO device.py L1840: 'peak_ram': 18.91GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.30:  71%|███████▏  | 30/42 [02:35<01:01,  5.16s/it][38;20m2026-06-17 10:29:05 INFO device.py L1840: 'peak_ram': 19.08GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.31:  74%|███████▍  | 31/42 [02:40<00:56,  5.16s/it][38;20m2026-06-17 10:29:10 INFO device.py L1840: 'peak_ram': 19.25GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.32:  76%|███████▌  | 32/42 [02:45<00:51,  5.16s/it][38;20m2026-06-17 10:29:15 INFO device.py L1840: 'peak_ram': 19.39GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.33:  79%|███████▊  | 33/42 [02:50<00:46,  5.16s/it][38;20m2026-06-17 10:29:20 INFO device.py L1840: 'peak_ram': 19.56GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.34:  81%|████████  | 34/42 [02:55<00:41,  5.16s/it][38;20m2026-06-17 10:29:25 INFO device.py L1840: 'peak_ram': 19.72GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.35:  83%|████████▎ | 35/42 [02:59<00:36,  5.16s/it][38;20m2026-06-17 10:29:30 INFO device.py L1840: 'peak_ram': 19.95GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.36:  86%|████████▌ | 36/42 [03:04<00:30,  5.16s/it][38;20m2026-06-17 10:29:35 INFO device.py L1840: 'peak_ram': 20.11GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.37:  88%|████████▊ | 37/42 [03:09<00:25,  5.16s/it][38;20m2026-06-17 10:29:39 INFO device.py L1840: 'peak_ram': 20.28GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.38:  90%|█████████ | 38/42 [03:14<00:20,  5.16s/it][38;20m2026-06-17 10:29:44 INFO device.py L1840: 'peak_ram': 20.45GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.39:  93%|█████████▎| 39/42 [03:18<00:15,  5.16s/it][38;20m2026-06-17 10:29:49 INFO device.py L1840: 'peak_ram': 20.6GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.40:  95%|█████████▌| 40/42 [03:23<00:10,  5.16s/it][38;20m2026-06-17 10:29:53 INFO device.py L1840: 'peak_ram': 20.76GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.41:  98%|█████████▊| 41/42 [03:28<00:05,  5.16s/it][38;20m2026-06-17 10:29:58 INFO device.py L1840: 'peak_ram': 20.99GB, 'peak_vram': 14.79GB[0m
+Quantizing model.language_model.layers.41: 100%|██████████| 42/42 [03:33<00:00,  5.08s/it]
+10:30:03 [INFO] Quantization completed in 275.2s
+10:30:03 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-17 10:30:03 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+packing:   0%|          | 0/342 [00:00<?, ?it/s]packing: 100%|██████████| 342/342 [00:08<00:00, 39.23it/s]
+[33;1m2026-06-17 10:30:12 WARNING export.py L344: /root/_work/1/s/auto_quant/output/runs/gemma-4-E4B-it-AutoRound-W4A16-RTN/quantized_model already exists, this may cause model conflict[0m
+10:30:19 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-E4B-it/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:30:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-E4B-it/fee6332c1abaafb77f6f9624236c63aa2f1d0187/config.json "HTTP/1.1 200 OK"
+10:30:19 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/gemma-4-E4B-it-AutoRound-W4A16-RTN/quant_summary.json
+10:30:19 [INFO] === Phase 2: DONE ===
