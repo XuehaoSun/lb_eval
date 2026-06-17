@@ -1,0 +1,475 @@
+2026-06-17:10:36:55 INFO     [_cli.run:388] Selected Tasks: ['piqa', 'mmlu', 'hellaswag']
+2026-06-17:10:36:56 INFO     [evaluator:214] Setting random seed to 42 | Setting numpy seed to 42 | Setting torch manual seed to 42 | Setting fewshot manual seed to 42
+2026-06-17:10:36:56 INFO     [evaluator:239] Initializing hf model, with arguments: {'pretrained': '/root/_work/1/s/auto_quant/output/runs/gemma-4-26B-A4B-it-AutoRound-W4A16-RTN/quantized_model', 'dtype': 'bfloat16', 'trust_remote_code': True}
+2026-06-17:10:36:59 INFO     [models.huggingface:286] Using device 'cuda:0'
+2026-06-17:10:37:01 INFO     [models.huggingface:579] Model parallel was set to False, max memory was not set, and device map was set to {'': 'cuda:0'}
+/root/.venv/lib/python3.12/site-packages/transformers/quantizers/auto.py:271: UserWarning: You passed `quantization_config` or equivalent parameters to `from_pretrained` but the model you're loading already has a `quantization_config` attribute. The `quantization_config` from the model will be used.However, loading attributes (e.g. ['backend']) will be overwritten with the one you passed to `from_pretrained`. The rest will be ignored.
+  warnings.warn(warning_msg)
+[38;20m2026-06-17 10:37:01 INFO replace_modules.py L120: Experts (before replacement) [model.language_model.layers.0.experts] (Gemma4TextExperts):
+Gemma4TextExperts(
+  (act_fn): GELUTanh()
+)[0m
+[33;1m2026-06-17 10:37:01 WARNING modeling_utils.py L4637: `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.[0m
+[38;20m2026-06-17 10:37:01 INFO device.py L1838: Before applying custom replacements 'peak_ram': 1.23GB[0m
+[38;20m2026-06-17 10:37:02 INFO moe_experts_interface.py L655: [MoE Prep] Unfused 30 MOE experts modules[0m
+[38;20m2026-06-17 10:37:03 INFO device.py L1838: After applying custom replacements 'peak_ram': 1.25GB[0m
+[38;20m2026-06-17 10:37:03 INFO replace_modules.py L93: Prepared 30 MOE modules for quantization[0m
+[38;20m2026-06-17 10:37:03 INFO replace_modules.py L120: Experts (after replacement) [model.language_model.layers.0.experts] (Gemma4TextExperts):
+Gemma4TextExperts(
+  (act_fn): GELUTanh()
+  (0-127): 128 x _ExpertContainer(
+    (down_proj): Linear(in_features=704, out_features=2816, bias=False)
+    (gate_proj): Linear(in_features=2816, out_features=704, bias=False)
+    (up_proj): Linear(in_features=2816, out_features=704, bias=False)
+  )
+)[0m
+[33;1m2026-06-17 10:37:04 WARNING backend.py L1176: Better backend is found, please install all the following requirements to enable it.[0m
+[33;1m2026-06-17 10:37:04 WARNING backend.py L1176: `pip install -v "gptqmodel>=2.0" --no-build-isolation`[0m
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Generating train split:   0%|          | 0/16113 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 16113/16113 [00:00<00:00, 1071756.48 examples/s]
+Generating validation split:   0%|          | 0/1838 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 1838/1838 [00:00<00:00, 803704.21 examples/s]
+Generating test split:   0%|          | 0/3084 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 3084/3084 [00:00<00:00, 1207207.98 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 36618.68 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8566.16 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4151.13 examples/s]
+Generating test split:   0%|          | 0/135 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 135/135 [00:00<00:00, 52487.12 examples/s]
+Generating validation split:   0%|          | 0/14 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 14/14 [00:00<00:00, 10766.46 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4378.19 examples/s]
+Generating test split:   0%|          | 0/152 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 152/152 [00:00<00:00, 65664.25 examples/s]
+Generating validation split:   0%|          | 0/16 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 16/16 [00:00<00:00, 12588.42 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3814.39 examples/s]
+Generating test split:   0%|          | 0/144 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 144/144 [00:00<00:00, 63270.46 examples/s]
+Generating validation split:   0%|          | 0/16 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 16/16 [00:00<00:00, 11558.54 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4399.31 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 49096.38 examples/s]
+Generating validation split:   0%|          | 0/8 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 8/8 [00:00<00:00, 6234.57 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4434.66 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 40681.90 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8610.93 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3808.16 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 50472.97 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8137.10 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4345.53 examples/s]
+Generating test split:   0%|          | 0/102 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 102/102 [00:00<00:00, 48599.23 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8768.02 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4118.52 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 44253.05 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8860.64 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4425.30 examples/s]
+Generating test split:   0%|          | 0/235 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 235/235 [00:00<00:00, 98114.82 examples/s]
+Generating validation split:   0%|          | 0/26 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 26/26 [00:00<00:00, 20337.92 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4258.18 examples/s]
+Generating test split:   0%|          | 0/145 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 145/145 [00:00<00:00, 66322.15 examples/s]
+Generating validation split:   0%|          | 0/16 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 16/16 [00:00<00:00, 13005.59 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4419.71 examples/s]
+Generating test split:   0%|          | 0/378 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 378/378 [00:00<00:00, 154106.43 examples/s]
+Generating validation split:   0%|          | 0/41 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 41/41 [00:00<00:00, 32155.28 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4345.53 examples/s]
+Generating test split:   0%|          | 0/310 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 310/310 [00:00<00:00, 135356.47 examples/s]
+Generating validation split:   0%|          | 0/32 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 32/32 [00:00<00:00, 25811.10 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4220.47 examples/s]
+Generating test split:   0%|          | 0/203 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 203/203 [00:00<00:00, 87822.97 examples/s]
+Generating validation split:   0%|          | 0/22 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 22/22 [00:00<00:00, 15542.31 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4129.06 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 47382.56 examples/s]
+Generating validation split:   0%|          | 0/9 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 9/9 [00:00<00:00, 7012.58 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3918.45 examples/s]
+Generating test split:   0%|          | 0/270 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 270/270 [00:00<00:00, 127085.86 examples/s]
+Generating validation split:   0%|          | 0/29 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 29/29 [00:00<00:00, 23279.39 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4103.21 examples/s]
+Generating test split:   0%|          | 0/151 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 151/151 [00:00<00:00, 63018.90 examples/s]
+Generating validation split:   0%|          | 0/17 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 17/17 [00:00<00:00, 13542.86 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3948.70 examples/s]
+Generating test split:   0%|          | 0/216 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 216/216 [00:00<00:00, 94342.36 examples/s]
+Generating validation split:   0%|          | 0/23 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 23/23 [00:00<00:00, 16719.06 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4154.42 examples/s]
+Generating test split:   0%|          | 0/112 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 112/112 [00:00<00:00, 50560.98 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8275.76 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4104.82 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 42948.02 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8250.60 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3925.78 examples/s]
+Generating test split:   0%|          | 0/265 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 265/265 [00:00<00:00, 105214.93 examples/s]
+Generating validation split:   0%|          | 0/29 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 29/29 [00:00<00:00, 20721.43 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3763.06 examples/s]
+Generating test split:   0%|          | 0/173 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 173/173 [00:00<00:00, 74983.42 examples/s]
+Generating validation split:   0%|          | 0/22 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 22/22 [00:00<00:00, 17865.38 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4266.84 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 48987.43 examples/s]
+Generating validation split:   0%|          | 0/10 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 10/10 [00:00<00:00, 8370.19 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4236.67 examples/s]
+Generating test split:   0%|          | 0/223 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 223/223 [00:00<00:00, 101051.19 examples/s]
+Generating validation split:   0%|          | 0/23 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 23/23 [00:00<00:00, 18024.85 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4264.24 examples/s]
+Generating test split:   0%|          | 0/103 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 103/103 [00:00<00:00, 46081.42 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8753.05 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3974.14 examples/s]
+Generating test split:   0%|          | 0/234 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 234/234 [00:00<00:00, 107960.31 examples/s]
+Generating validation split:   0%|          | 0/25 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 25/25 [00:00<00:00, 20041.59 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4263.37 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 46356.15 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8305.55 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4528.51 examples/s]
+Generating test split:   0%|          | 0/783 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 783/783 [00:00<00:00, 334501.94 examples/s]
+Generating validation split:   0%|          | 0/86 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 86/86 [00:00<00:00, 75684.04 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4370.89 examples/s]
+Generating test split:   0%|          | 0/306 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 306/306 [00:00<00:00, 132438.04 examples/s]
+Generating validation split:   0%|          | 0/33 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 33/33 [00:00<00:00, 26777.33 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4206.92 examples/s]
+Generating test split:   0%|          | 0/282 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 282/282 [00:00<00:00, 113348.70 examples/s]
+Generating validation split:   0%|          | 0/31 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 31/31 [00:00<00:00, 22907.58 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3956.14 examples/s]
+Generating test split:   0%|          | 0/272 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 272/272 [00:00<00:00, 105322.26 examples/s]
+Generating validation split:   0%|          | 0/31 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 31/31 [00:00<00:00, 26726.29 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4326.70 examples/s]
+Generating test split:   0%|          | 0/166 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 166/166 [00:00<00:00, 80969.24 examples/s]
+Generating validation split:   0%|          | 0/18 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 18/18 [00:00<00:00, 14380.47 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4203.55 examples/s]
+Generating test split:   0%|          | 0/114 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 114/114 [00:00<00:00, 58225.85 examples/s]
+Generating validation split:   0%|          | 0/12 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 12/12 [00:00<00:00, 9859.28 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4352.74 examples/s]
+Generating test split:   0%|          | 0/198 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 198/198 [00:00<00:00, 87454.95 examples/s]
+Generating validation split:   0%|          | 0/22 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 22/22 [00:00<00:00, 19300.29 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4175.10 examples/s]
+Generating test split:   0%|          | 0/193 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 193/193 [00:00<00:00, 84969.11 examples/s]
+Generating validation split:   0%|          | 0/21 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 21/21 [00:00<00:00, 17142.93 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4242.67 examples/s]
+Generating test split:   0%|          | 0/390 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 390/390 [00:00<00:00, 155951.81 examples/s]
+Generating validation split:   0%|          | 0/43 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 43/43 [00:00<00:00, 31893.03 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4236.67 examples/s]
+Generating test split:   0%|          | 0/238 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 238/238 [00:00<00:00, 106354.61 examples/s]
+Generating validation split:   0%|          | 0/26 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 26/26 [00:00<00:00, 20568.07 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4032.98 examples/s]
+Generating test split:   0%|          | 0/545 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 545/545 [00:00<00:00, 191818.05 examples/s]
+Generating validation split:   0%|          | 0/60 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 60/60 [00:00<00:00, 45772.69 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4173.44 examples/s]
+Generating test split:   0%|          | 0/131 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 131/131 [00:00<00:00, 63418.03 examples/s]
+Generating validation split:   0%|          | 0/12 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 12/12 [00:00<00:00, 9950.90 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4293.92 examples/s]
+Generating test split:   0%|          | 0/612 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 612/612 [00:00<00:00, 216983.44 examples/s]
+Generating validation split:   0%|          | 0/69 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 69/69 [00:00<00:00, 51505.07 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4099.20 examples/s]
+Generating test split:   0%|          | 0/110 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 110/110 [00:00<00:00, 46485.99 examples/s]
+Generating validation split:   0%|          | 0/12 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 12/12 [00:00<00:00, 9561.48 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4349.13 examples/s]
+Generating test split:   0%|          | 0/245 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 245/245 [00:00<00:00, 87672.08 examples/s]
+Generating validation split:   0%|          | 0/27 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 27/27 [00:00<00:00, 21736.32 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3903.86 examples/s]
+Generating test split:   0%|          | 0/201 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 201/201 [00:00<00:00, 83819.36 examples/s]
+Generating validation split:   0%|          | 0/22 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 22/22 [00:00<00:00, 17633.23 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4178.43 examples/s]
+Generating test split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 100/100 [00:00<00:00, 48998.88 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 9094.69 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3027.50 examples/s]
+Generating test split:   0%|          | 0/126 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 126/126 [00:00<00:00, 55280.58 examples/s]
+Generating validation split:   0%|          | 0/14 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 14/14 [00:00<00:00, 11169.92 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3840.94 examples/s]
+Generating test split:   0%|          | 0/165 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 165/165 [00:00<00:00, 58733.78 examples/s]
+Generating validation split:   0%|          | 0/18 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 18/18 [00:00<00:00, 13046.05 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3790.95 examples/s]
+Generating test split:   0%|          | 0/204 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 204/204 [00:00<00:00, 61463.83 examples/s]
+Generating validation split:   0%|          | 0/22 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 22/22 [00:00<00:00, 15613.31 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4041.53 examples/s]
+Generating test split:   0%|          | 0/237 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 237/237 [00:00<00:00, 76465.39 examples/s]
+Generating validation split:   0%|          | 0/26 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 26/26 [00:00<00:00, 17111.55 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4187.60 examples/s]
+Generating test split:   0%|          | 0/121 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 121/121 [00:00<00:00, 52304.52 examples/s]
+Generating validation split:   0%|          | 0/13 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 13/13 [00:00<00:00, 10771.62 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3990.02 examples/s]
+Generating test split:   0%|          | 0/108 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 108/108 [00:00<00:00, 53248.48 examples/s]
+Generating validation split:   0%|          | 0/11 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 11/11 [00:00<00:00, 8993.63 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4389.18 examples/s]
+Generating test split:   0%|          | 0/163 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 163/163 [00:00<00:00, 49029.80 examples/s]
+Generating validation split:   0%|          | 0/18 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 18/18 [00:00<00:00, 13383.70 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4096.00 examples/s]
+Generating test split:   0%|          | 0/346 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 346/346 [00:00<00:00, 152072.64 examples/s]
+Generating validation split:   0%|          | 0/38 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 38/38 [00:00<00:00, 27175.37 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4177.59 examples/s]
+Generating test split:   0%|          | 0/895 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 895/895 [00:00<00:00, 298639.78 examples/s]
+Generating validation split:   0%|          | 0/100 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 100/100 [00:00<00:00, 68939.91 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4073.72 examples/s]
+Generating test split:   0%|          | 0/311 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 311/311 [00:00<00:00, 128527.79 examples/s]
+Generating validation split:   0%|          | 0/34 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 34/34 [00:00<00:00, 27989.47 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4077.68 examples/s]
+Generating test split:   0%|          | 0/324 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 324/324 [00:00<00:00, 141646.29 examples/s]
+Generating validation split:   0%|          | 0/35 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 35/35 [00:00<00:00, 25085.55 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 3908.95 examples/s]
+Generating test split:   0%|          | 0/1534 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 1534/1534 [00:00<00:00, 184881.54 examples/s]
+Generating validation split:   0%|          | 0/170 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 170/170 [00:00<00:00, 95210.53 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4112.06 examples/s]
+Generating test split:   0%|          | 0/171 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 171/171 [00:00<00:00, 85988.01 examples/s]
+Generating validation split:   0%|          | 0/19 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 19/19 [00:00<00:00, 16015.23 examples/s]
+Generating dev split:   0%|          | 0/5 [00:00<?, ? examples/s]Generating dev split: 100%|██████████| 5/5 [00:00<00:00, 4405.78 examples/s]
+Generating train split:   0%|          | 0/39905 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 39905/39905 [00:00<00:00, 395032.53 examples/s]
+Generating test split:   0%|          | 0/10003 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10003/10003 [00:00<00:00, 425340.86 examples/s]
+Generating validation split:   0%|          | 0/10042 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 10042/10042 [00:00<00:00, 427966.72 examples/s]
+Map:   0%|          | 0/39905 [00:00<?, ? examples/s]Map: 100%|██████████| 39905/39905 [00:02<00:00, 15245.73 examples/s]
+Map:   0%|          | 0/10042 [00:00<?, ? examples/s]Map: 100%|██████████| 10042/10042 [00:00<00:00, 10131.84 examples/s]
+2026-06-17:10:44:44 INFO     [evaluator_utils:446] Selected tasks:
+2026-06-17:10:44:44 INFO     [evaluator_utils:462] Group: mmlu
+2026-06-17:10:44:44 INFO     [evaluator_utils:462]   Group: mmlu_stem
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_abstract_algebra (mmlu/default/mmlu_abstract_algebra.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_anatomy (mmlu/default/mmlu_anatomy.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_astronomy (mmlu/default/mmlu_astronomy.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_college_biology (mmlu/default/mmlu_college_biology.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_college_chemistry (mmlu/default/mmlu_college_chemistry.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_college_computer_science (mmlu/default/mmlu_college_computer_science.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_college_mathematics (mmlu/default/mmlu_college_mathematics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_college_physics (mmlu/default/mmlu_college_physics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_computer_security (mmlu/default/mmlu_computer_security.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_conceptual_physics (mmlu/default/mmlu_conceptual_physics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_electrical_engineering (mmlu/default/mmlu_electrical_engineering.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_elementary_mathematics (mmlu/default/mmlu_elementary_mathematics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_biology (mmlu/default/mmlu_high_school_biology.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_chemistry (mmlu/default/mmlu_high_school_chemistry.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_computer_science (mmlu/default/mmlu_high_school_computer_science.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_mathematics (mmlu/default/mmlu_high_school_mathematics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_physics (mmlu/default/mmlu_high_school_physics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_statistics (mmlu/default/mmlu_high_school_statistics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_machine_learning (mmlu/default/mmlu_machine_learning.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:462]   Group: mmlu_other
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_business_ethics (mmlu/default/mmlu_business_ethics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_clinical_knowledge (mmlu/default/mmlu_clinical_knowledge.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_college_medicine (mmlu/default/mmlu_college_medicine.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_global_facts (mmlu/default/mmlu_global_facts.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_human_aging (mmlu/default/mmlu_human_aging.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_management (mmlu/default/mmlu_management.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_marketing (mmlu/default/mmlu_marketing.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_medical_genetics (mmlu/default/mmlu_medical_genetics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_miscellaneous (mmlu/default/mmlu_miscellaneous.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_nutrition (mmlu/default/mmlu_nutrition.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_professional_accounting (mmlu/default/mmlu_professional_accounting.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_professional_medicine (mmlu/default/mmlu_professional_medicine.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_virology (mmlu/default/mmlu_virology.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:462]   Group: mmlu_social_sciences
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_econometrics (mmlu/default/mmlu_econometrics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_geography (mmlu/default/mmlu_high_school_geography.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_government_and_politics (mmlu/default/mmlu_high_school_government_and_politics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_macroeconomics (mmlu/default/mmlu_high_school_macroeconomics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_microeconomics (mmlu/default/mmlu_high_school_microeconomics.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_psychology (mmlu/default/mmlu_high_school_psychology.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_human_sexuality (mmlu/default/mmlu_human_sexuality.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_professional_psychology (mmlu/default/mmlu_professional_psychology.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_public_relations (mmlu/default/mmlu_public_relations.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_security_studies (mmlu/default/mmlu_security_studies.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_sociology (mmlu/default/mmlu_sociology.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_us_foreign_policy (mmlu/default/mmlu_us_foreign_policy.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:462]   Group: mmlu_humanities
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_formal_logic (mmlu/default/mmlu_formal_logic.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_european_history (mmlu/default/mmlu_high_school_european_history.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_us_history (mmlu/default/mmlu_high_school_us_history.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_high_school_world_history (mmlu/default/mmlu_high_school_world_history.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_international_law (mmlu/default/mmlu_international_law.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_jurisprudence (mmlu/default/mmlu_jurisprudence.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_logical_fallacies (mmlu/default/mmlu_logical_fallacies.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_moral_disputes (mmlu/default/mmlu_moral_disputes.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_moral_scenarios (mmlu/default/mmlu_moral_scenarios.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_philosophy (mmlu/default/mmlu_philosophy.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_prehistory (mmlu/default/mmlu_prehistory.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_professional_law (mmlu/default/mmlu_professional_law.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:470]     Task: mmlu_world_religions (mmlu/default/mmlu_world_religions.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:480] Task: hellaswag (hellaswag/hellaswag.yaml)
+2026-06-17:10:44:44 INFO     [evaluator_utils:480] Task: piqa (piqa/piqa.yaml)
+2026-06-17:10:44:44 INFO     [api.task:312] Building contexts for piqa on rank 0...
+  0%|          | 0/1838 [00:00<?, ?it/s]100%|██████████| 1838/1838 [00:01<00:00, 1531.12it/s]
+2026-06-17:10:44:45 INFO     [api.task:312] Building contexts for mmlu_abstract_algebra on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1306.32it/s]
+2026-06-17:10:44:45 INFO     [api.task:312] Building contexts for mmlu_anatomy on rank 0...
+  0%|          | 0/135 [00:00<?, ?it/s]100%|██████████| 135/135 [00:00<00:00, 1325.39it/s]
+2026-06-17:10:44:45 INFO     [api.task:312] Building contexts for mmlu_astronomy on rank 0...
+  0%|          | 0/152 [00:00<?, ?it/s]100%|██████████| 152/152 [00:00<00:00, 1326.48it/s]
+2026-06-17:10:44:45 INFO     [api.task:312] Building contexts for mmlu_college_biology on rank 0...
+  0%|          | 0/144 [00:00<?, ?it/s]100%|██████████| 144/144 [00:00<00:00, 1319.79it/s]
+2026-06-17:10:44:45 INFO     [api.task:312] Building contexts for mmlu_college_chemistry on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1308.65it/s]
+2026-06-17:10:44:46 INFO     [api.task:312] Building contexts for mmlu_college_computer_science on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1323.78it/s]
+2026-06-17:10:44:46 INFO     [api.task:312] Building contexts for mmlu_college_mathematics on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1312.73it/s]
+2026-06-17:10:44:46 INFO     [api.task:312] Building contexts for mmlu_college_physics on rank 0...
+  0%|          | 0/102 [00:00<?, ?it/s]100%|██████████| 102/102 [00:00<00:00, 1323.46it/s]
+2026-06-17:10:44:46 INFO     [api.task:312] Building contexts for mmlu_computer_security on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1316.66it/s]
+2026-06-17:10:44:46 INFO     [api.task:312] Building contexts for mmlu_conceptual_physics on rank 0...
+  0%|          | 0/235 [00:00<?, ?it/s]100%|██████████| 235/235 [00:00<00:00, 1325.89it/s]
+2026-06-17:10:44:46 INFO     [api.task:312] Building contexts for mmlu_electrical_engineering on rank 0...
+  0%|          | 0/145 [00:00<?, ?it/s]100%|██████████| 145/145 [00:00<00:00, 1318.10it/s]
+2026-06-17:10:44:46 INFO     [api.task:312] Building contexts for mmlu_elementary_mathematics on rank 0...
+  0%|          | 0/378 [00:00<?, ?it/s]100%|██████████| 378/378 [00:00<00:00, 1319.79it/s]
+2026-06-17:10:44:46 INFO     [api.task:312] Building contexts for mmlu_high_school_biology on rank 0...
+  0%|          | 0/310 [00:00<?, ?it/s]100%|██████████| 310/310 [00:00<00:00, 1321.19it/s]
+2026-06-17:10:44:47 INFO     [api.task:312] Building contexts for mmlu_high_school_chemistry on rank 0...
+  0%|          | 0/203 [00:00<?, ?it/s]100%|██████████| 203/203 [00:00<00:00, 1326.92it/s]
+2026-06-17:10:44:47 INFO     [api.task:312] Building contexts for mmlu_high_school_computer_science on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1253.58it/s]
+2026-06-17:10:44:47 INFO     [api.task:312] Building contexts for mmlu_high_school_mathematics on rank 0...
+  0%|          | 0/270 [00:00<?, ?it/s]100%|██████████| 270/270 [00:00<00:00, 1299.10it/s]
+2026-06-17:10:44:47 INFO     [api.task:312] Building contexts for mmlu_high_school_physics on rank 0...
+  0%|          | 0/151 [00:00<?, ?it/s]100%|██████████| 151/151 [00:00<00:00, 1304.03it/s]
+2026-06-17:10:44:47 INFO     [api.task:312] Building contexts for mmlu_high_school_statistics on rank 0...
+  0%|          | 0/216 [00:00<?, ?it/s]100%|██████████| 216/216 [00:00<00:00, 1306.82it/s]
+2026-06-17:10:44:47 INFO     [api.task:312] Building contexts for mmlu_machine_learning on rank 0...
+  0%|          | 0/112 [00:00<?, ?it/s]100%|██████████| 112/112 [00:00<00:00, 1299.30it/s]
+2026-06-17:10:44:47 INFO     [api.task:312] Building contexts for mmlu_business_ethics on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1319.83it/s]
+2026-06-17:10:44:48 INFO     [api.task:312] Building contexts for mmlu_clinical_knowledge on rank 0...
+  0%|          | 0/265 [00:00<?, ?it/s]100%|██████████| 265/265 [00:00<00:00, 1310.29it/s]
+2026-06-17:10:44:48 INFO     [api.task:312] Building contexts for mmlu_college_medicine on rank 0...
+  0%|          | 0/173 [00:00<?, ?it/s]100%|██████████| 173/173 [00:00<00:00, 1325.76it/s]
+2026-06-17:10:44:48 INFO     [api.task:312] Building contexts for mmlu_global_facts on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1313.60it/s]
+2026-06-17:10:44:48 INFO     [api.task:312] Building contexts for mmlu_human_aging on rank 0...
+  0%|          | 0/223 [00:00<?, ?it/s]100%|██████████| 223/223 [00:00<00:00, 1324.50it/s]
+2026-06-17:10:44:48 INFO     [api.task:312] Building contexts for mmlu_management on rank 0...
+  0%|          | 0/103 [00:00<?, ?it/s]100%|██████████| 103/103 [00:00<00:00, 1286.91it/s]
+2026-06-17:10:44:48 INFO     [api.task:312] Building contexts for mmlu_marketing on rank 0...
+  0%|          | 0/234 [00:00<?, ?it/s]100%|██████████| 234/234 [00:00<00:00, 1317.61it/s]
+2026-06-17:10:44:48 INFO     [api.task:312] Building contexts for mmlu_medical_genetics on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1318.55it/s]
+2026-06-17:10:44:49 INFO     [api.task:312] Building contexts for mmlu_miscellaneous on rank 0...
+  0%|          | 0/783 [00:00<?, ?it/s]100%|██████████| 783/783 [00:00<00:00, 1315.42it/s]
+2026-06-17:10:44:49 INFO     [api.task:312] Building contexts for mmlu_nutrition on rank 0...
+  0%|          | 0/306 [00:00<?, ?it/s]100%|██████████| 306/306 [00:00<00:00, 1317.70it/s]
+2026-06-17:10:44:49 INFO     [api.task:312] Building contexts for mmlu_professional_accounting on rank 0...
+  0%|          | 0/282 [00:00<?, ?it/s]100%|██████████| 282/282 [00:00<00:00, 1320.41it/s]
+2026-06-17:10:44:50 INFO     [api.task:312] Building contexts for mmlu_professional_medicine on rank 0...
+  0%|          | 0/272 [00:00<?, ?it/s]100%|██████████| 272/272 [00:00<00:00, 1303.83it/s]
+2026-06-17:10:44:50 INFO     [api.task:312] Building contexts for mmlu_virology on rank 0...
+  0%|          | 0/166 [00:00<?, ?it/s]100%|██████████| 166/166 [00:00<00:00, 1314.25it/s]
+2026-06-17:10:44:50 INFO     [api.task:312] Building contexts for mmlu_econometrics on rank 0...
+  0%|          | 0/114 [00:00<?, ?it/s]100%|██████████| 114/114 [00:00<00:00, 1313.25it/s]
+2026-06-17:10:44:50 INFO     [api.task:312] Building contexts for mmlu_high_school_geography on rank 0...
+  0%|          | 0/198 [00:00<?, ?it/s]100%|██████████| 198/198 [00:00<00:00, 1324.50it/s]
+2026-06-17:10:44:50 INFO     [api.task:312] Building contexts for mmlu_high_school_government_and_politics on rank 0...
+  0%|          | 0/193 [00:00<?, ?it/s]100%|██████████| 193/193 [00:00<00:00, 1313.71it/s]
+2026-06-17:10:44:50 INFO     [api.task:312] Building contexts for mmlu_high_school_macroeconomics on rank 0...
+  0%|          | 0/390 [00:00<?, ?it/s]100%|██████████| 390/390 [00:00<00:00, 1316.40it/s]
+2026-06-17:10:44:51 INFO     [api.task:312] Building contexts for mmlu_high_school_microeconomics on rank 0...
+  0%|          | 0/238 [00:00<?, ?it/s]100%|██████████| 238/238 [00:00<00:00, 1310.73it/s]
+2026-06-17:10:44:51 INFO     [api.task:312] Building contexts for mmlu_high_school_psychology on rank 0...
+  0%|          | 0/545 [00:00<?, ?it/s]100%|██████████| 545/545 [00:00<00:00, 1321.56it/s]
+2026-06-17:10:44:51 INFO     [api.task:312] Building contexts for mmlu_human_sexuality on rank 0...
+  0%|          | 0/131 [00:00<?, ?it/s]100%|██████████| 131/131 [00:00<00:00, 1318.68it/s]
+2026-06-17:10:44:51 INFO     [api.task:312] Building contexts for mmlu_professional_psychology on rank 0...
+  0%|          | 0/612 [00:00<?, ?it/s]100%|██████████| 612/612 [00:00<00:00, 1322.63it/s]
+2026-06-17:10:44:52 INFO     [api.task:312] Building contexts for mmlu_public_relations on rank 0...
+  0%|          | 0/110 [00:00<?, ?it/s]100%|██████████| 110/110 [00:00<00:00, 1326.01it/s]
+2026-06-17:10:44:52 INFO     [api.task:312] Building contexts for mmlu_security_studies on rank 0...
+  0%|          | 0/245 [00:00<?, ?it/s]100%|██████████| 245/245 [00:00<00:00, 1332.27it/s]
+2026-06-17:10:44:52 INFO     [api.task:312] Building contexts for mmlu_sociology on rank 0...
+  0%|          | 0/201 [00:00<?, ?it/s]100%|██████████| 201/201 [00:00<00:00, 1320.93it/s]
+2026-06-17:10:44:52 INFO     [api.task:312] Building contexts for mmlu_us_foreign_policy on rank 0...
+  0%|          | 0/100 [00:00<?, ?it/s]100%|██████████| 100/100 [00:00<00:00, 1330.76it/s]
+2026-06-17:10:44:52 INFO     [api.task:312] Building contexts for mmlu_formal_logic on rank 0...
+  0%|          | 0/126 [00:00<?, ?it/s]100%|██████████| 126/126 [00:00<00:00, 1327.44it/s]
+2026-06-17:10:44:52 INFO     [api.task:312] Building contexts for mmlu_high_school_european_history on rank 0...
+  0%|          | 0/165 [00:00<?, ?it/s]100%|██████████| 165/165 [00:00<00:00, 1327.18it/s]
+2026-06-17:10:44:53 INFO     [api.task:312] Building contexts for mmlu_high_school_us_history on rank 0...
+  0%|          | 0/204 [00:00<?, ?it/s]100%|██████████| 204/204 [00:00<00:00, 1324.89it/s]
+2026-06-17:10:44:53 INFO     [api.task:312] Building contexts for mmlu_high_school_world_history on rank 0...
+  0%|          | 0/237 [00:00<?, ?it/s]100%|██████████| 237/237 [00:00<00:00, 1338.61it/s]
+2026-06-17:10:44:53 INFO     [api.task:312] Building contexts for mmlu_international_law on rank 0...
+  0%|          | 0/121 [00:00<?, ?it/s]100%|██████████| 121/121 [00:00<00:00, 1344.83it/s]
+2026-06-17:10:44:53 INFO     [api.task:312] Building contexts for mmlu_jurisprudence on rank 0...
+  0%|          | 0/108 [00:00<?, ?it/s]100%|██████████| 108/108 [00:00<00:00, 1333.17it/s]
+2026-06-17:10:44:53 INFO     [api.task:312] Building contexts for mmlu_logical_fallacies on rank 0...
+  0%|          | 0/163 [00:00<?, ?it/s]100%|██████████| 163/163 [00:00<00:00, 1326.78it/s]
+2026-06-17:10:44:53 INFO     [api.task:312] Building contexts for mmlu_moral_disputes on rank 0...
+  0%|          | 0/346 [00:00<?, ?it/s]100%|██████████| 346/346 [00:00<00:00, 1344.08it/s]
+2026-06-17:10:44:53 INFO     [api.task:312] Building contexts for mmlu_moral_scenarios on rank 0...
+  0%|          | 0/895 [00:00<?, ?it/s]100%|██████████| 895/895 [00:00<00:00, 1339.52it/s]
+2026-06-17:10:44:54 INFO     [api.task:312] Building contexts for mmlu_philosophy on rank 0...
+  0%|          | 0/311 [00:00<?, ?it/s]100%|██████████| 311/311 [00:00<00:00, 1335.40it/s]
+2026-06-17:10:44:54 INFO     [api.task:312] Building contexts for mmlu_prehistory on rank 0...
+  0%|          | 0/324 [00:00<?, ?it/s]100%|██████████| 324/324 [00:00<00:00, 1341.42it/s]
+2026-06-17:10:44:55 INFO     [api.task:312] Building contexts for mmlu_professional_law on rank 0...
+  0%|          | 0/1534 [00:00<?, ?it/s]100%|██████████| 1534/1534 [00:01<00:00, 1337.89it/s]
+2026-06-17:10:44:56 INFO     [api.task:312] Building contexts for mmlu_world_religions on rank 0...
+  0%|          | 0/171 [00:00<?, ?it/s]100%|██████████| 171/171 [00:00<00:00, 1321.36it/s]
+2026-06-17:10:44:56 INFO     [api.task:312] Building contexts for hellaswag on rank 0...
+  0%|          | 0/10042 [00:00<?, ?it/s]100%|██████████| 10042/10042 [00:03<00:00, 2587.69it/s]
+2026-06-17:10:45:00 INFO     [evaluator:585] Running loglikelihood requests
+Tokenizing inputs:   0%|          | 0/100012 [00:00<?, ?it/s]Tokenizing inputs: 100%|██████████| 100012/100012 [00:27<00:00, 3703.33it/s]
+Running loglikelihood requests:   0%|          | 0/100012 [00:00<?, ?it/s]Passed argument batch_size = auto:1. Detecting largest batch size
+Determined largest batch size: 11
+Running loglikelihood requests:   0%|          | 221/100012 [02:01<15:16:26,  1.81it/s]Running loglikelihood requests:   1%|          | 528/100012 [02:16<15:13:37,  1.81it/s]Running loglikelihood requests:   3%|▎         | 2861/100012 [04:02<1:59:13, 13.58it/s]Running loglikelihood requests:   3%|▎         | 3212/100012 [04:16<1:58:47, 13.58it/s]Running loglikelihood requests:   6%|▌         | 5721/100012 [06:03<1:26:23, 18.19it/s]Running loglikelihood requests:   6%|▌         | 6072/100012 [06:16<1:26:04, 18.19it/s]Running loglikelihood requests:   9%|▊         | 8645/100012 [08:04<1:14:15, 20.50it/s]Running loglikelihood requests:   9%|▉         | 8952/100012 [08:16<1:14:00, 20.50it/s]Running loglikelihood requests:  12%|█▏        | 11619/100012 [10:04<1:06:51, 22.04it/s]Running loglikelihood requests:  12%|█▏        | 11920/100012 [10:16<1:06:37, 22.04it/s]Running loglikelihood requests:  15%|█▍        | 14583/100012 [12:05<1:02:15, 22.87it/s]Running loglikelihood requests:  15%|█▍        | 14869/100012 [12:16<1:02:02, 22.87it/s]Running loglikelihood requests:  17%|█▋        | 16982/100012 [14:07<1:03:18, 21.86it/s]Running loglikelihood requests:  17%|█▋        | 17209/100012 [14:21<1:03:08, 21.86it/s]Running loglikelihood requests:  19%|█▉        | 18804/100012 [16:07<1:08:36, 19.73it/s]Running loglikelihood requests:  19%|█▉        | 18902/100012 [16:21<1:08:31, 19.73it/s]Running loglikelihood requests:  20%|██        | 20208/100012 [18:08<1:17:23, 17.19it/s]Running loglikelihood requests:  20%|██        | 20340/100012 [18:21<1:17:15, 17.19it/s]Running loglikelihood requests:  22%|██▏       | 21603/100012 [20:09<1:24:46, 15.42it/s]Running loglikelihood requests:  22%|██▏       | 21729/100012 [20:21<1:24:37, 15.42it/s]Running loglikelihood requests:  23%|██▎       | 22848/100012 [22:11<1:33:00, 13.83it/s]Running loglikelihood requests:  23%|██▎       | 22924/100012 [22:21<1:32:55, 13.83it/s]Running loglikelihood requests:  24%|██▍       | 24166/100012 [24:11<1:37:32, 12.96it/s]Running loglikelihood requests:  24%|██▍       | 24275/100012 [24:26<1:37:23, 12.96it/s]Running loglikelihood requests:  25%|██▌       | 25136/100012 [26:11<1:48:37, 11.49it/s]Running loglikelihood requests:  25%|██▌       | 25500/100012 [26:26<1:48:05, 11.49it/s]Running loglikelihood requests:  26%|██▋       | 26430/100012 [28:12<1:48:56, 11.26it/s]Running loglikelihood requests:  27%|██▋       | 26528/100012 [28:26<1:48:47, 11.26it/s]Running loglikelihood requests:  28%|██▊       | 27530/100012 [30:13<1:53:59, 10.60it/s]Running loglikelihood requests:  28%|██▊       | 27747/100012 [30:26<1:53:38, 10.60it/s]Running loglikelihood requests:  29%|██▊       | 28701/100012 [32:14<1:55:06, 10.33it/s]Running loglikelihood requests:  29%|██▉       | 28788/100012 [32:26<1:54:58, 10.33it/s]Running loglikelihood requests:  30%|██▉       | 29770/100012 [34:15<1:58:28,  9.88it/s]Running loglikelihood requests:  30%|██▉       | 29857/100012 [34:26<1:58:20,  9.88it/s]Running loglikelihood requests:  31%|███       | 30828/100012 [36:15<2:00:41,  9.55it/s]Running loglikelihood requests:  31%|███       | 31036/100012 [36:26<2:00:20,  9.55it/s]Running loglikelihood requests:  32%|███▏      | 32122/100012 [38:15<1:54:05,  9.92it/s]Running loglikelihood requests:  32%|███▏      | 32198/100012 [38:26<1:53:58,  9.92it/s]Running loglikelihood requests:  33%|███▎      | 33223/100012 [40:16<1:54:51,  9.69it/s]Running loglikelihood requests:  33%|███▎      | 33299/100012 [40:26<1:54:43,  9.69it/s]Running loglikelihood requests:  34%|███▍      | 34260/100012 [42:16<1:56:53,  9.37it/s]Running loglikelihood requests:  34%|███▍      | 34337/100012 [42:26<1:56:45,  9.37it/s]Running loglikelihood requests:  35%|███▌      | 35358/100012 [44:17<1:56:04,  9.28it/s]Running loglikelihood requests:  35%|███▌      | 35467/100012 [44:31<1:55:52,  9.28it/s]Running loglikelihood requests:  36%|███▋      | 36402/100012 [46:18<1:56:47,  9.08it/s]Running loglikelihood requests:  36%|███▋      | 36500/100012 [46:31<1:56:36,  9.08it/s]Running loglikelihood requests:  37%|███▋      | 37497/100012 [48:19<1:54:51,  9.07it/s]Running loglikelihood requests:  38%|███▊      | 37584/100012 [48:31<1:54:42,  9.07it/s]Running loglikelihood requests:  39%|███▊      | 38618/100012 [50:20<1:52:03,  9.13it/s]Running loglikelihood requests:  39%|███▉      | 38781/100012 [50:31<1:51:45,  9.13it/s]Running loglikelihood requests:  40%|███▉      | 39781/100012 [52:20<1:48:05,  9.29it/s]Running loglikelihood requests:  40%|████      | 40088/100012 [52:31<1:47:32,  9.29it/s]Running loglikelihood requests:  41%|████      | 41079/100012 [54:20<1:40:48,  9.74it/s]Running loglikelihood requests:  41%|████▏     | 41257/100012 [54:31<1:40:30,  9.74it/s]Running loglikelihood requests:  42%|████▏     | 42379/100012 [56:22<1:35:44, 10.03it/s]Running loglikelihood requests:  42%|████▏     | 42477/100012 [56:36<1:35:34, 10.03it/s]Running loglikelihood requests:  44%|████▎     | 43533/100012 [58:23<1:35:18,  9.88it/s]Running loglikelihood requests:  44%|████▎     | 43631/100012 [58:36<1:35:08,  9.88it/s]Running loglikelihood requests:  45%|████▍     | 44698/100012 [1:00:25<1:34:10,  9.79it/s]Running loglikelihood requests:  45%|████▍     | 44785/100012 [1:00:36<1:34:01,  9.79it/s]Running loglikelihood requests:  46%|████▌     | 45905/100012 [1:02:26<1:31:36,  9.84it/s]Running loglikelihood requests:  46%|████▌     | 45981/100012 [1:02:36<1:31:28,  9.84it/s]Running loglikelihood requests:  47%|████▋     | 47079/100012 [1:04:27<1:30:02,  9.80it/s]Running loglikelihood requests:  47%|████▋     | 47188/100012 [1:04:41<1:29:50,  9.80it/s]Running loglikelihood requests:  48%|████▊     | 48265/100012 [1:06:28<1:28:02,  9.80it/s]Running loglikelihood requests:  48%|████▊     | 48363/100012 [1:06:41<1:27:52,  9.80it/s]Running loglikelihood requests:  49%|████▉     | 49452/100012 [1:08:29<1:25:56,  9.81it/s]Running loglikelihood requests:  50%|████▉     | 49540/100012 [1:08:41<1:25:47,  9.81it/s]Running loglikelihood requests:  51%|█████     | 50610/100012 [1:10:30<1:24:38,  9.73it/s]Running loglikelihood requests:  51%|█████     | 50872/100012 [1:10:41<1:24:11,  9.73it/s]Running loglikelihood requests:  52%|█████▏    | 52159/100012 [1:12:31<1:14:56, 10.64it/s]Running loglikelihood requests:  52%|█████▏    | 52268/100012 [1:12:46<1:14:46, 10.64it/s]Running loglikelihood requests:  53%|█████▎    | 53405/100012 [1:14:32<1:13:35, 10.56it/s]Running loglikelihood requests:  54%|█████▎    | 53514/100012 [1:14:46<1:13:24, 10.56it/s]Running loglikelihood requests:  55%|█████▍    | 54596/100012 [1:16:32<1:13:07, 10.35it/s]Running loglikelihood requests:  55%|█████▍    | 54694/100012 [1:16:46<1:12:58, 10.35it/s]Running loglikelihood requests:  56%|█████▌    | 56069/100012 [1:18:33<1:07:11, 10.90it/s]Running loglikelihood requests:  56%|█████▋    | 56428/100012 [1:18:46<1:06:38, 10.90it/s]Running loglikelihood requests:  58%|█████▊    | 57579/100012 [1:20:34<1:02:04, 11.39it/s]Running loglikelihood requests:  58%|█████▊    | 57666/100012 [1:20:46<1:01:57, 11.39it/s]Running loglikelihood requests:  59%|█████▉    | 58903/100012 [1:22:34<1:00:49, 11.26it/s]Running loglikelihood requests:  59%|█████▉    | 59254/100012 [1:22:46<1:00:18, 11.26it/s]Running loglikelihood requests:  61%|██████    | 60704/100012 [1:24:36<53:03, 12.35it/s]  Running loglikelihood requests:  61%|██████    | 60780/100012 [1:24:46<52:57, 12.35it/s]Running loglikelihood requests:  62%|██████▏   | 62295/100012 [1:26:36<49:52, 12.60it/s]Running loglikelihood requests:  63%|██████▎   | 62524/100012 [1:26:46<49:34, 12.60it/s]Running loglikelihood requests:  64%|██████▍   | 63765/100012 [1:28:37<48:23, 12.48it/s]Running loglikelihood requests:  64%|██████▍   | 64079/100012 [1:28:51<47:58, 12.48it/s]Running loglikelihood requests:  66%|██████▌   | 65521/100012 [1:30:37<43:49, 13.11it/s]Running loglikelihood requests:  66%|██████▌   | 65879/100012 [1:30:51<43:22, 13.11it/s]Running loglikelihood requests:  67%|██████▋   | 67405/100012 [1:32:37<39:09, 13.88it/s]Running loglikelihood requests:  68%|██████▊   | 67848/100012 [1:32:51<38:37, 13.88it/s]Running loglikelihood requests:  70%|██████▉   | 69708/100012 [1:34:38<32:41, 15.45it/s]Running loglikelihood requests:  70%|██████▉   | 69863/100012 [1:34:51<32:31, 15.45it/s]Running loglikelihood requests:  72%|███████▏  | 71754/100012 [1:36:38<29:36, 15.91it/s]Running loglikelihood requests:  72%|███████▏  | 71847/100012 [1:36:51<29:30, 15.91it/s]Running loglikelihood requests:  74%|███████▍  | 73913/100012 [1:38:39<26:20, 16.52it/s]Running loglikelihood requests:  74%|███████▍  | 74308/100012 [1:38:51<25:56, 16.52it/s]Running loglikelihood requests:  76%|███████▋  | 76450/100012 [1:40:39<21:56, 17.89it/s]Running loglikelihood requests:  77%|███████▋  | 76632/100012 [1:40:51<21:46, 17.89it/s]Running loglikelihood requests:  79%|███████▊  | 78547/100012 [1:42:39<20:08, 17.76it/s]Running loglikelihood requests:  79%|███████▊  | 78708/100012 [1:42:51<19:59, 17.76it/s]Running loglikelihood requests:  81%|████████  | 80718/100012 [1:44:39<18:01, 17.85it/s]Running loglikelihood requests:  81%|████████  | 81113/100012 [1:44:51<17:38, 17.85it/s]Running loglikelihood requests:  83%|████████▎ | 82970/100012 [1:46:40<15:42, 18.08it/s]Running loglikelihood requests:  83%|████████▎ | 83114/100012 [1:46:51<15:34, 18.08it/s]Running loglikelihood requests:  85%|████████▍ | 84824/100012 [1:48:41<14:39, 17.27it/s]Running loglikelihood requests:  85%|████████▍ | 84911/100012 [1:48:51<14:34, 17.27it/s]Running loglikelihood requests:  86%|████████▋ | 86374/100012 [1:50:41<14:15, 15.95it/s]Running loglikelihood requests:  86%|████████▋ | 86461/100012 [1:50:51<14:09, 15.95it/s]Running loglikelihood requests:  88%|████████▊ | 87779/100012 [1:52:42<13:55, 14.63it/s]Running loglikelihood requests:  88%|████████▊ | 87923/100012 [1:52:56<13:46, 14.63it/s]Running loglikelihood requests:  89%|████████▉ | 88996/100012 [1:54:43<13:50, 13.26it/s]Running loglikelihood requests:  89%|████████▉ | 89156/100012 [1:54:56<13:38, 13.26it/s]Running loglikelihood requests:  90%|█████████ | 90116/100012 [1:56:44<13:40, 12.06it/s]Running loglikelihood requests:  90%|█████████ | 90232/100012 [1:56:56<13:30, 12.06it/s]Running loglikelihood requests:  91%|█████████ | 91145/100012 [1:58:45<13:26, 10.99it/s]Running loglikelihood requests:  91%|█████████ | 91243/100012 [1:58:56<13:17, 10.99it/s]Running loglikelihood requests:  92%|█████████▏| 92152/100012 [2:00:45<12:49, 10.21it/s]Running loglikelihood requests:  92%|█████████▏| 92250/100012 [2:00:56<12:40, 10.21it/s]Running loglikelihood requests:  93%|█████████▎| 93164/100012 [2:02:46<11:49,  9.66it/s]Running loglikelihood requests:  93%|█████████▎| 93295/100012 [2:03:01<11:35,  9.66it/s]Running loglikelihood requests:  94%|█████████▍| 94177/100012 [2:04:47<10:28,  9.28it/s]Running loglikelihood requests:  94%|█████████▍| 94308/100012 [2:05:01<10:14,  9.28it/s]Running loglikelihood requests:  95%|█████████▌| 95201/100012 [2:06:47<08:51,  9.05it/s]Running loglikelihood requests:  95%|█████████▌| 95321/100012 [2:07:01<08:38,  9.05it/s]Running loglikelihood requests:  96%|█████████▌| 96236/100012 [2:08:47<07:03,  8.92it/s]Running loglikelihood requests:  96%|█████████▋| 96367/100012 [2:09:01<06:48,  8.92it/s]Running loglikelihood requests:  97%|█████████▋| 97293/100012 [2:10:48<05:06,  8.88it/s]Running loglikelihood requests:  97%|█████████▋| 97424/100012 [2:11:01<04:51,  8.88it/s]Running loglikelihood requests:  98%|█████████▊| 98385/100012 [2:12:48<03:02,  8.94it/s]Running loglikelihood requests:  99%|█████████▊| 98518/100012 [2:13:01<02:47,  8.94it/s]Running loglikelihood requests: 100%|█████████▉| 99548/100012 [2:14:48<00:50,  9.16it/s]Running loglikelihood requests: 100%|█████████▉| 99692/100012 [2:15:01<00:34,  9.16it/s]Running loglikelihood requests: 100%|██████████| 100012/100012 [2:15:25<00:00, 12.31it/s]
+2026-06-17:13:01:01 INFO     [loggers.evaluation_tracker:247] Saving results aggregated
+2026-06-17:13:01:01 INFO     [loggers.evaluation_tracker:119] Saving per-task samples to /root/_work/1/s/auto_quant/output/runs/gemma-4-26B-A4B-it-AutoRound-W4A16-RTN/lm_eval_results/__root___work__1__s__auto_quant__output__runs__gemma-4-26B-A4B-it-AutoRound-W4A16-RTN__quantized_model/*.jsonl
+hf ({'pretrained': '/root/_work/1/s/auto_quant/output/runs/gemma-4-26B-A4B-it-AutoRound-W4A16-RTN/quantized_model', 'dtype': 'bfloat16'}), gen_kwargs: ({}), limit: None, num_fewshot: None, batch_size: auto (11)
+|                 Tasks                 |Version|Filter|n-shot| Metric |   |Value |   |Stderr|
+|---------------------------------------|------:|------|-----:|--------|---|-----:|---|-----:|
+|mmlu                                   |      2|none  |      |acc     |   |0.4321|±  |0.0041|
+| - humanities                          |      2|none  |     0|acc     |↑  |0.4421|±  |0.0071|
+|  - formal_logic                       |      1|none  |     0|acc     |↑  |0.3333|±  |0.0422|
+|  - high_school_european_history       |      1|none  |     0|acc     |↑  |0.6485|±  |0.0373|
+|  - high_school_us_history             |      1|none  |     0|acc     |↑  |0.6961|±  |0.0323|
+|  - high_school_world_history          |      1|none  |     0|acc     |↑  |0.6371|±  |0.0313|
+|  - international_law                  |      1|none  |     0|acc     |↑  |0.5455|±  |0.0455|
+|  - jurisprudence                      |      1|none  |     0|acc     |↑  |0.4259|±  |0.0478|
+|  - logical_fallacies                  |      1|none  |     0|acc     |↑  |0.4540|±  |0.0391|
+|  - moral_disputes                     |      1|none  |     0|acc     |↑  |0.3642|±  |0.0259|
+|  - moral_scenarios                    |      1|none  |     0|acc     |↑  |0.3631|±  |0.0161|
+|  - philosophy                         |      1|none  |     0|acc     |↑  |0.3923|±  |0.0277|
+|  - prehistory                         |      1|none  |     0|acc     |↑  |0.4722|±  |0.0278|
+|  - professional_law                   |      1|none  |     0|acc     |↑  |0.4140|±  |0.0126|
+|  - world_religions                    |      1|none  |     0|acc     |↑  |0.5322|±  |0.0383|
+| - other                               |      2|none  |     0|acc     |↑  |0.3891|±  |0.0087|
+|  - business_ethics                    |      1|none  |     0|acc     |↑  |0.4700|±  |0.0502|
+|  - clinical_knowledge                 |      1|none  |     0|acc     |↑  |0.3585|±  |0.0295|
+|  - college_medicine                   |      1|none  |     0|acc     |↑  |0.3931|±  |0.0372|
+|  - global_facts                       |      1|none  |     0|acc     |↑  |0.2200|±  |0.0416|
+|  - human_aging                        |      1|none  |     0|acc     |↑  |0.3722|±  |0.0324|
+|  - management                         |      1|none  |     0|acc     |↑  |0.4272|±  |0.0490|
+|  - marketing                          |      1|none  |     0|acc     |↑  |0.4188|±  |0.0323|
+|  - medical_genetics                   |      1|none  |     0|acc     |↑  |0.4100|±  |0.0494|
+|  - miscellaneous                      |      1|none  |     0|acc     |↑  |0.3448|±  |0.0170|
+|  - nutrition                          |      1|none  |     0|acc     |↑  |0.4150|±  |0.0282|
+|  - professional_accounting            |      1|none  |     0|acc     |↑  |0.4078|±  |0.0293|
+|  - professional_medicine              |      1|none  |     0|acc     |↑  |0.4816|±  |0.0304|
+|  - virology                           |      1|none  |     0|acc     |↑  |0.4096|±  |0.0383|
+| - social sciences                     |      2|none  |     0|acc     |↑  |0.4732|±  |0.0090|
+|  - econometrics                       |      1|none  |     0|acc     |↑  |0.4123|±  |0.0463|
+|  - high_school_geography              |      1|none  |     0|acc     |↑  |0.4747|±  |0.0356|
+|  - high_school_government_and_politics|      1|none  |     0|acc     |↑  |0.5751|±  |0.0357|
+|  - high_school_macroeconomics         |      1|none  |     0|acc     |↑  |0.4333|±  |0.0251|
+|  - high_school_microeconomics         |      1|none  |     0|acc     |↑  |0.5042|±  |0.0325|
+|  - high_school_psychology             |      1|none  |     0|acc     |↑  |0.5211|±  |0.0214|
+|  - human_sexuality                    |      1|none  |     0|acc     |↑  |0.4885|±  |0.0438|
+|  - professional_psychology            |      1|none  |     0|acc     |↑  |0.4020|±  |0.0198|
+|  - public_relations                   |      1|none  |     0|acc     |↑  |0.4273|±  |0.0474|
+|  - security_studies                   |      1|none  |     0|acc     |↑  |0.5061|±  |0.0320|
+|  - sociology                          |      1|none  |     0|acc     |↑  |0.4677|±  |0.0353|
+|  - us_foreign_policy                  |      1|none  |     0|acc     |↑  |0.5600|±  |0.0499|
+| - stem                                |      2|none  |     0|acc     |↑  |0.4196|±  |0.0087|
+|  - abstract_algebra                   |      1|none  |     0|acc     |↑  |0.3000|±  |0.0461|
+|  - anatomy                            |      1|none  |     0|acc     |↑  |0.4074|±  |0.0424|
+|  - astronomy                          |      1|none  |     0|acc     |↑  |0.4539|±  |0.0405|
+|  - college_biology                    |      1|none  |     0|acc     |↑  |0.5278|±  |0.0417|
+|  - college_chemistry                  |      1|none  |     0|acc     |↑  |0.4100|±  |0.0494|
+|  - college_computer_science           |      1|none  |     0|acc     |↑  |0.4200|±  |0.0496|
+|  - college_mathematics                |      1|none  |     0|acc     |↑  |0.3000|±  |0.0461|
+|  - college_physics                    |      1|none  |     0|acc     |↑  |0.2843|±  |0.0449|
+|  - computer_security                  |      1|none  |     0|acc     |↑  |0.4300|±  |0.0498|
+|  - conceptual_physics                 |      1|none  |     0|acc     |↑  |0.3617|±  |0.0314|
+|  - electrical_engineering             |      1|none  |     0|acc     |↑  |0.4207|±  |0.0411|
+|  - elementary_mathematics             |      1|none  |     0|acc     |↑  |0.4259|±  |0.0255|
+|  - high_school_biology                |      1|none  |     0|acc     |↑  |0.5677|±  |0.0282|
+|  - high_school_chemistry              |      1|none  |     0|acc     |↑  |0.3892|±  |0.0343|
+|  - high_school_computer_science       |      1|none  |     0|acc     |↑  |0.5600|±  |0.0499|
+|  - high_school_mathematics            |      1|none  |     0|acc     |↑  |0.3556|±  |0.0292|
+|  - high_school_physics                |      1|none  |     0|acc     |↑  |0.3444|±  |0.0388|
+|  - high_school_statistics             |      1|none  |     0|acc     |↑  |0.4537|±  |0.0340|
+|  - machine_learning                   |      1|none  |     0|acc     |↑  |0.3929|±  |0.0464|
+|hellaswag                              |      1|none  |     0|acc     |↑  |0.3310|±  |0.0047|
+|                                       |       |none  |     0|acc_norm|↑  |0.4008|±  |0.0049|
+|piqa                                   |      1|none  |     0|acc     |↑  |0.5501|±  |0.0116|
+|                                       |       |none  |     0|acc_norm|↑  |0.5522|±  |0.0116|
+
+|      Groups      |Version|Filter|n-shot|Metric|   |Value |   |Stderr|
+|------------------|------:|------|-----:|------|---|-----:|---|-----:|
+|mmlu              |      2|none  |      |acc   |   |0.4321|±  |0.0041|
+| - humanities     |      2|none  |     0|acc   |↑  |0.4421|±  |0.0071|
+| - other          |      2|none  |     0|acc   |↑  |0.3891|±  |0.0087|
+| - social sciences|      2|none  |     0|acc   |↑  |0.4732|±  |0.0090|
+| - stem           |      2|none  |     0|acc   |↑  |0.4196|±  |0.0087|
+
