@@ -1,0 +1,22 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+The tokenizer doesn't produce `attention_mask` for this model. Auto-round hardcodes the requirement at line 889. I'll patch it to only require columns that exist.
+**FIX_PLAN:**
+1. Patch `calib_dataset.py` to handle tokenizers that don't produce `attention_mask` (two locations patched)
+2. Verify the fix works by testing the import
+3. The quantization phase will be re-run automatically to verify
+
+Let me verify the patch works:
+The patch works. The fix addresses two locations in `calib_dataset.py`:
+
+1. **Line 889**: Changed hardcoded `["input_ids", "attention_mask"]` to only include columns that actually exist in the dataset
+2. **collate_batch function**: Added fallback to create a default attention_mask of all ones when the tokenizer doesn't produce one
+
+The test confirms:
+- Tokenizer for `Escarda-86M-Base` only outputs `['input_ids']` (no `attention_mask`)
+- Dataset loads successfully with features `['text', 'meta', 'input_ids']`
+- No error when `attention_mask` is absent
+
+**FIX_PLAN:**
+1. ✅ Patched `calib_dataset.py` to handle tokenizers that don't produce `attention_mask` 
+2. ✅ Verified the patch works by testing dataset loading
+3. The quantization phase will now be re-run to completion
