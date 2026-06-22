@@ -1,0 +1,32 @@
+{
+  "category": "model_code_tensor_shape_mismatch",
+  "phase": "quantize",
+  "key_error": "RuntimeError: The size of tensor a (2048) must match the size of tensor b (8) at non-singleton dimension 2",
+  "root_cause": "The error occurs in the model's custom attention implementation (model_v2.py:381, F.scaled_dot_product_attention call). The query tensor has sequence length 2048 while the key tensor has sequence length 8 at non-singleton dimension 2. This is a sequence length mismatch in multi-head attention — the model was probably fine-tuned from a base model with a different context length (or uses position embeddings that expect a specific seq_len), and the calibration data (pile-10k samples) has a different sequence length than what the model's position encoding expects. The mismatch happens when the model's attention mask or position embeddings are incompatible with the input sequence length being fed during calibration.",
+  "traceback_analysis": "1. **Entry point (quantize.py:183)**: Calls autoround.quantize() which initiates the quantization pipeline. 2. **data_driven.py:1235** - _quant_rtn_with_imatrix calls _quantize_via_rtn_blockwise. This is auto-round's calibration process. 3. **data_driven.py:1059** - cache_inter_data is called to cache intermediate calibration data. This calls self.calibration.cache_inter_data. 4. **llm.py:240** - calibration.cache_inter_data calls calib method. 5. **llm.py:368** - The calib method runs the model with calibration data. 6. **llm.py:387** - Error is raised here (the raise error line). 7. **model_v2.py:887** - The model's forward method is called (custom Escarda model). 8. **model_v2.py:770** - Individual layer forward is called. 9. **model_v2.py:605** - The attention block's attn method is called. 10. **model_v2.py:381** - F.scaled_dot_product_attention is called and FAILS here. The tensors passed have incompatible sequence lengths (2048 vs 8) at dimension 2.",
+  "fault_attribution": {
+    "component": "model_code",
+    "specific_module": "transformers_modules/Quazim0t0/Escarda_hyphen_86M_hyphen_Base/model_v2.py",
+    "specific_function": "EscardaModel.forward / self.attn / F.scaled_dot_product_attention",
+    "fault_type": "code_bug",
+    "responsible_party": "model_author"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "1. The auto-round warning at llm.py:383 explicitly suggests using batch_size=1 to avoid this error. This indicates the calibration is running with batch_size > 1 which causes sequence length mismatches in this model's attention mechanism. 2. Add 'batch_size=1' to the quantization config/arguments for this specific model. 3. Alternatively, the model may have a hard-coded position embedding size (seq_len=2048) that is incompatible with the calibration dataset's sequence length (likely 8 tokens per sample from pile-10k). The model author may have modified position embeddings incorrectly. 4. Check if this is a fine-tuned model that requires sequence length matching the original pre-training context.",
+  "fix_verification": "grep -r 'batch_size' /root/test_submit/lb_eval/auto_quant/configs/ || grep -r 'batch_size' ~/.openclaw/workspace/  # Find quantization config",
+  "workaround": "Run quantization with batch_size=1. If that fails, the model may have architecture issues with its position embeddings and the model author should be consulted. The alternative is to use a different calibration dataset that matches the model's expected sequence length.",
+  "affected_component": "model",
+  "severity": "high",
+  "confidence": 0.85,
+  "versions_involved": {
+    "auto_round": "unknown (installed version)",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "The quantization failed during the calibration phase when auto-round ran the model on pile-10k dataset samples. The model's custom attention implementation (model_v2.py:381) calls F.scaled_dot_product_attention with incompatible tensor shapes — query has seq_len=2048 while key has seq_len=8. This is not an auto-round bug; the warning message at llm.py:383 explicitly acknowledges this class of error and suggests batch_size=1 as the workaround. The root cause is either the model author's position embedding modifications or a mismatch between the calibration data sequence length and the model's expected context length. Setting batch_size=1 during quantization should resolve this.",
+  "analyzed_at": "2026-06-22T12:52:13.487954+00:00",
+  "model": "Quazim0t0/Escarda-86M-Base",
+  "run_id": "Escarda-86M-Base-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)"
+}

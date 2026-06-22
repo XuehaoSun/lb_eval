@@ -1,0 +1,24 @@
+[31m[huggingface-models][39m [33mDiscovery failed: TimeoutError: The operation was aborted due to timeout, using static catalog[39m
+[31m[huggingface-models][39m [33mDiscovery failed: TimeoutError: The operation was aborted due to timeout, using static catalog[39m
+[31m[huggingface-models][39m [33mDiscovery failed: TimeoutError: The operation was aborted due to timeout, using static catalog[39m
+[34m[tools][39m [33mtools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.[39m
+[33m[agent/embedded][39m [33mread tool called without path: toolCallId=call_function_85ml15dba3v6_1 argsType=object[39m
+[33m[agent/embedded][39m [33mread tool called without path: toolCallId=call_function_9529rbp8mm65_1 argsType=object[39m
+[33m[agent/embedded][39m [33mread tool called without path: toolCallId=call_function_zs548n6thrn5_1 argsType=object[39m
+[33m[agent/embedded][39m [33mread tool called without path: toolCallId=call_function_0l4md1cj0p3n_1 argsType=object[39m
+[33m[agent/embedded][39m [33mread tool called without path: toolCallId=call_function_8fetor0b538a_1 argsType=object[39m
+[33m[agent/embedded][39m [33mread tool called without path: toolCallId=call_function_t7rrn3nykb4f_1 argsType=object[39m
+[33m[agent/embedded][39m [33mread tool called without path: toolCallId=call_function_zmtovcuz0mc4_1 argsType=object[39m
+[33m[agent/embedded][39m [33mread tool called without path: toolCallId=call_function_jmeek94kyth0_1 argsType=object[39m
+The error occurs at `F.scaled_dot_product_attention` in the model's custom code, with a tensor shape mismatch (2048 vs 8) at dimension 2. The warning from auto-round suggests `batch_size=1` as a workaround.
+
+Let me examine the model's attention code:
+Let me check the config for this quantization run to understand the current batch_size setting:
+The error is a tensor shape mismatch (2048 vs 8) in `F.scaled_dot_product_attention`. The warning from auto-round explicitly suggests `batch_size=1` as a workaround. The default batch_size for calibration is 8.
+
+**FIX_PLAN:**
+1. Add `batch_size=1` to the `ar_kwargs` in `/root/test_submit/lb_eval/auto_quant/phases/quantize.py`
+2. Re-run the quantization phase to verify the fix
+The fix has been applied and committed. 
+
+**Summary:** Added `"batch_size": 1` to the `ar_kwargs` dict in `quantize.py`. This forces AutoRound's calibration to process one sample at a time instead of batching (default batch_size=8), which was causing a tensor shape mismatch (2048 vs 8) in `F.scaled_dot_product_attention` when calibration samples with different sequence lengths were processed together.
