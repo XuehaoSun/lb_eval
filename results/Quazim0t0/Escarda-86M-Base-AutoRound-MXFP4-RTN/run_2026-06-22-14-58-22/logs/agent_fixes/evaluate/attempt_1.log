@@ -1,0 +1,5 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+**FIX_PLAN:**
+1. Identified dtype mismatch at `model_v2.py:147` — `.float()` was forcing `compressed` to float32 while `proj` is bfloat16
+2. Changed `.float()` → `.to(proj.dtype)` to match the projection matrix's dtype
+3. Re-running evaluation to verify the fix
