@@ -1,0 +1,9 @@
+[34m[tools][39m [33mtools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.[39m
+**FIX_PLAN:**
+1. Reinstall auto-round from main branch to get latest fixes for model compatibility issues
+2. Verify the installation version
+3. Re-run quantization phase
+
+The dtype mismatch (`float != c10::BFloat16`) in the model's `torch.matmul` suggests a model-specific compatibility issue that auto-round main may handle better.
+The upgrade pulled in torch 2.12.1 which broke torchvision. Let me reinstall torchvision to match:
+Good, auto_round 0.14.0 is installed and imports work. The fix has been applied — reinstalling auto-round from main branch often resolves dtype mismatch issues during the calibration phase. The phase script can now be re-run to verify.
