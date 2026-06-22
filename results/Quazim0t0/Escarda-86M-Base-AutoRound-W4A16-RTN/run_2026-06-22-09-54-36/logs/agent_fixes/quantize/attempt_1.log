@@ -1,9 +1,0 @@
-[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
-**FIX_PLAN:**
-1. Upgrade auto-round from main branch to fix the dataset column issue
-2. Re-run the quantization phase
-The upgrade broke torch compatibility. Let me restore torch and patch auto_round directly instead:
-The issue is line 889 unconditionally requires `attention_mask`, but the dataset only has `['text', 'meta', 'input_ids']`. Let me patch it to only format available columns:
-Now let me check if attention_mask handling after line 889 also needs patching:
-Let me verify the patch was applied correctly:
-The patch is applied and auto_round (v0.14.0) imports correctly. The fix makes the format columns conditional — if `attention_mask` doesn't exist in the dataset, it only formats `input_ids`.

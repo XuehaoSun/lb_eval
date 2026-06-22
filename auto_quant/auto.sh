@@ -180,6 +180,10 @@ export RUN_OUTPUT_DIR QUANTIZED_MODEL_DIR EVAL_OUTPUT_DIR
 export DEVICE_MAP="${DEVICE_MAP:-auto}"
 export LB_EVAL_REPO_DIR LESSONS_DIR GIT_BRANCH
 export REQUEST_FILENAME
+# Tokens — needed by upload scripts and error_analysis (Python subprocesses)
+export GIT_TOKEN="${GIT_TOKEN:-}"
+export HF_TOKEN="${HF_TOKEN:-${HF_TOKENS%%,*}}"
+export HF_TOKENS="${HF_TOKENS:-}"
 
 mkdir -p "${RUN_OUTPUT_DIR}" "${LOG_DIR}" "${LESSONS_DIR}"
 
@@ -351,6 +355,44 @@ if [[ "$SKIP_UPLOAD" != "true" ]]; then
         --git-user-name "${GIT_USER_NAME:-auto-pipeline}" \
         --git-user-email "${GIT_USER_EMAIL:-auto@pipeline.local}" \
         2>&1 | tee "${LOG_DIR}/upload_github.log" || log_warn "GitHub upload failed"
+fi
+
+# ═══ Error Analysis & Community Reporting (on failure) ═══
+if [[ "$PIPELINE_STATUS" == "Failed" ]]; then
+    log_step "Error Analysis"
+    ERROR_ANALYSIS_SCRIPT="${SCRIPT_DIR}/error_analysis/analyze_failures.py"
+    if [[ -f "${ERROR_ANALYSIS_SCRIPT}" ]]; then
+        # Determine which phase log to analyze
+        _FAILED_PHASE="${FAILED_STEPS[0]}"
+        _FAILED_LOG="${LOG_DIR}/${_FAILED_PHASE}.log"
+
+        if [[ -f "${_FAILED_LOG}" ]]; then
+            log_info "Analyzing failure: ${_FAILED_PHASE} phase..."
+
+            # Run analysis with agent (unless --skip-agent), push to github, submit community
+            _ANALYSIS_ARGS=(
+                --run-dir "${RUN_OUTPUT_DIR}"
+                --limit 1
+                --repo-dir "${LB_EVAL_REPO_DIR}"
+                --org "${MODEL_ID%%/*}"
+                --artifact-name "${HF_REPO_NAME}"
+            )
+            if [[ "$SKIP_AGENT" == "true" ]]; then
+                _ANALYSIS_ARGS+=(--no-agent)
+            fi
+            # Always push diagnosis to GitHub (results already uploaded)
+            _ANALYSIS_ARGS+=(--push-github)
+            # Submit to community discussion for visibility
+            _ANALYSIS_ARGS+=(--submit-community)
+
+            python3 "${ERROR_ANALYSIS_SCRIPT}" "${_ANALYSIS_ARGS[@]}" \
+                2>&1 | tee "${LOG_DIR}/error_analysis.log" || log_warn "Error analysis failed (non-fatal)"
+        else
+            log_warn "No log found for failed phase: ${_FAILED_PHASE}"
+        fi
+    else
+        log_info "Error analysis script not found, skipping"
+    fi
 fi
 
 # ═══ Summary ═══

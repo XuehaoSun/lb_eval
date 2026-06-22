@@ -1,7 +1,0 @@
-[31m[huggingface-models][39m [33mDiscovery failed: TimeoutError: The operation was aborted due to timeout, using static catalog[39m
-[31m[huggingface-models][39m [33mDiscovery failed: TimeoutError: The operation was aborted due to timeout, using static catalog[39m
-[31m[huggingface-models][39m [33mDiscovery failed: TimeoutError: The operation was aborted due to timeout, using static catalog[39m
-[34m[tools][39m [33mtools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.[39m
-The error is in the model's custom code at line 147 of `model_v2.py`. A `.float()` call is creating a float tensor while `proj` is bfloat16 — dtype mismatch in `torch.matmul`.
-Fix: change `.float()` to `.to(proj.dtype)` so the matmul operates on matching dtypes.
-**FIX_PLAN:**;1. Patch model's `model_v2.py` line 147 — replace `.float()` with `.to(proj.dtype)` to fix dtype mismatch in matmul;2. Re-run quantization phase to verify

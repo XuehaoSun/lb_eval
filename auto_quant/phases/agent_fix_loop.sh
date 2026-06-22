@@ -149,17 +149,37 @@ ${error}
 ${lessons_section}
 
 ## Your Task:
-1. First output a brief FIX_PLAN (3 lines max) describing what you will do
-2. Then execute the fix (modify files, install packages, adjust parameters)
-3. The phase script will be re-run after your fix to verify
+1. READ the traceback carefully — identify the EXACT file and line that caused the error
+2. Determine if the fault is in: auto-round code, transformers, model's custom code, or environment
+3. Output a brief FIX_PLAN (3 lines max) describing what you will do
+4. Execute the fix, then the phase will be re-run to verify
+
+## Key Technique: Patching Model Custom Code
+
+If the traceback shows files in \`~/.cache/huggingface/modules/transformers_modules/\`, that is the
+MODEL'S CUSTOM CODE that was downloaded from HuggingFace. **YOU CAN AND SHOULD EDIT THESE FILES.**
+
+Common fixes for model custom code:
+- dtype mismatch (\`.float()\` mixed with bfloat16): Replace \`.float()\` with \`.to(other_tensor.dtype)\`
+- Missing device: Add \`device=hidden_states.device\` to tensor creation
+- Invalid regex: Fix the regex pattern in the model file
+- Missing imports: Add the import or install the package
+
+Example: If you see:
+  File "/root/.cache/huggingface/modules/transformers_modules/Org/Model/hash/model.py", line 147
+    h = h + torch.matmul(compressed[:, k:k+valid_len, :].float(), proj.t())
+  RuntimeError: expected m1 and m2 to have the same dtype
+
+Fix: Edit that file, change \`.float()\` to \`.to(proj.dtype)\`
 
 ## Constraints:
 - Do NOT reinstall or downgrade torch (it will break CUDA)
 - Do NOT modify the evaluation tasks or expected output format
-- Keep fixes minimal and targeted
+- Keep fixes minimal and targeted — change only what's needed
 - If you need to install a package, use: pip install <package>
-- If unsupported model architecture, try: pip install -U auto-round transformers
+- If unsupported model architecture (multimodal/VL), report and stop
 - Working directory: ${RUN_OUTPUT_DIR}
+- Model: ${MODEL_ID}
 PROMPT
 }
 
@@ -178,8 +198,26 @@ run_openclaw_fix() {
 
     local timeout="${AGENT_TIMEOUT:-600}"
     local session_id="fix_${phase_name:-unknown}_$$_$(date +%s)"
+    local sessions_dir="${OPENCLAW_SESSIONS_DIR:-/root/.openclaw/agents/main/sessions}"
+    local session_file="${sessions_dir}/${session_id}.jsonl"
 
     log_info "Calling openclaw agent (session=${session_id}, timeout=${timeout}s)..."
+    log_info "  Session file: ${session_file}"
+
+    # Background progress reporter — prints elapsed time + session size every 30s
+    local _progress_pid=""
+    (
+        local _start=$SECONDS
+        while true; do
+            sleep 30
+            local elapsed=$(( SECONDS - _start ))
+            local session_lines=0
+            [[ -f "${session_file}" ]] && session_lines=$(wc -l < "${session_file}" 2>/dev/null || echo 0)
+            log_info "  [agent running ${elapsed}s] session: ${session_lines} messages"
+        done
+    ) &
+    _progress_pid=$!
+
     timeout "${timeout}" openclaw agent --local \
         --session-id "${session_id}" \
         --message "${prompt}" \
@@ -191,6 +229,20 @@ run_openclaw_fix() {
             log_warn "Agent timed out after ${timeout}s"
         fi
     }
+
+    # Stop progress reporter
+    if [[ -n "${_progress_pid}" ]]; then
+        kill "${_progress_pid}" 2>/dev/null || true
+        wait "${_progress_pid}" 2>/dev/null || true
+    fi
+
+    # Print session summary to auto.log
+    if [[ -f "${session_file}" ]]; then
+        local msg_count tool_count
+        msg_count=$(grep -c '"type":"message"\|"type": "message"' "${session_file}" 2>/dev/null || echo 0)
+        tool_count=$(grep -c '"tool_use"\|"tool_call"' "${session_file}" 2>/dev/null || echo 0)
+        log_info "  Agent session complete: ${msg_count} messages, ${tool_count} tool calls"
+    fi
 
     return 0
 }
