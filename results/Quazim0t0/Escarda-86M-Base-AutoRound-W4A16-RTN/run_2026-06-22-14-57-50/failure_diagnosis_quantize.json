@@ -1,0 +1,32 @@
+{
+  "category": "dataset_error",
+  "phase": "quantize",
+  "key_error": "ValueError: Columns ['attention_mask'] not in the dataset. Current columns in the dataset: ['text', 'meta', 'input_ids']",
+  "root_cause": "The calibration dataset NeelNanda/pile-10k only contains columns ['text', 'meta', 'input_ids'] without 'attention_mask'. The auto_round calib_dataset.py code hardcodes set_format(..., columns=['input_ids', 'attention_mask']) assuming attention_mask always exists, but this dataset's tokenizer output lacks it.",
+  "traceback_analysis": "quantize.py:183→autoround.quantize()→_quant_rtn_with_imatrix()→ensure_dataloader()→get_dataloader()→get_dataset()→_get_dataset_impl() fails at calib_dataset.py:889 where dataset.set_format(..., columns=['input_ids', 'attention_mask']) is called. The dataset returned by load_dataset has no 'attention_mask' column.",
+  "fault_attribution": {
+    "component": "auto_round",
+    "specific_module": "auto_round.calib_dataset",
+    "specific_function": "_get_dataset_impl",
+    "fault_type": "code_bug",
+    "responsible_party": "auto_round_devs"
+  },
+  "retryable": false,
+  "fix_available": true,
+  "suggested_fix": "In auto_round/calib_dataset.py around line 889, change dataset.set_format to only include existing columns. Replace:\n  dataset.set_format(type='torch', columns=['input_ids', 'attention_mask'])\nwith:\n  cols = ['input_ids'] + (['attention_mask'] if 'attention_mask' in dataset.column_names else [])\n  dataset.set_format(type='torch', columns=cols)",
+  "fix_verification": "Re-run quantization: auto_quant quantize Quazim0t0/Escarda-86M-Base --bits 4 --group_size 128 --iters 100",
+  "workaround": "Use a different calibration dataset that has attention_mask column, or pre-tokenize pile-10k with a tokenizer that outputs attention_mask before passing to auto-round",
+  "affected_component": "auto_round",
+  "severity": "high",
+  "confidence": 0.95,
+  "versions_involved": {
+    "auto_round": "unknown (latest)",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "Auto-round fails on pile-10k calibration dataset because _get_dataset_impl hardcodes attention_mask column which this dataset lacks. The fix is to conditionally include attention_mask only when present in the dataset column_names.",
+  "analyzed_at": "2026-06-22T14:58:24.742918+00:00",
+  "model": "Quazim0t0/Escarda-86M-Base",
+  "run_id": "Escarda-86M-Base-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)"
+}
