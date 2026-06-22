@@ -1,0 +1,32 @@
+{
+  "category": "dtype_mismatch",
+  "phase": "evaluate",
+  "key_error": "RuntimeError: expected mat1 and mat2 to have the same dtype, but got: float != c10::BFloat16",
+  "root_cause": "Model's custom forward code in the quantized module performs torch.matmul on a float-converted tensor (compressed.float()) with a BFloat16 weight matrix (proj), causing a dtype mismatch. The model author incorrectly assumed both inputs would share dtype after conversion.",
+  "traceback_analysis": "lm_eval → HuggingFaceModel._model_call → quantized_model.forward (model_v2.py:147) → lookup() → torch.matmul(compressed.float(), proj.t()). The compressed tensor is explicitly cast to .float() on line 147, but proj remains BFloat16. Fault is in the model's custom code at model_v2.py:147 - it converts only one operand to float.",
+  "fault_attribution": {
+    "component": "model_code",
+    "specific_module": "/root/.cache/huggingface/modules/transformers_modules/quantized_model/f7fcf3a03fd8863c/model_v2.py",
+    "specific_function": "lookup.forward (line 147)",
+    "fault_type": "code_bug",
+    "responsible_party": "model_author"
+  },
+  "retryable": false,
+  "fix_available": true,
+  "suggested_fix": "In model_v2.py line 147, change `torch.matmul(compressed[:, k:k + valid_len, :].float(), proj.t())` to `torch.matmul(compressed[:, k:k + valid_len, :].float(), proj.t().float())` OR convert both to same dtype. This is a one-line fix in the cached quantized model module.",
+  "fix_verification": "Re-run lm_eval with the corrected model_v2.py",
+  "workaround": "Use a non-quantized version of Escarda-86M-Base or disable the custom model architecture that triggers this code path",
+  "affected_component": "model",
+  "severity": "critical",
+  "confidence": 0.92,
+  "versions_involved": {
+    "auto_round": "unknown (quantization phase succeeded)",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "The 86M Base model evaluation crashed during lm_eval's loglikelihood computation due to a dtype mismatch in the model's custom forward pass. The model's lookup() function converts one matmul operand to float32 but leaves the weight matrix in BFloat16. This is a bug in the model author's custom transformer code, not the quantization pipeline. Fix by ensuring both tensors share the same dtype before matmul.",
+  "analyzed_at": "2026-06-22T14:58:56.395470+00:00",
+  "model": "Quazim0t0/Escarda-86M-Base",
+  "run_id": "Escarda-86M-Base-AutoRound-MXFP4-RTN",
+  "quant_scheme": "MXFP4"
+}
