@@ -1,0 +1,68 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the error: `Columns ['attention_mask'] not in the dataset. Current columns in the dataset: ['text', 'meta', 'input_ids']` - this is an auto-round dataset handling issue where it expects `attention_mask` but the pile-10k dataset doesn't provide it.
+
+**FIX_PLAN:**
+1. Reinstall auto-round from main branch to fix dataset column handling
+2. Verify installation
+3. Re-run quantization phase
+Wait - the reinstall changed torch from 2.6.0+cu124 to 2.12.1. That might cause issues. Let me verify torch still works with CUDA:
+CUDA is broken now because torch 2.12.1+cu130 is incompatible with the driver. This is the issue from Lesson 2. Let me check the driver version and reinstall torch with the correct CUDA:
+The auto-round main branch reinstall also reinstalled torch as a dependency and broke CUDA. CUDA Version is 12.4, so I need cu124:
+Good, torch is back to 2.6.0+cu124. Let me verify CUDA works:
+CUDA is working. Now let me verify auto-round is installed properly:
+
+Now let me verify auto-round version:
+auto-round 0.14.0 is installed. Now let me look at the auto-round code to understand the attention_mask issue:
+Let me look at more context around where the attention_mask is handled:
+Let me look at where concat_dataset_element is defined and how it handles attention_mask:
+I see the issue. Looking at the auto-round code, at line 889 it unconditionally calls `dataset.set_format(type="torch", columns=["input_ids", "attention_mask"])` but the pile-10k dataset doesn't have an attention_mask column.
+
+Let me look at the full `_get_dataset_impl` function to understand the flow better:
+Let me look at the full `_get_dataset_impl` function to understand the control flow better:
+
+Looking at the code:
+- Line 837: `do_concat = False` (default)
+- Line 881: `if do_concat: dataset = concat_dataset_element(dataset)` - so concat is NOT called by default
+- Line 889: `dataset.set_format(type="torch", columns=["input_ids", "attention_mask"])` - this fails because the dataset doesn't have attention_mask
+
+The issue is that when `do_concat=False` (the default), the original dataset is used which only has `input_ids` but not `attention_mask`.
+
+Looking at the `concat_dataset_element` function (line 828), it creates a new dataset with both `input_ids` and `attention_mask`: `data = [{"input_ids": a, "attention_mask": b} for a, b in zip(concat_input_ids, attention_mask_list)]`.
+
+So the fix is: when `do_concat=False`, we still need to ensure the dataset has an `attention_mask` column. Let me look at what columns are expected and fix the code.
+
+Let me patch the calib_dataset.py to handle the case where attention_mask is missing:
+Let me look at the exact location where I need to patch. The issue is at line 889 where it calls `set_format` with columns that might not exist. Let me patch it to handle missing attention_mask:
+
+Let me first look at the exact code around line 881-895 to understand the exact patch needed:
+
+The issue is that when `do_concat=False` (default), the dataset doesn't get the attention_mask column added. I need to patch the code to add a dummy attention_mask when it's missing.
+
+Let me look at the exact code section I need to modify:
+
+The fix is to patch the `calib_dataset.py` to add a dummy attention_mask column when it doesn't exist. Let me apply the fix:
+I need to patch the auto-round code to handle missing attention_mask. The issue is at line 889 where it calls `set_format` with columns that don't exist. I need to add a dummy attention_mask column before that.
+
+Let me create the patch:
+
+The dataset at that point (after filtering) has `['text', 'meta', 'input_ids']` but not `attention_mask`. I need to add a dummy attention_mask column before line 889.
+Now I need to patch the code to add a dummy attention_mask column when it's missing. I'll add code after line 888 and before line 889:
+Now let me verify the patch was applied correctly:
+The patch was applied correctly. Now let me verify that auto_round still imports correctly:
+
+Let me verify that the auto_round import still works:
+Good. Let me also verify torch CUDA still works after the auto-round reinstall:
+Both torch and auto_round are working correctly. 
+
+Let me summarize the fixes applied:
+
+1. **Reinstalled auto-round from main branch** - to ensure we have the latest fixes
+2. **Fixed torch CUDA compatibility** - torch was accidentally upgraded to cu130 by the auto-round reinstall, so I downgraded it back to cu124 (matching the NVIDIA driver CUDA 12.4)
+3. **Patched calib_dataset.py** - Added a check to add a dummy `attention_mask` column when it's missing from the dataset (before calling `set_format`)
+
+The key issue was that pile-10k dataset only has `['text', 'meta', 'input_ids']` columns but auto-round expected `attention_mask` to exist. My patch adds a dummy attention_mask column of all ones when it's missing.
+
+The phase script should now be able to run. The fixes are minimal and targeted:
+- No changes to torch version (back to 2.6.0+cu124)
+- CUDA working
+- auto-round patched to handle missing attention_mask
