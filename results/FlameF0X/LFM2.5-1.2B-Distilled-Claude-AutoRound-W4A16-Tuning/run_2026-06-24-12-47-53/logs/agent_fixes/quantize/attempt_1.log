@@ -1,0 +1,8 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+The error is a dtype mismatch: `attention_mask` is `long int` but `query` is `Half` (float16). The `sdpa_attention_forward` function already handles this for NPU but not for the general case.
+
+Let me apply a fix to handle this:
+**FIX_PLAN:**
+1. Added dtype check in `sdpa_attention.py` to convert `attention_mask` to match query dtype when it's `long int` (not bool/float)
+2. This resolves the `RuntimeError: Expected attn_mask dtype to be bool or float or to match query dtype` error
+3. The quantization phase will be re-run to verify
