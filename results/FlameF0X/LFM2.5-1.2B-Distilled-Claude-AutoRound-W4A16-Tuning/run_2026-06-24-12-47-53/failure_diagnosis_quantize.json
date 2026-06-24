@@ -1,0 +1,32 @@
+{
+  "category": "auto_round_compatibility",
+  "phase": "quantize",
+  "key_error": "RuntimeError: Expected attn_mask dtype to be bool or float or to match query dtype, but got attn_mask.dtype: long int and query.dtype: c10::Half instead.",
+  "root_cause": "During AutoRound's calibration forward pass, the attention mask tensor passed to torch.nn.functional.scaled_dot_product_attention (SDPA) has dtype `long int` instead of the required `bool`, `float`, or `Half`. SDPA enforces strict dtype checking and rejects integer attention masks when running in fp16/bf16 mixed precision.",
+  "traceback_analysis": "The call chain is: quantize.py:283 → data_driven.py:722 (_quantize_blocks) → data_driven.py:529 (_get_block_outputs) → base.py:452 (_bf wrapper) → utils.py:208 (block_forward) → modeling_lfm2.py:427 (self_attn) → modeling_lfm2.py:269 (attention_interface) → sdpa_attention.py:92 (scaled_dot_product_attention). The fault occurs at SDPA because it receives an integer mask during AutoRound's reference forward pass for layer model.layers.2.",
+  "fault_attribution": {
+    "component": "auto_round",
+    "specific_module": "auto_round.compressors.data_driven",
+    "specific_function": "_get_block_outputs or block_forward",
+    "fault_type": "code_bug",
+    "responsible_party": "auto_round_devs"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "In auto_round/compressors/utils.py or auto_round/algorithms/quantization/base.py, cast the attention mask to float32 before passing to SDPA: `if hasattr(input_others, 'get(\"attention_mask\")') and input_others[\"attention_mask\"] is not None: input_others = dict(input_others); input_others[\"attention_mask\"] = input_others[\"attention_mask\"].to(torch.float32)` placed in the block_forward wrapper or _bf function.",
+  "fix_verification": "Re-run quantization with patched auto_round - the layer should progress past model.layers.2 without the SDPA dtype error",
+  "workaround": "Use a different quantization method (e.g., GPTQ or AWQ instead of AutoRound) that doesn't require running full forward passes through the attention layers, or patch the model's attention to accept integer masks.",
+  "affected_component": "auto_round",
+  "severity": "high",
+  "confidence": 0.85,
+  "versions_involved": {
+    "auto_round": "unknown (latest via pip)",
+    "transformers": "unknown (likely 4.40+)",
+    "torch": "unknown (likely 2.0+)"
+  },
+  "community_summary": "AutoRound's calibration forward pass fails at layer 2 of the LFM2.5-1.2B model because SDPA requires attention masks to be bool/float/float16, but an integer mask is being passed. This is an AutoRound bug - it should cast the mask to a compatible dtype before the forward pass. The fix is a one-line dtype cast in AutoRound's block_forward wrapper. This is not a model or transformers bug - the same model works in training/inference.",
+  "analyzed_at": "2026-06-24T12:48:37.694062+00:00",
+  "model": "FlameF0X/LFM2.5-1.2B-Distilled-Claude",
+  "run_id": "LFM2.5-1.2B-Distilled-Claude-AutoRound-W4A16-Tuning",
+  "quant_scheme": "INT4 (W4A16)"
+}
