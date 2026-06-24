@@ -1,0 +1,8 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+**FIX_PLAN:**
+1. Install missing `pillow` and `torchvision` packages required by `Qwen2VLImageProcessor`
+2. Verify imports work
+3. Re-run quantization phase
+
+The error is clear: `Qwen2VLImageProcessor` requires `pillow` and `torchvision` which are not installed. Same root cause as Lessons 4, 5, and 7.
+Packages installed and verified. The quantization phase will now be re-run to confirm the fix resolves the `Qwen2VLImageProcessor` ImportError.
