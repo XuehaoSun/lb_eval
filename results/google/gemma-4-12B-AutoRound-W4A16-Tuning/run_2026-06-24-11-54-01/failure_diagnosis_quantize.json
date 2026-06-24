@@ -1,0 +1,32 @@
+{
+  "category": "model_architecture_mismatch",
+  "phase": "quantize",
+  "key_error": "RuntimeError: The size of tensor a (512) must match the size of tensor b (256) at non-singleton dimension 3",
+  "root_cause": "RoPE (Rotary Position Embedding) tensor size mismatch during forward pass. The cos/sin tensors have shape mismatch (512 vs 256) at dimension 3, indicating the model's position embedding configuration is inconsistent with the forward pass input shape. Layers 0-4 succeeded, layer 5 failed, suggesting an architecture variant mismatch (google/gemma-4-12B likely has different head_dim or RoPE configuration than what auto_round expects for gemma4_unified).",
+  "traceback_analysis": "Call chain: quantize.py:183 autoround.quantize() -> data_driven.py:722 _quantize_blocks() -> data_driven.py:529 _get_block_outputs() -> base.py:452 _get_block_outputs via _bf() -> utils.py:208 block_forward() -> modeling_gemma4_unified.py:516 self.self_attn() -> modeling_gemma4_unified.py:421 apply_rotary_pos_emb() -> line 304 (x * cos) + (rotate_half(x) * sin). Fault is at the RoPE application where cos/sin tensors don't match query_states dimensions.",
+  "fault_attribution": {
+    "component": "model_code",
+    "specific_module": "transformers.models.gemma4_unified.modeling_gemma4_unified",
+    "specific_function": "apply_rotary_pos_emb",
+    "fault_type": "api_change",
+    "responsible_party": "model_author"
+  },
+  "retryable": false,
+  "fix_available": true,
+  "suggested_fix": "Check if google/gemma-4-12B is actually a unified model variant with different attention head_dim (512 vs standard 256). Verify the model's config.json for head_dim, hidden_size, and num_attention_heads values. If mismatched, use a different model variant (e.g., google/gemma-4-12B-it for instruction tuning) or set trust_remote_code=True with correct config.",
+  "fix_verification": "python -c \"from transformers import AutoConfig; c = AutoConfig.from_pretrained('google/gemma-4-12B', trust_remote_code=True); print(c.head_dim, c.hidden_size, c.num_attention_heads)\"",
+  "workaround": "Use a different quantization method (GPTQ or AWQ) that doesn't require calibration forward passes through the full model, or use a model variant that matches the expected gemma4_unified architecture.",
+  "affected_component": "model",
+  "severity": "high",
+  "confidence": 0.72,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown (4.50+ likely)",
+    "torch": "unknown"
+  },
+  "community_summary": "The gemma-4-12B quantization failed at layer 5 during calibration due to RoPE tensor size mismatch (512 vs 256 at dimension 3). This is a model architecture/config mismatch — google/gemma-4-12B appears to use a different head_dim than the gemma4_unified modeling code expects. Use the correct Gemma variant or switch quantization methods.",
+  "analyzed_at": "2026-06-24T11:54:39.121774+00:00",
+  "model": "google/gemma-4-12B",
+  "run_id": "gemma-4-12B-AutoRound-W4A16-Tuning",
+  "quant_scheme": "INT4 (W4A16)"
+}
