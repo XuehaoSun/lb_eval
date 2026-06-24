@@ -1,0 +1,32 @@
+{
+  "category": "model_data_missing",
+  "phase": "quantize",
+  "key_error": "OSError: Can't load image processor for 'empero-ai/Qwythos-9B-Claude-Mythos-5-1M'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'empero-ai/Qwythos-9B-Claude-Mythos-5-1M' is the correct path to a directory containing a preprocessor_config.json file",
+  "root_cause": "The model's HuggingFace repository is missing required processor configuration files. Multiple HTTP 404s for processor_config.json, preprocessor_config.json, video_preprocessor_config.json, and audio_tokenizer_config.json confirm these files don't exist. The AutoProcessor falls back to image_processing_auto which requires preprocessor_config.json, but it's absent.",
+  "traceback_analysis": "Call chain: quantize.py:178 AutoRound() → AutoRoundCompatible() → AutoRound() → mllm_load_model() (model.py:757) → AutoProcessor.from_pretrained() → processing_utils.py:1844 _get_arguments_from_pretrained() → image_processing_auto.py:567 get_image_processor_dict() → raises OSError. The fault is at transformers' image_processing_auto trying to load a processor where the required config file doesn't exist on the remote repo.",
+  "fault_attribution": {
+    "component": "model_data",
+    "specific_module": "huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+    "specific_function": "AutoProcessor.from_pretrained",
+    "fault_type": "missing_dep",
+    "responsible_party": "model_author"
+  },
+  "retryable": false,
+  "fix_available": false,
+  "suggested_fix": "Model author must upload missing files: preprocessor_config.json, processor_config.json, video_preprocessor_config.json, audio_tokenizer_config.json to the model repository. This is not a code or environment issue.",
+  "fix_verification": "Check if https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M/tree/main has preprocessor_config.json",
+  "workaround": "Use a different model that has complete multimodal processor config, or contact empero-ai to fix their model repository",
+  "affected_component": "model",
+  "severity": "critical",
+  "confidence": 0.95,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown (latest likely)",
+    "torch": "unknown"
+  },
+  "community_summary": "Quantization failed because the model's HuggingFace repository is missing required processor configuration files (preprocessor_config.json returns 404). AutoProcessor tries to load an image processor but can't find the config. This is a model data issue, not a code bug — the model author must upload the missing files before this model can be quantized.",
+  "analyzed_at": "2026-06-24T12:11:29.116473+00:00",
+  "model": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+  "run_id": "Qwythos-9B-Claude-Mythos-5-1M-AutoRound-W4A16-Tuning",
+  "quant_scheme": "INT4 (W4A16)"
+}
