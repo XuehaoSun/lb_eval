@@ -1,0 +1,15 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+**Analysis:**
+- Error: `ImportError: Qwen2VLImageProcessor requires the PIL library... Qwen2VLImageProcessor requires the Torchvision library`
+- This is a missing dependency issue for a Vision-Language (Qwen2-VL) model
+- NOT an auto-round bug or model custom code issue — it's missing `pillow` and `torchvision`
+- This is a repeat of Lessons 4, 5, 7, 8, 9
+
+**FIX_PLAN:**
+1. Install missing `pillow` and `torchvision` packages
+2. Verify imports work
+3. Re-run quantization phase
+**FIX_PLAN:**
+1. ✅ Installed `pillow` and `torchvision` — both installed successfully
+2. ✅ Verified imports work
+3. → Ready for quantization phase re-run
