@@ -1,0 +1,291 @@
+=== Phase 2: Quantization ===
+  model=llmfan46/Qwen3.6-35B-A3B-uncensored-heretic
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3.6-35B-A3B-uncensored-heretic-AutoRound-W4A16-RTN/quantized_model
+17:22:35 [INFO] Model: llmfan46/Qwen3.6-35B-A3B-uncensored-heretic
+17:22:35 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+17:22:35 [INFO] Iters: 0 (RTN)
+17:22:35 [INFO] Export format: auto_round
+17:22:35 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-35B-A3B-uncensored-heretic-AutoRound-W4A16-RTN/quantized_model
+17:22:35 [INFO] Device map: auto
+17:22:35 [INFO] Loading tokenizer...
+17:22:36 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:36 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:22:36 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/tokenizer_config.json "HTTP/1.1 200 OK"
+17:22:37 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/tokenizer_config.json "HTTP/1.1 200 OK"
+17:22:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+17:22:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+17:22:39 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic "HTTP/1.1 200 OK"
+17:22:39 [INFO] Loading model...
+17:22:39 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:22:39 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+17:22:39 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+17:22:39 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/model.safetensors.index.json "HTTP/1.1 200 OK"
+17:22:40 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/revision/main "HTTP/1.1 200 OK"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+17:22:56 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:56 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/generation_config.json "HTTP/1.1 200 OK"
+17:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+17:22:57 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+17:22:57 [INFO] Ignore layers: lm_head
+17:22:57 [INFO] Configuring AutoRound...
+[38;20m2026-06-25 17:22:57 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-25 17:22:57 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+17:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a3d63f1-2e47d7fe4680ad417348b76e;61f14dbd-bf3b-44f8-8e26-4ac7a86700f5)
+
+Entry Not Found for url: https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/model_index.json.
+17:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:22:57 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+17:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:22:58 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:22:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:22:58 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+17:22:58 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+17:22:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/model.safetensors.index.json "HTTP/1.1 200 OK"
+17:22:58 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/revision/main "HTTP/1.1 200 OK"
+[transformers] [1mQwen3_5MoeForConditionalGeneration LOAD REPORT[0m from: llmfan46/Qwen3.6-35B-A3B-uncensored-heretic
+Key                                                               | Status     | 
+------------------------------------------------------------------+------------+-
+model.language_model.visual.blocks.{0...26}.norm1.weight          | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.norm2.bias            | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.mlp.linear_fc1.weight | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.mlp.linear_fc2.bias   | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.mlp.linear_fc1.bias   | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.attn.qkv.weight       | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.norm2.weight          | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.attn.proj.bias        | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.mlp.linear_fc2.weight | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.attn.proj.weight      | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.attn.qkv.bias         | UNEXPECTED | 
+model.language_model.visual.pos_embed.weight                      | UNEXPECTED | 
+model.language_model.visual.blocks.{0...26}.norm1.bias            | UNEXPECTED | 
+model.language_model.visual.merger.norm.bias                      | UNEXPECTED | 
+model.language_model.visual.merger.linear_fc1.bias                | UNEXPECTED | 
+model.language_model.visual.patch_embed.proj.bias                 | UNEXPECTED | 
+model.language_model.visual.patch_embed.proj.weight               | UNEXPECTED | 
+model.language_model.visual.merger.norm.weight                    | UNEXPECTED | 
+model.language_model.visual.merger.linear_fc1.weight              | UNEXPECTED | 
+model.language_model.visual.merger.linear_fc2.bias                | UNEXPECTED | 
+model.language_model.visual.merger.linear_fc2.weight              | UNEXPECTED | 
+model.visual.blocks.{0...26}.attn.proj.bias                       | MISSING    | 
+model.visual.merger.linear_fc2.weight                             | MISSING    | 
+model.visual.blocks.{0...26}.norm1.weight                         | MISSING    | 
+model.visual.blocks.{0...26}.mlp.linear_fc1.bias                  | MISSING    | 
+model.visual.merger.linear_fc1.bias                               | MISSING    | 
+model.visual.blocks.{0...26}.mlp.linear_fc2.weight                | MISSING    | 
+model.visual.blocks.{0...26}.attn.qkv.bias                        | MISSING    | 
+model.visual.blocks.{0...26}.mlp.linear_fc1.weight                | MISSING    | 
+model.visual.blocks.{0...26}.attn.qkv.weight                      | MISSING    | 
+model.visual.blocks.{0...26}.attn.proj.weight                     | MISSING    | 
+model.visual.blocks.{0...26}.norm1.bias                           | MISSING    | 
+model.visual.blocks.{0...26}.mlp.linear_fc2.bias                  | MISSING    | 
+model.visual.blocks.{0...26}.norm2.weight                         | MISSING    | 
+model.visual.blocks.{0...26}.norm2.bias                           | MISSING    | 
+model.visual.patch_embed.proj.bias                                | MISSING    | 
+model.visual.merger.norm.bias                                     | MISSING    | 
+model.visual.merger.linear_fc2.bias                               | MISSING    | 
+model.visual.merger.norm.weight                                   | MISSING    | 
+model.visual.pos_embed.weight                                     | MISSING    | 
+model.visual.merger.linear_fc1.weight                             | MISSING    | 
+model.visual.patch_embed.proj.weight                              | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/generation_config.json "HTTP/1.1 200 OK"
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/tokenizer_config.json "HTTP/1.1 200 OK"
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:06 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/tokenizer_config.json "HTTP/1.1 200 OK"
+17:23:07 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+17:23:07 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+17:23:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic "HTTP/1.1 200 OK"
+17:23:09 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:09 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:09 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:10 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:10 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+17:23:10 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:10 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+17:23:10 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+17:23:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/chat_template.jinja "HTTP/1.1 200 OK"
+17:23:11 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+17:23:11 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:11 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/tokenizer_config.json "HTTP/1.1 200 OK"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:12 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/tokenizer_config.json "HTTP/1.1 200 OK"
+17:23:12 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+17:23:12 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+17:23:15 [INFO] HTTP Request: GET https://huggingface.co/api/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic "HTTP/1.1 200 OK"
+17:23:15 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:15 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/video_preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/video_preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:15 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/video_preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:15 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:15 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:16 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:16 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/video_preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/video_preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:16 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:16 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:16 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:17 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:17 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+17:23:17 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+17:23:17 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/preprocessor_config.json "HTTP/1.1 200 OK"
+17:23:17 [INFO] Starting quantization...
+[38;20m2026-06-25 17:23:17 INFO replace_modules.py L120: Experts (before replacement) [model.language_model.layers.0.mlp.experts] (Qwen3_5MoeExperts):
+Qwen3_5MoeExperts(
+  (act_fn): SiLUActivation()
+)[0m
+[38;20m2026-06-25 17:23:17 INFO device.py L1871: [Memory Monitor] Before applying custom replacements: 'peak_ram': 2.16GB[0m
+[38;20m2026-06-25 17:23:17 INFO replace_modules.py L360: Found 40 modules to replace[0m
+Replacing modules:   0%|          | 0/40 [00:00<?, ?it/s]Replacing modules: 100%|██████████| 40/40 [00:02<00:00, 16.71it/s]
+[38;20m2026-06-25 17:23:20 INFO replace_modules.py L387: Replaced 40 modules[0m
+[38;20m2026-06-25 17:23:20 INFO device.py L1874: [Memory Monitor] After applying custom replacements: 'peak_ram': 2.26GB[0m
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-06-25 17:23:22 INFO replace_modules.py L120: Experts (after replacement) [model.language_model.layers.0.mlp.experts] (SequentialQwen3_5MoeExperts):
+SequentialQwen3_5MoeExperts(
+  (0-255): 256 x Qwen3_5MoeMLP(
+    (gate_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (up_proj): Linear(in_features=2048, out_features=512, bias=False)
+    (down_proj): Linear(in_features=512, out_features=2048, bias=False)
+    (act_fn): SiLUActivation()
+  )
+)[0m
+[38;20m2026-06-25 17:23:22 INFO base.py L573: Using predefined ignore_layers: model.language_model.layers.[0-39].mlp.gate[0m
+[38;20m2026-06-25 17:23:22 INFO utils.py L964: Ignored layers: lm_head, lm_head, model.language_model.layers.[0-39].mlp.gate[0m
+[33;1m2026-06-25 17:23:22 WARNING logging.py L340: Layer name or regex 'model.language_model.layers.[0-39].mlp.gate' in layer_config does not match any supported layers. Please check for typos or update the regex pattern, ignore it for now[0m
+[38;20m2026-06-25 17:23:24 INFO base.py L663: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-06-25 17:23:25 INFO data_driven.py L1089: start to compute imatrix[0m
+[38;20m2026-06-25 17:23:25 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+17:23:25 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+17:23:25 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+17:23:25 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+17:23:25 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+17:23:25 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+17:23:26 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+17:23:26 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+17:23:26 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+17:23:26 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+17:23:26 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+17:23:27 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+17:23:27 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+17:23:27 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+17:23:27 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 44972.77 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:13<00:00, 755.48 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:03<00:00, 3029.26 examples/s]
+Casting the dataset:   0%|          | 0/1229 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1229/1229 [00:03<00:00, 352.81 examples/s]
+17:23:49 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+17:23:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+17:23:49 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+17:23:50 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+17:23:50 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+17:23:50 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+17:23:50 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+17:23:50 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+17:23:50 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-06-25 17:23:54 INFO mllm.py L83: Using MLLM template: qwen3_5_moe[0m
+[38;20m2026-06-25 17:23:54 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+17:23:54 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+17:23:54 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+17:23:54 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+17:23:54 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+17:23:54 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+17:23:55 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+17:23:55 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+17:23:55 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+17:23:55 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+17:23:55 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+17:23:55 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+17:23:56 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+  0%|          | 0/40 [00:00<?, ?it/s]Quantizing model.language_model.layers.0:   0%|          | 0/40 [00:00<?, ?it/s][33;1m2026-06-25 17:24:13 WARNING logging.py L340: MoE layer detected: optimized RTN is disabled for efficiency. Use `--enable_opt_rtn` to force-enable it for MoE layers.[0m
+[38;20m2026-06-25 17:24:36 INFO offload.py L706: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_lt_da7vq[0m
+[38;20m2026-06-25 17:24:38 INFO device.py L1840: 'peak_ram': 10.58GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.1:   2%|▎         | 1/40 [00:40<26:30, 40.78s/it][38;20m2026-06-25 17:25:16 INFO device.py L1840: 'peak_ram': 10.76GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.2:   5%|▌         | 2/40 [01:18<24:47, 39.15s/it][38;20m2026-06-25 17:25:48 INFO device.py L1840: 'peak_ram': 12.59GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.3:   8%|▊         | 3/40 [01:50<22:44, 36.89s/it][38;20m2026-06-25 17:26:19 INFO device.py L1840: 'peak_ram': 13.85GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.3:  10%|█         | 4/40 [02:21<21:11, 35.32s/it]Quantizing model.language_model.layers.4:  10%|█         | 4/40 [02:21<21:11, 35.32s/it]Quantizing model.language_model.layers.4:  10%|█         | 4/40 [02:32<21:11, 35.32s/it][38;20m2026-06-25 17:26:49 INFO device.py L1840: 'peak_ram': 15.74GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.5:  12%|█▎        | 5/40 [02:51<20:36, 35.32s/it][38;20m2026-06-25 17:27:22 INFO device.py L1840: 'peak_ram': 17.03GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.6:  15%|█▌        | 6/40 [03:24<20:01, 35.32s/it][38;20m2026-06-25 17:27:53 INFO device.py L1840: 'peak_ram': 18.66GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.7:  18%|█▊        | 7/40 [03:55<19:25, 35.32s/it][38;20m2026-06-25 17:28:21 INFO device.py L1840: 'peak_ram': 20.16GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.7:  20%|██        | 8/40 [04:23<17:21, 32.53s/it]Quantizing model.language_model.layers.8:  20%|██        | 8/40 [04:23<17:21, 32.53s/it]Quantizing model.language_model.layers.8:  20%|██        | 8/40 [04:40<17:21, 32.53s/it][38;20m2026-06-25 17:28:52 INFO device.py L1840: 'peak_ram': 21.76GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.9:  22%|██▎       | 9/40 [04:53<16:48, 32.53s/it][38;20m2026-06-25 17:29:19 INFO device.py L1840: 'peak_ram': 23.3GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.10:  25%|██▌       | 10/40 [05:21<16:16, 32.53s/it][38;20m2026-06-25 17:29:56 INFO device.py L1840: 'peak_ram': 24.85GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.11:  28%|██▊       | 11/40 [05:58<15:43, 32.53s/it][38;20m2026-06-25 17:30:32 INFO device.py L1840: 'peak_ram': 26.4GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.11:  30%|███       | 12/40 [06:34<15:13, 32.64s/it]Quantizing model.language_model.layers.12:  30%|███       | 12/40 [06:34<15:13, 32.64s/it]Quantizing model.language_model.layers.12:  30%|███       | 12/40 [06:50<15:13, 32.64s/it][38;20m2026-06-25 17:31:08 INFO device.py L1840: 'peak_ram': 27.99GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.13:  32%|███▎      | 13/40 [07:10<14:41, 32.64s/it][38;20m2026-06-25 17:31:41 INFO device.py L1840: 'peak_ram': 29.58GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.14:  35%|███▌      | 14/40 [07:42<14:08, 32.64s/it][38;20m2026-06-25 17:32:08 INFO device.py L1840: 'peak_ram': 31.16GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.15:  38%|███▊      | 15/40 [08:10<13:35, 32.64s/it][38;20m2026-06-25 17:32:35 INFO device.py L1840: 'peak_ram': 32.71GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.15:  40%|████      | 16/40 [08:37<12:45, 31.91s/it]Quantizing model.language_model.layers.16:  40%|████      | 16/40 [08:37<12:45, 31.91s/it]Quantizing model.language_model.layers.16:  40%|████      | 16/40 [08:50<12:45, 31.91s/it][38;20m2026-06-25 17:33:08 INFO device.py L1840: 'peak_ram': 34.31GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.17:  42%|████▎     | 17/40 [09:10<12:13, 31.91s/it][38;20m2026-06-25 17:33:47 INFO device.py L1840: 'peak_ram': 35.89GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.18:  45%|████▌     | 18/40 [09:49<11:42, 31.91s/it][38;20m2026-06-25 17:34:19 INFO device.py L1840: 'peak_ram': 37.47GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.19:  48%|████▊     | 19/40 [10:21<11:10, 31.91s/it][38;20m2026-06-25 17:34:58 INFO device.py L1840: 'peak_ram': 39.03GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.19:  50%|█████     | 20/40 [10:59<11:04, 33.22s/it]Quantizing model.language_model.layers.20:  50%|█████     | 20/40 [10:59<11:04, 33.22s/it]Quantizing model.language_model.layers.20:  50%|█████     | 20/40 [11:11<11:04, 33.22s/it][38;20m2026-06-25 17:35:28 INFO device.py L1840: 'peak_ram': 40.62GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.21:  52%|█████▎    | 21/40 [11:30<10:31, 33.22s/it][38;20m2026-06-25 17:35:58 INFO device.py L1840: 'peak_ram': 42.2GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.22:  55%|█████▌    | 22/40 [12:00<09:57, 33.22s/it][38;20m2026-06-25 17:36:30 INFO device.py L1840: 'peak_ram': 43.79GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.23:  57%|█████▊    | 23/40 [12:32<09:24, 33.22s/it][38;20m2026-06-25 17:37:02 INFO device.py L1840: 'peak_ram': 45.34GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.23:  60%|██████    | 24/40 [13:04<08:39, 32.49s/it]Quantizing model.language_model.layers.24:  60%|██████    | 24/40 [13:04<08:39, 32.49s/it]Quantizing model.language_model.layers.24:  60%|██████    | 24/40 [13:14<08:39, 32.49s/it][38;20m2026-06-25 17:37:29 INFO device.py L1840: 'peak_ram': 46.94GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.25:  62%|██████▎   | 25/40 [13:31<08:07, 32.49s/it][38;20m2026-06-25 17:37:59 INFO device.py L1840: 'peak_ram': 48.52GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.26:  65%|██████▌   | 26/40 [14:01<07:34, 32.49s/it][38;20m2026-06-25 17:38:26 INFO device.py L1840: 'peak_ram': 50.1GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.27:  68%|██████▊   | 27/40 [14:28<07:02, 32.49s/it][38;20m2026-06-25 17:39:09 INFO device.py L1840: 'peak_ram': 51.66GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.27:  70%|███████   | 28/40 [15:11<06:27, 32.30s/it]Quantizing model.language_model.layers.28:  70%|███████   | 28/40 [15:11<06:27, 32.30s/it]Quantizing model.language_model.layers.28:  70%|███████   | 28/40 [15:23<06:27, 32.30s/it][38;20m2026-06-25 17:39:52 INFO device.py L1840: 'peak_ram': 53.25GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.29:  72%|███████▎  | 29/40 [15:54<05:55, 32.30s/it][38;20m2026-06-25 17:40:32 INFO device.py L1840: 'peak_ram': 54.83GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.30:  75%|███████▌  | 30/40 [16:34<05:23, 32.30s/it][38;20m2026-06-25 17:41:11 INFO device.py L1840: 'peak_ram': 56.41GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.30:  78%|███████▊  | 31/40 [17:13<05:10, 34.46s/it]Quantizing model.language_model.layers.31:  78%|███████▊  | 31/40 [17:13<05:10, 34.46s/it]Quantizing model.language_model.layers.31:  78%|███████▊  | 31/40 [17:24<05:10, 34.46s/it][38;20m2026-06-25 17:41:45 INFO device.py L1840: 'peak_ram': 57.97GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.32:  80%|████████  | 32/40 [17:47<04:35, 34.46s/it][38;20m2026-06-25 17:42:18 INFO device.py L1840: 'peak_ram': 59.57GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.33:  82%|████████▎ | 33/40 [18:20<04:01, 34.46s/it][38;20m2026-06-25 17:42:59 INFO device.py L1840: 'peak_ram': 61.15GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.34:  85%|████████▌ | 34/40 [19:01<03:26, 34.46s/it][38;20m2026-06-25 17:43:31 INFO device.py L1840: 'peak_ram': 62.73GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.34:  88%|████████▊ | 35/40 [19:33<02:52, 34.58s/it]Quantizing model.language_model.layers.35:  88%|████████▊ | 35/40 [19:33<02:52, 34.58s/it]Quantizing model.language_model.layers.35:  88%|████████▊ | 35/40 [19:44<02:52, 34.58s/it][38;20m2026-06-25 17:44:05 INFO device.py L1840: 'peak_ram': 64.29GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.36:  90%|█████████ | 36/40 [20:07<02:18, 34.58s/it][38;20m2026-06-25 17:44:38 INFO device.py L1840: 'peak_ram': 65.88GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.37:  92%|█████████▎| 37/40 [20:40<01:43, 34.58s/it][38;20m2026-06-25 17:45:14 INFO device.py L1840: 'peak_ram': 67.46GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.38:  95%|█████████▌| 38/40 [21:16<01:09, 34.58s/it][38;20m2026-06-25 17:45:45 INFO device.py L1840: 'peak_ram': 69.05GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.38:  98%|█████████▊| 39/40 [21:47<00:34, 34.30s/it]Quantizing model.language_model.layers.39:  98%|█████████▊| 39/40 [21:47<00:34, 34.30s/it]Quantizing model.language_model.layers.39:  98%|█████████▊| 39/40 [22:04<00:34, 34.30s/it][38;20m2026-06-25 17:46:19 INFO device.py L1840: 'peak_ram': 70.6GB, 'peak_vram': 64.61GB[0m
+Quantizing model.language_model.layers.39: 100%|██████████| 40/40 [22:21<00:00, 33.53s/it]
+17:47:07 [INFO] Quantization completed in 1429.9s
+17:47:07 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-06-25 17:47:07 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+packing:   0%|          | 0/31125 [00:00<?, ?it/s]packing:  21%|██        | 6612/31125 [02:00<07:24, 55.10it/s]packing:  21%|██        | 6612/31125 [02:15<07:24, 55.10it/s]packing:  51%|█████     | 15936/31125 [04:00<03:42, 68.39it/s]packing:  51%|█████     | 15936/31125 [04:15<03:42, 68.39it/s]packing:  64%|██████▍   | 19993/31125 [06:00<03:31, 52.60it/s]packing:  64%|██████▍   | 19993/31125 [06:15<03:31, 52.60it/s]packing:  81%|████████  | 25068/31125 [08:00<02:04, 48.53it/s]packing:  81%|████████  | 25068/31125 [08:15<02:04, 48.53it/s]packing: 100%|██████████| 31125/31125 [09:58<00:00, 52.05it/s]
+[33;1m2026-06-25 17:57:06 WARNING export.py L344: /root/_work/1/s/auto_quant/output/runs/Qwen3.6-35B-A3B-uncensored-heretic-AutoRound-W4A16-RTN/quantized_model already exists, this may cause model conflict[0m
+[38;20m2026-06-25 17:57:28 INFO missing_tensors.py L336: Found 333 tensor(s) in the source checkpoint that are absent from the saved output (e.g., MTP parameters): model.language_model.visual.blocks.[0-26].attn.proj, model.language_model.visual.blocks.[0-26].attn.qkv, model.language_model.visual.blocks.[0-26].mlp.linear_fc1, model.language_model.visual.blocks.[0-26].mlp.linear_fc2, model.language_model.visual.blocks.[0-26].norm1, model.language_model.visual.blocks.[0-26].norm2, model.language_model.visual.merger.linear_fc1, model.language_model.visual.merger.linear_fc2, model.language_model.visual.merger.norm, model.language_model.visual.patch_embed.proj, model.language_model.visual.pos_embed. Copying them now...
+[0m
+Loading missing tensors:   0%|          | 0/1 [00:00<?, ?shard/s]
+  model-00002-of-00002.safetensors:   0%|          | 0/333 [00:00<?, ?tensor/s][A
+                                                                               [ALoading missing tensors: 100%|██████████| 1/1 [00:00<00:00, 81.68shard/s]
+[38;20m2026-06-25 17:57:28 INFO missing_tensors.py L823: Processing config.json to update quantization_config for missing tensors...[0m
+[38;20m2026-06-25 17:57:28 INFO missing_tensors.py L790: Updated extra_config for 3 ignored layer(s): model.language_model.visual.merger.linear_fc1, model.language_model.visual.merger.linear_fc2, model.language_model.visual.pos_embed[0m
+[38;20m2026-06-25 17:57:28 INFO missing_tensors.py L816: Updated block_name_to_quantize: ['model.language_model.layers', 'model.language_model.visual.blocks'][0m
+[38;20m2026-06-25 17:57:28 INFO missing_tensors.py L846: Applying WOQ[RTN] to 108 missing Linear weight(s) (per-layer overrides from extra_config applied)...[0m
+WOQ[RTN] quantizing missing weights:   0%|          | 0/108 [00:00<?, ?weight/s]WOQ[RTN] quantizing missing weights: 100%|██████████| 108/108 [00:12<00:00,  8.65weight/s]
+[38;20m2026-06-25 17:57:41 INFO missing_tensors.py L909: Successfully packed 108 weight(s) into WOQ format (324 packed tensor(s) created).[0m
+[38;20m2026-06-25 17:57:41 INFO missing_tensors.py L476: Successfully wrote 549 missing tensor(s) to 'model_extra_tensors.safetensors' in /root/_work/1/s/auto_quant/output/runs/Qwen3.6-35B-A3B-uncensored-heretic-AutoRound-W4A16-RTN/quantized_model.[0m
+17:57:41 [INFO] HTTP Request: HEAD https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+17:57:41 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic/dbfd9eb0cdc7c33fc970b06429f6e043b6851190/config.json "HTTP/1.1 200 OK"
+17:57:41 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/Qwen3.6-35B-A3B-uncensored-heretic-AutoRound-W4A16-RTN/quant_summary.json
+17:57:41 [INFO] === Phase 2: DONE ===
