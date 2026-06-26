@@ -1,0 +1,17 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+The issue is clear: `Qwen2VLImageProcessorFast` (which the model uses) requires `torchvision` but it's not installed. This is a repeat of Lessons 4, 5, 7, 8, 9, and 10.
+
+**FIX_PLAN:**
+1. Install missing `torchvision` and `pillow` packages required by `Qwen2VLImageProcessorFast`
+2. Verify imports work
+3. Re-run the quantization phase
+The `Qwen2VLImageProcessorFast` doesn't exist in transformers 5.12.1 — only `Qwen2VLImageProcessor`. I'll patch the model's preprocessor_config.json to use the available class.
+The fix is verified — `AutoProcessor` now loads successfully. Two changes were applied:
+
+1. Installed `torchvision` and `pillow` (required by `Qwen2VLImageProcessor`)
+2. Patched `preprocessor_config.json`: changed `Qwen2VLImageProcessorFast` → `Qwen2VLImageProcessor` (the Fast variant doesn't exist in transformers 5.12.1)
+
+**FIX_PLAN:**
+1. ✅ Installed `torchvision` and `pillow` (required by Qwen2VLImageProcessor)
+2. ✅ Patched model's `preprocessor_config.json` to use `Qwen2VLImageProcessor` instead of non-existent `Qwen2VLImageProcessorFast`
+3. ✅ Verified AutoProcessor loads correctly — ready to re-run quantize
