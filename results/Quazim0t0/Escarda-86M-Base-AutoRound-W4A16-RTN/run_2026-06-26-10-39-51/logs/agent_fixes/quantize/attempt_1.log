@@ -1,0 +1,11 @@
+[34m[tools][39m [33mtools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.[39m
+Looking at the traceback:
+
+**Error**: `ValueError: Columns ['attention_mask'] not in the dataset. Current columns in the dataset: ['text', 'meta', 'input_ids']`
+
+**Location**: `auto_round/calib_dataset.py`, line 889 - `_get_dataset_impl` calls `dataset.set_format(type="torch", columns=["input_ids", "attention_mask"])` but the dataset only has `input_ids` (no `attention_mask`).
+
+**Fault**: auto-round code — it hardcodes `attention_mask` as a required column, but the dataset only contains `input_ids` after preprocessing.
+
+**FIX_PLAN:**;1. Reinstall auto-round from main branch to fix this bug where it assumes `attention_mask` exists in the dataset;2. Verify installation;3. Re-run quantization phase
+auto-round updated to `0.14.0.dev479+g5a3ade8`. The fix has been applied and the quantization phase will be re-run to verify.
