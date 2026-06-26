@@ -1,0 +1,10 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+The error is `Qwen2VLImageProcessor requires the Torchvision library` and `requires the PIL library` — this is the same missing `pillow` and `torchvision` issue that's appeared multiple times (Lessons 4, 5, 7, 8, 9, 10).
+
+**FIX_PLAN:**
+1. Install missing `pillow` and `torchvision` packages required by `Qwen2VLImageProcessor`
+2. Verify imports work
+3. Re-run quantization phase
+Packages installed and verified. PIL 12.2.0 and torchvision 0.27.1+cu130 are now available.
+
+The quantization phase should now proceed past the `Qwen2VLImageProcessor` image processing requirements. Ready for re-run.
