@@ -1,0 +1,17 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the traceback, the error occurs in `AutoProcessor.from_pretrained()` when transformers can't find a recognized `image_processor_type` or `model_type` in the model's config. This is a model configuration issue, not auto-round itself.
+
+Let me check the model's configuration:
+The preprocessor_config.json shows `image_processor_type": "Qwen2VLImageProcessorFast"` but this processor class may not be available in the installed transformers version. Let me check:
+Let me check the auto-round version and see if there's a known issue:
+**FIX_PLAN:**
+1. Install missing `torchvision` package required by `Qwen2VLImageProcessorFast` — the error shows `ModuleNotFoundError: No module named 'torchvision'`
+2. Verify the import works
+3. Re-run quantization phase
+The `Qwen2VLImageProcessorFast` was deprecated — the current transformers (5.12.1) only has `Qwen2VLImageProcessor`. The model's preprocessor_config.json references the old class name. Let me fix it:
+The fix is applied. The issue was that the model's `preprocessor_config.json` referenced `Qwen2VLImageProcessorFast` which was deprecated and removed in transformers 5.x. I changed it to `Qwen2VLImageProcessor`.
+
+Let me verify the fix is correct:
+**Fix applied.** The model had `Qwen2VLImageProcessorFast` in its `preprocessor_config.json`, but this class was deprecated and removed in transformers 5.x. Changed it to `Qwen2VLImageProcessor`. Additionally installed the missing `torchvision` dependency.
+
+The phase can now be re-run.
