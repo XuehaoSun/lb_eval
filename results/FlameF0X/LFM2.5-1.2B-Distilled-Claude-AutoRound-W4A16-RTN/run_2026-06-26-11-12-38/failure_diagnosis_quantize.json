@@ -1,0 +1,32 @@
+{
+  "category": "quantization_index_error",
+  "phase": "quantize",
+  "key_error": "IndexError: list index out of range (auto_round/algorithms/quantization/base.py line 603 in _sampling_inputs: current_input_others[key] = [input_others[key][i] for i in indices])",
+  "root_cause": "auto_round's _sampling_inputs function generates sampling indices that exceed the length of the input_others tensor. During calibration dataset preprocessing in a subprocess, the indices for 'others' (e.g., attention masks, position ids) become misaligned with the actual input_ids data, causing out-of-bounds access when building block-wise quantization inputs.",
+  "traceback_analysis": "quantize.py:183→autoround.quantize()→data_driven.py:1149_quantize_impl→1175_quant_rtn_with_imatrix→1109_quantize_via_rtn_blockwise→1027_get_block_outputs→base.py:444_sampling_inputs→603 where fault occurs: indices list contains index values beyond the bounds of input_others[key] list. The bug is in _sampling_inputs - it does not validate that generated indices are within the valid range of the input_others containers.",
+  "fault_attribution": {
+    "component": "auto_round",
+    "specific_module": "auto_round.algorithms.quantization.base",
+    "specific_function": "_sampling_inputs",
+    "fault_type": "code_bug",
+    "responsible_party": "auto_round_devs"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "Check if auto_round has a newer version with fix for index bounds in _sampling_inputs. If using a fixed commit, try setting dataset layout parameters: --calib_batch_size 1 or --calib_seq_len 512 to reduce memory pressure. Alternatively, use a different calibration dataset via --calib_dataset argument.",
+  "fix_verification": "re-run quantization with same model/dataset after upgrading auto_round or adjusting batch/seq parameters",
+  "workaround": "Use a smaller calibration dataset or adjust --calib_batch_size to reduce the index range mismatch. Could also try --quantization_scheme w4a16_gptq instead of autoround.",
+  "affected_component": "auto_round",
+  "severity": "high",
+  "confidence": 0.75,
+  "versions_involved": {
+    "auto_round": "unknown (latest at time of run)",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "The quantization failed due to an IndexError in auto_round's _sampling_inputs function where generated sampling indices exceed the bounds of the input_others container. This is an internal auto-round bug related to misaligned index generation during calibration data preprocessing. Try updating auto_round to latest version or adjusting calibration batch/sequence length parameters.",
+  "analyzed_at": "2026-06-26T11:13:24.523628+00:00",
+  "model": "FlameF0X/LFM2.5-1.2B-Distilled-Claude",
+  "run_id": "LFM2.5-1.2B-Distilled-Claude-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)"
+}
