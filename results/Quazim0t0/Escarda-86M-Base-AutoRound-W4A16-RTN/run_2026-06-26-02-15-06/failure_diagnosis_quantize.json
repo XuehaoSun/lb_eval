@@ -1,0 +1,32 @@
+{
+  "category": "dataset_error",
+  "phase": "quantize",
+  "key_error": "ValueError: Columns ['attention_mask'] not in the dataset. Current columns in the dataset: ['text', 'meta', 'input_ids']",
+  "root_cause": "The calibration dataset 'NeelNanda/pile-10k' is a pre-tokenized dataset containing only 'input_ids' (and 'text', 'meta'), but auto_round's calib_dataset.py:889 unconditionally calls set_format requiring both 'input_ids' and 'attention_mask'. The dataset does not have an attention_mask column because it was pre-tokenized without attention masks.",
+  "traceback_analysis": "Call chain: quantize.py:183 → autoround.quantize() → data_driven.py:1175 _quant_rtn_with_imatrix → calibration/state.py:140 ensure_dataloader → calib_dataset.py:1045 get_dataloader → calib_dataset.py:999 get_dataset → calib_dataset.py:889 _get_dataset_impl → datasets/arrow_dataset.py:2916 set_format. Fault is at calib_dataset.py:_get_dataset_impl which hardcodes columns=['input_ids', 'attention_mask'] without checking if attention_mask exists in the dataset.",
+  "fault_attribution": {
+    "component": "auto_round",
+    "specific_module": "auto_round.calib_dataset",
+    "specific_function": "_get_dataset_impl",
+    "fault_type": "code_bug",
+    "responsible_party": "auto_round_devs"
+  },
+  "retryable": false,
+  "fix_available": true,
+  "suggested_fix": "Use a different calibration dataset that includes attention_mask, OR patch auto_round to handle datasets missing attention_mask by creating a dummy attention_mask (all ones). For example: if 'attention_mask' not in dataset.columns: dataset = dataset.add_column('attention_mask', [[1]*len(ids) for ids in dataset['input_ids']])",
+  "fix_verification": "python -c \"from datasets import load_dataset; ds = load_dataset('NeelNanda/pile-10k'); print(ds['train'].column_names)\" # should show attention_mask or code handles its absence",
+  "workaround": "Use dataset_args to specify a different dataset (e.g., 'NeelNanda/pile-10k' without attention_mask is incompatible). Use 'mit-han-lab/tl-RED' or other datasets auto_round officially supports that have proper tokenizer output columns.",
+  "affected_component": "auto_round",
+  "severity": "critical",
+  "confidence": 0.95,
+  "versions_involved": {
+    "auto_round": "unknown (latest via pip)",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "Auto-round's calibration data loading fails because the NeelNanda/pile-10k dataset only has 'input_ids' columns (pre-tokenized format) but auto_round unconditionally requires 'attention_mask'. This is a bug in auto_round's dataset handling which doesn't account for pre-tokenized datasets. Switch to a supported dataset or patch auto_round to generate dummy attention_mask for pre-tokenized datasets.",
+  "analyzed_at": "2026-06-26T02:15:41.001999+00:00",
+  "model": "Quazim0t0/Escarda-86M-Base",
+  "run_id": "Escarda-86M-Base-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)"
+}
