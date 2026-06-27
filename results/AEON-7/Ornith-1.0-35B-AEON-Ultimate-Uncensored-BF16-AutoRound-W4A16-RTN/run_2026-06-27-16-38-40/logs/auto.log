@@ -1,0 +1,794 @@
+
+═══════ Pipeline: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 | W4A16/RTN/auto_round ═══════
+
+
+═══════ Pipeline: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 | W4A16/RTN/auto_round ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+
+═══════ Phase: setup_env ═══════
+
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+=== Phase 1: Environment Setup ===
+  AUTO_ROUND_REF=latest
+  TRANSFORMERS_REF=auto
+  EXPORT_FORMAT=auto_round
+  EVAL_BACKEND=hf
+[setup_env] Installing: auto-round
+[setup_env] Installing: auto-round
+ + transformers==5.12.1
+ + triton==3.7.1
+ + urllib3==2.7.0
+ + xxhash==3.8.0
+ + yarl==1.24.2
+ + transformers==5.12.1
+ + triton==3.7.1
+ + urllib3==2.7.0
+ + xxhash==3.8.0
+ + yarl==1.24.2
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + threadpoolctl==3.6.0
+ + typepy==1.3.5
+ + word2number==1.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+ + hf-transfer==0.1.9
+ + loguru==0.7.3
+ + sentencepiece==0.2.1
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] Checking torch/CUDA driver compatibility...
+[setup_env] torch=2.12.1+cu130, CUDA available — OK
+[setup_env] torch=2.12.1+cu130, CUDA available — OK
+[setup_env] Running pre-flight dependency check for AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16...
+[setup_env] Running pre-flight dependency check for AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16...
+16:33:35 [preflight] Pre-flight check for: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+16:33:35 [preflight] Pre-flight check for: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+16:33:35 [preflight] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+16:33:35 [preflight] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+16:33:35 [preflight] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:35 [preflight] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:35 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:33:35 [preflight] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:33:35 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:33:35 [preflight] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:33:35 [preflight]   model_type: qwen3_5_moe
+16:33:35 [preflight]   auto_map: no
+16:33:35 [preflight]   transformers_version: 5.13.0.dev0
+16:33:35 [preflight]   model_type: qwen3_5_moe
+16:33:35 [preflight]   auto_map: no
+16:33:35 [preflight]   transformers_version: 5.13.0.dev0
+16:33:36 [preflight]   [!] transformers upgrade needed: ['transformers>=5.13.0.dev0']
+16:33:36 [preflight]   [!] transformers upgrade needed: ['transformers>=5.13.0.dev0']
+16:33:36 [preflight] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+16:33:36 [preflight] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/requirements.txt "HTTP/1.1 404 Not Found"
+16:33:36 [preflight]   Missing dependencies: ['transformers>=5.13.0.dev0']
+16:33:36 [preflight] Installing: transformers>=5.13.0.dev0
+16:33:36 [preflight]   Missing dependencies: ['transformers>=5.13.0.dev0']
+16:33:36 [preflight] Installing: transformers>=5.13.0.dev0
+16:33:36 [preflight] uv pip install failed:
+Using Python 3.12.13 environment at: /root/.venv
+  × No solution found when resolving dependencies:
+  ╰─▶ Because only transformers<=5.12.1 is available and you require
+      transformers>=5.13.0.dev0, we can conclude that your requirements are
+      unsatisfiable.
+
+16:33:36 [preflight] uv pip install failed:
+Using Python 3.12.13 environment at: /root/.venv
+  × No solution found when resolving dependencies:
+  ╰─▶ Because only transformers<=5.12.1 is available and you require
+      transformers>=5.13.0.dev0, we can conclude that your requirements are
+      unsatisfiable.
+
+[WARN] Pre-flight dep install had issues (non-fatal, agent can retry)
+
+[WARN] Pre-flight dep install had issues (non-fatal, agent can retry)
+[setup_env] Verification:
+
+[setup_env] Verification:
+  torch=2.12.1+cu130, cuda=True
+  torch=2.12.1+cu130, cuda=True
+  auto_round=0.13.1
+  transformers=5.12.1
+  auto_round=0.13.1
+  transformers=5.12.1
+  lm_eval=0.4.12
+  lm_eval=0.4.12
+
+=== Phase 1: DONE ===
+
+=== Phase 1: DONE ===
+[auto_v3] setup_env succeeded
+[auto_v3] setup_env succeeded
+
+═══════ Phase: quantize ═══════
+
+
+═══════ Phase: quantize ═══════
+
+=== Phase 2: Quantization ===
+=== Phase 2: Quantization ===
+  model=AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/quantized_model
+  model=AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/quantized_model
+16:33:48 [INFO] Model: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+16:33:48 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+16:33:48 [INFO] Iters: 0 (RTN)
+16:33:48 [INFO] Export format: auto_round
+16:33:48 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/quantized_model
+16:33:48 [INFO] Device map: auto
+16:33:48 [INFO] Loading tokenizer...
+16:33:48 [INFO] Model: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+16:33:48 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+16:33:48 [INFO] Iters: 0 (RTN)
+16:33:48 [INFO] Export format: auto_round
+16:33:48 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/quantized_model
+16:33:48 [INFO] Device map: auto
+16:33:48 [INFO] Loading tokenizer...
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:33:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:33:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/vocab.json "HTTP/1.1 404 Not Found"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/vocab.json "HTTP/1.1 404 Not Found"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/merges.txt "HTTP/1.1 404 Not Found"
+16:33:48 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/merges.txt "HTTP/1.1 404 Not Found"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:33:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:33:49 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:33:49 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:33:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 "HTTP/1.1 200 OK"
+16:33:50 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 "HTTP/1.1 200 OK"
+16:33:50 [INFO] Loading model...
+16:33:50 [INFO] Loading model...
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:33:50 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:33:51 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:33:51 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:33:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/revision/main "HTTP/1.1 200 OK"
+16:33:51 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/revision/main "HTTP/1.1 200 OK"
+16:33:51 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/cbc8e8544a817916de142c25231e0df18a03be1b/model-00001-of-00002.safetensors "HTTP/1.1 302 Found"
+16:33:51 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/cbc8e8544a817916de142c25231e0df18a03be1b/model-00001-of-00002.safetensors "HTTP/1.1 302 Found"
+16:33:51 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/cbc8e8544a817916de142c25231e0df18a03be1b/model-00002-of-00002.safetensors "HTTP/1.1 302 Found"
+16:33:51 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/cbc8e8544a817916de142c25231e0df18a03be1b/model-00002-of-00002.safetensors "HTTP/1.1 302 Found"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+16:34:37 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+16:34:37 [INFO] Ignore layers: lm_head
+16:34:37 [INFO] Configuring AutoRound...
+16:34:37 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+16:34:37 [INFO] Ignore layers: lm_head
+16:34:37 [INFO] Configuring AutoRound...
+[38;20m2026-06-27 16:34:37 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-27 16:34:37 INFO config.py L45: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-27 16:34:37 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+[38;20m2026-06-27 16:34:37 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a3ffb9d-5920719648aba206607a05d7;829a8d59-80df-4390-bdbb-1f2c25e38cc7)
+
+Entry Not Found for url: https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a3ffb9d-5920719648aba206607a05d7;829a8d59-80df-4390-bdbb-1f2c25e38cc7)
+
+Entry Not Found for url: https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model_index.json.
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/revision/main "HTTP/1.1 200 OK"
+16:34:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/revision/main "HTTP/1.1 200 OK"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:35:32 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:35:33 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:33 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:35:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:35:33 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:33 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:35:33 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:35:33 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:35:33 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:35:33 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:35:33 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/preprocessor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/preprocessor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/preprocessor_config.json "HTTP/1.1 200 OK"
+16:35:34 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/preprocessor_config.json "HTTP/1.1 200 OK"
+16:35:34 [ERROR] Quantization failed: Unrecognized image processor in AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16. Should have a `image_processor_type` key in its preprocessor_config.json of config.json, or one of the following `model_type` keys in its config.json: aria, beit, bit, blip, bridgetower, chameleon, chinese_clip, chmv2, clip, cohere2_vision, conditional_detr, convnext, deepseek_ocr2, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_pro, detr, dinov3_vit, dpt, efficientloftr, efficientnet, eomt, ernie4_5_vl_moe, flava, fuyu, gemma3, gemma4, gemma4_unified, glm46v, glm4v, glm_image, glmga, glpn, got_ocr2, grounding-dino, idefics, idefics2, idefics3, imagegpt, janus, layoutlmv2, layoutlmv3, levit, lfm2_vl, lightglue, llama4, llava, llava_next, llava_onevision, mask2former, maskformer, minicpmv4_6, minimax_m3_vl, mllama, mobilenet_v1, mobilenet_v2, mobilevit, nougat, oneformer, ovis2, owlv2, owlvit, paddleocr_vl, perceiver, perception_lm, phi4_multimodal, pi0, pix2struct, pixtral, poolformer, pp_chart2table, pp_doclayout_v2, pp_doclayout_v3, pp_formulanet, pp_lcnet, pp_ocrv5_server_det, pp_ocrv5_server_rec, pp_ocrv6_small_rec, prompt_depth_anything, pvt, qwen2_vl, rf_detr, rt_detr, sam, sam2, sam3, sapiens2, segformer, seggpt, siglip, siglip2, slanext, smolvlm, superglue, superpoint, swin2sr, textnet, tvp, uvdoc, video_llama_3, videomae, vilt, vit, vitmatte, vitpose, yolos, zoedepth, aimv2, aimv2_vision_model, align, altclip, aya_vision, blip-2, clipseg, colpali, colqwen2, convnextv2, cosmos3_omni, cvt, data2vec-vision, deimv2, depth_anything, dinat, dinov2, donut-swin, edgetam, emu3, eomt_dinov3, exaone4_5, florence2, focalnet, gemma3n, git, granite4_vision, groupvit, hiera, ijepa, instructblip, internvl, kosmos-2, kosmos-2.5, layoutxlm, lighton_ocr, llava_next_video, lw_detr, metaclip_2, mgp-str, mistral3, mlcd, mm-grounding-dino, mobilevitv2, omdet-turbo, paligemma, pixio, pp_ocrv5_mobile_det, pp_ocrv5_mobile_rec, pp_ocrv6_medium_det, pp_ocrv6_small_det, pp_ocrv6_tiny_rec, pvt_v2, qianfan_ocr, qwen2_5_omni, qwen2_5_vl, qwen3_5, qwen3_5_moe, qwen3_omni_moe, qwen3_vl, regnet, resnet, sam2_video, sam3_lite_text, sam3_tracker, sam3_tracker_video, sam3_video, sam_hq, shieldgemma2, slanet, swiftformer, swin, swinv2, t5gemma2, t5gemma2_encoder, table-transformer, timesformer, timm_wrapper, trocr, udop, upernet, video_llava, vipllava, vit_mae, vit_msn, vivit, xclip
+16:35:34 [ERROR] Quantization failed: Unrecognized image processor in AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16. Should have a `image_processor_type` key in its preprocessor_config.json of config.json, or one of the following `model_type` keys in its config.json: aria, beit, bit, blip, bridgetower, chameleon, chinese_clip, chmv2, clip, cohere2_vision, conditional_detr, convnext, deepseek_ocr2, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_pro, detr, dinov3_vit, dpt, efficientloftr, efficientnet, eomt, ernie4_5_vl_moe, flava, fuyu, gemma3, gemma4, gemma4_unified, glm46v, glm4v, glm_image, glmga, glpn, got_ocr2, grounding-dino, idefics, idefics2, idefics3, imagegpt, janus, layoutlmv2, layoutlmv3, levit, lfm2_vl, lightglue, llama4, llava, llava_next, llava_onevision, mask2former, maskformer, minicpmv4_6, minimax_m3_vl, mllama, mobilenet_v1, mobilenet_v2, mobilevit, nougat, oneformer, ovis2, owlv2, owlvit, paddleocr_vl, perceiver, perception_lm, phi4_multimodal, pi0, pix2struct, pixtral, poolformer, pp_chart2table, pp_doclayout_v2, pp_doclayout_v3, pp_formulanet, pp_lcnet, pp_ocrv5_server_det, pp_ocrv5_server_rec, pp_ocrv6_small_rec, prompt_depth_anything, pvt, qwen2_vl, rf_detr, rt_detr, sam, sam2, sam3, sapiens2, segformer, seggpt, siglip, siglip2, slanext, smolvlm, superglue, superpoint, swin2sr, textnet, tvp, uvdoc, video_llama_3, videomae, vilt, vit, vitmatte, vitpose, yolos, zoedepth, aimv2, aimv2_vision_model, align, altclip, aya_vision, blip-2, clipseg, colpali, colqwen2, convnextv2, cosmos3_omni, cvt, data2vec-vision, deimv2, depth_anything, dinat, dinov2, donut-swin, edgetam, emu3, eomt_dinov3, exaone4_5, florence2, focalnet, gemma3n, git, granite4_vision, groupvit, hiera, ijepa, instructblip, internvl, kosmos-2, kosmos-2.5, layoutxlm, lighton_ocr, llava_next_video, lw_detr, metaclip_2, mgp-str, mistral3, mlcd, mm-grounding-dino, mobilevitv2, omdet-turbo, paligemma, pixio, pp_ocrv5_mobile_det, pp_ocrv5_mobile_rec, pp_ocrv6_medium_det, pp_ocrv6_small_det, pp_ocrv6_tiny_rec, pvt_v2, qianfan_ocr, qwen2_5_omni, qwen2_5_vl, qwen3_5, qwen3_5_moe, qwen3_omni_moe, qwen3_vl, regnet, resnet, sam2_video, sam3_lite_text, sam3_tracker, sam3_tracker_video, sam3_video, sam_hq, shieldgemma2, slanet, swiftformer, swin, swinv2, t5gemma2, t5gemma2_encoder, table-transformer, timesformer, timm_wrapper, trocr, udop, upernet, video_llava, vipllava, vit_mae, vit_msn, vivit, xclip
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 312, in __new__
+    return _get_compressor_class(model_type, CalibratedRTNCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 900, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 165, in __new__
+    return AutoRoundCompatible(**local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 594, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 312, in __new__
+    return _get_compressor_class(model_type, CalibratedRTNCompressor)(alg_configs, **local_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 87, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 900, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 93, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 300, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1715, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1844, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 651, in from_pretrained
+    raise ValueError(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 106, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 138, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 757, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1715, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1844, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 651, in from_pretrained
+    raise ValueError(
+ValueError: Unrecognized image processor in AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16. Should have a `image_processor_type` key in its preprocessor_config.json of config.json, or one of the following `model_type` keys in its config.json: aria, beit, bit, blip, bridgetower, chameleon, chinese_clip, chmv2, clip, cohere2_vision, conditional_detr, convnext, deepseek_ocr2, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_pro, detr, dinov3_vit, dpt, efficientloftr, efficientnet, eomt, ernie4_5_vl_moe, flava, fuyu, gemma3, gemma4, gemma4_unified, glm46v, glm4v, glm_image, glmga, glpn, got_ocr2, grounding-dino, idefics, idefics2, idefics3, imagegpt, janus, layoutlmv2, layoutlmv3, levit, lfm2_vl, lightglue, llama4, llava, llava_next, llava_onevision, mask2former, maskformer, minicpmv4_6, minimax_m3_vl, mllama, mobilenet_v1, mobilenet_v2, mobilevit, nougat, oneformer, ovis2, owlv2, owlvit, paddleocr_vl, perceiver, perception_lm, phi4_multimodal, pi0, pix2struct, pixtral, poolformer, pp_chart2table, pp_doclayout_v2, pp_doclayout_v3, pp_formulanet, pp_lcnet, pp_ocrv5_server_det, pp_ocrv5_server_rec, pp_ocrv6_small_rec, prompt_depth_anything, pvt, qwen2_vl, rf_detr, rt_detr, sam, sam2, sam3, sapiens2, segformer, seggpt, siglip, siglip2, slanext, smolvlm, superglue, superpoint, swin2sr, textnet, tvp, uvdoc, video_llama_3, videomae, vilt, vit, vitmatte, vitpose, yolos, zoedepth, aimv2, aimv2_vision_model, align, altclip, aya_vision, blip-2, clipseg, colpali, colqwen2, convnextv2, cosmos3_omni, cvt, data2vec-vision, deimv2, depth_anything, dinat, dinov2, donut-swin, edgetam, emu3, eomt_dinov3, exaone4_5, florence2, focalnet, gemma3n, git, granite4_vision, groupvit, hiera, ijepa, instructblip, internvl, kosmos-2, kosmos-2.5, layoutxlm, lighton_ocr, llava_next_video, lw_detr, metaclip_2, mgp-str, mistral3, mlcd, mm-grounding-dino, mobilevitv2, omdet-turbo, paligemma, pixio, pp_ocrv5_mobile_det, pp_ocrv5_mobile_rec, pp_ocrv6_medium_det, pp_ocrv6_small_det, pp_ocrv6_tiny_rec, pvt_v2, qianfan_ocr, qwen2_5_omni, qwen2_5_vl, qwen3_5, qwen3_5_moe, qwen3_omni_moe, qwen3_vl, regnet, resnet, sam2_video, sam3_lite_text, sam3_tracker, sam3_tracker_video, sam3_video, sam_hq, shieldgemma2, slanet, swiftformer, swin, swinv2, t5gemma2, t5gemma2_encoder, table-transformer, timesformer, timm_wrapper, trocr, udop, upernet, video_llava, vipllava, vit_mae, vit_msn, vivit, xclip
+ValueError: Unrecognized image processor in AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16. Should have a `image_processor_type` key in its preprocessor_config.json of config.json, or one of the following `model_type` keys in its config.json: aria, beit, bit, blip, bridgetower, chameleon, chinese_clip, chmv2, clip, cohere2_vision, conditional_detr, convnext, deepseek_ocr2, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_pro, detr, dinov3_vit, dpt, efficientloftr, efficientnet, eomt, ernie4_5_vl_moe, flava, fuyu, gemma3, gemma4, gemma4_unified, glm46v, glm4v, glm_image, glmga, glpn, got_ocr2, grounding-dino, idefics, idefics2, idefics3, imagegpt, janus, layoutlmv2, layoutlmv3, levit, lfm2_vl, lightglue, llama4, llava, llava_next, llava_onevision, mask2former, maskformer, minicpmv4_6, minimax_m3_vl, mllama, mobilenet_v1, mobilenet_v2, mobilevit, nougat, oneformer, ovis2, owlv2, owlvit, paddleocr_vl, perceiver, perception_lm, phi4_multimodal, pi0, pix2struct, pixtral, poolformer, pp_chart2table, pp_doclayout_v2, pp_doclayout_v3, pp_formulanet, pp_lcnet, pp_ocrv5_server_det, pp_ocrv5_server_rec, pp_ocrv6_small_rec, prompt_depth_anything, pvt, qwen2_vl, rf_detr, rt_detr, sam, sam2, sam3, sapiens2, segformer, seggpt, siglip, siglip2, slanext, smolvlm, superglue, superpoint, swin2sr, textnet, tvp, uvdoc, video_llama_3, videomae, vilt, vit, vitmatte, vitpose, yolos, zoedepth, aimv2, aimv2_vision_model, align, altclip, aya_vision, blip-2, clipseg, colpali, colqwen2, convnextv2, cosmos3_omni, cvt, data2vec-vision, deimv2, depth_anything, dinat, dinov2, donut-swin, edgetam, emu3, eomt_dinov3, exaone4_5, florence2, focalnet, gemma3n, git, granite4_vision, groupvit, hiera, ijepa, instructblip, internvl, kosmos-2, kosmos-2.5, layoutxlm, lighton_ocr, llava_next_video, lw_detr, metaclip_2, mgp-str, mistral3, mlcd, mm-grounding-dino, mobilevitv2, omdet-turbo, paligemma, pixio, pp_ocrv5_mobile_det, pp_ocrv5_mobile_rec, pp_ocrv6_medium_det, pp_ocrv6_small_det, pp_ocrv6_tiny_rec, pvt_v2, qianfan_ocr, qwen2_5_omni, qwen2_5_vl, qwen3_5, qwen3_5_moe, qwen3_omni_moe, qwen3_vl, regnet, resnet, sam2_video, sam3_lite_text, sam3_tracker, sam3_tracker_video, sam3_video, sam_hq, shieldgemma2, slanet, swiftformer, swin, swinv2, t5gemma2, t5gemma2_encoder, table-transformer, timesformer, timm_wrapper, trocr, udop, upernet, video_llava, vipllava, vit_mae, vit_msn, vivit, xclip
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+[auto_v3] quantize failed (exit=1), entering agent fix loop
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+
+═══════ Agent fix attempt 1/10 for quantize ═══════
+
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Loaded lessons for agent (let agent decide relevance)
+[auto_v3] Calling openclaw agent (session=fix_quantize_360_1782578138, timeout=600s)...
+[auto_v3]   Session file: /root/.openclaw/agents/main/sessions/fix_quantize_360_1782578138.jsonl
+[auto_v3] Calling openclaw agent (session=fix_quantize_360_1782578138, timeout=600s)...
+[auto_v3]   Session file: /root/.openclaw/agents/main/sessions/fix_quantize_360_1782578138.jsonl
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[auto_v3]   [agent running 30s] session: 12 messages
+[auto_v3]   [agent running 30s] session: 12 messages
+[auto_v3]   [agent running 61s] session: 17 messages
+[auto_v3]   [agent running 61s] session: 17 messages
+Looking at the error, it's failing when trying to load an image processor for a multimodal model. The `preprocessor_config.json` exists but doesn't have a recognized `image_processor_type` and the `model_type` isn't in the standard list.
+
+Let me check the model's preprocessor config:
+Looking at the error, it's failing when trying to load an image processor for a multimodal model. The `preprocessor_config.json` exists but doesn't have a recognized `image_processor_type` and the `model_type` isn't in the standard list.
+
+Let me check the model's preprocessor config:
+The model has `image_processor_type: "Qwen2VLImageProcessorFast"` but this type isn't recognized by the installed transformers (5.12.1). This is a fast image processor that was added recently.
+
+The `model_type` is `qwen3_5_moe` which also isn't in the recognized list. This is a newer Qwen3.5 MoE architecture variant.
+
+**FIX_PLAN:**
+1. Upgrade auto-round from main branch to get fixes for newer Qwen3.5 MoE architectures
+2. Re-run the quantization phase to verify
+
+Let me apply the fix:
+The model has `image_processor_type: "Qwen2VLImageProcessorFast"` but this type isn't recognized by the installed transformers (5.12.1). This is a fast image processor that was added recently.
+
+The `model_type` is `qwen3_5_moe` which also isn't in the recognized list. This is a newer Qwen3.5 MoE architecture variant.
+
+**FIX_PLAN:**
+1. Upgrade auto-round from main branch to get fixes for newer Qwen3.5 MoE architectures
+2. Re-run the quantization phase to verify
+
+Let me apply the fix:
+Auto-round reinstalled from main branch (0.14.0). Ready for the phase to be re-run to verify.
+Auto-round reinstalled from main branch (0.14.0). Ready for the phase to be re-run to verify.
+[auto_v3]   Agent session complete: 17 messages, 0
+0 tool calls
+[auto_v3]   Agent session complete: 17 messages, 0
+0 tool calls
+[auto_v3] Re-running quantize after agent fix...
+[auto_v3] Re-running quantize after agent fix...
+=== Phase 2: Quantization ===
+  model=AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+=== Phase 2: Quantization ===
+  model=AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/quantized_model
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/quantized_model
+16:36:59 [INFO] Model: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+16:36:59 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+16:36:59 [INFO] Iters: 0 (RTN)
+16:36:59 [INFO] Export format: auto_round
+16:36:59 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/quantized_model
+16:36:59 [INFO] Device map: auto
+16:36:59 [INFO] Loading tokenizer...
+16:36:59 [INFO] Model: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+16:36:59 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+16:36:59 [INFO] Iters: 0 (RTN)
+16:36:59 [INFO] Export format: auto_round
+16:36:59 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/quantized_model
+16:36:59 [INFO] Device map: auto
+16:36:59 [INFO] Loading tokenizer...
+16:36:59 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:36:59 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:36:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:36:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:00 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:00 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:00 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:37:00 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:37:00 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:00 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:00 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:37:00 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:37:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:37:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:37:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:37:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:37:01 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 "HTTP/1.1 200 OK"
+16:37:01 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 "HTTP/1.1 200 OK"
+16:37:01 [INFO] Loading model...
+16:37:01 [INFO] Loading model...
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:37:01 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:37:01 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/revision/main "HTTP/1.1 200 OK"
+16:37:01 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/revision/main "HTTP/1.1 200 OK"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+16:37:08 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+16:37:08 [INFO] Ignore layers: lm_head
+16:37:08 [INFO] Configuring AutoRound...
+16:37:08 [INFO] Architecture: Qwen3_5MoeForCausalLM (model_type=qwen3_5_moe_text, moe=True)
+16:37:08 [INFO] Ignore layers: lm_head
+16:37:08 [INFO] Configuring AutoRound...
+[38;20m2026-06-27 16:37:08 INFO config.py L53: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-27 16:37:08 INFO config.py L53: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+[38;20m2026-06-27 16:37:08 INFO entry.py L744: Using MLLM mode for multimodal model.[0m
+[38;20m2026-06-27 16:37:08 INFO entry.py L744: Using MLLM mode for multimodal model.[0m
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a3ffc34-0aa248331af50bab2c9bf4c4;8b6678b9-e88f-4c76-a804-2c97c54a4268)
+
+Entry Not Found for url: https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model_index.json.
+404 Client Error. (Request ID: Root=1-6a3ffc34-0aa248331af50bab2c9bf4c4;8b6678b9-e88f-4c76-a804-2c97c54a4268)
+
+Entry Not Found for url: https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model_index.json.
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/model.safetensors.index.json "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/revision/main "HTTP/1.1 200 OK"
+16:37:08 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/revision/main "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/generation_config.json "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/config.json "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/tokenizer_config.json "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:38:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:38:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:38:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16 "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:38:10 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+16:38:10 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+16:38:11 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:38:11 [INFO] HTTP Request: GET https://huggingface.co/api/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/chat_template.jinja "HTTP/1.1 200 OK"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/processor_config.json "HTTP/1.1 200 OK"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/preprocessor_config.json "HTTP/1.1 200 OK"
+16:38:11 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16/cbc8e8544a817916de142c25231e0df18a03be1b/preprocessor_config.json "HTTP/1.1 200 OK"
+16:38:11 [ERROR] Quantization failed: Unrecognized image processor in AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16. Should have a `image_processor_type` key in its preprocessor_config.json of config.json, or one of the following `model_type` keys in its config.json: aria, beit, bit, blip, bridgetower, chameleon, chinese_clip, chmv2, clip, cohere2_vision, conditional_detr, convnext, deepseek_ocr2, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_pro, detr, dinov3_vit, dpt, efficientloftr, efficientnet, eomt, ernie4_5_vl_moe, flava, fuyu, gemma3, gemma4, gemma4_unified, glm46v, glm4v, glm_image, glmga, glpn, got_ocr2, grounding-dino, idefics, idefics2, idefics3, imagegpt, janus, layoutlmv2, layoutlmv3, levit, lfm2_vl, lightglue, llama4, llava, llava_next, llava_onevision, mask2former, maskformer, minicpmv4_6, minimax_m3_vl, mllama, mobilenet_v1, mobilenet_v2, mobilevit, nougat, oneformer, ovis2, owlv2, owlvit, paddleocr_vl, perceiver, perception_lm, phi4_multimodal, pi0, pix2struct, pixtral, poolformer, pp_chart2table, pp_doclayout_v2, pp_doclayout_v3, pp_formulanet, pp_lcnet, pp_ocrv5_server_det, pp_ocrv5_server_rec, pp_ocrv6_small_rec, prompt_depth_anything, pvt, qwen2_vl, rf_detr, rt_detr, sam, sam2, sam3, sapiens2, segformer, seggpt, siglip, siglip2, slanext, smolvlm, superglue, superpoint, swin2sr, textnet, tvp, uvdoc, video_llama_3, videomae, vilt, vit, vitmatte, vitpose, yolos, zoedepth, aimv2, aimv2_vision_model, align, altclip, aya_vision, blip-2, clipseg, colpali, colqwen2, convnextv2, cosmos3_omni, cvt, data2vec-vision, deimv2, depth_anything, dinat, dinov2, donut-swin, edgetam, emu3, eomt_dinov3, exaone4_5, florence2, focalnet, gemma3n, git, granite4_vision, groupvit, hiera, ijepa, instructblip, internvl, kosmos-2, kosmos-2.5, layoutxlm, lighton_ocr, llava_next_video, lw_detr, metaclip_2, mgp-str, mistral3, mlcd, mm-grounding-dino, mobilevitv2, omdet-turbo, paligemma, pixio, pp_ocrv5_mobile_det, pp_ocrv5_mobile_rec, pp_ocrv6_medium_det, pp_ocrv6_small_det, pp_ocrv6_tiny_rec, pvt_v2, qianfan_ocr, qwen2_5_omni, qwen2_5_vl, qwen3_5, qwen3_5_moe, qwen3_omni_moe, qwen3_vl, regnet, resnet, sam2_video, sam3_lite_text, sam3_tracker, sam3_tracker_video, sam3_video, sam_hq, shieldgemma2, slanet, swiftformer, swin, swinv2, t5gemma2, t5gemma2_encoder, table-transformer, timesformer, timm_wrapper, trocr, udop, upernet, video_llava, vipllava, vit_mae, vit_msn, vivit, xclip
+16:38:11 [ERROR] Quantization failed: Unrecognized image processor in AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16. Should have a `image_processor_type` key in its preprocessor_config.json of config.json, or one of the following `model_type` keys in its config.json: aria, beit, bit, blip, bridgetower, chameleon, chinese_clip, chmv2, clip, cohere2_vision, conditional_detr, convnext, deepseek_ocr2, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_pro, detr, dinov3_vit, dpt, efficientloftr, efficientnet, eomt, ernie4_5_vl_moe, flava, fuyu, gemma3, gemma4, gemma4_unified, glm46v, glm4v, glm_image, glmga, glpn, got_ocr2, grounding-dino, idefics, idefics2, idefics3, imagegpt, janus, layoutlmv2, layoutlmv3, levit, lfm2_vl, lightglue, llama4, llava, llava_next, llava_onevision, mask2former, maskformer, minicpmv4_6, minimax_m3_vl, mllama, mobilenet_v1, mobilenet_v2, mobilevit, nougat, oneformer, ovis2, owlv2, owlvit, paddleocr_vl, perceiver, perception_lm, phi4_multimodal, pi0, pix2struct, pixtral, poolformer, pp_chart2table, pp_doclayout_v2, pp_doclayout_v3, pp_formulanet, pp_lcnet, pp_ocrv5_server_det, pp_ocrv5_server_rec, pp_ocrv6_small_rec, prompt_depth_anything, pvt, qwen2_vl, rf_detr, rt_detr, sam, sam2, sam3, sapiens2, segformer, seggpt, siglip, siglip2, slanext, smolvlm, superglue, superpoint, swin2sr, textnet, tvp, uvdoc, video_llama_3, videomae, vilt, vit, vitmatte, vitpose, yolos, zoedepth, aimv2, aimv2_vision_model, align, altclip, aya_vision, blip-2, clipseg, colpali, colqwen2, convnextv2, cosmos3_omni, cvt, data2vec-vision, deimv2, depth_anything, dinat, dinov2, donut-swin, edgetam, emu3, eomt_dinov3, exaone4_5, florence2, focalnet, gemma3n, git, granite4_vision, groupvit, hiera, ijepa, instructblip, internvl, kosmos-2, kosmos-2.5, layoutxlm, lighton_ocr, llava_next_video, lw_detr, metaclip_2, mgp-str, mistral3, mlcd, mm-grounding-dino, mobilevitv2, omdet-turbo, paligemma, pixio, pp_ocrv5_mobile_det, pp_ocrv5_mobile_rec, pp_ocrv6_medium_det, pp_ocrv6_small_det, pp_ocrv6_tiny_rec, pvt_v2, qianfan_ocr, qwen2_5_omni, qwen2_5_vl, qwen3_5, qwen3_5_moe, qwen3_omni_moe, qwen3_vl, regnet, resnet, sam2_video, sam3_lite_text, sam3_tracker, sam3_tracker_video, sam3_video, sam_hq, shieldgemma2, slanet, swiftformer, swin, swinv2, t5gemma2, t5gemma2_encoder, table-transformer, timesformer, timm_wrapper, trocr, udop, upernet, video_llava, vipllava, vit_mae, vit_msn, vivit, xclip
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 261, in __new__
+    return AutoRoundCompatible(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 282, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 178, in quantize
+    autoround = AutoRound(**ar_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/autoround.py", line 261, in __new__
+    return AutoRoundCompatible(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 751, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 429, in __new__
+    return _get_compressor_class(model_type, base_cls)(alg_configs, **local_args, **ctor_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 89, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 1024, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 751, in __new__
+    compressor = AutoRound(
+                 ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/entry.py", line 429, in __new__
+    return _get_compressor_class(model_type, base_cls)(alg_configs, **local_args, **ctor_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/mllm_mixin.py", line 89, in __init__
+    super().__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 96, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 379, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 1024, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/data_driven.py", line 96, in __init__
+    super().__init__(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/base.py", line 379, in __init__
+    self.model_context = ModelContext(
+                         ^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 110, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 39, in __call__
+    instance.__init__(*args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/base.py", line 27, in wrapped_init
+    original_init(self, *args, **kwargs)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 110, in __init__
+    self._load_model()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 151, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 758, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/context/model.py", line 151, in _load_model
+    self.model, self.processor, self.tokenizer, self.image_processor = mllm_load_model(
+                                                                       ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/model.py", line 758, in mllm_load_model
+    processor = AutoProcessor.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/processing_auto.py", line 327, in from_pretrained
+    return processor_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1715, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1844, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 651, in from_pretrained
+    raise ValueError(
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1715, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 1844, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/image_processing_auto.py", line 651, in from_pretrained
+    raise ValueError(
+ValueError: Unrecognized image processor in AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16. Should have a `image_processor_type` key in its preprocessor_config.json of config.json, or one of the following `model_type` keys in its config.json: aria, beit, bit, blip, bridgetower, chameleon, chinese_clip, chmv2, clip, cohere2_vision, conditional_detr, convnext, deepseek_ocr2, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_pro, detr, dinov3_vit, dpt, efficientloftr, efficientnet, eomt, ernie4_5_vl_moe, flava, fuyu, gemma3, gemma4, gemma4_unified, glm46v, glm4v, glm_image, glmga, glpn, got_ocr2, grounding-dino, idefics, idefics2, idefics3, imagegpt, janus, layoutlmv2, layoutlmv3, levit, lfm2_vl, lightglue, llama4, llava, llava_next, llava_onevision, mask2former, maskformer, minicpmv4_6, minimax_m3_vl, mllama, mobilenet_v1, mobilenet_v2, mobilevit, nougat, oneformer, ovis2, owlv2, owlvit, paddleocr_vl, perceiver, perception_lm, phi4_multimodal, pi0, pix2struct, pixtral, poolformer, pp_chart2table, pp_doclayout_v2, pp_doclayout_v3, pp_formulanet, pp_lcnet, pp_ocrv5_server_det, pp_ocrv5_server_rec, pp_ocrv6_small_rec, prompt_depth_anything, pvt, qwen2_vl, rf_detr, rt_detr, sam, sam2, sam3, sapiens2, segformer, seggpt, siglip, siglip2, slanext, smolvlm, superglue, superpoint, swin2sr, textnet, tvp, uvdoc, video_llama_3, videomae, vilt, vit, vitmatte, vitpose, yolos, zoedepth, aimv2, aimv2_vision_model, align, altclip, aya_vision, blip-2, clipseg, colpali, colqwen2, convnextv2, cosmos3_omni, cvt, data2vec-vision, deimv2, depth_anything, dinat, dinov2, donut-swin, edgetam, emu3, eomt_dinov3, exaone4_5, florence2, focalnet, gemma3n, git, granite4_vision, groupvit, hiera, ijepa, instructblip, internvl, kosmos-2, kosmos-2.5, layoutxlm, lighton_ocr, llava_next_video, lw_detr, metaclip_2, mgp-str, mistral3, mlcd, mm-grounding-dino, mobilevitv2, omdet-turbo, paligemma, pixio, pp_ocrv5_mobile_det, pp_ocrv5_mobile_rec, pp_ocrv6_medium_det, pp_ocrv6_small_det, pp_ocrv6_tiny_rec, pvt_v2, qianfan_ocr, qwen2_5_omni, qwen2_5_vl, qwen3_5, qwen3_5_moe, qwen3_omni_moe, qwen3_vl, regnet, resnet, sam2_video, sam3_lite_text, sam3_tracker, sam3_tracker_video, sam3_video, sam_hq, shieldgemma2, slanet, swiftformer, swin, swinv2, t5gemma2, t5gemma2_encoder, table-transformer, timesformer, timm_wrapper, trocr, udop, upernet, video_llava, vipllava, vit_mae, vit_msn, vivit, xclip
+ValueError: Unrecognized image processor in AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16. Should have a `image_processor_type` key in its preprocessor_config.json of config.json, or one of the following `model_type` keys in its config.json: aria, beit, bit, blip, bridgetower, chameleon, chinese_clip, chmv2, clip, cohere2_vision, conditional_detr, convnext, deepseek_ocr2, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_pro, detr, dinov3_vit, dpt, efficientloftr, efficientnet, eomt, ernie4_5_vl_moe, flava, fuyu, gemma3, gemma4, gemma4_unified, glm46v, glm4v, glm_image, glmga, glpn, got_ocr2, grounding-dino, idefics, idefics2, idefics3, imagegpt, janus, layoutlmv2, layoutlmv3, levit, lfm2_vl, lightglue, llama4, llava, llava_next, llava_onevision, mask2former, maskformer, minicpmv4_6, minimax_m3_vl, mllama, mobilenet_v1, mobilenet_v2, mobilevit, nougat, oneformer, ovis2, owlv2, owlvit, paddleocr_vl, perceiver, perception_lm, phi4_multimodal, pi0, pix2struct, pixtral, poolformer, pp_chart2table, pp_doclayout_v2, pp_doclayout_v3, pp_formulanet, pp_lcnet, pp_ocrv5_server_det, pp_ocrv5_server_rec, pp_ocrv6_small_rec, prompt_depth_anything, pvt, qwen2_vl, rf_detr, rt_detr, sam, sam2, sam3, sapiens2, segformer, seggpt, siglip, siglip2, slanext, smolvlm, superglue, superpoint, swin2sr, textnet, tvp, uvdoc, video_llama_3, videomae, vilt, vit, vitmatte, vitpose, yolos, zoedepth, aimv2, aimv2_vision_model, align, altclip, aya_vision, blip-2, clipseg, colpali, colqwen2, convnextv2, cosmos3_omni, cvt, data2vec-vision, deimv2, depth_anything, dinat, dinov2, donut-swin, edgetam, emu3, eomt_dinov3, exaone4_5, florence2, focalnet, gemma3n, git, granite4_vision, groupvit, hiera, ijepa, instructblip, internvl, kosmos-2, kosmos-2.5, layoutxlm, lighton_ocr, llava_next_video, lw_detr, metaclip_2, mgp-str, mistral3, mlcd, mm-grounding-dino, mobilevitv2, omdet-turbo, paligemma, pixio, pp_ocrv5_mobile_det, pp_ocrv5_mobile_rec, pp_ocrv6_medium_det, pp_ocrv6_small_det, pp_ocrv6_tiny_rec, pvt_v2, qianfan_ocr, qwen2_5_omni, qwen2_5_vl, qwen3_5, qwen3_5_moe, qwen3_omni_moe, qwen3_vl, regnet, resnet, sam2_video, sam3_lite_text, sam3_tracker, sam3_tracker_video, sam3_video, sam_hq, shieldgemma2, slanet, swiftformer, swin, swinv2, t5gemma2, t5gemma2_encoder, table-transformer, timesformer, timm_wrapper, trocr, udop, upernet, video_llava, vipllava, vit_mae, vit_msn, vivit, xclip
+[lesson] Saved: [still_failing] 404 Client Error. (Request ID: Root=1-6a3ffb9d-5920719648aba206607a05d7;829a8d59
+[lesson]   Solution: Attempt 1 did not resolve
+[lesson] Saved: [still_failing] 404 Client Error. (Request ID: Root=1-6a3ffb9d-5920719648aba206607a05d7;829a8d59
+[lesson]   Solution: Attempt 1 did not resolve
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+
+═══════ Agent fix attempt 2/10 for quantize ═══════
+
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[auto_v3] Drift detected: same error repeating. Aborting fix loop.
+[lesson] Saved: [drift] 404 Client Error. (Request ID: Root=1-6a3ffc34-0aa248331af50bab2c9bf4c4;8b6678b9
+[lesson]   Solution: Same error repeated 2 times
+[lesson] Saved: [drift] 404 Client Error. (Request ID: Root=1-6a3ffc34-0aa248331af50bab2c9bf4c4;8b6678b9
+[lesson]   Solution: Same error repeated 2 times
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] quantize failed after 10 fix attempts
+[auto_v3] Pipeline failed at: quantize (302s)
+[auto_v3] Pipeline failed at: quantize (302s)
+[auto_v3] Collected 1 openclaw session(s)
+[auto_v3] Collected 1 openclaw session(s)
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/session_fix_quantize_360_1782578138.md
+[format_sessions] Wrote /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/session_fix_quantize_360_1782578138.md
+[auto_v3] Generating run report...
+[auto_v3] Generating run report...
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/run_report.md
+[report] Written to: /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN/run_report.md
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+
+═══════ Upload Results ═══════
+
+[auto_v3] Uploading results to lb_eval GitHub...
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Removing stale non-git directory: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] Cloning repo into: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+[github-upload] artifact name: Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN
+[github-upload] result org: AEON-7
+[github-upload] branch: main
+[github-upload] repo dir: /root/_work/1/s/auto_quant/lb_eval
+[github-upload] model id: AEON-7/Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16
+[github-upload] artifact name: Ornith-1.0-35B-AEON-Ultimate-Uncensored-BF16-AutoRound-W4A16-RTN
+[github-upload] result org: AEON-7
+[github-upload] branch: main
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>
+[github-upload] git user: lkk12014402 <kaokao.lv@intel.com>

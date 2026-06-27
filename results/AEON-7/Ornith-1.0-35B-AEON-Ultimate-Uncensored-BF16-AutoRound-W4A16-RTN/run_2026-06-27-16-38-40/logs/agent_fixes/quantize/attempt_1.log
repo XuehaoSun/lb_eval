@@ -1,0 +1,14 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the error, it's failing when trying to load an image processor for a multimodal model. The `preprocessor_config.json` exists but doesn't have a recognized `image_processor_type` and the `model_type` isn't in the standard list.
+
+Let me check the model's preprocessor config:
+The model has `image_processor_type: "Qwen2VLImageProcessorFast"` but this type isn't recognized by the installed transformers (5.12.1). This is a fast image processor that was added recently.
+
+The `model_type` is `qwen3_5_moe` which also isn't in the recognized list. This is a newer Qwen3.5 MoE architecture variant.
+
+**FIX_PLAN:**
+1. Upgrade auto-round from main branch to get fixes for newer Qwen3.5 MoE architectures
+2. Re-run the quantization phase to verify
+
+Let me apply the fix:
+Auto-round reinstalled from main branch (0.14.0). Ready for the phase to be re-run to verify.
