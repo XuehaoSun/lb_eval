@@ -1,0 +1,21 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the traceback:
+
+**Error**: `ValueError: Unrecognized configuration class <class 'transformers.models.mistral3.configuration_mistral3.Mistral3Config'> for this kind of AutoModel: AutoModelForCausalLM.`
+
+**Root cause**: The `Mistral3Config` class exists in transformers but isn't registered in `AutoModelForCausalLM`'s supported configurations. This is a compatibility issue between the model's config class and the auto-round library's model loading patching.
+
+This is NOT a model custom code issue (no files in `~/.cache/huggingface/modules/transformers_modules/`), and NOT a simple missing package issue.
+
+**Relevant lesson**: Lesson 1 — auto-round has compatibility issues with new model architectures, fixed by installing from main branch.
+
+**FIX_PLAN:**
+1. Reinstall auto-round from main branch: `uv pip install --reinstall "auto-round @ git+https://github.com/intel/auto-round.git@main"`
+2. Verify installation: `python -c "import auto_round; print(auto_round.__version__)"`
+3. Re-run quantization phase
+auto-round upgraded from `0.13.1` to `0.14.0.dev480+g9468e52`. Let me verify:
+The reinstall pulled incompatible torch versions (2.12.1 instead of 2.6.0+cu124). I need to restore the correct torch version while keeping the newer auto-round.
+
+Let me restore torch first:
+Now verify auto-round imports correctly:
+auto-round `0.14.0` is now working with torch `2.6.0+cu124`. The fix is complete — the quantization phase can now be re-run to verify `Ministral-3-3B-Base-2512` with `Mistral3Config` is properly supported.
