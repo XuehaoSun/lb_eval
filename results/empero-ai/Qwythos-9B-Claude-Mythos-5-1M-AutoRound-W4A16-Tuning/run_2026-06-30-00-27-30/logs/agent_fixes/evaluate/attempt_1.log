@@ -1,0 +1,14 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+Looking at the traceback, the error is:
+
+```
+huggingface_hub.errors.HfHubHTTPError: Server error '504 Gateway Time-out' for url 'https://huggingface.co/api/datasets/cais/mmlu/tree/...'
+```
+
+This is a **transient HuggingFace server error** (504 Gateway Timeout), not an auto-round, torch/CUDA, or model code issue. The evaluation harness timed out trying to download the MMLU dataset.
+
+**FIX_PLAN:**
+1. Set `HF_HUB_DISABLE_IPV6=1` to force IPv4 fallback (more stable connection to HuggingFace)
+2. Retry the evaluation — HuggingFace timeouts are usually transient
+3. The phase will be re-run automatically to verify
+Set `HF_HUB_DISABLE_IPV6=1` to force IPv4 fallback. The 504 error was a transient HuggingFace server timeout when trying to download the MMLU dataset — this is not an auto-round or model code issue. The evaluation will be retried automatically with the IPv4 fallback.
