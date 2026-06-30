@@ -1,0 +1,20 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] embedded run timeout: runId=fix_quantize_412_1782784829 sessionId=fix_quantize_412_1782784829 timeoutMs=600000
+[agent/embedded] Profile minimax:cn timed out. Trying next account...
+[agent/embedded] embedded run failover decision: runId=fix_quantize_412_1782784829 stage=assistant decision=surface_error reason=timeout provider=minimax/MiniMax-M2.7 profile=sha256:c38c74a5066a
+[agent] run fix_quantize_412_1782784829 ended with stopReason=toolUse
+Looking at the error:
+
+```
+ValueError: Unrecognized configuration class <class 'transformers.models.diffusion_gemma.configuration_diffusion_gemma.DiffusionGemmaConfig'> for this kind of AutoModel: AutoModelForCausalLM.
+```
+
+**Root Cause:** The model `google/diffusiongemma-26B-A4B-it` is a **DiffusionGemma** model — a diffusion-based conditional generation model, NOT a causal language model. The quantization pipeline at `phases/quantize.py:137` calls `AutoModelForCausalLM.from_pretrained()`, which cannot load this architecture. `DiffusionGemmaConfig` is not in the supported list for `AutoModelForCausalLM`.
+
+This is not an auto-round bug or environment issue — it's a **model architecture mismatch**. DiffusionGemma uses a different base model class (likely `AutoModelForConditionalGeneration` or a custom diffusion pipeline), not `AutoModelForCausalLM`.
+
+**FIX_PLAN:**
+1. Verify the actual model architecture and its correct AutoModel class
+2. Report that `DiffusionGemma` is unsupported for quantization via `AutoModelForCausalLM`
+3. Stop the quantization phase — this model type cannot be quantized with the current pipeline
+[TIMEOUT] Agent exceeded 600s
