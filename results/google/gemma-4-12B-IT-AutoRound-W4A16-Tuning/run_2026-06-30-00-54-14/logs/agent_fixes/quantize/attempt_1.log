@@ -1,0 +1,6 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+The bug is clear. In `compute_default_rope_parameters`, `dim` is set to `config.head_dim` (256) but the model's RoPE uses `global_head_dim` (512). The `inv_freq` is computed with 256/2=128 entries, but the forward pass expects 512/2=256 entries (from `emb = torch.cat((freqs, freqs), dim=-1)`).
+**FIX_PLAN:**
+1. Root cause: `compute_default_rope_parameters` used `head_dim` (256) instead of `global_head_dim` (512) for the RoPE inverse frequency computation, causing a shape mismatch at `apply_rotary_pos_emb` where query_states has 512 dims but cos/sin have 256
+2. Fixed: Changed `getattr(config, "head_dim", None)` → `getattr(config, "global_head_dim", None)` in `/root/.venv/lib/python3.12/site-packages/transformers/models/gemma4_unified/modeling_gemma4_unified.py` line 249
+3. Verified: inv_freq now correctly produces 256 entries → emb.cos()/sin() now has 512 dims matching query_states
