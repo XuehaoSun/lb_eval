@@ -1,0 +1,10 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] read tool called without path: toolCallId=call_041873ff6baa4f1d9cc90474 argsType=object
+**Diagnosis:** The error occurs at line 137 of `quantize.py` which calls `AutoModelForCausalLM.from_pretrained()` on a `DiffusionGemmaConfig`. However, `DiffusionGemma` is a **diffusion model**, not a causal language model — `AutoModelForCausalLM` explicitly refuses this config class.
+
+This is an **unsupported model architecture** for the quantization pipeline. The fix is not in auto-round or environment — it's that `DiffusionGemma` requires `AutoModelForDiffusion` (or similar), which auto-round may not support.
+
+**FIX_PLAN:**
+1. Verify what AutoModel class `DiffusionGemma` actually uses
+2. Check if auto-round has any support for diffusion models
+3. Report unsupported — diffusion models are out of scope for standard CausalLM quantization pipelines
