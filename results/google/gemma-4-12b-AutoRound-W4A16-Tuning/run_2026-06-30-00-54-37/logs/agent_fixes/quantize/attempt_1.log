@@ -1,0 +1,9 @@
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+The error is a tensor shape mismatch during rotary position embedding in Gemma4 attention. The `cos/sin` tensors have a dimension of 256 while `query_states` has 512 at dimension 3. This is likely a caching issue with the block inputs cache.
+The fix plan is to clear the stale block inputs cache and retry. The error occurred when processing layer 5 - the cache generated for previous layers may have stale position embeddings with mismatched sequence dimensions (256 vs 512). Clearing it forces regeneration with correct dimensions for the full model.
+**FIX_PLAN:**
+1. Cleared stale block inputs cache that caused dimension mismatch (256 vs 512) during layer 5 quantization
+2. The mismatch occurred in `apply_rotary_pos_emb` where cos/sin had seq_len=256 but query_states expected seq_len=512
+3. Re-running quantization will regenerate cache with correct dimensions
+
+Cache cleared — ready to re-run.
