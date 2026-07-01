@@ -22,6 +22,79 @@ MAX_FIX_ATTEMPTS="${MAX_FIX_ATTEMPTS:-10}"
 LESSONS_DIR="${LESSONS_DIR:-${LB_EVAL_REPO_DIR:-$(dirname "$0")/../lessons}}"
 
 # ═══════════════════════════════════════════════════════════════════
+# cleanup_stale_gpu_procs — kill leftover phase worker processes that may still
+# be holding GPU memory, then wait for VRAM to actually release.
+#
+# Root cause this solves: after a phase fails (timeout / crash / agent-killed parent),
+# a child quantize.py/evaluate.py can be orphaned and keep ~all VRAM allocated. The
+# next run is then STARVED and silently falls back to CPU (hours of wasted compute).
+#
+# Safety: we match ONLY our own phase script paths, kill each PID explicitly (never by
+# name-broad signals), and never touch ourselves. Gated by CLEANUP_STALE_GPU (default on).
+# ═══════════════════════════════════════════════════════════════════
+cleanup_stale_gpu_procs() {
+    [ "${CLEANUP_STALE_GPU:-true}" = "true" ] || return 0
+
+    local self_pid=$$
+    local patterns=("phases/quantize.py" "phases/evaluate.py")
+    local killed=0 pat pid comm
+
+    for pat in "${patterns[@]}"; do
+        # pgrep only LISTS pids; killing is done explicitly per-PID below.
+        # Restrict to actual python worker processes: a bare -f match also hits our own
+        # shell / command-substitution subshells (their cmdline contains the pattern
+        # string) and the harness itself. Filtering comm=python* avoids killing them.
+        for pid in $(pgrep -f "${pat}" 2>/dev/null || true); do
+            [ "${pid}" = "${self_pid}" ] && continue
+            kill -0 "${pid}" 2>/dev/null || continue
+            comm=$(ps -o comm= -p "${pid}" 2>/dev/null | tr -d ' ')
+            case "${comm}" in
+                python|python3|python3.*) ;;
+                *) continue ;;
+            esac
+            log_warn "Stale GPU worker still alive: PID=${pid} (${pat}) — terminating"
+            kill "${pid}" 2>/dev/null || true
+            killed=$((killed + 1))
+        done
+    done
+
+    # Escalate any survivors after a grace period.
+    if [ "${killed}" -gt 0 ]; then
+        sleep 3
+        for pat in "${patterns[@]}"; do
+            for pid in $(pgrep -f "${pat}" 2>/dev/null || true); do
+                [ "${pid}" = "${self_pid}" ] && continue
+                kill -0 "${pid}" 2>/dev/null || continue
+                comm=$(ps -o comm= -p "${pid}" 2>/dev/null | tr -d ' ')
+                case "${comm}" in
+                    python|python3|python3.*) ;;
+                    *) continue ;;
+                esac
+                log_warn "PID=${pid} survived SIGTERM — sending SIGKILL"
+                kill -9 "${pid}" 2>/dev/null || true
+            done
+        done
+    fi
+
+    # Wait for VRAM to actually free up (best-effort; needs nvidia-smi).
+    command -v nvidia-smi >/dev/null 2>&1 || { [ "${killed}" -gt 0 ] && sleep 2; return 0; }
+    local min_free_mb="${MIN_FREE_VRAM_MB:-2048}"
+    local waited=0 max_wait="${GPU_FREE_WAIT_SEC:-30}" free_mb
+    while [ "${waited}" -lt "${max_wait}" ]; do
+        free_mb=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' ')
+        [[ "${free_mb}" =~ ^[0-9]+$ ]] || break
+        if [ "${free_mb}" -ge "${min_free_mb}" ]; then
+            [ "${killed}" -gt 0 ] && log_ok "GPU VRAM released (${free_mb}MB free)"
+            return 0
+        fi
+        log_info "Waiting for VRAM to free (${free_mb}MB free, need ${min_free_mb}MB)..."
+        sleep 3
+        waited=$((waited + 3))
+    done
+    return 0
+}
+
+# ═══════════════════════════════════════════════════════════════════
 # agent_fix_loop — run a phase script, retry with agent on failure
 # ═══════════════════════════════════════════════════════════════════
 agent_fix_loop() {
@@ -48,7 +121,9 @@ agent_fix_loop() {
         log_info "CUDA available at start — GPU will be enforced across fix attempts"
     fi
 
-    # First execution (deterministic script)
+    # First execution (deterministic script). Clear any leftover GPU workers first so
+    # a leak from a prior phase/run can't starve this one onto CPU.
+    cleanup_stale_gpu_procs
     log_step "Phase: ${phase_name}"
     bash "${script_path}" "${script_args[@]}" 2>&1 | tee "${phase_log}"
     local exit_code=${PIPESTATUS[0]}
@@ -148,6 +223,9 @@ agent_fix_loop() {
         fi
 
         # 7. Re-run phase script to verify
+        # Clean up any orphaned GPU workers from the failed attempt (or from the agent's
+        # own test runs) so this re-run isn't starved into a silent CPU fallback.
+        cleanup_stale_gpu_procs
         log_info "Re-running ${phase_name} after agent fix..."
         local retry_log="${fix_log_dir}/retry_${attempt}.log"
         bash "${script_path}" "${script_args[@]}" 2>&1 | tee "${retry_log}"

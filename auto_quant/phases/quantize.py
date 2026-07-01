@@ -159,6 +159,31 @@ def assert_gpu_or_explain(resolved_device_map):
             "for multi-GPU) and that no fix installed a CPU-only torch or cleared CUDA_VISIBLE_DEVICES."
         )
 
+    # Preflight free-VRAM check. A leftover process from a previous run / fix attempt can
+    # keep holding GPU memory, starving this run. With low_gpu_mem_usage=True, auto-round
+    # then SILENTLY offloads to CPU and quantization crawls for hours. Fail fast instead.
+    try:
+        if isinstance(resolved_device_map, int):
+            idx = resolved_device_map
+        else:
+            idx = torch.cuda.current_device()
+        free_b, total_b = torch.cuda.mem_get_info(idx)
+        free_gb = free_b / (1024 ** 3)
+        total_gb = total_b / (1024 ** 3)
+        min_free = float(os.environ.get("MIN_FREE_VRAM_GB", "2"))
+        logger.info(f"GPU{idx} free VRAM: {free_gb:.1f}GB / {total_gb:.1f}GB (min required: {min_free:.1f}GB)")
+        if free_gb < min_free:
+            raise RuntimeError(
+                f"Only {free_gb:.1f}GB VRAM free on GPU{idx} (< {min_free:.1f}GB required). "
+                "A previous or leftover process is likely still holding GPU memory, which would force "
+                "this quantization to SILENTLY fall back to CPU. Free the GPU (kill stale processes / "
+                "wait for VRAM to release) before retrying. Set MIN_FREE_VRAM_GB to tune this threshold."
+            )
+    except RuntimeError:
+        raise
+    except Exception as e:
+        logger.warning(f"Could not read free VRAM (non-fatal): {e}")
+
 
 def quantize(args):
     """Run quantization using AutoRound.
