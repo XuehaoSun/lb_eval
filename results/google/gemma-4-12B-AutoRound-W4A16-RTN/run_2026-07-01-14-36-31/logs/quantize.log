@@ -1,0 +1,74 @@
+=== Phase 2: Quantization ===
+  model=google/gemma-4-12B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/gemma-4-12B-AutoRound-W4A16-RTN/quantized_model
+14:23:21 [INFO] Quantization compute device: cuda:0 (device_map=0)
+14:23:21 [INFO] GPU0 free VRAM: 21.8GB / 22.2GB (min required: 2.0GB)
+14:23:21 [INFO] Model: google/gemma-4-12B
+14:23:21 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+14:23:21 [INFO] Iters: 0 (RTN)
+14:23:21 [INFO] Export format: auto_round
+14:23:21 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/gemma-4-12B-AutoRound-W4A16-RTN/quantized_model
+14:23:21 [INFO] Device map: auto → effective: 0
+14:23:21 [INFO] Loading tokenizer...
+14:23:22 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+14:23:22 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-12B/56820d7d8cbe8e47975a53325439ed272e91cff2/config.json "HTTP/1.1 200 OK"
+14:23:22 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+14:23:22 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-12B/56820d7d8cbe8e47975a53325439ed272e91cff2/tokenizer_config.json "HTTP/1.1 200 OK"
+14:23:22 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/google/gemma-4-12B/56820d7d8cbe8e47975a53325439ed272e91cff2/tokenizer_config.json "HTTP/1.1 200 OK"
+14:23:22 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-12B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+14:23:22 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-12B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+14:23:22 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+14:23:24 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+14:23:24 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+14:23:24 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+14:23:26 [INFO] HTTP Request: GET https://huggingface.co/api/models/google/gemma-4-12B "HTTP/1.1 200 OK"
+14:23:26 [INFO] Loading model...
+14:23:27 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+14:23:27 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/google/gemma-4-12B/56820d7d8cbe8e47975a53325439ed272e91cff2/config.json "HTTP/1.1 200 OK"
+14:23:27 [INFO] HTTP Request: HEAD https://huggingface.co/google/gemma-4-12B/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+14:26:10 [ERROR] Quantization failed: CUDA out of memory. Tried to allocate 30.00 MiB. GPU 0 has a total capacity of 22.15 GiB of which 28.00 MiB is free. Process 3467027 has 22.12 GiB memory in use. Of the allocated memory 21.72 GiB is allocated by PyTorch, and 23.99 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 380, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 233, in quantize
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 140, in patched
+    return underlying_func(klass, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 406, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4327, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4457, in _load_pretrained_model
+    loading_info, disk_offload_index = convert_and_load_state_dict_in_model(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py", line 1466, in convert_and_load_state_dict_in_model
+    realized_value = mapping.convert(
+                     ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py", line 830, in convert
+    collected_tensors = self.materialize_tensors()
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py", line 794, in materialize_tensors
+    tensors = [future.result() for future in tensors if future.result() is not None]
+                                                        ^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py", line 1005, in _job
+    return _materialize_copy(tensor, device, dtype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py", line 991, in _materialize_copy
+    tensor = tensor.to(device=device, dtype=dtype)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 30.00 MiB. GPU 0 has a total capacity of 22.15 GiB of which 28.00 MiB is free. Process 3467027 has 22.12 GiB memory in use. Of the allocated memory 21.72 GiB is allocated by PyTorch, and 23.99 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
