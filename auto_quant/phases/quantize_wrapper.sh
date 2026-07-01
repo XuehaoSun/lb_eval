@@ -12,6 +12,7 @@ ITERS="${ITERS:-0}"
 EXPORT_FORMAT="${EXPORT_FORMAT:-auto_round}"
 DEVICE_MAP="${DEVICE_MAP:-auto}"
 QUANTIZED_MODEL_DIR="${QUANTIZED_MODEL_DIR:-${RUN_OUTPUT_DIR}/quantized_model}"
+DEVICE_INDEX="${DEVICE_INDEX:-0}"
 
 echo "=== Phase 2: Quantization ==="
 echo "  model=${MODEL_ID}"
@@ -27,4 +28,5 @@ python3 "${SCRIPT_DIR}/quantize.py" \
     --export_format "${EXPORT_FORMAT}" \
     --output_dir "${QUANTIZED_MODEL_DIR}" \
     --device_map "${DEVICE_MAP}" \
+    --device_index "${DEVICE_INDEX}" \
     --num_gpus "${NUM_GPUS:-1}"

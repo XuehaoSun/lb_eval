@@ -93,6 +93,73 @@ def is_moe_model(model) -> bool:
     return False
 
 
+def resolve_device_map(requested, num_gpus, device_index):
+    """Resolve the device_map passed to AutoRound so quantization actually runs on GPU.
+
+    Why this exists: auto-round's own default is device_map=0 (GPU 0). Passing the
+    transformers-style "auto" instead lets accelerate auto-dispatch the model, which —
+    combined with low_gpu_mem_usage=True — frequently OFFLOADS small / W4A16 models to
+    CPU. That makes quantization silently run on CPU even when a GPU is present.
+
+    Rules (mirrors the documented CUDA device rules):
+      - no CUDA            -> "cpu" (with a loud warning; caller asserts against this)
+      - single GPU (<=1)   -> explicit int index (e.g. 0) so the model loads on cuda:N
+      - multi-GPU (>1)     -> "auto" (accelerate shards across cards intentionally)
+    An explicit non-"auto"/non-CPU request from the caller is always honored.
+    """
+    import torch
+
+    try:
+        n_gpus = int(num_gpus)
+    except (TypeError, ValueError):
+        n_gpus = 1
+    try:
+        dev_idx = int(device_index)
+    except (TypeError, ValueError):
+        dev_idx = 0
+
+    if not torch.cuda.is_available():
+        logger.warning("CUDA is NOT available — quantization would run on CPU (very slow).")
+        return "cpu"
+
+    # Honor an explicit, deliberate override (a specific device or a real device map),
+    # but treat the default "auto" as "let us decide" so we can force GPU on single card.
+    if requested and requested not in ("auto", "cpu", ""):
+        return requested
+
+    if n_gpus > 1:
+        return "auto"
+    return dev_idx
+
+
+def assert_gpu_or_explain(resolved_device_map):
+    """Fail LOUDLY if CUDA is present but quantization resolved to CPU.
+
+    Prevents the silent CPU fallback: better to error and let the fix loop react than
+    to spend an hour quantizing on CPU (or OOM the box).
+    """
+    import torch
+
+    if not torch.cuda.is_available():
+        return  # genuinely CPU-only environment; nothing to enforce
+
+    major = None
+    try:
+        from auto_round.utils.device import get_major_device
+        major = str(get_major_device(resolved_device_map))
+    except Exception:
+        # Fallback: infer from the resolved value itself
+        major = "cpu" if str(resolved_device_map).lower() in ("cpu",) else "cuda"
+
+    logger.info(f"Quantization compute device: {major} (device_map={resolved_device_map!r})")
+    if major.startswith("cpu"):
+        raise RuntimeError(
+            f"CUDA is available but quantization resolved to CPU (device_map={resolved_device_map!r}). "
+            "Refusing to run quantization on CPU. Ensure a GPU device_map (single-GPU index or 'auto' "
+            "for multi-GPU) and that no fix installed a CPU-only torch or cleared CUDA_VISIBLE_DEVICES."
+        )
+
+
 def quantize(args):
     """Run quantization using AutoRound.
 
@@ -118,12 +185,16 @@ def quantize(args):
 
     iters = args.iters
 
+    # Resolve the device_map so quantization runs on GPU (not silent CPU fallback).
+    effective_device_map = resolve_device_map(args.device_map, args.num_gpus, args.device_index)
+    assert_gpu_or_explain(effective_device_map)
+
     logger.info(f"Model: {args.model}")
     logger.info(f"Scheme: {args.scheme} → AutoRound scheme='{ar_scheme}'")
     logger.info(f"Iters: {iters} ({'RTN' if iters == 0 else 'TUNING'})")
     logger.info(f"Export format: {args.export_format}")
     logger.info(f"Output: {args.output_dir}")
-    logger.info(f"Device map: {args.device_map}")
+    logger.info(f"Device map: {args.device_map} → effective: {effective_device_map!r}")
 
     # Load tokenizer
     logger.info("Loading tokenizer...")
@@ -136,7 +207,7 @@ def quantize(args):
     logger.info("Loading model...")
     model = AutoModelForCausalLM.from_pretrained(
         args.model,
-        device_map=args.device_map,
+        device_map=effective_device_map,
         trust_remote_code=True,
         torch_dtype="auto",
     )
@@ -161,7 +232,7 @@ def quantize(args):
         "scheme": ar_scheme,
         "iters": iters,
         "low_gpu_mem_usage": True,
-        "device_map": args.device_map,
+        "device_map": effective_device_map,
         # "enable_torch_compile": True,
         # "disable_opt_rtn": True,
     }
@@ -237,8 +308,8 @@ def quantize(args):
         "ignore_layers": ignore_layers,
         "duration_seconds": round(duration, 1),
         "output_dir": args.output_dir,
-        "device": "cuda",
-        "device_map": args.device_map,
+        "device": str(effective_device_map),
+        "device_map": str(effective_device_map),
         "num_gpus": str(args.num_gpus),
         "output_files": output_files,
         "original_size_mb": original_size_mb,
@@ -269,13 +340,15 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", default="./quantized_model",
                         help="Output directory for quantized model")
     parser.add_argument("--device_map", default="auto",
-                        help="Device map for model loading")
+                        help="Device map for model loading (default 'auto' → resolved to GPU index on single card)")
+    parser.add_argument("--device_index", default="0",
+                        help="GPU index to use on a single-GPU run (forces cuda:N instead of CPU offload)")
     parser.add_argument("--seqlen", type=int, default=2048,
                         help="Calibration sequence length (only used when iters > 0)")
     parser.add_argument("--nsamples", type=int, default=128,
                         help="Number of calibration samples (only used when iters > 0)")
     parser.add_argument("--num_gpus", default="1",
-                        help="Number of GPUs used (for metadata only)")
+                        help="Number of GPUs: 1 → single-GPU (forced cuda:index); >1 → device_map='auto' sharding")
     args = parser.parse_args()
 
     try:
