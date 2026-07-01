@@ -1,0 +1,32 @@
+{
+  "category": "oom_resource_limit",
+  "phase": "quantize",
+  "key_error": "torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 30.00 MiB. GPU 0 has a total capacity of 22.15 GiB of which 28.00 MiB is free. Process 3467027 has 22.12 GiB memory in use.",
+  "root_cause": "The 12B parameter model cannot fit in the 22.15 GiB GPU. The tokenizer loaded successfully (HTTP 200/302 responses), and the OOM occurs during model weight materialization when transformers tries to move tensors to GPU. A 12B model in BF16/FP16 needs ~24 GiB just for weights, exceeding available VRAM before quantization buffers are allocated.",
+  "traceback_analysis": "quantize.py:380 → quantize() at line 233 calls AutoModelForCausalLM.from_pretrained(), which goes through auto_round's patched wrapper (common.py:140) into transformers' from_pretrained (auto_factory.py:406). Inside _load_pretrained_model → convert_and_load_state_dict_in_model (modeling_utils.py:4327/4457), the state-dict loading calls mapping.convert() (core_model_loading.py:1466) which materializes tensors concurrently. Each tensor is moved to GPU via _materialize_copy → tensor.to(device, dtype) at core_model_loading.py:991, which fails with OOM because the 12B model weights (~24 GiB in BF16) plus another process already holding 22.12 GiB cannot fit in the 22.15 GiB device.",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "GPU memory allocator (PyTorch CUDA caching)",
+    "specific_function": "tensor.to(device=device, dtype=dtype)",
+    "fault_type": "resource_limit",
+    "responsible_party": "infra_team"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "1) Move model loading off-GPU: pass device_map='cpu' or 'auto' with offload_folder='/tmp/offload' and offload_state_dict=True to AutoModelForCausalLM.from_pretrained, then let auto_round quantize layer-by-layer. 2) Use a GPU with ≥48 GiB (A6000/A100 80GB) for 12B class models. 3) Set PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to reduce fragmentation (suggested by error). 4) Run on a smaller proxy model first, or use --device cpu flag if auto_round supports it for W4A16 RTN.",
+  "fix_verification": "PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python -c \"from transformers import AutoModelForCausalLM; m = AutoModelForCausalLM.from_pretrained('google/gemma-4-12B', device_map='cpu', torch_dtype='auto'); print('OK')\"  # verify model loads without OOM; then re-run the auto_quant pipeline with offload enabled.",
+  "workaround": "Use a smaller GPU-suitable variant (e.g., gemma-2-9B or a 7B/8B proxy) on the current 22 GiB hardware, or shard the model: load and quantize one transformer block at a time in a Python loop with block-level offload between GPU and CPU. Alternatively, use GGUF/AWQ static-quant paths that support CPU quantization.",
+  "affected_component": "infrastructure",
+  "severity": "critical",
+  "confidence": 0.95,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown (uses core_model_loading.py — recent ≥4.45 with new WeightConverter API)",
+    "torch": "unknown (Python 3.12.13, .venv)"
+  },
+  "community_summary": "The auto-round W4A16 RTN quantization of google/gemma-4-12B failed with a CUDA OOM during model load, not a tokenizer error (the tokenizer loaded fine — HTTP 200 on tokenizer_config.json). The 12B model in BF16 (~24 GiB) cannot fit in the 22.15 GiB GPU. Fix by enabling CPU/disk offload in from_pretrained, running on a ≥48 GiB GPU, or quantizing block-by-block on CPU.",
+  "analyzed_at": "2026-07-01T14:37:10.179598+00:00",
+  "model": "google/gemma-4-12B",
+  "run_id": "gemma-4-12B-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)"
+}
