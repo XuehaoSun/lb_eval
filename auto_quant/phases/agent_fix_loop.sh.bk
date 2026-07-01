@@ -36,10 +36,6 @@ agent_fix_loop() {
     local fix_log_dir="${RUN_OUTPUT_DIR}/logs/agent_fixes/${phase_name}"
     mkdir -p "$(dirname "${phase_log}")" "${fix_log_dir}"
 
-    # Reuse ONE agent session across all attempts for this phase so the agent keeps
-    # memory of what it already tried and does not repeat failed fixes.
-    local fix_session_id="fix_${phase_name}_$$_$(date +%s)"
-
     # First execution (deterministic script)
     log_step "Phase: ${phase_name}"
     bash "${script_path}" "${script_args[@]}" 2>&1 | tee "${phase_log}"
@@ -90,35 +86,15 @@ agent_fix_loop() {
 
         # 4. Build agent prompt
         local fix_prompt
-        fix_prompt=$(build_fix_prompt "${phase_name}" "${error_tail}" "${lessons}" "${attempt}")
+        fix_prompt=$(build_fix_prompt "${phase_name}" "${error_tail}" "${lessons}")
 
         # 5. Save prompt for audit
         local prompt_file="${fix_log_dir}/prompt_${attempt}.txt"
         printf '%s\n' "${fix_prompt}" > "${prompt_file}"
 
-        # 6. Call OpenClaw agent (same session across attempts → retains memory)
+        # 6. Call OpenClaw agent
         local agent_log="${fix_log_dir}/attempt_${attempt}.log"
-        run_openclaw_fix "${fix_prompt}" "${agent_log}" "${fix_session_id}" || true
-
-        # 6b. Early stop: agent declared this failure UNFIXABLE → don't waste retries
-        if grep -aiE 'VERDICT:[[:space:]*]*UNFIXABLE' "${agent_log}" >/dev/null 2>&1; then
-            local unfix_reason
-            unfix_reason=$(extract_agent_field "${agent_log}" "UNFIXABLE_REASON")
-            unfix_reason="${unfix_reason:-declared UNFIXABLE by agent}"
-            log_warn "Agent verdict: UNFIXABLE (${unfix_reason}). Aborting fix loop."
-            save_lesson "${phase_name}" "${error_tail}" "unfixable" "UNFIXABLE: ${unfix_reason}"
-            return 1
-        fi
-
-        # 6c. Cheap smoke test before the expensive full phase re-run.
-        # run_smoke_test returns 0 if the smoke test passed OR none could be extracted
-        # (fall back to the normal full re-run); non-zero only if an extracted test failed.
-        if ! run_smoke_test "${agent_log}"; then
-            log_warn "Smoke test failed after agent fix (attempt ${attempt}); skipping full re-run."
-            save_lesson "${phase_name}" "${error_tail}" "still_failing" "Smoke test failed on attempt ${attempt}"
-            phase_log="${agent_log}"
-            continue
-        fi
+        run_openclaw_fix "${fix_prompt}" "${agent_log}" || true
 
         # 7. Re-run phase script to verify
         log_info "Re-running ${phase_name} after agent fix..."
@@ -153,7 +129,6 @@ build_fix_prompt() {
     local phase="$1"
     local error="$2"
     local lessons="$3"
-    local attempt="${4:-1}"
 
     local lessons_section=""
     if [ -n "${lessons}" ]; then
@@ -173,29 +148,11 @@ ${error}
 
 ${lessons_section}
 
-## MANDATORY PROTOCOL — fill this out BEFORE editing or installing anything
-
-Use the \`error_analysis\` skill methodology: read the traceback BOTTOM-UP, locate the
-EXACT file:line, then classify the failing component. You MUST print the block below
-FIRST. Do NOT modify code or install packages until you have printed an EVIDENCE_RESULT
-from a READ-ONLY command that actually supports your hypothesis. No guessing.
-
-COMPONENT: <our_code|transformers|auto_round|torch|model_code|data|environment>
-ROOT_CAUSE_HYPOTHESIS: <one falsifiable sentence — the specific cause, NOT "maybe a version issue">
-EVIDENCE_CMD: <a single read-only command that verifies the hypothesis>
-EVIDENCE_RESULT: <paste the command's output>
-VERDICT: <FIXABLE | UNFIXABLE>
-UNFIXABLE_REASON: <required only if UNFIXABLE: e.g. multimodal-unsupported / corrupt weights / needs torch downgrade>
-FIX_TIER: <config | upgrade | workaround | patch>   # always try the LOWEST tier that works
-FIX_PLAN: <3 lines max — what you will change and why it fixes the ROOT CAUSE (not the symptom)>
-SMOKE_TEST: <ONE fast command (NOT the full phase) that proves the fix works, e.g. a tokenizer/model load>
-
-## Rules for this protocol:
-- If VERDICT is UNFIXABLE: print the block and STOP. Do NOT attempt a fix. The pipeline will halt this phase (no wasted retries).
-- Prefer the LOWEST FIX_TIER. Patching source code is a last resort.
-- Escalate tiers only with evidence that the lower tier cannot work.
-- After applying the fix, RUN your SMOKE_TEST yourself and show its output before finishing.
-- This is attempt ${attempt}. Any earlier attempts are in your session history — do NOT repeat a fix that already failed; try a different hypothesis.
+## Your Task:
+1. READ the traceback carefully — identify the EXACT file and line that caused the error
+2. Determine if the fault is in: auto-round code, transformers, model's custom code, or environment
+3. Output a brief FIX_PLAN (3 lines max) describing what you will do
+4. Execute the fix, then the phase will be re-run to verify
 
 ## Key Technique: Patching Model Custom Code
 
@@ -220,10 +177,7 @@ Fix: Edit that file, change \`.float()\` to \`.to(proj.dtype)\`
 - Do NOT modify the evaluation tasks or expected output format
 - Keep fixes minimal and targeted — change only what's needed
 - If you need to install a package, use: pip install <package>
-- Multimodal/VL models are NOT auto-rejected: AutoRound can quantize the LM backbone of VL/MLLM
-  models (Qwen-VL, LLaVA, InternVL, Qwen3-VL). For image-processor / preprocessor_config / new-arch
-  errors, try \`pip install -U auto-round transformers\` first. Only declare VERDICT: UNFIXABLE for a
-  model with NO text-generation backbone (pure vision/audio encoder).
+- If unsupported model architecture (multimodal/VL), report and stop
 - Working directory: ${RUN_OUTPUT_DIR}
 - Model: ${MODEL_ID}
 PROMPT
@@ -235,7 +189,6 @@ PROMPT
 run_openclaw_fix() {
     local prompt="$1"
     local log_file="$2"
-    local session_id_arg="${3:-}"
 
     if ! command -v openclaw >/dev/null 2>&1; then
         log_warn "openclaw not found, skipping agent fix"
@@ -244,7 +197,7 @@ run_openclaw_fix() {
     fi
 
     local timeout="${AGENT_TIMEOUT:-600}"
-    local session_id="${session_id_arg:-fix_${phase_name:-unknown}_$$_$(date +%s)}"
+    local session_id="fix_${phase_name:-unknown}_$$_$(date +%s)"
     local sessions_dir="${OPENCLAW_SESSIONS_DIR:-/root/.openclaw/agents/main/sessions}"
     local session_file="${sessions_dir}/${session_id}.jsonl"
 
@@ -292,49 +245,6 @@ run_openclaw_fix() {
     fi
 
     return 0
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# extract_agent_field — pull a labeled single-line field from agent output
-#   Tolerates markdown bold (**FIELD:**) and leading/trailing whitespace.
-# ═══════════════════════════════════════════════════════════════════
-extract_agent_field() {
-    local log="$1"
-    local field="$2"
-    [ -f "${log}" ] || return 0
-    grep -aiE "${field}:" "${log}" 2>/dev/null \
-        | head -1 \
-        | sed -E "s/.*${field}:[[:space:]]*//I" \
-        | sed -E 's/\*+//g; s/^[[:space:]]*//; s/[[:space:]]*$//; s/`//g'
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# run_smoke_test — run the agent's suggested SMOKE_TEST for cheap verification
-#   Returns 0 if the smoke test passed OR no runnable test could be extracted
-#   (caller then falls back to the normal full phase re-run).
-#   Returns non-zero ONLY when an extracted command actually ran and failed.
-# ═══════════════════════════════════════════════════════════════════
-run_smoke_test() {
-    local agent_log="$1"
-    local cmd
-    cmd=$(extract_agent_field "${agent_log}" "SMOKE_TEST")
-
-    # Empty, placeholder (<...>), or missing → fall back to full re-run
-    if [ -z "${cmd}" ] || printf '%s' "${cmd}" | grep -q '<'; then
-        return 0
-    fi
-    # Only run things that look like an actual command; otherwise fall back
-    case "${cmd}" in
-        python3*|python*|pip*|uv*|bash*|./*) : ;;
-        *) return 0 ;;
-    esac
-
-    log_info "Running agent smoke test: ${cmd}"
-    if timeout "${SMOKE_TEST_TIMEOUT:-180}" bash -c "${cmd}" >>"${agent_log}" 2>&1; then
-        log_ok "Smoke test passed — proceeding to full re-run"
-        return 0
-    fi
-    return 1
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -430,9 +340,8 @@ for fpath in sorted(lessons_dir.glob("*.jsonl")):
                 if not line.strip():
                     continue
                 lesson = json.loads(line)
-                # Only load actionable lessons (fixed/verified/seed) plus known-unfixable
-                # verdicts so the agent can stop early on a previously-hopeless error.
-                if lesson.get("status") in ("fixed", "seed", "verified", "unfixable"):
+                # Only load lessons with actionable solutions (fixed, verified, or seed lessons)
+                if lesson.get("status") in ("fixed", "seed", "verified"):
                     lessons.append(lesson)
     except (FileNotFoundError, json.JSONDecodeError):
         continue

@@ -116,9 +116,17 @@ The 20-30 lines before `Traceback` often reveal:
    - Fix: `pip install <missing_package>` then ensure `trust_remote_code=True`
 3. `size mismatch for ...` → checkpoint incompatible with config
    - This means model author uploaded mismatched weights. **NOT FIXABLE.**
-4. `assert processor is not None` / `image_processor` → multimodal model
-   - This pipeline is text-only. Multimodal models are **NOT SUPPORTED.**
-   - Report as unsupported architecture, skip.
+4. `assert processor is not None` / `image_processor` / `Can't load image processor` → multimodal model
+   - **Multimodal is NOT auto-rejected.** AutoRound has an MLLM path (`compressors/mllm/`) and can
+     weight-quantize the language backbone of VL/MLLM models (Qwen-VL, LLaVA, InternVL, Qwen3-VL, etc.).
+   - **Decision:**
+     a. Missing `preprocessor_config.json` / image processor load error / version skew on a new VL arch
+        → usually **FIXABLE**: `pip install -U auto-round transformers` (match the new arch's support),
+        then retry. (See lesson: Qwen3-VL / Qwythos fixed by upgrading deps.)
+     b. Model has NO causal-LM / text-generation head at all (pure vision or audio-only encoder)
+        → genuinely **UNSUPPORTED**: quantization has no LM to quantize, and lm_eval text tasks can't run.
+        Report as `multimodal_unsupported`, verdict UNFIXABLE.
+   - When unsure, prefer to ATTEMPT the dependency upgrade before declaring UNFIXABLE.
 
 ### 2.3 Quantization Failures (auto-round internal)
 
@@ -335,7 +343,10 @@ h = h + torch.matmul(compressed[:, k:k+valid_len, :].to(proj.dtype), proj.t())
 ### 4.5 When NOT to Fix
 
 **Stop and report** (do NOT attempt a fix) when:
-- The model is multimodal and our pipeline is text-only
+- The model is multimodal AND has no text-generation (causal-LM) backbone to quantize
+  (pure vision/audio encoder). NOTE: VL/MLLM models WITH a language backbone (Qwen-VL,
+  LLaVA, InternVL, Qwen3-VL...) ARE quantizable via AutoRound's mllm path — try upgrading
+  `auto-round`/`transformers` first before giving up.
 - The model is private/gated and we don't have access
 - Fixing would require downgrading PyTorch (NEVER do this)
 - The model architecture is fundamentally incompatible (e.g., no standard forward() signature)
@@ -437,10 +448,12 @@ Fix strategy: {what to do}
 - **FIX**: Find the regex in the model file and fix it (usually an unescaped special char)
 - Read the traceback to find the exact file and line, then patch it
 
-### Pattern: "`assert processor is not None`"
-- Model is multimodal (VL/audio) but loaded in text pipeline
-- NOT FIXABLE. Our pipeline is text-only.
-- Report as unsupported architecture.
+### Pattern: "`assert processor is not None`" / "Can't load image processor"
+- Model is multimodal (VL/MLLM) and AutoRound routed it through the mllm loader.
+- **This is NOT an automatic reject.** AutoRound can quantize the LM backbone of VL models.
+- First try: `pip install -U auto-round transformers` (new VL archs often need newer deps), then retry.
+- Only report UNSUPPORTED (UNFIXABLE) if the model has no causal-LM / text head at all
+  (pure vision or audio encoder) — then there is nothing quantizable and text eval can't run.
 
 ---
 
