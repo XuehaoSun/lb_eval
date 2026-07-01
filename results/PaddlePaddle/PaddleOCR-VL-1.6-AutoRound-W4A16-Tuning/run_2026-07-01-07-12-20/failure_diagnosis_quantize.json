@@ -1,0 +1,32 @@
+{
+  "category": "missing_dependency",
+  "phase": "quantize",
+  "key_error": "ImportError: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`",
+  "root_cause": "The PaddleOCR-VL-1.6 model's custom modeling file (modeling_paddleocr_vl.py) requires the einops package which is not installed in the quantization environment. The transformers library's check_imports() caught this missing dependency when trying to dynamically load the model class.",
+  "traceback_analysis": "quantize.py:137 → auto_round.utils.common.patched (wrapper) → transformers.auto_factory.from_pretrained → get_class_from_dynamic_module → get_cached_module_file → check_imports → ImportError. The fault is at check_imports() which validates required imports from the model's modeling file before loading. The model file declares einops as a dependency but it was never installed.",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "environment",
+    "specific_function": "pip install einops",
+    "fault_type": "missing_dep",
+    "responsible_party": "infra_team"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "pip install einops",
+  "fix_verification": "python -c 'import einops; print(einops.__version__)'",
+  "workaround": "None needed - einops is a standard pip package with no known compatibility issues",
+  "affected_component": "infrastructure",
+  "severity": "critical",
+  "confidence": 0.95,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "The auto-quantization pipeline failed when loading the PaddleOCR-VL-1.6 model because the einops package is missing from the environment. The model's custom modeling code (modeling_paddleocr_vl.py) requires einops but check_imports() in transformers caught the missing dependency before the model could load. Simply running `pip install einops` will resolve this and allow the quantization to proceed.",
+  "analyzed_at": "2026-07-01T07:12:43.862649+00:00",
+  "model": "PaddlePaddle/PaddleOCR-VL-1.6",
+  "run_id": "PaddleOCR-VL-1.6-AutoRound-W4A16-Tuning",
+  "quant_scheme": "INT4 (W4A16)"
+}
