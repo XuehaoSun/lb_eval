@@ -40,6 +40,14 @@ agent_fix_loop() {
     # memory of what it already tried and does not repeat failed fixes.
     local fix_session_id="fix_${phase_name}_$$_$(date +%s)"
 
+    # Snapshot whether CUDA was available BEFORE the fix loop. If it was, a fix that
+    # loses CUDA is a regression — we must refuse to silently quantize on CPU.
+    local cuda_was_available=false
+    if python3 -c "import torch,sys; sys.exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null; then
+        cuda_was_available=true
+        log_info "CUDA available at start — GPU will be enforced across fix attempts"
+    fi
+
     # First execution (deterministic script)
     log_step "Phase: ${phase_name}"
     bash "${script_path}" "${script_args[@]}" 2>&1 | tee "${phase_log}"
@@ -110,7 +118,26 @@ agent_fix_loop() {
             return 1
         fi
 
-        # 6c. Cheap smoke test before the expensive full phase re-run.
+        # 6c. GPU guard: a fix must NOT break CUDA. If GPU was available at start but is
+        # now gone, refuse to silently fall back to a slow/OOM-prone CPU quantization run.
+        # Feed the regression back so the agent restores CUDA on the next attempt.
+        if [ "${cuda_was_available}" = "true" ] && [ "${REQUIRE_CUDA:-true}" = "true" ]; then
+            if ! python3 -c "import torch,sys; sys.exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null; then
+                log_error "CUDA became UNAVAILABLE after agent fix (attempt ${attempt}) — refusing CPU re-run."
+                {
+                    echo "[harness] REGRESSION: torch.cuda.is_available() == False after your fix."
+                    echo "[harness] This box HAS a GPU. Your fix broke CUDA — most likely a CPU-only torch"
+                    echo "[harness] was installed, torch was reinstalled/downgraded, or CUDA_VISIBLE_DEVICES was cleared."
+                    echo "[harness] RESTORE CUDA before anything else: reinstall the matching CUDA torch wheel,"
+                    echo "[harness] unset/repair CUDA_VISIBLE_DEVICES, and verify: python3 -c 'import torch; assert torch.cuda.is_available()'"
+                } | tee -a "${agent_log}"
+                save_lesson "${phase_name}" "${error_tail}" "still_failing" "Fix broke CUDA (attempt ${attempt}); refused CPU re-run"
+                phase_log="${agent_log}"
+                continue
+            fi
+        fi
+
+        # 6d. Cheap smoke test before the expensive full phase re-run.
         # run_smoke_test returns 0 if the smoke test passed OR none could be extracted
         # (fall back to the normal full re-run); non-zero only if an extracted test failed.
         if ! run_smoke_test "${agent_log}"; then
@@ -195,6 +222,10 @@ SMOKE_TEST: <ONE fast command (NOT the full phase) that proves the fix works, e.
 - Prefer the LOWEST FIX_TIER. Patching source code is a last resort.
 - Escalate tiers only with evidence that the lower tier cannot work.
 - After applying the fix, RUN your SMOKE_TEST yourself and show its output before finishing.
+- GPU IS REQUIRED. This environment HAS CUDA and the re-run MUST run on GPU. Never force CPU
+  (no \`device='cpu'\`, no \`device_map='cpu'\`, do not edit quantize.py to use CPU), never clear
+  \`CUDA_VISIBLE_DEVICES\`, and never install a CPU-only torch. After any \`pip install\`, confirm
+  CUDA still works: \`python3 -c "import torch; assert torch.cuda.is_available()"\`.
 - This is attempt ${attempt}. Any earlier attempts are in your session history — do NOT repeat a fix that already failed; try a different hypothesis.
 
 ## Key Technique: Patching Model Custom Code
@@ -216,7 +247,12 @@ Example: If you see:
 Fix: Edit that file, change \`.float()\` to \`.to(proj.dtype)\`
 
 ## Constraints:
-- Do NOT reinstall or downgrade torch (it will break CUDA)
+- Do NOT reinstall or downgrade torch (it will break CUDA).
+- **CUDA MUST STAY WORKING.** The re-run quantizes on GPU. If your fix leaves the box on CPU
+  (torch.cuda.is_available() == False), the pipeline will REJECT the CPU run as a failure.
+  - Do NOT install a CPU-only torch wheel; if you must (re)install torch, use the matching CUDA wheel.
+  - Do NOT set \`CUDA_VISIBLE_DEVICES=""\`; do NOT pass \`device='cpu'\` / \`device_map='cpu'\`.
+  - Beware: \`pip install -U auto-round\`/\`transformers\` can pull a CPU torch — re-check CUDA after installing.
 - Do NOT modify the evaluation tasks or expected output format
 - Keep fixes minimal and targeted — change only what's needed
 - If you need to install a package, use: pip install <package>
