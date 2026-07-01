@@ -1,0 +1,33 @@
+{
+  "category": "model_unavailable",
+  "phase": "quantize",
+  "key_error": "OSError: FlameF0X/LFM2-2.6B-Thinking is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'",
+  "root_cause": "The Hugging Face repository 'FlameF0X/LFM2-2.6B-Thinking' returns 404 — it does not exist (or is private/gated without authentication). The pipeline never reaches the quantization logic; it fails during tokenizer load because the repo cannot be resolved. The initial 'transformers_incompatible' classification is incorrect: transformers/AutoTokenizer is working as designed and correctly reporting the missing repo.",
+  "traceback_analysis": "auto_quant/phases/quantize.py:quantize() → AutoTokenizer.from_pretrained() → PreTrainedConfig.from_pretrained() → get_config_dict() → cached_file() → huggingface_hub file_download → HTTP GET to https://huggingface.co/FlameF0X/LFM2-2.6B-Thinking/resolve/main/config.json. The HTTP layer returns 404 RepositoryNotFoundError, which transformers wraps as OSError. Fault is upstream of auto_round entirely — the model identifier passed in --model does not resolve to a valid HF repo.",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "pipeline_config_or_model_identifier",
+    "specific_function": "model repo_id resolution",
+    "fault_type": "network",
+    "responsible_party": "infra_team"
+  },
+  "retryable": false,
+  "fix_available": true,
+  "suggested_fix": "1) Verify the exact repo_id on https://huggingface.co (e.g. LiquidAI/LFM2-2.6B-Thinking vs FlameF0X/*). LFM2 is a Liquid AI model family — confirm the correct namespace. 2) If the model is gated/private, set HF_TOKEN env var with read permissions before running: export HF_TOKEN=hf_xxx && hf auth login. 3) If the model is mirrored locally, pass the local path instead of the repo_id, e.g. --model /path/to/LFM2-2.6B-Thinking.",
+  "fix_verification": "curl -sI https://huggingface.co/<correct_repo_id>/resolve/main/config.json | head -1   # expect HTTP/2 200",
+  "workaround": "Pre-download the model snapshot with: huggingface-cli download <correct_repo_id> --local-dir ./models/LFM2-2.6B-Thinking  then pass --model ./models/LFM2-2.6B-Thinking to the quantize phase. This also unblocks offline runs.",
+  "affected_component": "model",
+  "severity": "critical",
+  "confidence": 0.95,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown (installed but not at fault)",
+    "torch": "unknown"
+  },
+  "community_summary": "The run failed with a 404 from Hugging Face when fetching config.json for 'FlameF0X/LFM2-2.6B-Thinking'. That repo does not exist publicly; the failure is purely a wrong/missing model identifier, not a transformers or auto-round bug. Correct the --model repo_id (LFM2 is a Liquid AI family) or supply HF_TOKEN / use a local snapshot, then re-run the quantize phase.",
+  "analyzed_at": "2026-07-01T22:48:58.031769+00:00",
+  "model": "FlameF0X/LFM2-2.6B-Thinking",
+  "run_id": "LFM2-2.6B-Thinking-AutoRound-W4A16-Tuning",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "transformers_incompatible"
+}
