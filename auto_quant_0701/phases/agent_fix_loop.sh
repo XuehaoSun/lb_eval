@@ -94,98 +94,6 @@ cleanup_stale_gpu_procs() {
     return 0
 }
 
-# Stable location of this library and the shared error taxonomy, so the harness can
-# REUSE the exact same deterministic classifier the post-mortem diagnosis uses.
-_AFL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ERROR_ANALYSIS_DIR="${ERROR_ANALYSIS_DIR:-${_AFL_DIR}/../error_analysis}"
-
-# ═══════════════════════════════════════════════════════════════════
-# taxonomy_classify — L1 deterministic classification, REUSING error_analysis/taxonomy.py
-#   (the same classify_error() the post-mortem diagnosis uses — single source of truth).
-#   Reads an error-log file; prints:
-#     line 1           : the taxonomy category token (or "unknown")
-#     lines 2..N       : a ready-to-embed "prior" block for the agent prompt
-#   This is a FAST, high-precision fast-path — it is NOT expected to cover every error.
-#   Long-tail coverage is the agent's job (L2); unknowns fall back to text similarity.
-# ═══════════════════════════════════════════════════════════════════
-taxonomy_classify() {
-    local errfile="$1"
-    python3 - "$errfile" "${ERROR_ANALYSIS_DIR}" <<'PY' 2>/dev/null || echo "unknown"
-import sys, os
-errfile, ea_dir = sys.argv[1], sys.argv[2]
-sys.path.insert(0, ea_dir)
-try:
-    from taxonomy import classify_error
-except Exception:
-    print("unknown"); sys.exit(0)
-try:
-    text = open(errfile, encoding="utf-8", errors="replace").read()
-except OSError:
-    text = ""
-cat, info = classify_error(text)
-print(cat)
-desc = info.get("description", "")
-guide = info.get("root_cause_guide", "")
-if isinstance(guide, (list, tuple)):
-    guide = " ".join(guide)
-hints = info.get("workaround_hints", []) or []
-print("- Category (pattern-based, MAY BE WRONG — verify or override): %s" % cat)
-if desc:  print("- Description: %s" % desc)
-if guide: print("- Root-cause guide: %s" % guide)
-if hints: print("- Workaround hints: %s" % "; ".join(hints))
-PY
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# logs_are_similar — L1.5 deterministic FALLBACK for drift when neither attempt got a
-#   confident category (both "unknown"). Works on ARBITRARY error text with zero
-#   enumeration: denoise (strip timestamps/HTTP/progress/paths, normalize numbers) then
-#   compare with difflib. Exit 0 = same error, 1 = different, 2 = cannot tell.
-# ═══════════════════════════════════════════════════════════════════
-logs_are_similar() {
-    python3 - "$1" "$2" "${DRIFT_SIM:-0.90}" <<'PY' 2>/dev/null
-import sys, re, difflib
-def denoise(p):
-    try:
-        t = open(p, encoding="utf-8", errors="replace").read()
-    except OSError:
-        return ""
-    out = []
-    for ln in t.splitlines():
-        if re.search(r'HTTP Request|HTTP/1\.1|Client Error|Downloading|it/s\]|\|\s*\d+/\d+|Config was last written|allowlist contains|WARNING logging', ln):
-            continue
-        s = re.sub(r'^\S*\d{4}-\d\d-\d\dT[\d:.]+Z?\s*', '', ln)
-        s = re.sub(r'\b\d{1,2}:\d{2}:\d{2}\b', '', s)
-        s = re.sub(r'\[[A-Z]+\]', '', s)
-        s = re.sub(r'0x[0-9a-fA-F]+', '0xADDR', s)
-        s = re.sub(r'/[^\s:]+/', '/PATH/', s)
-        s = re.sub(r'\d+\.\d+\s?[GMK]i?B', 'SIZE', s)
-        s = re.sub(r'line \d+', 'line N', s)
-        s = re.sub(r'\d+', 'N', s)
-        s = s.strip()
-        if s:
-            out.append(s)
-    return "\n".join(out)
-a, b, thr = denoise(sys.argv[1]), denoise(sys.argv[2]), float(sys.argv[3])
-if not a or not b:
-    sys.exit(2)
-r = difflib.SequenceMatcher(None, a, b).ratio()
-sys.stderr.write("[drift] denoised similarity=%.3f (threshold=%.2f)\n" % (r, thr))
-sys.exit(0 if r >= thr else 1)
-PY
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# extract_progress — deepest quantized layer index seen in a log (else -1). Used as a
-#   "real progress" override: if the re-run got FURTHER than before, it is NOT drift
-#   even when the error class repeats.
-# ═══════════════════════════════════════════════════════════════════
-extract_progress() {
-    local n
-    n=$(grep -oE 'layers\.[0-9]+' "$1" 2>/dev/null | grep -oE '[0-9]+' | sort -n | tail -1)
-    printf '%s' "${n:--1}"
-}
-
 # ═══════════════════════════════════════════════════════════════════
 # agent_fix_loop — run a phase script, retry with agent on failure
 # ═══════════════════════════════════════════════════════════════════
@@ -197,10 +105,6 @@ agent_fix_loop() {
 
     local max_attempts="${MAX_FIX_ATTEMPTS}"
     local attempt=0
-    local prev_eff_class=""      # error class (agent's, else taxonomy's) from the previous attempt
-    local prev_errfile=""        # previous attempt's error-tail file (similarity fallback)
-    local drift_count=0          # consecutive attempts stuck on the same error class
-    local max_progress=-1        # deepest quant layer reached so far (progress override)
     local phase_log="${RUN_OUTPUT_DIR}/logs/${phase_name}.log"
     local fix_log_dir="${RUN_OUTPUT_DIR}/logs/agent_fixes/${phase_name}"
     mkdir -p "$(dirname "${phase_log}")" "${fix_log_dir}"
@@ -236,23 +140,25 @@ agent_fix_loop() {
         attempt=$((attempt + 1))
         log_step "Agent fix attempt ${attempt}/${max_attempts} for ${phase_name}"
 
-        # 1. Extract error context and persist it to a per-attempt file (so drift can
-        #    compare attempt N vs N-1 by FILE — never a file against itself).
-        local error_tail errfile
-        errfile="${fix_log_dir}/errtail_${attempt}.txt"
+        # 1. Extract error context
+        local error_tail
         error_tail=$(tail -100 "${phase_log}")
-        printf '%s\n' "${error_tail}" > "${errfile}"
 
-        # 2. L1 deterministic classification (REUSED taxonomy) → category + prior block.
-        #    The category seeds drift detection; the prior block makes the AGENT start
-        #    smarter (it gets the pattern-based guess + root-cause guide + hints, and is
-        #    told it MAY BE WRONG and should verify/override).
-        local classout cur_taxo_cat prior_block cur_progress
-        classout=$(taxonomy_classify "${errfile}")
-        cur_taxo_cat=$(printf '%s\n' "${classout}" | head -1)
-        prior_block=$(printf '%s\n' "${classout}" | tail -n +2)
-        cur_progress=$(extract_progress "${errfile}")
-        log_info "L1 taxonomy class: ${cur_taxo_cat} (progress=layer ${cur_progress})"
+        # 2. Check for drift (same error repeating)
+        if [ $attempt -gt 1 ]; then
+            local prev_sig
+            prev_sig=$(echo "${error_tail}" | grep -i "error\|exception\|failed" | head -1 | cut -c1-100)
+            local prev_retry_log="${fix_log_dir}/retry_$((attempt - 1)).log"
+            if [ -f "${prev_retry_log}" ]; then
+                local prev_err
+                prev_err=$(tail -100 "${prev_retry_log}" | grep -i "error\|exception\|failed" | head -1 | cut -c1-100)
+                if [ -n "${prev_sig}" ] && [ "${prev_sig}" == "${prev_err}" ]; then
+                    log_warn "Drift detected: same error repeating. Aborting fix loop."
+                    save_lesson "${phase_name}" "${error_tail}" "drift" "Same error repeated ${attempt} times"
+                    break
+                fi
+            fi
+        fi
 
         # 3. Load all lessons for agent context
         local lessons=""
@@ -265,9 +171,9 @@ agent_fix_loop() {
             log_info "No lessons available"
         fi
 
-        # 4. Build agent prompt (now seeded with the L1 taxonomy prior)
+        # 4. Build agent prompt
         local fix_prompt
-        fix_prompt=$(build_fix_prompt "${phase_name}" "${error_tail}" "${lessons}" "${attempt}" "${prior_block}")
+        fix_prompt=$(build_fix_prompt "${phase_name}" "${error_tail}" "${lessons}" "${attempt}")
 
         # 5. Save prompt for audit
         local prompt_file="${fix_log_dir}/prompt_${attempt}.txt"
@@ -277,70 +183,15 @@ agent_fix_loop() {
         local agent_log="${fix_log_dir}/attempt_${attempt}.log"
         run_openclaw_fix "${fix_prompt}" "${agent_log}" "${fix_session_id}" || true
 
-        # Capture the agent's FULL structured diagnosis (analysis + fix) as JSON so every
-        # lesson we write below carries the agent's ROOT_CAUSE / COMPONENT / EVIDENCE /
-        # FIX_TIER — not just a grep'd fix line. Feeds L3 self-learning.
-        local agent_analysis_json
-        agent_analysis_json=$(extract_agent_analysis "${agent_log}")
-
         # 6b. Early stop: agent declared this failure UNFIXABLE → don't waste retries
         if grep -aiE 'VERDICT:[[:space:]*]*UNFIXABLE' "${agent_log}" >/dev/null 2>&1; then
             local unfix_reason
             unfix_reason=$(extract_agent_field "${agent_log}" "UNFIXABLE_REASON")
             unfix_reason="${unfix_reason:-declared UNFIXABLE by agent}"
             log_warn "Agent verdict: UNFIXABLE (${unfix_reason}). Aborting fix loop."
-            save_lesson "${phase_name}" "${error_tail}" "unfixable" "UNFIXABLE: ${unfix_reason}" "${agent_analysis_json}"
+            save_lesson "${phase_name}" "${error_tail}" "unfixable" "UNFIXABLE: ${unfix_reason}"
             return 1
         fi
-
-        # 6a. Drift / progress detection — 3-layer signal:
-        #   PRIMARY  : the AGENT's semantic ERROR_CLASS (covers the long tail / new errors)
-        #   FALLBACK : the L1 taxonomy category when the agent didn't emit a usable class
-        #   TIE-BREAK: denoised text similarity when BOTH classes are unknown/missing
-        #   OVERRIDE : deeper quant layer than before  → real progress, never drift
-        #   FAIL-SAFE: if we cannot tell, CONTINUE (a false abort is the expensive failure)
-        # We record the agent's class into the lesson (self-learning: recurring unknowns
-        # can later be promoted into the taxonomy).
-        local agent_class eff_class
-        agent_class=$(extract_agent_field "${agent_log}" "ERROR_CLASS" | awk '{print $1}' \
-            | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9_')
-        if [ -n "${agent_class}" ] && [ "${agent_class}" != "unknown" ]; then
-            eff_class="${agent_class}"      # PRIMARY: trust the agent's semantic label
-        else
-            eff_class="${cur_taxo_cat}"     # FALLBACK: deterministic taxonomy label
-        fi
-        log_info "Effective error class: ${eff_class} (agent='${agent_class:-none}', taxonomy='${cur_taxo_cat}')"
-
-        if [ "${cur_progress}" -gt "${max_progress}" ] 2>/dev/null; then
-            [ "${drift_count}" -gt 0 ] && log_info "Progress: reached layer ${cur_progress} (was ${max_progress}) — resetting drift"
-            drift_count=0
-        elif [ $attempt -gt 1 ]; then
-            local same_error=""   # yes | no | "" (unknown)
-            if [ -n "${eff_class}" ] && [ "${eff_class}" != "unknown" ] && [ -n "${prev_eff_class}" ] && [ "${prev_eff_class}" != "unknown" ]; then
-                [ "${eff_class}" = "${prev_eff_class}" ] && same_error="yes" || same_error="no"
-            elif [ -n "${prev_errfile}" ] && [ -f "${prev_errfile}" ]; then
-                logs_are_similar "${errfile}" "${prev_errfile}"; local sim_rc=$?
-                case "${sim_rc}" in 0) same_error="yes";; 1) same_error="no";; *) same_error="";; esac
-            fi
-
-            if [ "${same_error}" = "yes" ]; then
-                drift_count=$((drift_count + 1))
-                log_warn "Same error as previous attempt (class='${eff_class}', streak=${drift_count}/${DRIFT_THRESHOLD:-2})"
-                if [ "${drift_count}" -ge "${DRIFT_THRESHOLD:-2}" ]; then
-                    log_warn "Drift: error unchanged across ${drift_count} fixes. Aborting fix loop."
-                    save_lesson "${phase_name}" "${error_tail}" "drift" "Stuck on '${eff_class}' for ${drift_count} attempts (agent_class='${agent_class:-none}')" "${agent_analysis_json}"
-                    break
-                fi
-            elif [ "${same_error}" = "no" ]; then
-                [ "${drift_count}" -gt 0 ] && log_info "Error changed ('${prev_eff_class}' → '${eff_class}') — fix made progress"
-                drift_count=0
-            fi
-            # same_error == "" → FAIL-SAFE: neither abort nor reset; keep trying
-        fi
-        # Remember for the next iteration
-        [ -n "${eff_class}" ] && [ "${eff_class}" != "unknown" ] && prev_eff_class="${eff_class}"
-        prev_errfile="${errfile}"
-        [ "${cur_progress}" -gt "${max_progress}" ] 2>/dev/null && max_progress="${cur_progress}"
 
         # 6c. GPU guard: a fix must NOT break CUDA. If GPU was available at start but is
         # now gone, refuse to silently fall back to a slow/OOM-prone CPU quantization run.
@@ -355,7 +206,7 @@ agent_fix_loop() {
                     echo "[harness] RESTORE CUDA before anything else: reinstall the matching CUDA torch wheel,"
                     echo "[harness] unset/repair CUDA_VISIBLE_DEVICES, and verify: python3 -c 'import torch; assert torch.cuda.is_available()'"
                 } | tee -a "${agent_log}"
-                save_lesson "${phase_name}" "${error_tail}" "still_failing" "Fix broke CUDA (attempt ${attempt}); refused CPU re-run" "${agent_analysis_json}"
+                save_lesson "${phase_name}" "${error_tail}" "still_failing" "Fix broke CUDA (attempt ${attempt}); refused CPU re-run"
                 phase_log="${agent_log}"
                 continue
             fi
@@ -366,7 +217,7 @@ agent_fix_loop() {
         # (fall back to the normal full re-run); non-zero only if an extracted test failed.
         if ! run_smoke_test "${agent_log}"; then
             log_warn "Smoke test failed after agent fix (attempt ${attempt}); skipping full re-run."
-            save_lesson "${phase_name}" "${error_tail}" "still_failing" "Smoke test failed on attempt ${attempt}" "${agent_analysis_json}"
+            save_lesson "${phase_name}" "${error_tail}" "still_failing" "Smoke test failed on attempt ${attempt}"
             phase_log="${agent_log}"
             continue
         fi
@@ -388,12 +239,12 @@ agent_fix_loop() {
                 fix_summary=$(grep -A3 "FIX_PLAN\|Fix applied\|Installing\|pip install\|Changing\|Setting" "${agent_log}" | head -5 | tr '\n' '; ')
             fi
             fix_summary="${fix_summary:-Agent fixed on attempt ${attempt}}"
-            save_lesson "${phase_name}" "${error_tail}" "fixed" "${fix_summary}" "${agent_analysis_json}"
+            save_lesson "${phase_name}" "${error_tail}" "fixed" "${fix_summary}"
             return 0
         fi
 
         phase_log="${retry_log}"
-        save_lesson "${phase_name}" "${error_tail}" "still_failing" "Attempt ${attempt} did not resolve" "${agent_analysis_json}"
+        save_lesson "${phase_name}" "${error_tail}" "still_failing" "Attempt ${attempt} did not resolve"
     done
 
     log_error "${phase_name} failed after ${max_attempts} fix attempts"
@@ -408,7 +259,6 @@ build_fix_prompt() {
     local error="$2"
     local lessons="$3"
     local attempt="${4:-1}"
-    local prior_block="${5:-}"
 
     local lessons_section=""
     if [ -n "${lessons}" ]; then
@@ -420,22 +270,12 @@ Review the lessons above and apply the most relevant fix for the current error."
 No lessons available yet."
     fi
 
-    local prior_section=""
-    if [ -n "${prior_block}" ]; then
-        prior_section="## Quick Classification (deterministic pattern match — a PRIOR, not the truth)
-${prior_block}
-Treat this as a starting hint. CONFIRM it against the traceback, and OVERRIDE it in your
-ERROR_CLASS below if it is wrong or if the category is \`unknown\`.
-"
-    fi
-
     cat <<PROMPT
 You are fixing a failed "${phase}" phase in the quantization pipeline.
 
 ## Error Output (last 100 lines):
 ${error}
 
-${prior_section}
 ${lessons_section}
 
 ## MANDATORY PROTOCOL — fill this out BEFORE editing or installing anything
@@ -446,11 +286,6 @@ FIRST. Do NOT modify code or install packages until you have printed an EVIDENCE
 from a READ-ONLY command that actually supports your hypothesis. No guessing.
 
 COMPONENT: <our_code|transformers|auto_round|torch|model_code|data|environment>
-ERROR_CLASS: <ONE stable snake_case token naming THIS error's category. Reuse the taxonomy
-             category shown in Quick Classification if it is correct; otherwise give a better
-             existing token or a NEW snake_case name (e.g. shape_mismatch, meta_device_error,
-             unrecognized_config_class). Use the SAME token every time the same underlying
-             error recurs — this drives loop drift detection, so be consistent.>
 ROOT_CAUSE_HYPOTHESIS: <one falsifiable sentence — the specific cause, NOT "maybe a version issue">
 EVIDENCE_CMD: <a single read-only command that verifies the hypothesis>
 EVIDENCE_RESULT: <paste the command's output>
@@ -588,61 +423,6 @@ extract_agent_field() {
 }
 
 # ═══════════════════════════════════════════════════════════════════
-# extract_agent_analysis — capture the agent's WHOLE structured diagnosis block
-#   (COMPONENT / ERROR_CLASS / ROOT_CAUSE / EVIDENCE / VERDICT / FIX_TIER / FIX_PLAN)
-#   as a compact JSON object, so the lesson stores the agent's ANALYSIS — not just a
-#   grep'd fix line. Multiline field values (e.g. FIX_PLAN) are captured up to the next
-#   known label. Prints "{}" if the log is missing/empty.
-# ═══════════════════════════════════════════════════════════════════
-extract_agent_analysis() {
-    local agent_log="$1"
-    [ -f "${agent_log}" ] || { echo '{}'; return 0; }
-    AGENT_LOG_PATH="${agent_log}" python3 <<'PYEOF'
-import os, re, json
-
-try:
-    log = open(os.environ["AGENT_LOG_PATH"], encoding="utf-8", errors="replace").read()
-except OSError:
-    print("{}"); raise SystemExit
-
-LABELS = ["COMPONENT", "ERROR_CLASS", "ROOT_CAUSE_HYPOTHESIS", "EVIDENCE_CMD",
-          "EVIDENCE_RESULT", "VERDICT", "UNFIXABLE_REASON", "FIX_TIER", "FIX_PLAN",
-          "SMOKE_TEST"]
-
-
-def block(name, maxlen=400):
-    others = "|".join(l for l in LABELS if l != name)
-    m = re.search(rf'^\s*{name}\s*:\s*(.*?)(?=^\s*(?:{others})\s*:|\Z)',
-                  log, re.MULTILINE | re.DOTALL)
-    if not m:
-        return ""
-    val = re.sub(r'`', '', m.group(1))
-    val = re.sub(r'\*+', '', val)
-    val = re.sub(r'\s+', ' ', val).strip()
-    # Drop unfilled placeholders like "<one falsifiable sentence ...>"
-    if val.startswith('<') and val.endswith('>'):
-        return ""
-    return val[:maxlen]
-
-
-err_class = block("ERROR_CLASS", 60)
-if err_class:
-    err_class = re.sub(r'[^a-z0-9_]', '', err_class.split()[0].lower()) if err_class.split() else ""
-
-out = {
-    "component": block("COMPONENT", 60),
-    "error_class": err_class,
-    "root_cause": block("ROOT_CAUSE_HYPOTHESIS", 400),
-    "evidence": block("EVIDENCE_RESULT", 300),
-    "verdict": block("VERDICT", 20),
-    "fix_tier": block("FIX_TIER", 40),
-    "fix_plan": block("FIX_PLAN", 400),
-}
-print(json.dumps({k: v for k, v in out.items() if v}, ensure_ascii=False))
-PYEOF
-}
-
-# ═══════════════════════════════════════════════════════════════════
 # run_smoke_test — run the agent's suggested SMOKE_TEST for cheap verification
 #   Returns 0 if the smoke test passed OR no runnable test could be extracted
 #   (caller then falls back to the normal full phase re-run).
@@ -679,14 +459,12 @@ save_lesson() {
     local error_context="$2"
     local status="$3"
     local solution_note="$4"
-    local agent_analysis="${5:-}"   # optional: agent's structured diagnosis as JSON
-                                    # (or a bare snake_case class token, for back-compat)
 
     local lessons_file="${LESSONS_DIR}/${phase}.jsonl"
     mkdir -p "${LESSONS_DIR}"
 
     # Pass error_context via env var (not stdin, which conflicts with heredoc)
-    LESSON_ERROR_CONTEXT="${error_context}" LESSON_TAXONOMY_DIR="${ERROR_ANALYSIS_DIR}" LESSON_AGENT_ANALYSIS="${agent_analysis}" python3 - "${phase}" "${status}" "${solution_note}" "${MODEL_ID:-unknown}" "${SCHEME:-W4A16}" "${METHOD:-RTN}" "${lessons_file}" <<'PYEOF'
+    LESSON_ERROR_CONTEXT="${error_context}" python3 - "${phase}" "${status}" "${solution_note}" "${MODEL_ID:-unknown}" "${SCHEME:-W4A16}" "${METHOD:-RTN}" "${lessons_file}" <<'PYEOF'
 import json
 import sys
 import os
@@ -703,96 +481,22 @@ lessons_file = sys.argv[7]
 
 error_context = os.environ.get("LESSON_ERROR_CONTEXT", "")
 
-# Reuse the shared taxonomy: denoise + deterministic classification. This is the SAME
-# classifier the drift detector and post-mortem diagnosis use, so a lesson's category is
-# consistent across the whole pipeline. Degrade gracefully if the import fails.
-sys.path.insert(0, os.environ.get("LESSON_TAXONOMY_DIR", ""))
-try:
-    from taxonomy import _strip_noise, classify_error
-except Exception:
-    def _strip_noise(t):
-        return t
+# Extract signature (first error/exception line)
+error_signature = ""
+for line in error_context.splitlines():
+    lower = line.lower()
+    if any(kw in lower for kw in ("error", "exception", "failed", "traceback")):
+        error_signature = line.strip()[:150]
+        break
+if not error_signature:
+    error_signature = error_context.strip().splitlines()[-1][:150] if error_context.strip() else "unknown error"
 
-    def classify_error(t):
-        return "unknown", {}
-
-# Strip a leading timestamp / log-level prefix so signatures are stable across runs
-# (e.g. "15:51:56 [ERROR] Quantization failed: X" and the same error an hour later
-# must produce the SAME signature so dedup works).
-_PREFIX_RE = re.compile(
-    r'^\s*'
-    r'(?:\d{4}-\d{2}-\d{2}[T ])?'              # optional ISO date
-    r'(?:\d{2}:\d{2}:\d{2}(?:[.,]\d+)?)?'      # optional HH:MM:SS(.ms)
-    r'(?:\s*[Zz]|\s*[+-]\d{2}:?\d{2})?'        # optional timezone
-    r'\s*(?:\[[A-Za-z]+\]|[A-Z]{3,}:)?\s*'     # optional [ERROR] / ERROR:
-)
-
-
-def _clean(line):
-    return _PREFIX_RE.sub('', line).strip()
-
-
-# Python's real fault is the LAST exception line of a traceback, not the first line that
-# merely mentions "error". Prefer the deepest concrete exception; then a wrapper line that
-# actually carries a message; then the last meaningful denoised line.
-_EXC_RE = re.compile(r'\b([A-Za-z_][\w.]*(?:Error|Exception|Warning)|OSError)\b\s*:\s*\S')
-_WRAP_RE = re.compile(r'\b(?:failed|error)\b\s*[:\-]\s*(\S.+)', re.I)
-
-
-def extract_signature(text):
-    denoised = _strip_noise(text) or text
-    lines = [l for l in denoised.splitlines() if l.strip()]
-    exc = [_clean(l) for l in lines if _EXC_RE.search(_clean(l))]
-    if exc:
-        return exc[-1][:150]
-    for l in reversed(lines):
-        c = _clean(l)
-        m = _WRAP_RE.search(c)
-        if m and m.group(1).strip():
-            return c[:150]
-    return _clean(lines[-1])[:150] if lines else "unknown error"
-
-
-error_signature = extract_signature(error_context)
-
-# Persist the deterministic category at write time -> enables coverage measurement and
-# L3 self-learning (promoting recurring "unknown" categories into the taxonomy later).
-try:
-    error_category = classify_error(error_context)[0]
-except Exception:
-    error_category = "unknown"
-
-# The agent's semantic ERROR_CLASS (may be a NEW category the taxonomy doesn't know yet).
-# This is the raw material for L3: when taxonomy says "unknown" but the agent consistently
-# assigns the same label to a recurring error, promote_lessons.py can learn a signature.
-# Arg is a JSON blob of the agent's whole diagnosis (or a bare class token for back-compat).
-_raw_analysis = os.environ.get("LESSON_AGENT_ANALYSIS", "").strip()
-agent = {}
-if _raw_analysis:
-    try:
-        parsed = json.loads(_raw_analysis)
-        if isinstance(parsed, dict):
-            agent = parsed
-    except ValueError:
-        # Back-compat: a bare "error_class" token rather than JSON
-        agent = {"error_class": _raw_analysis}
-
-agent_category = re.sub(r'[^a-z0-9_]', '', str(agent.get("error_class", "")).strip().lower())
-agent_root_cause = str(agent.get("root_cause", ""))[:400]
-agent_component = str(agent.get("component", ""))[:60]
-agent_evidence = str(agent.get("evidence", ""))[:300]
-agent_fix_tier = str(agent.get("fix_tier", ""))[:40]
-# Prefer the agent's FIX_PLAN as the solution when the caller's note is thin/placeholder.
-agent_fix_plan = str(agent.get("fix_plan", ""))[:400]
-if agent_fix_plan and (not solution_note or len(solution_note) < 15):
-    solution_note = agent_fix_plan
-
-# Extract keywords from the cleaned signature
+# Extract keywords
 words = re.findall(r'[a-zA-Z]{4,}', error_signature.lower())
 keywords = list(dict.fromkeys(words))[:5]  # unique, ordered
 
-# Full traceback (last 50 lines, denoised so 404/progress chatter doesn't crowd it out)
-traceback_lines = (_strip_noise(error_context) or error_context).strip().splitlines()[-50:]
+# Full traceback (last 50 lines)
+traceback_lines = error_context.strip().splitlines()[-50:]
 error_traceback = "\n".join(traceback_lines)
 
 lesson = {
@@ -800,12 +504,6 @@ lesson = {
     "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     "phase": phase,
     "error_signature": error_signature,
-    "error_category": error_category,
-    "agent_category": agent_category,
-    "agent_root_cause": agent_root_cause,
-    "agent_component": agent_component,
-    "agent_evidence": agent_evidence,
-    "fix_tier": agent_fix_tier,
     "error_traceback": error_traceback,
     "error_keywords": keywords,
     "model": model_id,

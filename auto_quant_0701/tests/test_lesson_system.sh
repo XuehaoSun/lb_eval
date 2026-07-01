@@ -144,9 +144,7 @@ assert_eq "2" "${LINE_COUNT}" "Two entries now in quantize.jsonl"
 
 ENTRY2=$(tail -1 "${LESSONS_DIR}/quantize.jsonl")
 SIG2=$(echo "${ENTRY2}" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['error_signature'])")
-# The signature is the DEEPEST real exception (bottom of the traceback), not the useless
-# "Traceback (most recent call last):" connector line the old extractor grabbed.
-assert_contains "${SIG2}" "device-side assert triggered" "Signature is the real exception, not the Traceback line"
+assert_contains "${SIG2}" "Traceback" "Signature from multiline error"
 
 # Verify traceback stored
 TB=$(echo "${ENTRY2}" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['error_traceback'])")
@@ -295,7 +293,7 @@ chmod +x "${ALWAYS_FAIL}"
 # Run — should hit drift detection
 DRIFT_OUTPUT=$(agent_fix_loop "quantize" "${ALWAYS_FAIL}" 2>&1 || true)
 
-assert_contains "${DRIFT_OUTPUT}" "Drift: error unchanged" "Drift detection triggered"
+assert_contains "${DRIFT_OUTPUT}" "Drift detected" "Drift detection triggered"
 
 # Verify drift lesson saved
 if [ -f "${LESSONS_DIR}/quantize.jsonl" ]; then

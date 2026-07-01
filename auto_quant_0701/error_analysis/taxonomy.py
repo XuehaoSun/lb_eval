@@ -95,6 +95,8 @@ TAXONOMY = {
         "description": "PyTorch version, CUDA driver, or kernel incompatibility",
         "signatures": [
             r"NVIDIA driver.*too old",
+            r"CUDA.*not available",
+            r"RuntimeError.*CUDA",
             r"torch.*not compiled with CUDA",
             r"cudaErrorNoKernelImageForDevice",
             r"no kernel image is available",
@@ -309,13 +311,13 @@ TAXONOMY = {
     "model_unavailable": {
         "description": "Model removed from HuggingFace Hub or made private",
         "signatures": [
+            r"404 Client Error",
             r"Repository Not Found",
             r"does not appear to have a file named",
             r"is not a valid model identifier",
             r"We couldn't connect to.*to download",
             r"gated.*access",
             r"Access to model.*is restricted",
-            r"401 Client Error.*(?:huggingface\.co|Repository)",
         ],
         "root_cause_guide": (
             "Model has been deleted, made private, or is gated. "
@@ -354,256 +356,20 @@ TAXONOMY = {
             "Check if model fits in available RAM",
         ],
     },
-
-    # ══════════════════════════════════════════════════════════════
-    # Category 14: Shape / Dimension Mismatch
-    # ══════════════════════════════════════════════════════════════
-    "shape_mismatch": {
-        "description": "Tensor shape/dimension mismatch during quantization or forward pass",
-        "signatures": [
-            r"size of tensor a \(\d+\) must match the size of tensor b",
-            r"must match the size of tensor",
-            r"non-singleton dimension",
-            r"size mismatch for",
-            r"shape\s*mismatch",
-            r"shapes cannot be multiplied",
-            r"The expanded size of the tensor",
-            r"Expected size \d+ but got size \d+",
-            r"mat1 and mat2 shapes cannot be multiplied",
-            r"dimension \d+.*does not match",
-        ],
-        "root_cause_guide": (
-            "A tensor op received incompatible shapes. Common in models with unusual "
-            "head_dim / rotary (RoPE) position-embedding sizes, sliding-window attention, "
-            "or when auto_round splits a layer whose weight shape it does not expect. "
-            "Read the traceback bottom-up to find whether the fault is in the model's custom "
-            "code (patchable) or in auto_round/transformers."
-        ),
-        "fix_strategy": "patch_model_or_upgrade",
-        "retryable": True,
-        "workaround_hints": [
-            "If the failing frame is in ~/.cache/huggingface/modules/transformers_modules/, patch the model code",
-            "Check rotary_dim / head_dim / partial_rotary_factor in config vs the failing op",
-            "Try pip install -U auto-round transformers (new-arch support)",
-        ],
-    },
-
-    # ══════════════════════════════════════════════════════════════
-    # Category 15: Meta Device / Uninitialized Weights
-    # ══════════════════════════════════════════════════════════════
-    "meta_device_error": {
-        "description": "Weights left on the meta device (never materialized) when a real tensor was required",
-        "signatures": [
-            r"does not support parameters on meta device",
-            r"Cannot copy out of meta tensor",
-            r"meta tensor.*no data",
-            r"Tensor.*is on the meta device",
-            r"NotImplementedError.*meta",
-            r"parameter.*meta device",
-        ],
-        "root_cause_guide": (
-            "Model was loaded with lazy/meta initialization (accelerate low_cpu_mem_usage / "
-            "init_empty_weights / device_map offload) but a component then required real weights. "
-            "Ensure weights are materialized on a real device before that step."
-        ),
-        "fix_strategy": "fix_device_loading",
-        "retryable": True,
-        "workaround_hints": [
-            "Load with an explicit device_map to a real device (e.g. 0) instead of meta init",
-            "Avoid low_cpu_mem_usage / init_empty_weights for the failing component",
-            "Call model.to_empty(device=...) then load the real state_dict",
-        ],
-    },
-
-    # ══════════════════════════════════════════════════════════════
-    # Category 16: Cross-Device Placement / Unwanted CPU Fallback
-    # ══════════════════════════════════════════════════════════════
-    "device_mismatch": {
-        "description": "Tensors split across cuda/cpu, or compute silently fell back to CPU when a GPU was expected",
-        "signatures": [
-            r"Expected all tensors to be on the same device",
-            r"found at least two devices",
-            r"indices should be either on cpu or on the same device",
-            r"Tensor for argument.*is on cpu.*but expected",
-            r"is on cpu, but expected them to be on gpu",
-            r"CUDA.*not available",
-        ],
-        "root_cause_guide": (
-            "Part of the model or its inputs landed on CPU while the rest is on GPU, or the "
-            "whole run fell back to CPU. Often caused by device_map='auto' + low_gpu_mem_usage "
-            "offloading, a leftover process starving VRAM, or a fix that broke CUDA."
-        ),
-        "fix_strategy": "fix_device_placement",
-        "retryable": True,
-        "workaround_hints": [
-            "Pin the model to an explicit GPU index (device_map=0) instead of 'auto' on a single GPU",
-            "Verify torch.cuda.is_available() and free VRAM before the run",
-            "Kill stale GPU workers that may be holding memory",
-        ],
-    },
 }
-
-
-# Precedence for classification when several categories match at once.
-# Ordered MOST-specific/actionable → LEAST. A concrete Python-level fault (shape, dtype,
-# meta, oom) is a better diagnosis than a broad connectivity/killed signal that merely
-# co-occurs in the noisy log tail. Categories not listed here rank lowest (but above
-# "unknown"). This replaces the old "first key in the dict wins" behaviour.
-CLASSIFY_PRIORITY = [
-    "shape_mismatch",
-    "dtype_mismatch",
-    "meta_device_error",
-    "device_mismatch",
-    "out_of_memory",
-    "multimodal_unsupported",
-    "autoround_internal_error",
-    "tokenizer_error",
-    "transformers_incompatible",
-    "missing_dependency",
-    "dataset_error",
-    "eval_framework_error",
-    "pytorch_cuda_error",
-    "process_killed",
-    "network_error",
-    "model_unavailable",
-]
-
-
-# Lines that are pure noise in a pipeline log and must NOT drive classification.
-# (HTTP chatter, optional-file 404s, tqdm progress bars, OpenClaw config warnings, etc.)
-_NOISE_LINE_PATTERNS = [
-    r"HTTP Request:",
-    r'HTTP/1\.1"?\s*\d{3}',
-    r"additional_chat_templates",
-    r"\bit/s\]",
-    r"\|\s*\d+/\d+\s*\[",
-    r"\d+%\|",
-    r"Config was last written by a newer OpenClaw",
-    r"allowlist contains unknown entries",
-    r"WARNING logging\.py",
-    r"Downloading",
-    r"Fetching \d+ files",
-    r"resolve/main/.*Not Found",
-]
-
-
-def _strip_noise(log_text: str) -> str:
-    """Drop known-noise lines so classification keys off the real error, not chatter."""
-    import re
-
-    keep = []
-    for line in log_text.splitlines():
-        if any(re.search(p, line, re.IGNORECASE) for p in _NOISE_LINE_PATTERNS):
-            continue
-        keep.append(line)
-    return "\n".join(keep)
-
-
-# ─── L3 self-learning: learned-signature overlay ────────────────────────────────
-# Recurring errors that the curated TAXONOMY can't classify but the agent labels
-# consistently get promoted (by promote_lessons.py) into a SEPARATE json overlay.
-# Kept apart from the hand-curated TAXONOMY so it never corrupts the curated set and
-# stays fully auditable. Consulted ONLY after curated matching fails -> curated
-# precision is never affected; learned signatures only shrink the "unknown" tail.
-import os as _os
-
-LEARNED_SIGNATURES_PATH = _os.path.join(
-    _os.path.dirname(_os.path.abspath(__file__)), "learned_signatures.json"
-)
-
-_LEARNED_CACHE = None
-_LEARNED_MTIME = None
-
-
-def load_learned_signatures(path: str = None) -> list:
-    """Load the learned-signature overlay (cached, auto-reloads if the file changes).
-
-    Returns a list of dicts: {category, signature, description, retryable,
-    fix_strategy, workaround_hints, root_cause_guide, source_count, ...}.
-    Returns [] if the file is missing or malformed (fail-safe: no overlay).
-    """
-    global _LEARNED_CACHE, _LEARNED_MTIME
-    import json
-
-    p = path or LEARNED_SIGNATURES_PATH
-    try:
-        mtime = _os.path.getmtime(p)
-    except OSError:
-        _LEARNED_CACHE, _LEARNED_MTIME = [], None
-        return []
-
-    if _LEARNED_CACHE is not None and _LEARNED_MTIME == mtime:
-        return _LEARNED_CACHE
-
-    try:
-        with open(p, encoding="utf-8") as f:
-            data = json.load(f)
-        entries = data.get("signatures", data) if isinstance(data, dict) else data
-        clean = [e for e in entries if isinstance(e, dict) and e.get("category") and e.get("signature")]
-    except (OSError, ValueError):
-        clean = []
-
-    _LEARNED_CACHE, _LEARNED_MTIME = clean, mtime
-    return clean
-
-
-def _learned_info(entry: dict) -> dict:
-    """Normalize a learned entry into the same shape as a TAXONOMY value."""
-    return {
-        "description": entry.get("description", f"Learned category '{entry['category']}'"),
-        "signatures": [entry["signature"]],
-        "root_cause_guide": entry.get("root_cause_guide", "Learned from recurring agent-labeled lessons; verify with full log."),
-        "fix_strategy": entry.get("fix_strategy", "agent_investigation"),
-        "retryable": entry.get("retryable", None),
-        "workaround_hints": entry.get("workaround_hints", ["Inspect full log; this is an auto-learned category."]),
-        "learned": True,
-        "source_count": entry.get("source_count", 0),
-    }
 
 
 def classify_error(log_text: str) -> tuple[str, dict]:
     """Classify an error log into a taxonomy category.
 
-    Strips known-noise lines first, then returns the HIGHEST-PRIORITY category among all
-    curated signatures that match (per CLASSIFY_PRIORITY) — not merely the first key in the
-    dict. This avoids a broad early signature (e.g. a benign 404 or a co-occurring "Killed")
-    shadowing the real, more specific fault (shape mismatch, OOM, meta device, ...).
-
-    If NO curated category matches, the L3 learned-signature overlay is consulted as a
-    fallback (curated always wins → curated precision is preserved). Only if that also
-    misses do we return "unknown".
-
-    Returns (category_name, category_dict) or ("unknown", {...}) if nothing matches.
+    Returns (category_name, category_dict) or ("unknown", {...}) if no match.
     """
     import re
 
-    text = _strip_noise(log_text) or log_text
-
-    matched = []
     for category, info in TAXONOMY.items():
         for pattern in info["signatures"]:
-            if re.search(pattern, text, re.IGNORECASE):
-                matched.append(category)
-                break
-
-    if matched:
-        def _rank(c: str) -> int:
-            return CLASSIFY_PRIORITY.index(c) if c in CLASSIFY_PRIORITY else len(CLASSIFY_PRIORITY)
-
-        best = min(matched, key=_rank)
-        return best, TAXONOMY[best]
-
-    # Fallback: L3 learned overlay (most-supported entry wins on ties).
-    learned_hits = []
-    for entry in load_learned_signatures():
-        try:
-            if re.search(entry["signature"], text, re.IGNORECASE):
-                learned_hits.append(entry)
-        except re.error:
-            continue
-    if learned_hits:
-        best = max(learned_hits, key=lambda e: e.get("source_count", 0))
-        return best["category"], _learned_info(best)
+            if re.search(pattern, log_text, re.IGNORECASE):
+                return category, info
 
     return "unknown", {
         "description": "Unclassified error - requires manual analysis",

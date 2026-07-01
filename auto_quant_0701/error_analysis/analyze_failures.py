@@ -606,13 +606,6 @@ def save_failure_analysis_md(run_dir: Path, phase: str, diagnosis: dict, run_inf
     quant_scheme = diagnosis.get("quant_scheme", _get_quant_scheme(run_info))
     category = diagnosis.get("category", "unknown")
 
-    # Show the deterministic taxonomy label too when it disagrees with the agent's — a
-    # disagreement is itself a useful signal (agent refined it, or agent may be off).
-    pattern_category = diagnosis.get("pattern_category", "")
-    pattern_line = ""
-    if pattern_category and pattern_category != category:
-        pattern_line = f"\n**Pattern Match:** `{pattern_category}` (deterministic)"
-
     fault_attr = diagnosis.get("fault_attribution", {})
     traceback_analysis = diagnosis.get("traceback_analysis", "")
 
@@ -671,7 +664,7 @@ def save_failure_analysis_md(run_dir: Path, phase: str, diagnosis: dict, run_inf
 
 **Quantization Scheme:** `{quant_scheme}`
 **Failed Phase:** `{phase}`
-**Error Category:** `{category}`{pattern_line}
+**Error Category:** `{category}`
 **Severity:** `{diagnosis.get('severity', 'unknown')}`
 **Confidence:** `{diagnosis.get('confidence', 'N/A')}`
 **Retryable:** `{diagnosis.get('retryable', 'unknown')}`
@@ -1065,9 +1058,6 @@ def analyze_single_run(run_info: dict, use_agent: bool = True, timeout: int = 12
             "network_error": ("infrastructure", "network", "infra_team"),
             "model_unavailable": ("model_data", "corrupt_data", "model_author"),
             "process_killed": ("infrastructure", "resource_limit", "infra_team"),
-            "shape_mismatch": ("auto_round", "code_bug", "auto_round_devs"),
-            "meta_device_error": ("auto_round", "code_bug", "auto_round_devs"),
-            "device_mismatch": ("infrastructure", "code_bug", "infra_team"),
         }
         attr = _CATEGORY_ATTRIBUTION.get(quick_result["category"], ("unknown", "unknown", "unknown"))
 
@@ -1102,10 +1092,6 @@ def analyze_single_run(run_info: dict, use_agent: bool = True, timeout: int = 12
     diagnosis["run_id"] = run_info["run_id"]
     diagnosis["raw_error_log"] = raw_error_log
     diagnosis["quant_scheme"] = _get_quant_scheme(run_info)
-    # Always preserve the deterministic taxonomy label alongside the agent's category so the
-    # pushed report carries BOTH a reliable pattern-based label and the agent's semantic one
-    # (they cross-check each other; the deterministic label survives even if the agent errs).
-    diagnosis["pattern_category"] = quick_result["category"]
 
     # Copy diagnostic session JSONL to run directory (matches auto.sh convention)
     copied_session = None
