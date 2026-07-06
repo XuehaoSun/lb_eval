@@ -1,0 +1,128 @@
+=== Phase 2: Quantization ===
+  model=dark-pen/apodex-1.0-2B-SFT-rebased
+  scheme=W4A16
+  iters=200
+  export_format=auto_round
+  output_dir=/root/_work/1/s/auto_quant/output/runs/apodex-1.0-2B-SFT-rebased-AutoRound-W4A16-Tuning/quantized_model
+  (using local model mirror: /root/.cache/apodex-1.0-2B-SFT-rebased_local)
+23:55:50 [INFO] Quantization compute device: cuda:0 (device_map=0)
+23:55:50 [INFO] GPU0 free VRAM: 23.1GB / 23.5GB (min required: 2.0GB)
+23:55:50 [INFO] Model: /root/.cache/apodex-1.0-2B-SFT-rebased_local
+23:55:50 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+23:55:50 [INFO] Iters: 200 (TUNING)
+23:55:50 [INFO] Export format: auto_round
+23:55:50 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/apodex-1.0-2B-SFT-rebased-AutoRound-W4A16-Tuning/quantized_model
+23:55:50 [INFO] Device map: auto → effective: 0
+23:55:50 [INFO] Loading tokenizer...
+23:55:51 [INFO] Loading model...
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+23:55:52 [INFO] Architecture: Qwen3_5ForCausalLM (model_type=qwen3_5_text, moe=False)
+23:55:52 [INFO] Ignore layers: lm_head
+23:55:52 [INFO] Configuring AutoRound...
+[38;20m2026-07-05 23:55:52 INFO entry.py L587: Using MLLM mode for multimodal model.[0m
+23:55:56 [INFO] Starting quantization...
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-07-05 23:55:56 INFO utils.py L964: Ignored layers: lm_head, lm_head[0m
+[33;1m2026-07-05 23:55:56 WARNING utils.py L540: reset `quant_lm_head` to false as quantizing lm_head with tied weights has not been supported currently[0m
+[38;20m2026-07-05 23:55:56 INFO base.py L663: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-07-05 23:55:56 INFO data_driven.py L662: start to cache block inputs[0m
+[38;20m2026-07-05 23:55:56 INFO mllm.py L83: Using MLLM template: qwen3_5[0m
+[38;20m2026-07-05 23:55:56 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+23:55:57 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+23:55:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+23:55:57 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+23:55:57 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+23:55:58 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+23:55:58 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+23:55:58 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+23:55:58 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+23:55:58 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+23:55:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+23:55:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+23:55:59 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+23:55:59 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+23:55:59 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+23:56:00 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+23:56:00 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+23:56:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+23:56:00 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-07-05 23:56:01 INFO data_driven.py L685: caching done[0m
+  0%|          | 0/24 [00:00<?, ?it/s]Quantizing model.language_model.layers.0:   0%|          | 0/24 [00:00<?, ?it/s][38;20m2026-07-05 23:57:07 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000078 -> iter 175: 0.000016[0m
+[38;20m2026-07-05 23:57:09 INFO device.py L1840: 'peak_ram': 9.53GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.1:   4%|▍         | 1/24 [01:08<26:10, 68.27s/it][38;20m2026-07-05 23:58:13 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000074 -> iter 128: 0.000030[0m
+[38;20m2026-07-05 23:58:15 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.1:   8%|▊         | 2/24 [02:14<24:35, 67.09s/it]Quantizing model.language_model.layers.2:   8%|▊         | 2/24 [02:14<24:35, 67.09s/it]Quantizing model.language_model.layers.2:   8%|▊         | 2/24 [02:29<24:35, 67.09s/it][38;20m2026-07-05 23:59:20 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000124 -> iter 122: 0.000050[0m
+[38;20m2026-07-05 23:59:22 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.3:  12%|█▎        | 3/24 [03:21<23:28, 67.09s/it]/root/.venv/lib/python3.12/site-packages/torch/autograd/graph.py:882: UserWarning: Flash Attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:124.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[38;20mquantized 7/7 layers in the block, loss iter 0: 0.000169 -> iter 144: 0.000070[0m
+[38;20m2026-07-05 23:59:47 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.4:  17%|█▋        | 4/24 [03:45<22:21, 67.09s/it][38;20m2026-07-06 00:00:52 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000189 -> iter 158: 0.000090[0m
+[38;20m2026-07-06 00:00:54 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.4:  21%|██        | 5/24 [04:52<18:10, 57.37s/it]Quantizing model.language_model.layers.5:  21%|██        | 5/24 [04:52<18:10, 57.37s/it]Quantizing model.language_model.layers.5:  21%|██        | 5/24 [05:09<18:10, 57.37s/it][38;20m2026-07-06 00:01:59 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000194 -> iter 150: 0.000102[0m
+[38;20m2026-07-06 00:02:01 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.6:  25%|██▌       | 6/24 [06:00<17:12, 57.37s/it][38;20m2026-07-06 00:03:06 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000235 -> iter 170: 0.000113[0m
+[38;20m2026-07-06 00:03:08 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.6:  29%|██▉       | 7/24 [07:07<17:21, 61.29s/it]Quantizing model.language_model.layers.7:  29%|██▉       | 7/24 [07:07<17:21, 61.29s/it]Quantizing model.language_model.layers.7:  29%|██▉       | 7/24 [07:19<17:21, 61.29s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000315 -> iter 181: 0.000150[0m
+[38;20m2026-07-06 00:03:33 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.8:  33%|███▎      | 8/24 [07:31<16:20, 61.29s/it][38;20m2026-07-06 00:04:38 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000246 -> iter 185: 0.000137[0m
+[38;20m2026-07-06 00:04:41 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.9:  38%|███▊      | 9/24 [08:39<15:19, 61.29s/it][38;20m2026-07-06 00:05:46 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000268 -> iter 194: 0.000159[0m
+[38;20m2026-07-06 00:05:48 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.9:  42%|████▏     | 10/24 [09:46<13:25, 57.57s/it]Quantizing model.language_model.layers.10:  42%|████▏     | 10/24 [09:46<13:25, 57.57s/it]Quantizing model.language_model.layers.10:  42%|████▏     | 10/24 [09:59<13:25, 57.57s/it][38;20m2026-07-06 00:06:53 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000301 -> iter 160: 0.000175[0m
+[38;20m2026-07-06 00:06:55 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.11:  46%|████▌     | 11/24 [10:54<12:28, 57.57s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.000370 -> iter 187: 0.000209[0m
+[38;20m2026-07-06 00:07:20 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.12:  50%|█████     | 12/24 [11:18<11:30, 57.57s/it][38;20m2026-07-06 00:08:25 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000444 -> iter 191: 0.000253[0m
+[38;20m2026-07-06 00:08:27 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.12:  54%|█████▍    | 13/24 [12:25<10:12, 55.72s/it]Quantizing model.language_model.layers.13:  54%|█████▍    | 13/24 [12:25<10:12, 55.72s/it]Quantizing model.language_model.layers.13:  54%|█████▍    | 13/24 [12:39<10:12, 55.72s/it][38;20m2026-07-06 00:09:32 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000589 -> iter 182: 0.000346[0m
+[38;20m2026-07-06 00:09:34 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.14:  58%|█████▊    | 14/24 [13:32<09:17, 55.72s/it][38;20m2026-07-06 00:10:39 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.000915 -> iter 177: 0.000561[0m
+[38;20m2026-07-06 00:10:41 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.14:  62%|██████▎   | 15/24 [14:40<08:50, 58.91s/it]Quantizing model.language_model.layers.15:  62%|██████▎   | 15/24 [14:40<08:50, 58.91s/it]Quantizing model.language_model.layers.15:  62%|██████▎   | 15/24 [14:50<08:50, 58.91s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.001737 -> iter 194: 0.000888[0m
+[38;20m2026-07-06 00:11:06 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.16:  67%|██████▋   | 16/24 [15:04<07:51, 58.91s/it][38;20m2026-07-06 00:12:12 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.001863 -> iter 150: 0.001121[0m
+[38;20m2026-07-06 00:12:14 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.17:  71%|███████   | 17/24 [16:12<06:52, 58.91s/it][38;20m2026-07-06 00:13:19 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.002105 -> iter 195: 0.001202[0m
+[38;20m2026-07-06 00:13:21 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.17:  75%|███████▌  | 18/24 [17:20<05:41, 56.86s/it]Quantizing model.language_model.layers.18:  75%|███████▌  | 18/24 [17:20<05:41, 56.86s/it]Quantizing model.language_model.layers.18:  75%|███████▌  | 18/24 [17:30<05:41, 56.86s/it][38;20m2026-07-06 00:14:27 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.002497 -> iter 188: 0.001595[0m
+[38;20m2026-07-06 00:14:29 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.19:  79%|███████▉  | 19/24 [18:27<04:44, 56.86s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.004630 -> iter 199: 0.002303[0m
+[38;20m2026-07-06 00:14:54 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.20:  83%|████████▎ | 20/24 [18:52<03:47, 56.86s/it][38;20m2026-07-06 00:15:59 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.004009 -> iter 114: 0.002868[0m
+[38;20m2026-07-06 00:16:01 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.20:  88%|████████▊ | 21/24 [19:59<02:46, 55.56s/it]Quantizing model.language_model.layers.21:  88%|████████▊ | 21/24 [19:59<02:46, 55.56s/it]Quantizing model.language_model.layers.21:  88%|████████▊ | 21/24 [20:10<02:46, 55.56s/it][38;20m2026-07-06 00:17:06 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.005638 -> iter 163: 0.003529[0m
+[38;20m2026-07-06 00:17:08 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.22:  92%|█████████▏| 22/24 [21:07<01:51, 55.56s/it][38;20m2026-07-06 00:18:13 INFO quantizer.py L315: Unquantized layers: ['linear_attn.in_proj_b', 'linear_attn.in_proj_a'][0m
+[38;20mquantized 6/8 layers in the block, loss iter 0: 0.008048 -> iter 139: 0.004797[0m
+[38;20m2026-07-06 00:18:15 INFO device.py L1840: 'peak_ram': 9.59GB, 'peak_vram': 6.95GB[0m
+Quantizing model.language_model.layers.22:  96%|█████████▌| 23/24 [22:14<00:58, 58.46s/it]Quantizing model.language_model.layers.23:  96%|█████████▌| 23/24 [22:14<00:58, 58.46s/it]Quantizing model.language_model.layers.23:  96%|█████████▌| 23/24 [22:29<00:58, 58.46s/it][38;20mquantized 7/7 layers in the block, loss iter 0: 0.017678 -> iter 193: 0.008938[0m
+[38;20m2026-07-06 00:18:40 INFO device.py L1840: 'peak_ram': 9.6GB, 'peak_vram': 6.95GB[0m
+Quantizing done: 100%|██████████| 24/24 [22:39<00:00, 58.46s/it]                          Quantizing done: 100%|██████████| 24/24 [22:39<00:00, 56.66s/it]
+[38;20m2026-07-06 00:18:41 INFO device.py L1840: 'peak_ram': 9.6GB, 'peak_vram': 6.95GB[0m
+[38;20m2026-07-06 00:18:41 INFO data_driven.py L750: quantization tuning time 1359.9231343269348[0m
+[38;20m2026-07-06 00:18:41 INFO data_driven.py L769: Summary: quantized 150/285 in the model, unquantized layers: lm_head, model.language_model.layers.[0-2,4-6,8-10,12-14,16-18,20-22].linear_attn.in_proj_a, model.language_model.layers.[0-2,4-6,8-10,12-14,16-18,20-22].linear_attn.in_proj_b, model.visual.blocks.[0-23].attn.proj, model.visual.blocks.[0-23].attn.qkv, model.visual.blocks.[0-23].mlp.linear_fc1, model.visual.blocks.[0-23].mlp.linear_fc2, model.visual.merger.linear_fc1, model.visual.merger.linear_fc2[0m
+00:18:41 [INFO] Quantization completed in 1365.4s
+00:18:41 [INFO] Saving quantized model (auto_round format)...
+[33;1m2026-07-06 00:18:41 WARNING logging.py L340: some layers are skipped quantization (shape not divisible by 32): [0m
+packing:   0%|          | 0/186 [00:00<?, ?it/s]packing: 100%|██████████| 186/186 [00:00<00:00, 212.51it/s]
+[33;1m2026-07-06 00:18:42 WARNING export.py L344: /root/_work/1/s/auto_quant/output/runs/apodex-1.0-2B-SFT-rebased-AutoRound-W4A16-Tuning/quantized_model already exists, this may cause model conflict[0m
+00:18:43 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/apodex-1.0-2B-SFT-rebased-AutoRound-W4A16-Tuning/quant_summary.json
+00:18:43 [INFO] === Phase 2: DONE ===
