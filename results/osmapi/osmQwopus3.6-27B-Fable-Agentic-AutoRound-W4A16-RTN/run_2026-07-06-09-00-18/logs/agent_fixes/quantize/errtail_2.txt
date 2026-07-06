@@ -1,0 +1,100 @@
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] read tool called without path: toolCallId=chatcmpl-tool-bc51fdd0075498a1 argsType=object
+[agent/embedded] read tool called without path: toolCallId=chatcmpl-tool-9011fc92763ba0fc argsType=object
+[agent/embedded] embedded run timeout: runId=fix_quantize_379_1783320441 sessionId=fix_quantize_379_1783320441 timeoutMs=600000
+[agent/embedded] Profile minimax:cn timed out. Trying next account...
+[agent/embedded] embedded run failover decision: runId=fix_quantize_379_1783320441 stage=assistant decision=surface_error reason=timeout provider=minimax/MiniMax-M3 profile=sha256:c38c74a5066a
+[agent] run fix_quantize_379_1783320441 ended with stopReason=toolUse
+I'll analyze this CUDA OOM error step by step. The model is 27B parameters being loaded in fp16, which needs ~54GB VRAM, but only 31.37 GiB is available. Let me verify the cause and look at the quantize script.
+Let me verify the model size and check what's happening during load.
+Now I have enough info to confirm the hypothesis. Let me document the protocol analysis:
+
+**Analysis:**
+- Model: Qwen3_5 hybrid (27B params) - `Qwen3_5ForConditionalGeneration`
+- VRAM: 31.37 GB on RTX 5090
+- bf16 model size: ~49 GB → **won't fit on GPU**
+- AutoRound 0.13.1 installed; no bitsandbytes
+- Script has TWO full model loads: (a) pre-load for arch detection (~225), (b) AutoRound loads internally
+- Script forces `device_map=0` on single GPU which prevents offload
+
+```
+COMPONENT: our_code
+ERROR_CLASS: out_of_memory
+ROOT_CAUSE_HYPOTHESIS: 27B bf16 model (~49GB) cannot fit in 31GB VRAM. The script pre-loads the full model just for arch detection (wasteful OOM) AND forces device_map=0 for AutoRound, preventing accelerate from offloading layers to CPU.
+EVIDENCE_CMD: python3 -c "from transformers import AutoConfig; c = AutoConfig.from_pretrained('osmapi/osmQwopus3.6-27B-Fable-Agentic', trust_remote_code=True); t=c.text_config; print(f'{t.num_hidden_layers}L×{t.hidden_size}hs×{t.intermediate_size}is, params≈{(64*(4*5120*5120)+64*3*5120*17408+2*248320*5120)/1e9:.1f}B, bf16≈{((64*(4*5120*5120)+64*3*5120*17408+2*248320*5120)*2)/(1024**3):.1f}GB')"
+EVIDENCE_RESULT: 64L×5120hs×17408is, params≈27.4B, bf16≈51.0GB; GPU total=31.4GB
+VERDICT: FIXABLE
+FIX_TIER: config
+FIX_PLAN: (1) Skip the wasteful full-model pre-load — read config.json only for arch/MoE detection. (2) Estimate model size from config; if > GPU free memory ×0.9, pass device_map='auto' to AutoRound so accelerate can CPU-offload some layers (otherwise keep device_map=0 to avoid silent offload of small models).
+SMOKE_TEST: python3 -c "from auto_round import AutoRound; ar = AutoRound(model='osmapi/osmQwopus3.6-27B-Fable-Agentic', scheme='W4A16', iters=0, low_gpu_mem_usage=True, device_map='auto', trust_remote_code=True); print('AutoRound constructed ok')"  (then proceed to actual quantize)
+```
+
+Now let me apply the fix. The key change is replacing the wasteful full-model pre-load with config-only detection, plus smart device_map selection.
+Now let me also remove the unused `AutoModelForCausalLM` import if no longer used, and verify the change compiles:
+Now let me verify the patched script syntax is OK and run a smoke test:
+The smoke test shows `arch_name=Unknown` — I should fall back to top-level `config.architectures` when text_cfg doesn't have it. Let me fix that:
+Now let me verify the patched logic end-to-end. I'll run the script in dry-run-like mode (it'll start the actual quantize but I'll kill it before it gets deep). Actually, let me run a more thorough smoke test that simulates the full flow but only checks the key decision point:
+The smoke test confirms the fix works correctly:
+
+1. ✅ **No full-weight pre-load** (config-only detection — saves one ~54GB OOM)
+2. ✅ **Architecture correctly detected**: `Qwen3_5ForConditionalGeneration (model_type=qwen3_5_text, moe=False)`
+3. ✅ **device_map auto-switched**: `from 0 to 'auto'` because estimated 43.9GB > 30.9GB free
+4. ✅ **AutoRound receives correct args**: `device_map='auto'`, `low_gpu_mem_usage=True`, `iters=0`, `scheme='W4A16'`
+5. ✅ **CUDA still available** (verified earlier: `torch.cuda.is_available() == True`)
+
+Now let me also verify CUDA is still working after the changes (no torch reinstall happened, but worth confirming):
+[TIMEOUT] Agent exceeded 600s
+bash: -c: line 1: syntax error near unexpected token `('
+bash: -c: line 1: `python3 -c "from auto_round import AutoRound; ar = AutoRound(model='osmapi/osmQwopus3.6-27B-Fable-Agentic', scheme='W4A16', iters=0, low_gpu_mem_usage=True, device_map='auto', trust_remote_code=True); print('AutoRound constructed ok')"  (then proceed to actual quantize)'
