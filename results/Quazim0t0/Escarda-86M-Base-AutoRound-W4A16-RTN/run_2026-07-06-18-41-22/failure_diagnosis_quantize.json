@@ -1,0 +1,33 @@
+{
+  "category": "dataset_error",
+  "phase": "quantize",
+  "key_error": "ValueError: Columns ['attention_mask'] not in the dataset. Current columns in the dataset: ['text', 'meta', 'input_ids']",
+  "root_cause": "AutoRound's _get_dataset_impl in calib_dataset.py:889 unconditionally requests both 'input_ids' and 'attention_mask' columns when calling dataset.set_format(), but the prior tokenization/format step for this RTN-with-imatrix path only produced 'input_ids' (alongside the raw 'text' and 'meta' fields). The attention_mask column is missing from the prepared dataset.",
+  "traceback_analysis": "quantize.py::quantize() invokes autoround.quantize() → _quantize_impl() → _quant_rtn_with_imatrix() → calibration_state.ensure_dataloader() → get_dataloader() → get_dataset() → _get_dataset_impl(). Inside _get_dataset_impl (auto_round/calib_dataset.py:889), the code assumes the dataset has already been tokenized with an attention_mask column, but for the pile-10k / RTN-imatrix path the dataset still only has 'input_ids'. The fault is at _get_dataset_impl for hard-coding the required columns without handling the case where attention_mask is absent.",
+  "fault_attribution": {
+    "component": "auto_round",
+    "specific_module": "auto_round.calib_dataset",
+    "specific_function": "_get_dataset_impl",
+    "fault_type": "code_bug",
+    "responsible_party": "auto_round_devs"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "Workaround at the call site: re-run with a different dataset or explicitly tokenize first. Direct fix in auto_round/calib_dataset.py around line 889: filter the requested columns to only those present in the dataset, e.g. `cols = [c for c in ['input_ids','attention_mask'] if c in dataset.column_names]; dataset.set_format(type='torch', columns=cols)`. Alternatively pass --dataset or a tokenization config that guarantees attention_mask is generated and stored.",
+  "fix_verification": "Re-run the quantize command and confirm no ValueError; check the produced dataloader batch contains input_ids (and attention_mask if model expects it).",
+  "workaround": "Use a different calibration dataset known to be pre-tokenized with attention_mask (e.g. provide your own dataset via --dataset <path> where tokenization produces both fields), or downgrade to an auto_round version that still handles this path, or apply a small monkey-patch that adds a dummy ones attention_mask column before set_format.",
+  "affected_component": "auto_round",
+  "severity": "high",
+  "confidence": 0.85,
+  "versions_involved": {
+    "auto_round": "unknown (installed in /root/.venv, file shows data_driven.py and calib_dataset.py from auto_round)",
+    "transformers": "unknown",
+    "torch": "python3.12 site-packages, torch.utils._contextlib invoked"
+  },
+  "community_summary": "RTN-with-imatrix quantization of Escarda-86M-Base failed because AutoRound's calibration pipeline tried to select the 'attention_mask' column but the prepared pile-10k dataset only had 'input_ids'. The bug is in auto_round.calib_dataset._get_dataset_impl which hard-codes the column list; either upgrade auto_round to a fixed version or apply a patch that filters columns to those actually present. As a workaround, supply a pre-tokenized dataset that includes attention_mask.",
+  "analyzed_at": "2026-07-06T18:41:56.180582+00:00",
+  "model": "Quazim0t0/Escarda-86M-Base",
+  "run_id": "Escarda-86M-Base-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "dataset_error"
+}
