@@ -1,0 +1,33 @@
+{
+  "category": "dataset_error",
+  "phase": "quantize",
+  "key_error": "ValueError: Columns ['attention_mask'] not in the dataset. Current columns in the dataset: ['text', 'meta', 'input_ids']",
+  "root_cause": "After tokenization in auto_round's _get_dataset_impl, the dataset contains 'input_ids' but no 'attention_mask'. The downstream set_format call on line 889 hardcodes a requirement for both columns, but the tokenization step did not produce (or was not configured to produce) attention_mask for the NeelNanda/pile-10k dataset.",
+  "traceback_analysis": "quantize() -> _quantize_impl() -> _quant_rtn_with_imatrix() -> calibration_state.ensure_dataloader() -> get_dataloader() -> get_dataset() -> _get_dataset_impl() tokenizes NeelNanda/pile-10k and then unconditionally calls dataset.set_format(columns=['input_ids','attention_mask']) at line 889. The tokenization that preceded this call failed to add the 'attention_mask' column, so the format assertion raises. Fault is in auto_round's _get_dataset_impl: it should defensively add a default attention_mask of all-ones when the tokenizer does not return one, rather than assuming it exists.",
+  "fault_attribution": {
+    "component": "auto_round",
+    "specific_module": "auto_round.calib_dataset",
+    "specific_function": "_get_dataset_impl",
+    "fault_type": "code_bug",
+    "responsible_party": "auto_round_devs"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "Patch auto_round/calib_dataset.py around line 889: before set_format, ensure an attention_mask column exists. Add: `if 'attention_mask' not in dataset.column_names: dataset = dataset.map(lambda x: {'attention_mask': [1]*len(x['input_ids'])})`. Alternatively, force the tokenizer call to use return_attention_mask=True explicitly. Upstream fix: make set_format tolerant by computing attention_mask as (input_ids != pad_token_id) when missing.",
+  "fix_verification": "Re-run the pipeline: `python -m auto_quant --model Quazim0t0/Escarda-86M-Base --phase quantize --scheme W4A16-RTN`. The dataset preprocessing should succeed and quantization should proceed past get_dataloader.",
+  "workaround": "Pre-tokenize the calibration dataset yourself and pass a custom dataset path via the dataset argument, ensuring both 'input_ids' and 'attention_mask' columns are produced by your tokenizer call. Or pass a different calibration dataset (e.g., 'lambada_openai', 'wikitext-2') that round-trips through the tokenizer without losing attention_mask.",
+  "affected_component": "auto_round",
+  "severity": "high",
+  "confidence": 0.82,
+  "versions_involved": {
+    "auto_round": "unknown (calib_dataset.py line 889 implies recent 0.x release)",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "Auto-round's NeelNanda/pile-10k calibration pipeline crashed because the tokenizer step only produced 'input_ids' but not 'attention_mask', and the subsequent set_format call hard-requires both. This is an auto-round code bug in _get_dataset_impl — the proper fix is to defensively synthesize an all-ones attention_mask when missing, or to always pass return_attention_mask=True in the tokenizer call.",
+  "analyzed_at": "2026-07-07T02:58:42.329443+00:00",
+  "model": "Quazim0t0/Escarda-86M-Base",
+  "run_id": "Escarda-86M-Base-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "dataset_error"
+}
