@@ -75,6 +75,28 @@ DENSE_IGNORE_LAYERS = {
 }
 
 
+def _parse_layer_config(raw: str):
+    """Parse an auto-round relaxed-JSON layer_config string into a dict.
+
+    Prefers auto-round's own ``parse_layer_config_arg`` (authoritative, matches
+    the CLI behavior). Falls back to strict ``json.loads`` if unavailable.
+    Raises ValueError on unparseable input so the pipeline fails loudly rather
+    than silently ignoring a mixed-precision request.
+    """
+    raw = raw.strip()
+    if not raw:
+        return None
+    try:
+        from auto_round.utils.common import parse_layer_config_arg
+        return parse_layer_config_arg(raw)
+    except ImportError:
+        import json as _json
+        try:
+            return _json.loads(raw)
+        except Exception as e:
+            raise ValueError(f"Could not parse layer_config (strict JSON fallback): {e}") from e
+
+
 def is_moe_model(model) -> bool:
     """Detect if model is a Mixture-of-Experts architecture."""
     model_type = getattr(model.config, "model_type", "")
@@ -244,10 +266,24 @@ def quantize(args):
     del model
     logger.info(f"Architecture: {arch_name} (model_type={model_type}, moe={moe})")
 
-    # Determine ignore layers based on scheme and model type (MoE vs dense)
-    ignore_table = MOE_IGNORE_LAYERS if moe else DENSE_IGNORE_LAYERS
-    ignore_layers = ignore_table.get(args.scheme, "lm_head")
-    logger.info(f"Ignore layers: {ignore_layers}")
+    # Determine ignore layers based on scheme and model type (MoE vs dense).
+    # A user-supplied --ignore_layers (whitelisted advanced submissions) OVERRIDES
+    # the built-in table entirely; otherwise use the scheme/MoE default.
+    custom_ignore = (getattr(args, "ignore_layers", "") or "").strip()
+    if custom_ignore:
+        ignore_layers = custom_ignore
+        logger.info(f"Ignore layers (user override): {ignore_layers}")
+    else:
+        ignore_table = MOE_IGNORE_LAYERS if moe else DENSE_IGNORE_LAYERS
+        ignore_layers = ignore_table.get(args.scheme, "lm_head")
+        logger.info(f"Ignore layers (default): {ignore_layers}")
+
+    # Optional mixed-precision layer_config (auto-round relaxed JSON).
+    custom_layer_config = (getattr(args, "layer_config", "") or "").strip()
+    parsed_layer_config = None
+    if custom_layer_config:
+        parsed_layer_config = _parse_layer_config(custom_layer_config)
+        logger.info(f"Layer config (mixed precision): {parsed_layer_config}")
 
     # Build AutoRound — scheme-based API (auto-round >= 0.13)
     logger.info("Configuring AutoRound...")
@@ -262,9 +298,20 @@ def quantize(args):
         # "disable_opt_rtn": True,
     }
 
+    # Model-free: weight-only RTN straight from the checkpoint (no calibration
+    # forward). Routed inside AutoRound via is_model_free_route when model_free=True.
+    # Only valid for weight-only schemes (W4A16/MXFP4/MXFP8) — gated upstream.
+    if getattr(args, "model_free", False):
+        ar_kwargs["model_free"] = True
+        logger.info("Model-free mode enabled (weight-only RTN, no calibration).")
+
     # Use ignore_layers to completely skip quantization for sensitive layers
     if ignore_layers:
         ar_kwargs["ignore_layers"] = ignore_layers
+
+    # Mixed-precision per-module overrides
+    if parsed_layer_config:
+        ar_kwargs["layer_config"] = parsed_layer_config
 
     # Only pass seqlen/nsamples if tuning (iters > 0)
     if iters > 0:
@@ -331,6 +378,8 @@ def quantize(args):
         "iters": iters,
         "export_format": args.export_format,
         "ignore_layers": ignore_layers,
+        "model_free": bool(getattr(args, "model_free", False)),
+        "layer_config": custom_layer_config or None,
         "duration_seconds": round(duration, 1),
         "output_dir": args.output_dir,
         "device": str(effective_device_map),
@@ -374,6 +423,15 @@ if __name__ == "__main__":
                         help="Number of calibration samples (only used when iters > 0)")
     parser.add_argument("--num_gpus", default="1",
                         help="Number of GPUs: 1 → single-GPU (forced cuda:index); >1 → device_map='auto' sharding")
+    parser.add_argument("--model_free", action="store_true",
+                        help="Use auto-round model-free (weight-only RTN, no calibration forward). "
+                             "Only valid for weight-only schemes (W4A16/MXFP4/MXFP8).")
+    parser.add_argument("--ignore_layers", default="",
+                        help="Comma-separated module substrings to skip. When set, OVERRIDES the "
+                             "built-in scheme/MoE ignore table. Empty = use built-in defaults.")
+    parser.add_argument("--layer_config", default="",
+                        help="auto-round layer_config for mixed precision, e.g. "
+                             "'{block_sparse_moe.experts:{bits:4,data_type:mx_fp}}'. Empty = uniform scheme.")
     args = parser.parse_args()
 
     try:

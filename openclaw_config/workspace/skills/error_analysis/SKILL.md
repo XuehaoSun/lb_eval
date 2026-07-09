@@ -1,6 +1,6 @@
 ---
 name: error_analysis
-description: Analyze quantization/evaluation pipeline failure logs — trace root causes, diagnose issues, and propose concrete fixes like a senior engineer.
+description: Analyze quantization/evaluation pipeline failure logs — trace root causes, diagnose issues, and propose concrete fixes like a senior engineer. Part 0 is a framework-agnostic expert-reasoning discipline (attribute the bug's owning layer → verify hypotheses against real artifacts → reason about what data physically exists → differential-debug against a working reference → confirm the fix takes effect); Parts 1–8 apply it to the auto-quant taxonomy; Part 9 is a corpus-grounded recurring-failure catalog that keeps diagnosis deterministic (same signature → same verdict).
 metadata:
   openclaw:
     emoji: "🔍"
@@ -19,6 +19,105 @@ setup_env → quantize (auto-round) → evaluate (lm_eval) → upload (HuggingFa
 ```
 
 Your job is to **think like a senior engineer**: trace the actual root cause, not just pattern-match the error message. Below is the methodology.
+
+---
+
+## Part 0: How an Expert Actually Reasons (READ THIS FIRST)
+
+> Distilled from real senior-engineer debugging transcripts (Copilot+Opus4.8 solving
+> hard framework/model bugs). This Part is the **general thinking discipline** — it
+> transfers to ANY codebase or error, not just this pipeline. Parts 1–8 below are the
+> auto-quant-specific taxonomy that this discipline gets *applied to*. When an error
+> isn't in the taxonomy, fall back to THIS.
+
+```
+TRIAGE → ATTRIBUTE (whose bug?) → HYPOTHESIZE → VERIFY-AGAINST-REAL-ARTIFACT
+       → FIX-THE-RIGHT-LAYER → CONFIRM-IT-WILL-TAKE-EFFECT → SMOKE-TEST → RE-RUN → REPEAT
+```
+
+### 0.1 The master move: ATTRIBUTE the error before you fix anything
+
+The single trait that separates an expert from a guesser: **before touching code, decide
+which layer OWNS the bug.** The same symptom (e.g. one `KeyError`) can come from any layer,
+and the owner dictates *where* the fix must live:
+
+| Attribution | Meaning | Fix lives in | You must NOT |
+|-------------|---------|--------------|--------------|
+| **Framework/code bug** | our/vendor code is wrong (e.g. a fork missing a mapping) | patch the source | regenerate data |
+| **Data/artifact bug** | the produced artifact is wrong (bad config, wrong layer quantized) | regenerate the artifact | patch the framework to hide it |
+| **Capability gap** | code never supported this case (new arch, new activation) | add support / thread a param through | disable the assert |
+| **Environment/version** | wrong package version, missing dep, wrong install path | fix the env | edit code |
+| **Noise (WARNING)** | scary line with a fallback, not the crash | ignore it | chase it |
+
+In the source sessions the engineer re-attributed *every single* failure this way — "报错1/2
+是框架 fork bug、报错3 是量化产物 bug、报错4/5 是框架能力缺口" — and that attribution, not the
+error text, is what decided the fix. **Always state the attribution explicitly before acting.**
+
+### 0.2 Verify every hypothesis against the REAL artifact — never from memory
+
+The highest-value habit. A hypothesis is worthless until falsified against ground truth.
+Don't trust remembered key names, config fields, or shapes — go read them:
+- weight names → the checkpoint index / `weight_map`
+- config → the actual config file (ignore list, format, groups)
+- tensor shape/dtype → open the artifact and print it
+- "is this even supported?" → grep the runtime's registry
+
+On a name/format error, **put the two sources side by side** (what our code expects vs. what
+the artifact actually contains) and prove which side is wrong. Then fix *that* side.
+
+### 0.3 Reason about what data PHYSICALLY EXISTS — can this be fixed in place?
+
+Before proposing a post-hoc fix, ask: *does the data the fix needs actually exist?* The expert's
+sharpest reasoning was: "if I mark it quantized, the packed weights don't exist → KeyError; if I
+mark it unquantized, the plain weights don't exist → KeyError. **The consistent data simply isn't
+there**, so no config edit can work — it must be regenerated." That's deduction about physical
+state, not trial-and-error. Distinguish *"wrong wiring over correct data"* (patchable in place)
+from *"the data itself is missing/inconsistent"* (must regenerate upstream).
+
+### 0.4 "Why does the working one work?" — differential debugging
+
+When something *similar* works (another model, another fork/branch, a vendor's known-good copy),
+the fastest root cause is a **diff of working-vs-broken**, then port ONLY the missing behavior.
+Hard-won guard: **reuse a reference only after confirming the format and names actually align.**
+Copying a reference whose layout/naming differs just manufactures a new bug (that's exactly how a
+`w2_qweight` KeyError was created by reusing the wrong MoE method).
+
+### 0.5 Trace an assert to where the param SHOULD have been passed — don't disable it
+
+A deep `AssertionError`/error means the code reached that point but a required value wasn't
+threaded through. Walk the stack to find every link that dropped it (selector → config → forward
+call) and **plumb it through all of them**. Never comment out the assert. Also evaluate the
+obvious alternative and say why it's rejected ("falling back to the other backend also drops the
+param and loses perf") — a real engineer justifies the road not taken.
+
+### 0.6 Metacognition: will my change even take effect?
+
+Fixing the right code in the wrong copy = no fix. The expert proactively checked: *is this
+package installed editable (`pip install -e`)? which source tree does the runtime actually load?
+did my edit land in that tree?* When migrating a fix to another tree, **diff the target's real
+code first — never blind-apply a patch**: keep lines that look removable but are load-bearing,
+and when several near-identical call sites exist, change only the one that matters. Actively hunt
+for these traps.
+
+### 0.7 Decouple concerns; bound your confidence to what's verifiable
+
+- **Decouple:** separate independent questions and verify them independently ("is the artifact
+  correct?" vs. "does the framework support this arch?"). Don't let one mask the other.
+- **One root cause per iteration:** in a log loop (`test.log → test_2 → …`) fix ONE fatal cause,
+  re-run, re-triage the *next* one. Each fix reshapes the failure surface.
+- **Honest confidence:** state what you *cannot* verify in the current environment ("no XPU here,
+  so I can't confirm the real key names — if load fails, send the log and I'll adjust the mapping").
+  Never fake certainty; give the other party a concrete next step instead.
+- **Smoke-test first:** a 3-second `python -c "..."` probe beats a 30-minute re-run to learn the fix was wrong.
+
+### 0.8 Triage & map before diving
+
+- **Log:** `wc -l` → `grep -nE "Traceback|Error|Exception|assert|KeyError|RuntimeError|ValueError|Killed|FAILED"` →
+  read only around the *fatal* hit, bottom-up. Separate WARNINGS (have a fallback) from the line
+  the process actually died on.
+- **Unfamiliar codebase:** map breadth-first before editing — entrypoint → dispatch/factory →
+  backend → data/weight layout — and write the mental model down (even a small support-matrix
+  table) so the fix targets the right link in the chain.
 
 ---
 
@@ -489,12 +588,189 @@ After analysis, output a JSON diagnosis:
 
 ---
 
+## Part 8: Deep Root-Cause Techniques (Artifact Inspection & Reference-Diffing)
+
+> These techniques come from real sessions where the bug was NOT in the taxonomy —
+> weight-name mismatches, architecture support, kernel asserts, iterative log loops.
+> Use them when Parts 2 & 6 don't pattern-match, or when the fix requires touching source code.
+
+### 8.1 The checkpoint/config is the most direct evidence
+
+When you get a `KeyError`/`ValueError`/`size mismatch` on a weight, **stop guessing and read the artifact.**
+
+```bash
+# What weights actually exist? (list keys for one layer to see the naming scheme)
+python3 -c "
+import json, glob
+idx = glob.glob('model.safetensors.index.json') or glob.glob('*.index.json')
+wm = json.load(open(idx[0]))['weight_map']
+import re
+sample = sorted(set(re.sub(r'\.\d+\.', '.N.', k) for k in wm))   # collapse layer indices
+print('\n'.join(sample[:40]))
+"
+
+# What does the quant config say? (ignore list, format, per-group schemes)
+python3 -c "
+import json
+qc = json.load(open('config.json'))['quantization_config']
+print('format      :', qc.get('format'))
+print('quant_method:', qc.get('quant_method'))
+print('ignore (n)  :', len(qc.get('ignore') or []))
+for g,v in (qc.get('config_groups') or {}).items():
+    print('group', g, '->', v.get('targets'))
+"
+
+# Exact tensor shape & dtype (proves dtype-mismatch / layout hypotheses)
+python3 -c "
+from safetensors import safe_open
+with safe_open('model-00001-of-00002.safetensors','pt') as f:
+    for k in list(f.keys())[:5]:
+        t=f.get_tensor(k); print(k, tuple(t.shape), t.dtype)
+"
+
+# Does the runtime even support this architecture? (arch support is NOT a quant problem)
+python3 -c "import json; print(json.load(open('config.json')).get('architectures'))"
+grep -rin "<ArchName>" <runtime>/model_executor/models/registry.py
+```
+
+**The key question on any weight error:** *is it OUR registered param names, or the checkpoint's
+actual names?* Prove it with the two lists side by side. Then fix the side that's wrong
+(usually a config `ignore`/rename, or a param-name mapping in code) — do NOT regenerate weights
+unless the weights themselves are genuinely wrong.
+
+### 8.2 Reference-diffing: "why does the working one work?"
+
+When a *similar* case works (another model, another fork/branch, a vendor's known-good copy),
+the fastest root-cause is a **diff of working vs. broken**, not a from-scratch analysis.
+
+```bash
+# Compare the same function in a working vs broken source tree
+grep -n "hf_to_vllm_mapper\|packed_modules_mapping\|WeightsMapper" broken/model.py
+grep -n "hf_to_vllm_mapper\|packed_modules_mapping\|WeightsMapper" working/model.py
+diff <(sed -n '1000,1100p' broken/model.py) <(sed -n '1000,1100p' working/model.py)
+```
+
+Real example: an `fc1.weight` KeyError was because the load path renamed `mlp.fc1→fc1` but the
+*ignore-matching* path didn't. The AMD fork already had the right `packed_modules_mapping`; the
+NVIDIA fork was missing it. Fix = port the missing mapping, nothing more.
+
+**Guardrail (learned the hard way):** only reuse a reference implementation after confirming the
+checkpoint **format family and parameter names align**. In one session, reusing the
+compressed-tensors Marlin MoE method for an AutoRound (GPTQ-named) checkpoint produced a
+`w2_qweight` KeyError — the reference expected `w2_weight_packed`. Right move was a GPTQ-named
+method with the same compute backend, not a blind copy.
+
+### 8.3 Mapping a call/dispatch path (when the fix is in source code)
+
+To patch a runtime (vLLM/transformers/auto-round) you must first find where the decision is made.
+Explore in this order: **entrypoint → dispatch/factory → backend → weight layout.**
+
+```bash
+ls <pkg>/quantization/                                  # 1. recon the package
+grep -rn "def get_linear_method\|def get_moe_method\|def get_scheme\|select_gemm_impl" <pkg>   # 2. find the selector
+grep -rn "class .*Backend\|is_xpu\|current_platform" <pkg>/kernels/   # 3. find the runtime backend
+grep -rn "weight_packed\|qweight\|weight_scale\|g_idx" <pkg>          # 4. confirm the layout it expects
+```
+
+Trace top-level selector → method object → runtime backend → the exact tensor view it loads.
+The bug is usually a mismatch between two adjacent links in that chain.
+
+### 8.4 Kernel / backend asserts
+
+`AssertionError` deep inside a kernel (e.g. `SWIGLUOAI_UNINTERLEAVE requires clamp_limit`,
+`No common block size`) means the backend was reached but a required parameter wasn't threaded
+through. Trace the assert up the stack to find where the param *should* have been passed
+(config → method → forward) and plumb it through — don't disable the assert.
+
+### 8.5 Getting reference source you don't have installed
+
+If a package isn't installed locally, fetch the exact source to compare against:
+
+```bash
+# Prefer raw file; fall back to the GitHub contents API if raw 404s
+curl -fsSL "https://raw.githubusercontent.com/<org>/<repo>/main/path/to/file.py" \
+  || curl -fsSL "https://api.github.com/repos/<org>/<repo>/contents/path/to/dir"
+```
+(In one session `web_fetch` on a moved file returned nothing; the recovery was the GitHub
+contents API to relocate the refactored path, then fetch the new file.)
+
+---
+
+## Part 9: Recurring Failure Catalog (grounded in the real results corpus)
+
+> Built from ~29 real `failure_diagnosis_*.json` across `results/`. Two things this corpus proved:
+> **(a)** identical symptoms were repeatedly given *different* categories and *contradictory* fixes
+> across runs (see 9.1); **(b)** a handful of signatures recur constantly. Use this catalog to make
+> diagnosis **deterministic** — when the signature matches, use the canonical attribution + fix below,
+> do NOT re-derive a new one.
+
+### 9.1 Attribution stability (the #1 real defect to avoid)
+
+The **same** Gemma4 error — `RuntimeError: The size of tensor a (512) must match the size of tensor
+b (256)` (RoPE cos/sin dim vs query dim) — was diagnosed four different ways on the same model
+family: `model_architecture_mismatch`, `quantization_runtime_error`, `transformers_model_code_bug`,
+`model_forward_mismatch`, and one run even suggested **downgrading transformers** (a forbidden move).
+
+**Rule:** a stable diagnosis is worth more than a clever one. Before inventing a category, check this
+catalog. If the signature matches, reuse the canonical entry verbatim. Only introduce a new category
+when the signature is genuinely absent here (then propose it via `new_taxonomy_suggestion`).
+
+### 9.2 Canonical signature → attribution → fix table
+
+| Signature (key_error substring) | Phase | Canonical category | Owner | Retryable | Canonical fix (minimal first) |
+|---|---|---|---|---|---|
+| `tensor a (512) must match ... b (256)` + Gemma4/RoPE/cos-sin | quantize | `autoround_internal` (new-arch RoPE in block-forward) | auto_round + transformers | no | `pip install -U auto-round transformers` to match the new arch. **Do NOT downgrade transformers.** If still failing → arch not yet supported, report UNFIXABLE. |
+| `Columns ['attention_mask'] not in the dataset` | quantize | `dataset_error` | auto_round (`calib_dataset._get_dataset_impl` hardcodes attention_mask) | no | Patch `set_format` to include `attention_mask` only if present; OR switch calibration dataset. |
+| `Tokenizer class TokenizersBackend does not exist` | quantize/eval | `transformers_incompatible` (NOT "unknown") | env/version skew | no | `pip install -U transformers tokenizers` (newer tokenizer backend class); verify with `AutoTokenizer.from_pretrained(model, use_fast=False)`. |
+| `cannot import name 'NEED_SETUP_CACHE_CLASSES_MAPPING'` | quantize | `transformers_incompatible` | env/version skew (auto_round ↔ transformers API drift) | no | Align versions: `pip install -U auto-round` first, then transformers; check auto_round's required transformers range. |
+| `re.error: invalid group reference` (auto_round utils/common.py) | quantize | `autoround_internal` | auto_round bug | no | `pip install -U auto-round`; if still present, patch the bad backreference in `revert_checkpoint_conversion_mapping`. File upstream issue. |
+| `IndexError: list index out of range` in `auto_round/algorithms/quantization/base.py` (`_sampling_inputs`) | quantize | `autoround_internal` (calibration sampling) | auto_round | maybe | Try a different calibration dataset / chat-vs-plain format; `pip install -U auto-round`. |
+| `Expected attn_mask dtype to be bool or float ... but got` | quantize | `dtype_mismatch` (attn mask) | auto_round/model_code | no | `pip install -U auto-round transformers`; if in model custom code, cast mask `.to(query.dtype)`/bool at the traceback line. |
+| `expected mat1 and mat2 to have the same dtype ... float != BFloat16` | evaluate | `dtype_mismatch` | model_code (mixed dtype after quant) | no | Force uniform dtype at eval, or patch the custom `.float()` in model code to `.to(ref.dtype)` (see 4.4). |
+| `AssertionError: processor should not be None` / `Can't load image processor` | quantize | `multimodal_unsupported` | model_data / arch | no | Try `pip install -U auto-round transformers` (VL backbone often quantizable). Only UNFIXABLE if no causal-LM head (pure vision/audio). See 2.2.4. |
+| `... does not appear to have a file named pytorch_model* / model-*.safetensors` | quantize | `model_unavailable` / `sharded_checkpoint_cache_incomplete` | model_data / infra | **yes** | Re-download (interrupted/incomplete cache); if repo genuinely lacks weights (e.g. GGUF-only) → UNFIXABLE. |
+| `KimiLinearForCausalLM.__init__() got an unexpected keyword argument 'torch_compile'` | evaluate | `eval_framework` (harness↔custom-model interface) | model_code / lm_eval | no | Custom model `__init__` must accept/ignore `**kwargs`; or drop the arg in the eval model-args. |
+| `CUDA out of memory` | quantize/eval | `out_of_memory` | infra | **yes** | See 2.5: `--low_gpu_mem_usage` → fewer `nsamples` → shorter `seqlen` → more GPUs. |
+| **Last log line is a progress bar** (e.g. `Quantizing model.layers.2: 12%|...`) with NO traceback | quantize | `process_killed` (OOM/timeout) | infra | **yes** | This is a KILL, not a Python error — see 9.3. |
+
+### 9.3 "No traceback, just a progress bar" = the process was KILLED
+
+Several corpus failures have a `key_error` that is literally a tqdm progress bar
+(`Quantizing model.layers.2: 12%|█▎ | 2/16 [02:30<17:36, ...]`). That means the process died
+**without raising** — OOM-killer, timeout, or SIGKILL. **Do not treat the progress bar as the error.**
+Instead:
+- Check the exit code (137 = OOM/SIGKILL, 143 = SIGTERM/timeout).
+- Look for `Killed`, `dmesg | grep -i oom`, and whether `peak_ram`/`peak_vram` was climbing.
+- Note which layer it died on (large layer late in the model → memory; early + wall-clock hit → timeout).
+- Fix as OOM (2.5) or raise the timeout. This is `process_killed`, retryable — NOT `model_unavailable`.
+
+### 9.4 How to use this catalog in the diagnosis flow
+
+1. Triage the log (Part 0.8) → get the exact fatal signature.
+2. **Match against 9.2 first.** Hit → adopt its category/owner/retryable/fix; still verify against the
+   real artifact (Part 0.2) before editing, but keep the canonical attribution.
+3. Miss → run Parts 2/5/8 to derive one, then emit a `new_taxonomy_suggestion` so the catalog grows.
+4. Whatever you conclude, obey the stability rule: the same signature must always get the same verdict.
+
+---
+
 ## Constraints (HARD RULES)
 
 - **NEVER** downgrade PyTorch — it breaks CUDA/pipeline. Not negotiable.
+- **NEVER** downgrade transformers to "fix" a new-arch error — upgrade auto-round + transformers instead (9.2).
 - **NEVER** modify evaluation tasks, scoring criteria, or expected output format.
 - **NEVER** skip quantization layers to hide errors (that produces invalid models).
 - **NEVER** guess without evidence. If you're unsure, say confidence < 0.5.
+- **NEVER** disable an assert/error to "make it pass" — plumb the missing param through instead.
+- **NEVER** regenerate weights for a name/format mismatch — fix the config/mapping side.
+- **NEVER** blindly copy a working reference — first confirm checkpoint format + param names align (8.2).
+- **NEVER** treat a trailing progress bar as the error — it means the process was KILLED (9.3).
+- **NEVER** label a recurring signature `unknown` if it's in the Part 9 catalog — reuse the canonical verdict.
+- **ALWAYS** triage first (wc -l + grep for fatal markers), and separate WARNINGS from the fatal error.
+- **ALWAYS** verify a hypothesis against the real artifact (checkpoint keys / config / dtype) before editing.
+- **ALWAYS** fix ONE root cause per iteration in a log loop, then re-triage the next fatal error.
+- **ALWAYS** give the same signature the same verdict (attribution stability, 9.1).
 - **ALWAYS** show your reasoning chain (traceback analysis → hypothesis → verification).
 - **ALWAYS** try the minimal fix first. Don't `pip install -U` everything.
 - **ALWAYS** provide a verification command so the fix can be tested quickly.
+

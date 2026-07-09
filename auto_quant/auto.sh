@@ -107,6 +107,9 @@ request_filename = task.get("request_filename", "")
 # Explicit GPU card pinning (AWS B200 / local-agent path). Comma-separated
 # physical card indices, e.g. "0" or "0,1,3". Empty when not pinned.
 cuda_visible_devices = str(task.get("cuda_visible_devices", "") or "").strip()
+# Optional advanced quant controls (whitelisted submissions only).
+ignore_layers = str(task.get("ignore_layers", "") or "").strip()
+layer_config = str(task.get("layer_config", "") or "").strip()
 # If request_filename not in JSON, derive from the JSON filename itself
 if not request_filename:
     import os
@@ -137,6 +140,10 @@ print(f'AUTO_ROUND_REF="{auto_round_ref}"')
 print(f'TRANSFORMERS_REF="{transformers_ref}"')
 print(f'REQUEST_FILENAME="{request_filename}"')
 print(f'REQ_CUDA_VISIBLE_DEVICES="{cuda_visible_devices}"')
+# Use shlex.quote for free-form advanced values so the shell `eval` is injection-safe.
+import shlex
+print(f'REQ_IGNORE_LAYERS={shlex.quote(ignore_layers)}')
+print(f'REQ_LAYER_CONFIG={shlex.quote(layer_config)}')
 PYEOF
 )"
 
@@ -148,9 +155,10 @@ case "${EXPORT_FORMAT}" in
 esac
 
 case "${METHOD}" in
-    RTN)    ITERS=0;   METHOD_SUFFIX="RTN" ;;
-    TUNING) ITERS=200; METHOD_SUFFIX="Tuning" ;;
-    *)      ITERS=0;   METHOD_SUFFIX="${METHOD}" ;;
+    RTN)        ITERS=0;   METHOD_SUFFIX="RTN";      MODEL_FREE=false ;;
+    TUNING)     ITERS=200; METHOD_SUFFIX="Tuning";   MODEL_FREE=false ;;
+    MODEL_FREE) ITERS=0;   METHOD_SUFFIX="ModelFree"; MODEL_FREE=true ;;
+    *)          ITERS=0;   METHOD_SUFFIX="${METHOD}"; MODEL_FREE=false ;;
 esac
 
 # Use config.env defaults where task JSON didn't override
@@ -159,6 +167,10 @@ DEVICE_INDEX="${DEVICE_INDEX:-0}"
 EVAL_TASKS="${EVAL_TASKS:-piqa,mmlu,hellaswag}"
 EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-8}"
 NUM_GPUS="${NUM_GPUS:-1}"
+
+# Advanced quant controls (empty unless a whitelisted submission set them).
+IGNORE_LAYERS="${REQ_IGNORE_LAYERS:-}"
+LAYER_CONFIG="${REQ_LAYER_CONFIG:-}"
 
 # ═══ Explicit GPU card pinning (AWS B200 / local-agent path) ═══
 # When the request.json specifies cuda_visible_devices (e.g. "0,1"), pin the run
@@ -195,7 +207,8 @@ LESSONS_DIR="${SCRIPT_DIR}/lessons"
 GIT_BRANCH="${GIT_BRANCH:-main}"
 
 # Export for child scripts
-export MODEL_ID SCHEME METHOD ITERS EXPORT_FORMAT EVAL_BACKEND
+export MODEL_ID SCHEME METHOD ITERS EXPORT_FORMAT EVAL_BACKEND MODEL_FREE
+export IGNORE_LAYERS LAYER_CONFIG
 export AUTO_ROUND_REF TRANSFORMERS_REF
 export DEVICE DEVICE_INDEX EVAL_TASKS EVAL_BATCH_SIZE NUM_GPUS
 export RUN_OUTPUT_DIR QUANTIZED_MODEL_DIR EVAL_OUTPUT_DIR
