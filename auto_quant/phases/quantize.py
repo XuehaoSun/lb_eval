@@ -115,6 +115,22 @@ def is_moe_model(model) -> bool:
     return False
 
 
+def is_moe_config(config) -> bool:
+    """Detect MoE from a HF config WITHOUT loading weights (used by model-free,
+    where loading a possibly-huge model just to detect MoE would defeat the point)."""
+    for attr in ("num_experts", "num_local_experts", "n_routed_experts", "moe_num_experts"):
+        if getattr(config, attr, None):
+            return True
+    model_type = (getattr(config, "model_type", "") or "").lower()
+    moe_types = {"mixtral", "arctic", "dbrx", "jamba", "deepseek", "deepseek_v2",
+                 "deepseek_v3", "deepseek_v4", "qwen2_moe", "qwen3_moe", "qwen3_5_moe",
+                 "phimoe", "grok", "minimax", "minimax_m3", "longcat", "glm_moe"}
+    if model_type in moe_types:
+        return True
+    arch = " ".join(getattr(config, "architectures", None) or []).lower()
+    return "moe" in arch or "sparse" in arch
+
+
 def resolve_device_map(requested, num_gpus, device_index):
     """Resolve the device_map passed to AutoRound so quantization actually runs on GPU.
 
@@ -222,10 +238,23 @@ def quantize(args):
     - MoE models: additionally mlp.gate (router precision is critical)
     """
     from auto_round import AutoRound
-    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from transformers import AutoModelForCausalLM, AutoConfig, AutoTokenizer
+
+    model_free = bool(getattr(args, "model_free", False))
+
+    # Resolve export format. Model-free MXFP4/MXFP8 ONLY supports the
+    # llm_compressor format (auto-round would otherwise silently fall back to the
+    # regular calibration flow), so force it here.
+    export_format = args.export_format
+    if model_free and args.scheme in ("MXFP4", "MXFP8") and export_format != "llm_compressor":
+        logger.warning(
+            f"Model-free {args.scheme} only supports 'llm_compressor' export; "
+            f"overriding '{export_format}' → 'llm_compressor'."
+        )
+        export_format = "llm_compressor"
 
     # Resolve scheme string (use RCEIL variant for auto_round export if applicable)
-    if args.export_format == "auto_round" and args.scheme in SCHEME_MAP_AUTOROUND_EXPORT:
+    if export_format == "auto_round" and args.scheme in SCHEME_MAP_AUTOROUND_EXPORT:
         ar_scheme = SCHEME_MAP_AUTOROUND_EXPORT[args.scheme]
     else:
         ar_scheme = SCHEME_MAP.get(args.scheme, args.scheme)
@@ -239,7 +268,7 @@ def quantize(args):
     logger.info(f"Model: {args.model}")
     logger.info(f"Scheme: {args.scheme} → AutoRound scheme='{ar_scheme}'")
     logger.info(f"Iters: {iters} ({'RTN' if iters == 0 else 'TUNING'})")
-    logger.info(f"Export format: {args.export_format}")
+    logger.info(f"Export format: {export_format}")
     logger.info(f"Output: {args.output_dir}")
     logger.info(f"Device map: {args.device_map} → effective: {effective_device_map!r}")
 
@@ -250,20 +279,27 @@ def quantize(args):
         trust_remote_code=True,
     )
 
-    # Load model — AutoModelForCausalLM handles all architectures via config.json
-    logger.info("Loading model...")
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model,
-        device_map=effective_device_map,
-        trust_remote_code=True,
-        torch_dtype="auto",
-    )
-
-    # Log detected architecture for debugging
-    arch_name = type(model).__name__
-    model_type = getattr(model.config, "model_type", "unknown")
-    moe = is_moe_model(model)
-    del model
+    if model_free:
+        # Model-free reads the checkpoint directly, shard by shard — do NOT load the
+        # full model (it may be far larger than VRAM). Detect MoE from config only.
+        logger.info("Loading config (model-free: no full-weight load)...")
+        cfg = AutoConfig.from_pretrained(args.model, trust_remote_code=True)
+        moe = is_moe_config(cfg)
+        arch_name = (getattr(cfg, "architectures", None) or ["unknown"])[0]
+        model_type = getattr(cfg, "model_type", "unknown")
+    else:
+        # Load model — AutoModelForCausalLM handles all architectures via config.json
+        logger.info("Loading model...")
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model,
+            device_map=effective_device_map,
+            trust_remote_code=True,
+            torch_dtype="auto",
+        )
+        arch_name = type(model).__name__
+        model_type = getattr(model.config, "model_type", "unknown")
+        moe = is_moe_model(model)
+        del model
     logger.info(f"Architecture: {arch_name} (model_type={model_type}, moe={moe})")
 
     # Determine ignore layers based on scheme and model type (MoE vs dense).
@@ -301,7 +337,7 @@ def quantize(args):
     # Model-free: weight-only RTN straight from the checkpoint (no calibration
     # forward). Routed inside AutoRound via is_model_free_route when model_free=True.
     # Only valid for weight-only schemes (W4A16/MXFP4/MXFP8) — gated upstream.
-    if getattr(args, "model_free", False):
+    if model_free:
         ar_kwargs["model_free"] = True
         logger.info("Model-free mode enabled (weight-only RTN, no calibration).")
 
@@ -320,20 +356,25 @@ def quantize(args):
 
     autoround = AutoRound(**ar_kwargs)
 
-    # Execute quantization
-    logger.info("Starting quantization...")
+    # Execute quantization + export.
+    os.makedirs(args.output_dir, exist_ok=True)
     start_time = time.time()
-    autoround.quantize()
+    if model_free:
+        # Model-free MUST use the one-shot quantize_and_save entry point. Calling
+        # .quantize() on a ModelFreeCompressor deliberately falls back to the
+        # regular (calibration) compressor, which would defeat model-free.
+        logger.info(f"Starting model-free quantization + export ({export_format})...")
+        autoround.quantize_and_save(output_dir=args.output_dir, format=export_format)
+    else:
+        logger.info("Starting quantization...")
+        autoround.quantize()
+        logger.info(f"Saving quantized model ({export_format} format)...")
+        autoround.save_quantized(
+            output_dir=args.output_dir,
+            format=export_format,
+        )
     duration = time.time() - start_time
     logger.info(f"Quantization completed in {duration:.1f}s")
-
-    # Export
-    logger.info(f"Saving quantized model ({args.export_format} format)...")
-    os.makedirs(args.output_dir, exist_ok=True)
-    autoround.save_quantized(
-        output_dir=args.output_dir,
-        format=args.export_format,
-    )
 
     # Collect output file list (for backward-compatibility with leaderboard)
     output_files = []
@@ -376,9 +417,9 @@ def quantize(args):
         "method": method,
         "ar_scheme": ar_scheme,
         "iters": iters,
-        "export_format": args.export_format,
+        "export_format": export_format,
         "ignore_layers": ignore_layers,
-        "model_free": bool(getattr(args, "model_free", False)),
+        "model_free": model_free,
         "layer_config": custom_layer_config or None,
         "duration_seconds": round(duration, 1),
         "output_dir": args.output_dir,
