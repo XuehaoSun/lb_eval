@@ -1,0 +1,187 @@
+=== Phase 2: Quantization ===
+  model=SC117/Ornith-1.0-9B-heretic-MTP
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  model_free=false
+  ignore_layers=<default>
+  layer_config=<none>
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Ornith-1.0-9B-heretic-MTP-AutoRound-W4A16-RTN/quantized_model
+22:07:18 [INFO] Quantization compute device: cuda:0 (device_map=0)
+22:07:18 [INFO] GPU0 free VRAM: 23.1GB / 23.5GB (min required: 2.0GB)
+22:07:18 [INFO] Model: SC117/Ornith-1.0-9B-heretic-MTP
+22:07:18 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+22:07:18 [INFO] Iters: 0 (RTN)
+22:07:18 [INFO] Export format: auto_round
+22:07:18 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-9B-heretic-MTP-AutoRound-W4A16-RTN/quantized_model
+22:07:18 [INFO] Device map: auto → effective: 0
+22:07:18 [INFO] Loading tokenizer...
+22:07:19 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:19 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/tokenizer_config.json "HTTP/1.1 200 OK"
+22:07:19 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:19 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/tokenizer_config.json "HTTP/1.1 200 OK"
+22:07:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/SC117/Ornith-1.0-9B-heretic-MTP/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+22:07:19 [INFO] HTTP Request: GET https://huggingface.co/api/models/SC117/Ornith-1.0-9B-heretic-MTP/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+22:07:20 [INFO] HTTP Request: GET https://huggingface.co/api/models/SC117/Ornith-1.0-9B-heretic-MTP "HTTP/1.1 200 OK"
+22:07:20 [INFO] Loading model...
+22:07:20 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:21 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+22:07:21 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+22:07:21 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/model.safetensors.index.json "HTTP/1.1 200 OK"
+22:07:21 [INFO] HTTP Request: GET https://huggingface.co/api/models/SC117/Ornith-1.0-9B-heretic-MTP/revision/main "HTTP/1.1 200 OK"
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+22:07:23 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+22:07:23 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:23 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+22:07:24 [INFO] Architecture: Qwen3_5ForCausalLM (model_type=qwen3_5_text, moe=False)
+22:07:24 [INFO] Ignore layers (default): lm_head
+22:07:24 [INFO] Configuring AutoRound...
+[38;20m2026-07-09 22:07:24 INFO config.py L53: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a501b9c-15be91432b243838242f471f;c575fa7b-2f43-4abd-85e6-6d05f9a390ae)
+
+Entry Not Found for url: https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model_index.json.
+[38;20m2026-07-09 22:07:24 INFO entry.py L749: Using LLM mode.[0m
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a501b9c-6e35a2c4321f13da7699c587;9ddfdba9-8fb1-41eb-b4a5-daf220082514)
+
+Entry Not Found for url: https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model_index.json.
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:24 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+404 Client Error. (Request ID: Root=1-6a501b9d-564b64925cd1574f533dd057;3d512dfd-c919-417e-b2db-06ef48279810)
+
+Entry Not Found for url: https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model_index.json.
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:25 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:26 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:26 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/tokenizer_config.json "HTTP/1.1 200 OK"
+22:07:26 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:26 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/tokenizer_config.json "HTTP/1.1 200 OK"
+22:07:26 [INFO] HTTP Request: GET https://huggingface.co/api/models/SC117/Ornith-1.0-9B-heretic-MTP/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+22:07:26 [INFO] HTTP Request: GET https://huggingface.co/api/models/SC117/Ornith-1.0-9B-heretic-MTP/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+22:07:27 [INFO] HTTP Request: GET https://huggingface.co/api/models/SC117/Ornith-1.0-9B-heretic-MTP "HTTP/1.1 200 OK"
+22:07:27 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:27 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:27 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+22:07:28 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+22:07:28 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/model.safetensors.index.json "HTTP/1.1 200 OK"
+22:07:28 [INFO] HTTP Request: GET https://huggingface.co/api/models/SC117/Ornith-1.0-9B-heretic-MTP/revision/main "HTTP/1.1 200 OK"
+22:07:28 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
+22:07:28 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:07:28 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:07:28 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+22:07:28 [INFO] Starting quantization...
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+[38;20m2026-07-09 22:07:28 INFO utils.py L1026: Ignored layers: lm_head, lm_head[0m
+[38;20m2026-07-09 22:07:29 INFO base.py L767: 'enable_torch_compile' is set to `False` by default. Enabling it can reduce tuning cost by 20%, but it might throw an exception.[0m
+[38;20m2026-07-09 22:07:29 INFO data_driven.py L1216: start to compute imatrix[0m
+[38;20m2026-07-09 22:07:29 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+22:07:29 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+22:07:29 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+22:07:29 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+22:07:29 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+22:07:30 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+22:07:30 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+22:07:30 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+22:07:30 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+22:07:30 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+22:07:31 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+22:07:31 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+22:07:31 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+22:07:31 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 200 OK"
+22:07:31 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:00<00:00, 72000.27 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:05<00:00, 1709.57 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:02<00:00, 4070.01 examples/s]
+Casting the dataset:   0%|          | 0/1230 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 1230/1230 [00:02<00:00, 558.45 examples/s]
+22:07:43 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+22:07:43 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+22:07:43 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+22:07:44 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+22:07:44 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+22:07:44 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+22:07:44 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+22:07:44 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+22:07:45 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+[38;20m2026-07-09 22:07:45 INFO calib_dataset.py L977: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+22:07:45 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+22:07:45 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+22:07:45 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+22:07:46 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+22:07:46 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+22:07:46 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+22:07:46 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+22:07:46 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md "HTTP/1.1 200 OK"
+22:07:46 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+22:07:46 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+22:07:47 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+22:07:47 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+  0%|          | 0/32 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/32 [00:00<?, ?it/s][38;20m2026-07-09 22:07:54 INFO offload.py L707: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_xtrld2kf[0m
+[38;20m2026-07-09 22:07:54 INFO device.py L1450: 'peak_ram': 7.21GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.1:   3%|▎         | 1/32 [00:06<03:34,  6.91s/it][38;20m2026-07-09 22:08:01 INFO device.py L1450: 'peak_ram': 7.83GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.2:   6%|▋         | 2/32 [00:13<03:24,  6.80s/it][38;20m2026-07-09 22:08:07 INFO device.py L1450: 'peak_ram': 8.24GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.3:   9%|▉         | 3/32 [00:20<03:16,  6.79s/it][38;20m2026-07-09 22:08:13 INFO device.py L1450: 'peak_ram': 8.63GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.4:  12%|█▎        | 4/32 [00:26<03:03,  6.55s/it][38;20m2026-07-09 22:08:20 INFO device.py L1450: 'peak_ram': 9.08GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.5:  16%|█▌        | 5/32 [00:32<02:57,  6.59s/it][38;20m2026-07-09 22:08:27 INFO device.py L1450: 'peak_ram': 9.49GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.6:  19%|█▉        | 6/32 [00:39<02:51,  6.61s/it][38;20m2026-07-09 22:08:33 INFO device.py L1450: 'peak_ram': 9.87GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.7:  22%|██▏       | 7/32 [00:46<02:45,  6.62s/it][38;20m2026-07-09 22:08:39 INFO device.py L1450: 'peak_ram': 10.25GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.8:  25%|██▌       | 8/32 [00:52<02:36,  6.51s/it][38;20m2026-07-09 22:08:46 INFO device.py L1450: 'peak_ram': 10.7GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.9:  28%|██▊       | 9/32 [00:58<02:30,  6.53s/it][38;20m2026-07-09 22:08:52 INFO device.py L1450: 'peak_ram': 11.08GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.10:  31%|███▏      | 10/32 [01:05<02:23,  6.54s/it][38;20m2026-07-09 22:08:59 INFO device.py L1450: 'peak_ram': 11.49GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.11:  34%|███▍      | 11/32 [01:12<02:17,  6.56s/it][38;20m2026-07-09 22:09:05 INFO device.py L1450: 'peak_ram': 11.87GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.12:  38%|███▊      | 12/32 [01:17<02:09,  6.49s/it][38;20m2026-07-09 22:09:12 INFO device.py L1450: 'peak_ram': 12.3GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.13:  41%|████      | 13/32 [01:24<02:03,  6.52s/it][38;20m2026-07-09 22:09:19 INFO device.py L1450: 'peak_ram': 12.71GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.14:  44%|████▍     | 14/32 [01:31<01:57,  6.55s/it][38;20m2026-07-09 22:09:25 INFO device.py L1450: 'peak_ram': 13.12GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.15:  47%|████▋     | 15/32 [01:38<01:51,  6.56s/it][38;20m2026-07-09 22:09:31 INFO device.py L1450: 'peak_ram': 13.49GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.16:  50%|█████     | 16/32 [01:44<01:44,  6.51s/it][38;20m2026-07-09 22:09:38 INFO device.py L1450: 'peak_ram': 13.94GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.17:  53%|█████▎    | 17/32 [01:50<01:37,  6.52s/it][38;20m2026-07-09 22:09:45 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.18:  56%|█████▋    | 18/32 [01:57<01:31,  6.53s/it][38;20m2026-07-09 22:09:51 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.18:  59%|█████▉    | 19/32 [02:04<01:25,  6.54s/it]Quantizing model.layers.19:  59%|█████▉    | 19/32 [02:04<01:25,  6.54s/it][38;20m2026-07-09 22:09:57 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.20:  62%|██████▎   | 20/32 [02:09<01:18,  6.54s/it][38;20m2026-07-09 22:10:04 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.21:  66%|██████▌   | 21/32 [02:16<01:11,  6.54s/it]Quantizing model.layers.21:  66%|██████▌   | 21/32 [02:17<01:11,  6.54s/it][38;20m2026-07-09 22:10:10 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.22:  69%|██████▉   | 22/32 [02:23<01:05,  6.54s/it][38;20m2026-07-09 22:10:17 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.23:  72%|███████▏  | 23/32 [02:30<00:58,  6.54s/it][38;20m2026-07-09 22:10:23 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.24:  75%|███████▌  | 24/32 [02:35<00:52,  6.54s/it][38;20m2026-07-09 22:10:29 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.25:  78%|███████▊  | 25/32 [02:42<00:45,  6.54s/it][38;20m2026-07-09 22:10:36 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.26:  81%|████████▏ | 26/32 [02:49<00:39,  6.54s/it][38;20m2026-07-09 22:10:43 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.27:  84%|████████▍ | 27/32 [02:55<00:32,  6.54s/it][38;20m2026-07-09 22:10:49 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.28:  88%|████████▊ | 28/32 [03:01<00:26,  6.54s/it][38;20m2026-07-09 22:10:55 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.29:  91%|█████████ | 29/32 [03:08<00:19,  6.54s/it][38;20m2026-07-09 22:11:02 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.30:  94%|█████████▍| 30/32 [03:15<00:13,  6.54s/it][38;20m2026-07-09 22:11:09 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.31:  97%|█████████▋| 31/32 [03:21<00:06,  6.54s/it][38;20m2026-07-09 22:11:15 INFO device.py L1450: 'peak_ram': 14.34GB, 'peak_vram': 16.7GB[0m
+Quantizing model.layers.31: 100%|██████████| 32/32 [03:27<00:00,  6.49s/it]
+22:11:15 [INFO] Saving quantized model (auto_round format)...
+packing:   0%|          | 0/249 [00:00<?, ?it/s]packing: 100%|██████████| 249/249 [00:03<00:00, 74.29it/s]
+[33;1m2026-07-09 22:11:18 WARNING export.py L345: /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-9B-heretic-MTP-AutoRound-W4A16-RTN/quantized_model already exists, this may cause model conflict[0m
+[38;20m2026-07-09 22:11:20 INFO missing_tensors.py L358: Found 15 tensor(s) in the source checkpoint that are absent from the saved output (e.g., MTP parameters): mtp.fc, mtp.layers.0.input_layernorm, mtp.layers.0.mlp.down_proj, mtp.layers.0.mlp.gate_proj, mtp.layers.0.mlp.up_proj, mtp.layers.0.post_attention_layernorm, mtp.layers.0.self_attn.k_norm, mtp.layers.0.self_attn.k_proj, mtp.layers.0.self_attn.o_proj, mtp.layers.0.self_attn.q_norm, mtp.layers.0.self_attn.q_proj, mtp.layers.0.self_attn.v_proj, mtp.norm, mtp.pre_fc_norm_embedding, mtp.pre_fc_norm_hidden. Copying them now...
+[0m
+Loading missing tensors:   0%|          | 0/1 [00:00<?, ?shard/s]
+  model-00005-of-00005.safetensors:   0%|          | 0/15 [00:00<?, ?tensor/s][A
+                                                                              [ALoading missing tensors: 100%|██████████| 1/1 [00:00<00:00, 288.74shard/s]
+[38;20m2026-07-09 22:11:20 INFO missing_tensors.py L845: Processing config.json to update quantization_config for missing tensors...[0m
+[38;20m2026-07-09 22:11:20 INFO missing_tensors.py L812: Updated extra_config for 1 ignored layer(s): mtp.fc[0m
+[38;20m2026-07-09 22:11:20 INFO missing_tensors.py L838: Updated block_name_to_quantize: ['model.layers', 'mtp.layers'][0m
+[38;20m2026-07-09 22:11:20 INFO missing_tensors.py L868: Applying WOQ[RTN] to 7 missing Linear weight(s) (per-layer overrides from extra_config applied)...[0m
+WOQ[RTN] quantizing missing weights:   0%|          | 0/7 [00:00<?, ?weight/s]WOQ[RTN] quantizing missing weights: 100%|██████████| 7/7 [00:02<00:00,  3.37weight/s]
+[38;20m2026-07-09 22:11:22 INFO missing_tensors.py L931: Successfully packed 7 weight(s) into WOQ format (21 packed tensor(s) created).[0m
+[38;20m2026-07-09 22:11:22 INFO missing_tensors.py L498: Successfully wrote 29 missing tensor(s) to 'model_extra_tensors.safetensors' in /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-9B-heretic-MTP-AutoRound-W4A16-RTN/quantized_model.[0m
+22:11:23 [INFO] HTTP Request: HEAD https://huggingface.co/SC117/Ornith-1.0-9B-heretic-MTP/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+22:11:23 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/SC117/Ornith-1.0-9B-heretic-MTP/4d2cf3d341ab98049488fe4105784a8003b967c8/config.json "HTTP/1.1 200 OK"
+22:11:23 [INFO] Quantization completed in 234.2s
+22:11:23 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/Ornith-1.0-9B-heretic-MTP-AutoRound-W4A16-RTN/quant_summary.json
+22:11:23 [INFO] === Phase 2: DONE ===
