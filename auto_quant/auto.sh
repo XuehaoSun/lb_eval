@@ -104,6 +104,9 @@ export_format = task.get("export_format", "auto_round")
 auto_round_ref = task.get("auto_round_ref", "latest")
 transformers_ref = task.get("transformers_ref", "auto")
 request_filename = task.get("request_filename", "")
+# Explicit GPU card pinning (AWS B200 / local-agent path). Comma-separated
+# physical card indices, e.g. "0" or "0,1,3". Empty when not pinned.
+cuda_visible_devices = str(task.get("cuda_visible_devices", "") or "").strip()
 # If request_filename not in JSON, derive from the JSON filename itself
 if not request_filename:
     import os
@@ -133,6 +136,7 @@ print(f'EXPORT_FORMAT="{export_format}"')
 print(f'AUTO_ROUND_REF="{auto_round_ref}"')
 print(f'TRANSFORMERS_REF="{transformers_ref}"')
 print(f'REQUEST_FILENAME="{request_filename}"')
+print(f'REQ_CUDA_VISIBLE_DEVICES="{cuda_visible_devices}"')
 PYEOF
 )"
 
@@ -155,6 +159,24 @@ DEVICE_INDEX="${DEVICE_INDEX:-0}"
 EVAL_TASKS="${EVAL_TASKS:-piqa,mmlu,hellaswag}"
 EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-8}"
 NUM_GPUS="${NUM_GPUS:-1}"
+
+# ═══ Explicit GPU card pinning (AWS B200 / local-agent path) ═══
+# When the request.json specifies cuda_visible_devices (e.g. "0,1"), pin the run
+# to exactly those physical cards for BOTH quantize and evaluate. We export
+# CUDA_VISIBLE_DEVICES so torch/vLLM only see those cards (re-indexed to 0..N-1),
+# make the card count authoritative for NUM_GPUS, and reset DEVICE_INDEX to 0
+# (the first *visible* card after masking).
+if [[ -n "${REQ_CUDA_VISIBLE_DEVICES:-}" ]]; then
+    # Validate: comma-separated digits only (defensive; UI already validates).
+    if [[ "${REQ_CUDA_VISIBLE_DEVICES}" =~ ^[0-9]+(,[0-9]+)*$ ]]; then
+        export CUDA_VISIBLE_DEVICES="${REQ_CUDA_VISIBLE_DEVICES}"
+        NUM_GPUS=$(awk -F',' '{print NF}' <<< "${REQ_CUDA_VISIBLE_DEVICES}")
+        DEVICE_INDEX=0
+        log_info "GPU pinning: CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES} (NUM_GPUS=${NUM_GPUS}, DEVICE_INDEX=0)"
+    else
+        log_warn "Ignoring malformed cuda_visible_devices='${REQ_CUDA_VISIBLE_DEVICES}' (expected e.g. '0' or '0,1')"
+    fi
+fi
 
 # Output directories
 MODEL_SHORT="${MODEL_ID#*/}"
