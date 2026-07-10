@@ -110,6 +110,13 @@ cuda_visible_devices = str(task.get("cuda_visible_devices", "") or "").strip()
 # Optional advanced quant controls (whitelisted submissions only).
 ignore_layers = str(task.get("ignore_layers", "") or "").strip()
 layer_config = str(task.get("layer_config", "") or "").strip()
+# Hardware / agent type — used to place the HF cache on the B200 node's mounted
+# /azure disk instead of the container layer. B200 submissions set agent_type="local"
+# and carry an "AWS B200" gpu/hardware label.
+agent_type = str(task.get("agent_type", "") or "").strip()
+_gpu_type = " ".join(str(task.get(k, "") or "") for k in
+                     ("hardware", "gpu_type", "quant_gpu_type", "eval_gpu_type"))
+is_b200 = ("b200" in _gpu_type.lower()) or (agent_type.lower() == "local")
 # If request_filename not in JSON, derive from the JSON filename itself
 if not request_filename:
     import os
@@ -140,6 +147,7 @@ print(f'AUTO_ROUND_REF="{auto_round_ref}"')
 print(f'TRANSFORMERS_REF="{transformers_ref}"')
 print(f'REQUEST_FILENAME="{request_filename}"')
 print(f'REQ_CUDA_VISIBLE_DEVICES="{cuda_visible_devices}"')
+print(f'IS_B200="{"true" if is_b200 else "false"}"')
 # Use shlex.quote for free-form advanced values so the shell `eval` is injection-safe.
 import shlex
 print(f'REQ_IGNORE_LAYERS={shlex.quote(ignore_layers)}')
@@ -199,6 +207,29 @@ RUN_OUTPUT_DIR="${RUNTIME_OUTPUT_BASE_DIR}/${HF_REPO_NAME}"
 QUANTIZED_MODEL_DIR="${RUN_OUTPUT_DIR}/quantized_model"
 EVAL_OUTPUT_DIR="${RUN_OUTPUT_DIR}/lm_eval_results"
 LOG_DIR="${RUN_OUTPUT_DIR}/logs"
+
+# ═══ HuggingFace cache placement ═══
+# On AWS B200 (local-agent) nodes, /azure is a large mounted disk — put the HF
+# cache there so big model/dataset downloads don't fill the container's writable
+# layer. For every other hardware, keep HuggingFace's default (~/.cache/huggingface).
+#   - config.env HF_HOME set (non-empty) → always honor it verbatim (explicit override)
+#   - else B200 submission                → HF_HOME=/azure/hf_cache
+#   - else                                → default (~/.cache/huggingface)
+if [[ -n "${HF_HOME:-}" ]]; then
+    export HF_HOME
+    mkdir -p "${HF_HOME}"
+    export HF_HUB_CACHE="${HF_HOME}/hub" HUGGINGFACE_HUB_CACHE="${HF_HOME}/hub"
+    export TRANSFORMERS_CACHE="${HF_HOME}/hub" HF_DATASETS_CACHE="${HF_HOME}/datasets"
+    log_info "HF cache: ${HF_HOME} (explicit HF_HOME override)"
+elif [[ "${IS_B200:-false}" == "true" ]]; then
+    export HF_HOME="/azure/hf_cache"
+    mkdir -p "${HF_HOME}"
+    export HF_HUB_CACHE="${HF_HOME}/hub" HUGGINGFACE_HUB_CACHE="${HF_HOME}/hub"
+    export TRANSFORMERS_CACHE="${HF_HOME}/hub" HF_DATASETS_CACHE="${HF_HOME}/datasets"
+    log_info "HF cache: ${HF_HOME} (AWS B200 mounted disk)"
+else
+    log_info "HF cache: HuggingFace default (~/.cache/huggingface)"
+fi
 
 # lb_eval repo (for upload_results_github.py clone target)
 LB_EVAL_REPO_DIR="${GIT_RESULTS_REPO_DIR:-${SCRIPT_DIR}/lb_eval}"

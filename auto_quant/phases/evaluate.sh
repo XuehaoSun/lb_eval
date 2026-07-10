@@ -59,7 +59,7 @@ elif [ "$EVAL_BACKEND" == "vllm" ]; then
     MODEL_ARGS="pretrained=${MODEL_PATH}"
     MODEL_ARGS="${MODEL_ARGS},tensor_parallel_size=${NUM_GPUS}"
     MODEL_ARGS="${MODEL_ARGS},max_model_len=8192"
-    MODEL_ARGS="${MODEL_ARGS},gpu_memory_utilization=0.8"
+    MODEL_ARGS="${MODEL_ARGS},gpu_memory_utilization=0.9"
     MODEL_ARGS="${MODEL_ARGS},dtype=bfloat16"
     MODEL_ARGS="${MODEL_ARGS},trust_remote_code=True"
     MODEL_ARGS="${MODEL_ARGS},add_bos_token=True"
