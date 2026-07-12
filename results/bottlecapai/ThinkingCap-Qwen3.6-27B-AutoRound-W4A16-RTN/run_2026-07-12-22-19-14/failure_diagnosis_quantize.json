@@ -1,0 +1,33 @@
+{
+  "category": "out_of_memory",
+  "phase": "quantize",
+  "key_error": "torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 170.00 MiB. GPU 0 has a total capacity of 44.52 GiB of which 72.25 MiB is free.",
+  "root_cause": "A single 44.52 GiB GPU is insufficient to load the 27B-parameter Qwen model in fp16 for AutoRound W4A16 quantization. Model weights alone require ~54 GiB in fp16, and the materialize-copy step in transformers' parallel state-dict loading cannot allocate even an extra 170 MiB because the GPU is already saturated at 44.44/44.52 GiB.",
+  "traceback_analysis": "auto_quant/phases/quantize.py:293 calls AutoModelForCausalLM.from_pretrained -> transformers.modeling_utils._load_pretrained_model -> convert_and_load_state_dict_in_model -> materialize_tensors (uses ThreadPoolExecutor) -> _materialize_copy(tensor.to(device=cuda, dtype=fp16)). The fault is at transformers' concurrent tensor-materialization step because the GPU is already full from loading prior shards; the materialize pool cannot spill shards back to CPU and runs OOM on the final shard.",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "transformers.core_model_loading.materialize_tensors",
+    "specific_function": "_materialize_copy",
+    "fault_type": "resource_limit",
+    "responsible_party": "infra_team"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "1) Re-run with multi-GPU sharding: CUDA_VISIBLE_DEVICES=0,1 with device_map='auto' (or use --devices 2). 2) Add device_map='auto' or max_memory={0:'40GiB','cpu':'200GiB'} so transformers can offload non-critical layers. 3) Set PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True as suggested by the error. 4) As a last resort, use --low_cpu_mem_mode and --nsamples 1 with a smaller eval batch, or quantize on CPU using --device cpu (slower but works for 27B on a 44 GiB box).",
+  "fix_verification": "Run `nvidia-smi` to confirm >=2 GPUs or >=80 GiB free; then re-invoke the pipeline with `python -m auto_quant.phases.quantize --model bottlecapai/ThinkingCap-Qwen3.6-27B --devices 2 --device_map auto` and watch for successful from_pretrained + AutoRound quantization.",
+  "workaround": "Quantize on CPU (--device cpu) or use a smaller W4A16 calibration (--nsamples 4) and rely on AutoRound's layer-wise CPU packing to avoid holding full fp16 weights on GPU.",
+  "affected_component": "infrastructure",
+  "severity": "high",
+  "confidence": 0.93,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown (uses core_model_loading convert_and_load_state_dict_in_model with ThreadPoolExecutor materialize)",
+    "torch": "unknown"
+  },
+  "community_summary": "Quantization of the 27B Qwen model crashed with CUDA OOM while transformers was materializing weights onto a single 44 GiB GPU. The GPU simply cannot fit a 27B model in fp16 (needs ~54 GiB just for weights). Fix by using two GPUs with device_map='auto', enabling PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True, or falling back to CPU quantization.",
+  "analyzed_at": "2026-07-12T22:19:40.229766+00:00",
+  "model": "bottlecapai/ThinkingCap-Qwen3.6-27B",
+  "run_id": "ThinkingCap-Qwen3.6-27B-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "out_of_memory"
+}
