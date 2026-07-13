@@ -1,0 +1,33 @@
+{
+  "category": "dataset_error",
+  "phase": "quantize",
+  "key_error": "ValueError: Columns ['attention_mask'] not in the dataset. Current columns in the dataset: ['text', 'meta', 'input_ids']",
+  "root_cause": "auto_round's _get_dataset_impl hardcodes columns=['input_ids','attention_mask'] in set_format(), but the RTN-with-imatrix code path's tokenization step does not produce an 'attention_mask' column (dataset only has 'text','meta','input_ids').",
+  "traceback_analysis": "quantize.py:370 -> autoround.quantize() -> data_driven.py:_quant_rtn_with_imatrix() -> calibration/state.py:ensure_dataloader() -> calib_dataset.py:get_dataset() -> _get_dataset_impl() which calls dataset.set_format(type='torch', columns=['input_ids','attention_mask']). The set_format call fails because tokenization in this path drops/never adds attention_mask, so the fault is in auto_round's calibration tokenization/formatting for the RTN+imatrix flow.",
+  "fault_attribution": {
+    "component": "auto_round",
+    "specific_module": "auto_round.calib_dataset",
+    "specific_function": "_get_dataset_impl (set_format call) / tokenization in RTN+imatrix path",
+    "fault_type": "code_bug",
+    "responsible_party": "auto_round_devs"
+  },
+  "retryable": false,
+  "fix_available": true,
+  "suggested_fix": "Patch auto_round/calib_dataset.py _get_dataset_impl: either (a) generate attention_mask from input_ids via dataset.map(lambda x: {'attention_mask': [1]*len(x['input_ids'])}) before set_format, or (b) change set_format columns to ['input_ids'] only and handle masking downstream. The clean upstream fix is to ensure the tokenizer call in this RTN+imatrix branch uses return_attention_mask=True and includes 'attention_mask' in the remove_columns/output columns of the .map() call.",
+  "fix_verification": "Re-run the same quantize command (python phases/quantize.py ... --model Quazim0t0/Escarda-86M-Base --scheme W4A16 --algorithm RTN --enable-imatrix) and confirm the dataloader builds without ValueError; quantization should proceed past ensure_dataloader.",
+  "workaround": "Disable imatrix (use plain RTN without --enable-imatrix / --nsamples_for_imatrix) so the standard calibration path (which does add attention_mask) is used; or pass a pre-tokenized local dataset where 'attention_mask' is explicitly present; or downgrade to an auto_round version prior to this regression.",
+  "affected_component": "auto_round",
+  "severity": "high",
+  "confidence": 0.82,
+  "versions_involved": {
+    "auto_round": "unknown (installed in /root/.venv/lib/python3.12/site-packages/auto_round)",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "AutoRound's RTN-with-imatrix calibration path raised ValueError because it tried to set_format on columns ['input_ids','attention_mask'] while the tokenized NeelNanda/pile-10k dataset only contained ['text','meta','input_ids'] — the tokenization in this branch failed to add attention_mask. This is an auto_round bug in calib_dataset._get_dataset_impl; the immediate workaround is to disable imatrix (plain RTN) or supply a local pre-tokenized dataset with attention_mask, and the proper fix is for auto_round to include attention_mask in its tokenization .map() for the imatrix branch.",
+  "analyzed_at": "2026-07-13T12:44:28.716956+00:00",
+  "model": "Quazim0t0/Escarda-86M-Base",
+  "run_id": "Escarda-86M-Base-AutoRound-W4A16-RTN",
+  "quant_scheme": "W4A16",
+  "pattern_category": "dataset_error"
+}
