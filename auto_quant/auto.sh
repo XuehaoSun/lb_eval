@@ -134,9 +134,11 @@ scheme_map = {
 }
 scheme = scheme_map.get(scheme, scheme)
 
-# Normalize method from iters
+# Normalize method from iters — but NEVER override an explicit MODEL_FREE request
+# (model-free runs carry iters=0, which would otherwise be mis-normalized to RTN
+# and lose the "ModelFree" suffix in the result/artifact naming).
 iters = task.get("iters", None)
-if iters is not None:
+if iters is not None and str(method).strip().upper() not in ("MODEL_FREE", "MODELFREE"):
     method = "RTN" if int(iters) == 0 else "TUNING"
 
 print(f'MODEL_ID="{model}"')
