@@ -1,0 +1,81 @@
+=== Phase 2: Quantization ===
+  model=tencent/HiLS-Attention-7B
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  model_free=false
+  ignore_layers=<default>
+  layer_config=<none>
+  output_dir=/root/_work/1/s/auto_quant/output/runs/HiLS-Attention-7B-AutoRound-W4A16-RTN/quantized_model
+07:53:36 [INFO] Quantization compute device: cuda:0 (device_map=0)
+07:53:37 [INFO] GPU0 free VRAM: 23.3GB / 23.6GB (min required: 2.0GB)
+07:53:37 [INFO] Model: tencent/HiLS-Attention-7B
+07:53:37 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+07:53:37 [INFO] Iters: 0 (RTN)
+07:53:37 [INFO] Export format: auto_round
+07:53:37 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/HiLS-Attention-7B-AutoRound-W4A16-RTN/quantized_model
+07:53:37 [INFO] Device map: auto → effective: 0
+07:53:37 [INFO] Loading tokenizer...
+07:53:37 [INFO] HTTP Request: HEAD https://huggingface.co/tencent/HiLS-Attention-7B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/tencent/HiLS-Attention-7B/837293e2aa5ae551439ebbd05783bddb92401853/config.json "HTTP/1.1 200 OK"
+07:53:37 [INFO] HTTP Request: HEAD https://huggingface.co/tencent/HiLS-Attention-7B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/tencent/HiLS-Attention-7B/837293e2aa5ae551439ebbd05783bddb92401853/config.json "HTTP/1.1 200 OK"
+[transformers] You are using a model of type `olmo_hils` to instantiate a model of type ``. This may be expected if you are loading a checkpoint that shares a subset of the architecture (e.g., loading a `sam2_video` checkpoint into `Sam2Model`), but is otherwise not supported and can yield errors. Please verify that the checkpoint is compatible with the model you are instantiating.
+07:53:37 [INFO] HTTP Request: HEAD https://huggingface.co/tencent/HiLS-Attention-7B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:37 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/tencent/HiLS-Attention-7B/837293e2aa5ae551439ebbd05783bddb92401853/tokenizer_config.json "HTTP/1.1 200 OK"
+07:53:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/tencent/HiLS-Attention-7B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+07:53:37 [INFO] HTTP Request: GET https://huggingface.co/api/models/tencent/HiLS-Attention-7B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:53:38 [INFO] HTTP Request: GET https://huggingface.co/api/models/tencent/HiLS-Attention-7B "HTTP/1.1 200 OK"
+07:53:38 [INFO] Loading model...
+07:53:38 [INFO] HTTP Request: HEAD https://huggingface.co/tencent/HiLS-Attention-7B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:38 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/tencent/HiLS-Attention-7B/837293e2aa5ae551439ebbd05783bddb92401853/config.json "HTTP/1.1 200 OK"
+07:53:38 [WARNING] Transformers cannot load model_type for 'tencent/HiLS-Attention-7B': The checkpoint you are trying to load has model type `olmo_hils` but Transformers does not recognize this architecture. This could be because of an issue with the checkpoint, or because your version of Transformers is out of date.
+Auto-falling back to model_free=True (RTN, reads safetensors shards directly, does not require a registered transformers model class).
+07:53:38 [INFO] HTTP Request: HEAD https://huggingface.co/tencent/HiLS-Attention-7B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:53:38 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/tencent/HiLS-Attention-7B/837293e2aa5ae551439ebbd05783bddb92401853/config.json "HTTP/1.1 200 OK"
+07:53:38 [INFO] Loaded config.json as raw dict (transformers AutoConfig unavailable for this model_type).
+07:53:38 [INFO] Architecture: HiLSForCausalLM (model_type=olmo_hils, moe=False)
+07:53:38 [INFO] Ignore layers (default): lm_head
+07:53:38 [INFO] Configuring AutoRound...
+07:53:38 [INFO] Model-free mode enabled (weight-only RTN, no calibration).
+07:53:38 [INFO] Starting model-free quantization + export (auto_round)...
+07:53:38 [INFO] HTTP Request: GET https://huggingface.co/api/models/tencent/HiLS-Attention-7B/revision/main "HTTP/1.1 200 OK"
+[33;1m2026-08-03 07:53:38 WARNING model.py L2396: Failed to load model from /root/.cache/huggingface/hub/models--tencent--HiLS-Attention-7B/snapshots/837293e2aa5ae551439ebbd05783bddb92401853 for layer detection. Skipping. Warning: The checkpoint you are trying to load has model type `olmo_hils` but Transformers does not recognize this architecture. This could be because of an issue with the checkpoint, or because your version of Transformers is out of date.
+
+You can update Transformers with the command `pip install --upgrade transformers`. If this does not work, and the checkpoint is very new, then there may not be a release version that supports this model yet. In this case, you can get the most up-to-date code by installing Transformers from source with the command `pip install git+https://github.com/huggingface/transformers.git`[0m
+[38;20m2026-08-03 07:53:38 INFO model_free.py L1887: Detected source model_type='olmo_hils'.[0m
+[38;20m2026-08-03 07:53:38 INFO model_free.py L2130: Model-free quantization: tencent/HiLS-Attention-7B
+  Scheme: QuantizationScheme(bits=4, group_size=128, sym=True, data_type='int', act_bits=16, act_group_size=None, act_sym=None, act_data_type=None, act_dynamic=None, super_bits=None, super_group_size=None, rotation_config=None)
+  Packing format: auto_round:auto_gptq
+  Output: /root/_work/1/s/auto_quant/output/runs/HiLS-Attention-7B-AutoRound-W4A16-RTN/quantized_model
+  Shards: 3
+  Shard parallelism: 1 (auto(default=1), env AR_MODEL_FREE_SHARD_PARALLELISM)
+  Streaming download: False
+  Diffusion model: False
+  Quant lm_head: False
+  Quant nontext module: False
+  Device: cuda:0[0m
+Processing shards:   0%|          | 0/3 [00:00<?, ?shard/s][38;20m2026-08-03 07:53:49 INFO model_free.py L1989: Memory usage: 'peak_ram': 0.9GB[0m
+[38;20m2026-08-03 07:53:49 INFO model_free.py L1993: Shard 1/3 (model-00003-of-00003.safetensors):
+  Quantized layers (58): model.layers.[15,27,31].self_attn.lmk_q_proj.[0-1], model.layers.[6,16-18,28-31].self_attn.o_proj, model.layers.[7,10,13,19,22,25,29].mlp.down_proj, model.layers.[7,10,13,19,22,25,29].self_attn.v_proj, model.layers.[7,17-19,29-31].self_attn.k_proj, model.layers.[7,17-19,29-31].self_attn.q_proj, model.layers.[8,11,14,20,23,26-27,30].mlp.up_proj, model.layers.[9,12,15,21,24,27-28,31].mlp.gate_proj
+  Ignored layers (38): lm_head, model.embed_tokens, model.layers.[15,27,31].self_attn.lmk_q_norm, model.layers.[6,16-18,28-31].post_attention_layernorm, model.layers.[6,16-18,28-31].post_feedforward_layernorm, model.layers.[9,12,15,21,24,27-28,31].self_attn.k_norm, model.layers.[9,12,15,21,24,27-28,31].self_attn.q_norm, model.norm[0m
+[38;20m2026-08-03 07:53:57 INFO model_free.py L1989: Memory usage: 'peak_ram': 0.9GB[0m
+[38;20m2026-08-03 07:53:57 INFO model_free.py L1993: Shard 2/3 (model-00001-of-00003.safetensors):
+  Quantized layers (93): model.layers.3.self_attn.lmk_q_proj.1, model.layers.7.self_attn.lmk_q_proj.1, model.layers.[0,2-3,5,7-10,12,20-23].self_attn.o_proj, model.layers.[0,2-3,5-6,8-11,13,21-24].self_attn.q_proj, model.layers.[0,2-3,5-6,9,11,14,17,24,27,30].mlp.down_proj, model.layers.[0-1,3-4,6,9,11,14,17,24,27,30].self_attn.v_proj, model.layers.[0-1,3-4,7,10,12,15,18,25,28,31].mlp.up_proj, model.layers.[1-2,4-5,8-11,21-24].self_attn.k_proj, model.layers.[1-2,4-6,8,11,13,16,19,26,29].mlp.gate_proj, model.layers.[11,19].self_attn.lmk_q_proj.[0-1]
+  Ignored layers (54): model.layers.[0-1,3-5,7-10,12,20-23].post_feedforward_layernorm, model.layers.[0-2,4-6,8,11,13,16,19,26,29].self_attn.k_norm, model.layers.[1-2,4-5,7-10,12,20-23].post_attention_layernorm, model.layers.[1-2,4-6,8,11,13,16,19,26,29].self_attn.q_norm, model.layers.[11,19].self_attn.lmk_q_norm[0m
+[38;20m2026-08-03 07:54:04 INFO model_free.py L1989: Memory usage: 'peak_ram': 0.9GB[0m
+[38;20m2026-08-03 07:54:04 INFO model_free.py L1993: Shard 3/3 (model-00002-of-00003.safetensors):
+  Quantized layers (89): model.layers.23.self_attn.lmk_q_proj.[0-1], model.layers.3.self_attn.lmk_q_proj.0, model.layers.7.self_attn.lmk_q_proj.0, model.layers.[0,3,6,12-16,20,25-28].self_attn.k_proj, model.layers.[0,3,7,10,14,17-18,20,22-23,25,30].mlp.gate_proj, model.layers.[1,4,11,13-15,19,24-27].self_attn.o_proj, model.layers.[1,4,12,14-16,20,25-28].self_attn.q_proj, model.layers.[1,4,8,12,15-16,18,20-21,23,26,28,31].mlp.down_proj, model.layers.[2,5,8,12,15-16,18,20-21,23,26,28,31].self_attn.v_proj, model.layers.[2,5-6,9,13,16-17,19,21-22,24,29].mlp.up_proj
+  Ignored layers (47): model.layers.[0,3,11,13-15,19,24-27].post_attention_layernorm, model.layers.[0,3,7,10,14,17-18,20,22-23,25,30].self_attn.q_norm, model.layers.[2,11,13-15,19,24-27].post_feedforward_layernorm, model.layers.[3,7,10,14,17-18,20,22-23,25,30].self_attn.k_norm, model.layers.[3,7,23].self_attn.lmk_q_norm[0m
+Processing shards: 100%|██████████| 3/3 [00:26<00:00,  8.78s/shard]
+[38;20m2026-08-03 07:55:22 INFO model_free.py L2075: 
+Model-free quantization complete.
+  Output directory: /root/_work/1/s/auto_quant/output/runs/HiLS-Attention-7B-AutoRound-W4A16-RTN/quantized_model
+  Total time: 103.94 seconds
+  Memory usage: 'peak_ram': 0.9GB
+  Quantized layers (240): model.layers.[0-31].mlp.down_proj, model.layers.[0-31].mlp.gate_proj, model.layers.[0-31].mlp.up_proj, model.layers.[0-31].self_attn.k_proj, model.layers.[0-31].self_attn.o_proj, model.layers.[0-31].self_attn.q_proj, model.layers.[0-31].self_attn.v_proj, model.layers.[3,7,11,15,19,23,27,31].self_attn.lmk_q_proj.[0-1]
+  Ignored layers (139): lm_head, model.embed_tokens, model.layers.[0-31].post_attention_layernorm, model.layers.[0-31].post_feedforward_layernorm, model.layers.[0-31].self_attn.k_norm, model.layers.[0-31].self_attn.q_norm, model.layers.[3,7,11,15,19,23,27,31].self_attn.lmk_q_norm, model.norm
+[0m
+07:55:22 [INFO] Quantization completed in 104.0s
+07:55:22 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/HiLS-Attention-7B-AutoRound-W4A16-RTN/quant_summary.json
+07:55:22 [INFO] === Phase 2: DONE ===
