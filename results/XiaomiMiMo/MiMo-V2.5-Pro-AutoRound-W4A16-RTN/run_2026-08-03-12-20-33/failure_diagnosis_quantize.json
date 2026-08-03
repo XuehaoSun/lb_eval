@@ -1,0 +1,33 @@
+{
+  "category": "infrastructure_disk_space",
+  "phase": "quantize",
+  "key_error": "RuntimeError: Task error: File reconstruction error: IO Error: No space left on device (os error 28)",
+  "root_cause": "Insufficient disk space on the host: the model download requires ~31.3 GB but only ~25.0 GB is free on /root/.cache/huggingface, causing the xet-based file reconstruction in huggingface_hub.file_download to fail with ENOSPC.",
+  "traceback_analysis": "auto_quant/phases/quantize.py:quantize calls AutoModelForCausalLM.from_pretrained (transformers.modeling_utils) which calls _get_resolved_checkpoint_files → get_checkpoint_shard_files → cached_files → snapshot_download → hf_hub_download → _hf_hub_download_to_cache_dir → xet_get, where the xet session new_file_download_group raises RuntimeError due to underlying OSError 28 (ENOSPC). The fault is at the infrastructure layer (filesystem), not in auto-round or transformers code.",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "huggingface_hub.file_download._hf_hub_download_to_cache_dir / xet_get",
+    "specific_function": "_download_to_tmp_and_move",
+    "fault_type": "resource_limit",
+    "responsible_party": "infra_team"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "Free at least ~10-15 GB on the volume mounted at /root/.cache (or redirect the HF cache to a larger volume): `df -h /root/.cache`, then `du -sh /root/.cache/huggingface/*` and remove unused cached models/repos, OR set `export HF_HOME=/path/with/more/space` to a larger disk before re-running. Expected model size is ~31.3 GB, so target ≥45 GB free for safety (model + reconstructed shards + quantization working space).",
+  "fix_verification": "After freeing space or pointing HF_HOME elsewhere, run `df -h $HF_HOME` and confirm >=45 GB free, then re-run: `python -m auto_quant.phases.quantize --model XiaomiMiMo/MiMo-V2.5-Pro --scheme W4A16-RTN`.",
+  "workaround": "Pre-download only the weights to a larger volume using `huggingface-cli download XiaomiMiMo/MiMo-V2.5-Pro --local-dir /big/path/MiMo-V2.5-Pro` and pass `--model /big/path/MiMo-V2.5-Pro` to the quantize phase (offline path). Alternatively, mount/attach additional storage and symlink /root/.cache/huggingface to the new location.",
+  "affected_component": "infrastructure",
+  "severity": "critical",
+  "confidence": 0.97,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "The quantization run died with 'No space left on device' while downloading MiMo-V2.5-Pro: the host's HF cache only had ~25 GB free but the model needs ~31.3 GB. This is purely an infrastructure/disk issue, not a code bug. Free at least ~45 GB on the cache volume (or redirect HF_HOME to a larger disk / pre-download weights to a bigger path) and retry.",
+  "analyzed_at": "2026-08-03T12:21:04.596372+00:00",
+  "model": "XiaomiMiMo/MiMo-V2.5-Pro",
+  "run_id": "MiMo-V2.5-Pro-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "unknown"
+}
