@@ -1,0 +1,168 @@
+=== Phase 2: Quantization ===
+  model=microsoft/GELab-Zero-4B-preview-Sico-Evolution
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  model_free=false
+  ignore_layers=<default>
+  layer_config=<none>
+  output_dir=/root/_work/1/s/auto_quant/output/runs/GELab-Zero-4B-preview-Sico-Evolution-AutoRound-W4A16-RTN/quantized_model
+09:26:16 [INFO] Quantization compute device: cuda:0 (device_map=0)
+09:26:16 [INFO] GPU0 free VRAM: 23.1GB / 23.5GB (min required: 2.0GB)
+09:26:16 [INFO] Model: microsoft/GELab-Zero-4B-preview-Sico-Evolution
+09:26:16 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+09:26:16 [INFO] Iters: 0 (RTN)
+09:26:16 [INFO] Export format: auto_round
+09:26:16 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/GELab-Zero-4B-preview-Sico-Evolution-AutoRound-W4A16-RTN/quantized_model
+09:26:16 [INFO] Device map: auto → effective: 0
+09:26:16 [INFO] Loading tokenizer...
+09:26:16 [INFO] HTTP Request: HEAD https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json "HTTP/1.1 403 Forbidden"
+09:26:16 [INFO] HTTP Request: HEAD https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json "HTTP/1.1 403 Forbidden"
+09:26:16 [ERROR] Quantization failed: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution.
+403 Client Error. (Request ID: Root=1-6a705eb8-152add9b15dc1f3851b21830;efc6e94c-7145-4a90-b001-da93d24cb0f1)
+
+Cannot access gated repo for url https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json.
+Access to model microsoft/GELab-Zero-4B-preview-Sico-Evolution is restricted and you are not in the authorized list. Visit https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution to ask for access.
+Traceback (most recent call last):
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 795, in hf_raise_for_status
+    response.raise_for_status()
+  File "/root/.venv/lib/python3.12/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 437, in cached_files
+    hf_hub_download(
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1019, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1166, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1876, in _raise_on_head_call_error
+    raise head_call_error
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1713, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1621, in get_hf_file_metadata
+    response = _httpx_follow_relative_redirects_with_backoff(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 726, in _httpx_follow_relative_redirects_with_backoff
+    hf_raise_for_status(response)
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 821, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response, repo_type=repo_type, repo_id=repo_id) from e
+huggingface_hub.errors.GatedRepoError: 403 Client Error. (Request ID: Root=1-6a705eb8-4c918d323de0e25774a23d01;a8e7b8c8-f0a3-40bc-9cb2-5a302cceaa68)
+
+Cannot access gated repo for url https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json.
+Access to model microsoft/GELab-Zero-4B-preview-Sico-Evolution is restricted and you are not in the authorized list. Visit https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution to ask for access.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/tokenization_auto.py", line 747, in from_pretrained
+    config = AutoConfig.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/configuration_auto.py", line 376, in from_pretrained
+    config_dict, unused_kwargs = PreTrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 721, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 776, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 293, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 503, in cached_files
+    raise OSError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution.
+403 Client Error. (Request ID: Root=1-6a705eb8-4c918d323de0e25774a23d01;a8e7b8c8-f0a3-40bc-9cb2-5a302cceaa68)
+
+Cannot access gated repo for url https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json.
+Access to model microsoft/GELab-Zero-4B-preview-Sico-Evolution is restricted and you are not in the authorized list. Visit https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution to ask for access.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 795, in hf_raise_for_status
+    response.raise_for_status()
+  File "/root/.venv/lib/python3.12/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 437, in cached_files
+    hf_hub_download(
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1019, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1166, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1876, in _raise_on_head_call_error
+    raise head_call_error
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1713, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1621, in get_hf_file_metadata
+    response = _httpx_follow_relative_redirects_with_backoff(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 726, in _httpx_follow_relative_redirects_with_backoff
+    hf_raise_for_status(response)
+  File "/root/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 821, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response, repo_type=repo_type, repo_id=repo_id) from e
+huggingface_hub.errors.GatedRepoError: 403 Client Error. (Request ID: Root=1-6a705eb8-152add9b15dc1f3851b21830;efc6e94c-7145-4a90-b001-da93d24cb0f1)
+
+Cannot access gated repo for url https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json.
+Access to model microsoft/GELab-Zero-4B-preview-Sico-Evolution is restricted and you are not in the authorized list. Visit https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution to ask for access.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 479, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 277, in quantize
+    tokenizer = AutoTokenizer.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/tokenization_auto.py", line 751, in from_pretrained
+    config = PreTrainedConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 680, in from_pretrained
+    config_dict, kwargs = cls.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 721, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 776, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 293, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 503, in cached_files
+    raise OSError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution.
+403 Client Error. (Request ID: Root=1-6a705eb8-152add9b15dc1f3851b21830;efc6e94c-7145-4a90-b001-da93d24cb0f1)
+
+Cannot access gated repo for url https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution/resolve/main/config.json.
+Access to model microsoft/GELab-Zero-4B-preview-Sico-Evolution is restricted and you are not in the authorized list. Visit https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution to ask for access.
