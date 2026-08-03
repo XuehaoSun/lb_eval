@@ -1,0 +1,33 @@
+{
+  "category": "unsupported_model_architecture",
+  "phase": "quantize",
+  "key_error": "ValueError: The checkpoint you are trying to load has model type `olmo_hils` but Transformers does not recognize this architecture.",
+  "root_cause": "The model config.json declares model_type='olmo_hils' (a Tencent HiLS-Attention variant) which is not registered in the installed transformers' CONFIG_MAPPING. The installed transformers version predates support for this architecture, so AutoModelForCausalLM.from_pretrained cannot resolve a config class.",
+  "traceback_analysis": "auto_quant/phases/quantize.py:quantize() calls AutoModelForCausalLM.from_pretrained (auto_round/utils/common.py:patched wrapper), which internally calls AutoConfig.from_pretrained -> configuration_auto.py:from_pretrained, which does CONFIG_MAPPING[config_dict['model_type']] lookup. The KeyError 'olmo_hils' originates at this mapping lookup, meaning transformers has no registered config class for this model_type. Fault is in transformers (stale version lacking architecture support) combined with model being newer than transformers release.",
+  "fault_attribution": {
+    "component": "transformers",
+    "specific_module": "transformers.models.auto.configuration_auto",
+    "specific_function": "CONFIG_MAPPING.__getitem__ / AutoConfig.from_pretrained",
+    "fault_type": "unsupported_arch",
+    "responsible_party": "transformers_devs"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "Upgrade transformers to a version (or install from source) that registers the 'olmo_hils' model_type. If HiLS is very recent, install from main: `pip install git+https://github.com/huggingface/transformers.git --upgrade` and re-run. If HiLS support is still pending, load with `trust_remote_code=True` after ensuring the model repo provides a valid modeling file, or fall back to a Transformers-supported base architecture mapping (e.g., treat as olmo) via a custom AutoConfig shim.",
+  "fix_verification": "python -c \"from transformers import CONFIG_MAPPING; assert 'olmo_hils' in CONFIG_MAPPING, CONFIG_MAPPING.keys()\"",
+  "workaround": "Patch the loaded config before model construction: load config.json, overwrite config_dict['model_type'] to a known supported type (e.g., 'olmo' or 'llama' if the architecture is compatible), then call AutoModelForCausalLM.from_pretrained(..., config=cfg). This is fragile and only works if HiLS is architecturally a variant of an existing model.",
+  "affected_component": "transformers",
+  "severity": "high",
+  "confidence": 0.95,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "stale (lacks olmo_hils support; site-packages path /root/.venv/lib/python3.12/site-packages/transformers)",
+    "torch": "unknown"
+  },
+  "community_summary": "Quantization failed because the Tencent HiLS-Attention-7B model uses a new `olmo_hils` architecture that the installed transformers version doesn't recognize. The fix is to upgrade transformers (preferably from source) to obtain a build that registers the olmo_hils model type, or to use trust_remote_code if the repo supplies custom modeling code.",
+  "analyzed_at": "2026-08-03T08:03:02.215049+00:00",
+  "model": "tencent/HiLS-Attention-7B",
+  "run_id": "HiLS-Attention-7B-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "unknown"
+}
