@@ -1,0 +1,99 @@
+  [auto-detect] Model weight (186.19GB) exceeds usable VRAM (~118GB on GPU 0); promoting to model_free mode (reads safetensors shards one at a time).
+=== Phase 2: Quantization ===
+  model=deepseek-ai/DeepSeek-V4-Flash
+  scheme=W4A16
+  iters=0
+  export_format=auto_round
+  model_free=true
+  ignore_layers=<default>
+  layer_config=<none>
+  output_dir=/root/_work/1/s/auto_quant/output/runs/DeepSeek-V4-Flash-AutoRound-W4A16-RTN/quantized_model
+  [tight-disk] Free disk = 4GB < 300GB; forcing AR_MODEL_FREE_SHARD_PARALLELISM=1 to bound peak working set.
+14:34:47 [INFO] Quantization compute device: cuda:0 (device_map=0)
+14:34:47 [INFO] GPU0 free VRAM: 139.3GB / 139.8GB (min required: 2.0GB)
+14:34:47 [INFO] Model: deepseek-ai/DeepSeek-V4-Flash
+14:34:47 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+14:34:47 [INFO] Iters: 0 (RTN)
+14:34:47 [INFO] Export format: auto_round
+14:34:47 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/DeepSeek-V4-Flash-AutoRound-W4A16-RTN/quantized_model
+14:34:47 [INFO] Device map: auto → effective: 0
+14:34:47 [INFO] Loading tokenizer...
+14:34:47 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+14:34:47 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/deepseek-ai/DeepSeek-V4-Flash/60d8d70770c6776ff598c94bb586a859a38244f1/config.json "HTTP/1.1 200 OK"
+14:34:48 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+14:34:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/deepseek-ai/DeepSeek-V4-Flash/60d8d70770c6776ff598c94bb586a859a38244f1/tokenizer_config.json "HTTP/1.1 200 OK"
+14:34:48 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+14:34:48 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/deepseek-ai/DeepSeek-V4-Flash/60d8d70770c6776ff598c94bb586a859a38244f1/tokenizer_config.json "HTTP/1.1 200 OK"
+14:34:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/deepseek-ai/DeepSeek-V4-Flash/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+14:34:48 [INFO] HTTP Request: GET https://huggingface.co/api/models/deepseek-ai/DeepSeek-V4-Flash/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+14:34:49 [INFO] HTTP Request: GET https://huggingface.co/api/models/deepseek-ai/DeepSeek-V4-Flash "HTTP/1.1 200 OK"
+14:34:49 [INFO] Loading config (model-free: no full-weight load)...
+14:34:49 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+14:34:49 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/deepseek-ai/DeepSeek-V4-Flash/60d8d70770c6776ff598c94bb586a859a38244f1/config.json "HTTP/1.1 200 OK"
+14:34:49 [INFO] Architecture: DeepseekV4ForCausalLM (model_type=deepseek_v4, moe=True)
+14:34:49 [INFO] Ignore layers (default): lm_head
+14:34:49 [INFO] Configuring AutoRound...
+14:34:49 [INFO] Model-free mode enabled (weight-only RTN, no calibration).
+14:34:49 [INFO] Starting model-free quantization + export (auto_round)...
+14:34:49 [INFO] HTTP Request: GET https://huggingface.co/api/models/deepseek-ai/DeepSeek-V4-Flash/revision/main "HTTP/1.1 200 OK"
+[33;1m2026-08-03 14:34:50 WARNING model_free.py L1844: Detected 2 layer(s) incompatible with model-free RTN: embed_tokens, layers.[2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42].self_attn.compressor.indexer.rotary_emb, layers.[2-42].self_attn.compressor.rotary_emb, rotary_emb.
+These layers have been automatically added to ignore_layers and will be kept in full precision.
+To override, pass --ignore_layers explicitly or disable model-free mode (--disable_model_free).[0m
+[38;20m2026-08-03 14:34:50 INFO model_free.py L1877: Detected FP8 source model (block_size=[128, 128], scale_fmt=ue8m0). FP8 weights will be dequantized before quantization.[0m
+[38;20m2026-08-03 14:34:50 INFO model_free.py L1887: Detected source model_type='deepseek_v4'.[0m
+[38;20m2026-08-03 14:34:50 INFO model_free.py L2130: Model-free quantization: deepseek-ai/DeepSeek-V4-Flash
+  Scheme: QuantizationScheme(bits=4, group_size=128, sym=True, data_type='int', act_bits=16, act_group_size=None, act_sym=None, act_data_type=None, act_dynamic=None, super_bits=None, super_group_size=None, rotation_config=None)
+  Packing format: auto_round:auto_gptq
+  Output: /root/_work/1/s/auto_quant/output/runs/DeepSeek-V4-Flash-AutoRound-W4A16-RTN/quantized_model
+  Shards: 46
+  Shard parallelism: 1 (env=1, env AR_MODEL_FREE_SHARD_PARALLELISM)
+  Streaming download: False
+  Diffusion model: False
+  Quant lm_head: False
+  Quant nontext module: False
+  Device: cuda:0[0m
+Processing shards:   0%|          | 0/46 [00:00<?, ?shard/s][38;20m2026-08-03 14:34:56 INFO model_free.py L2593: Applied model_type preprocessing for deepseek_v4: 8 MXFP8 layer(s), 768 MXFP4 layer(s) converted to llm-compressor naming.[0m
+[38;20m2026-08-03 14:34:56 INFO model_free.py L729: [model-00002-of-00046.safetensors] Dequantizing MXFP tensor(s) to bfloat16 on cuda:0: MXFP8=8, MXFP4=768, total=776.[0m
+[38;20m2026-08-03 14:34:56 INFO model_free.py L1989: Memory usage: 'peak_ram': 1.14GB[0m
+[38;20m2026-08-03 14:34:56 INFO model_free.py L1993: Shard 1/46 (model-00001-of-00046.safetensors):
+  Quantized layers (0): 
+  Ignored layers (1): embed[0m
+[38;20m2026-08-03 14:35:06 INFO model_free.py L840: Handling MXFP source tensor(s): 776 dequantized to bfloat16, 776 model_type-normalized.[0m
+Processing shards:   2%|▏         | 1/46 [01:54<1:25:36, 114.15s/shard]
+14:36:44 [ERROR] Quantization failed: Error while serializing: I/O error: No space left on device (os error 28)
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/process.py", line 264, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/model_free.py", line 1319, in _process_single_shard_task
+    _write_output_shard(
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/model_free.py", line 1234, in _write_output_shard
+    save_file(deduped, shard_path)
+  File "/root/.venv/lib/python3.12/site-packages/safetensors/torch.py", line 323, in save_file
+    serialize_file(
+safetensors._safetensors_rust.SafetensorError: Error while serializing: I/O error: No space left on device (os error 28)
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 479, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 367, in quantize
+    autoround.quantize_and_save(output_dir=args.output_dir, format=export_format)
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/model_free.py", line 2478, in quantize_and_save
+    out_path = self.run()
+               ^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/model_free.py", line 2149, in run
+    self._process_all_shards()
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/compressors/model_free.py", line 1974, in _process_all_shards
+    shard_idx, shard_name, shard_path, out_shard_name, tensor_names, quantized, ignored = future.result()
+                                                                                          ^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+safetensors._safetensors_rust.SafetensorError: Error while serializing: I/O error: No space left on device (os error 28)

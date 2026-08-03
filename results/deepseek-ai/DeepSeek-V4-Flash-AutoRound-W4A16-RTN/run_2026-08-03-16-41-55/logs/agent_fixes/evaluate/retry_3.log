@@ -1,0 +1,153 @@
+=== Phase 3: Evaluation ===
+  backend=hf
+  model=/root/_work/1/s/auto_quant/output/runs/DeepSeek-V4-Flash-AutoRound-W4A16-RTN/quantized_model
+  tasks=piqa,mmlu,hellaswag
+  batch_size=auto
+  num_gpus=1
+[evaluate] Running lm_eval with hf backend...
+[deepseek_v4_mapping] Registered 6 extra WeightRenaming rules for routed experts (w1/w2/w3 → gate/up/down_proj) and head (head.* → lm_head.*). Total deepseek_v4 rules: 48.
+2026-08-03:16:23:39 INFO     [_cli.run:388] Selected Tasks: ['piqa', 'mmlu', 'hellaswag']
+2026-08-03:16:23:39 INFO     [evaluator:214] Setting random seed to 42 | Setting numpy seed to 42 | Setting torch manual seed to 42 | Setting fewshot manual seed to 42
+2026-08-03:16:23:39 INFO     [evaluator:239] Initializing hf model, with arguments: {'pretrained': '/root/_work/1/s/auto_quant/output/runs/DeepSeek-V4-Flash-AutoRound-W4A16-RTN/quantized_model', 'dtype': 'bfloat16', 'trust_remote_code': True}
+2026-08-03:16:23:41 INFO     [models.huggingface:286] Using device 'cuda:0'
+2026-08-03:16:23:42 INFO     [models.huggingface:579] Model parallel was set to False, max memory was not set, and device map was set to {'': 'cuda:0'}
+/root/.venv/lib/python3.12/site-packages/transformers/quantizers/auto.py:271: UserWarning: You passed `quantization_config` or equivalent parameters to `from_pretrained` but the model you're loading already has a `quantization_config` attribute. The `quantization_config` from the model will be used.However, loading attributes (e.g. ['backend']) will be overwritten with the one you passed to `from_pretrained`. The rest will be ignored.
+  warnings.warn(warning_msg)
+[38;20m2026-08-03 16:23:42 INFO replace_modules.py L121: Experts (before replacement) [model.layers.0.mlp.experts] (DeepseekV4Experts):
+DeepseekV4Experts(
+  (act_fn): SiLUActivation()
+)[0m
+[33;1m2026-08-03 16:23:42 WARNING modeling_utils.py L4770: `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.[0m
+[38;20m2026-08-03 16:23:42 INFO device.py L1448: Before applying custom replacements 'peak_ram': 1.11GB[0m
+[38;20m2026-08-03 16:23:47 INFO moe_experts_interface.py L655: [MoE Prep] Unfused 43 MOE experts modules[0m
+[38;20m2026-08-03 16:23:47 INFO device.py L1448: After applying custom replacements 'peak_ram': 1.2GB[0m
+[38;20m2026-08-03 16:23:47 INFO replace_modules.py L94: Prepared 43 MOE modules for quantization[0m
+[38;20m2026-08-03 16:23:47 INFO replace_modules.py L121: Experts (after replacement/skip) [model.layers.0.mlp.experts] (DeepseekV4Experts):
+DeepseekV4Experts(
+  (act_fn): SiLUActivation()
+  (0-255): 256 x _ExpertContainer(
+    (down_proj): Linear(in_features=2048, out_features=4096, bias=False)
+    (gate_proj): Linear(in_features=4096, out_features=2048, bias=False)
+    (up_proj): Linear(in_features=4096, out_features=2048, bias=False)
+  )
+)[0m
+[33;1m2026-08-03 16:24:00 WARNING backend.py L1176: Better backend is found, please install all the following requirements to enable it.[0m
+[33;1m2026-08-03 16:24:00 WARNING backend.py L1176: `pip install -v "gptqmodel>=2.0" --no-build-isolation`[0m
+[transformers] [1mDeepseekV4ForCausalLM LOAD REPORT[0m from: /root/_work/1/s/auto_quant/output/runs/DeepSeek-V4-Flash-AutoRound-W4A16-RTN/quantized_model
+Key                                             | Status     | 
+------------------------------------------------+------------+-
+mtp.0.ffn.experts.{0...255}.w1.qzeros           | UNEXPECTED | 
+mtp.0.ffn.experts.{0...255}.w1.qweight          | UNEXPECTED | 
+mtp.0.ffn.experts.{0...255}.w2.scales           | UNEXPECTED | 
+mtp.0.ffn.experts.{0...255}.w3.qweight          | UNEXPECTED | 
+mtp.0.ffn.experts.{0...255}.w3.qzeros           | UNEXPECTED | 
+mtp.0.ffn.experts.{0...255}.w3.scales           | UNEXPECTED | 
+mtp.0.ffn.experts.{0...255}.w2.qweight          | UNEXPECTED | 
+mtp.0.ffn.experts.{0...255}.w2.qzeros           | UNEXPECTED | 
+mtp.0.ffn.experts.{0...255}.w1.scales           | UNEXPECTED | 
+layers.{0...42}.self_attn.o_a_proj.qweight      | UNEXPECTED | 
+layers.{0...42}.self_attn.o_a_proj.scales       | UNEXPECTED | 
+mtp.0.attn.wo_b.qzeros                          | UNEXPECTED | 
+layers.{0...42}.self_attn.o_a_proj.qzeros       | UNEXPECTED | 
+mtp.0.e_proj.scales                             | UNEXPECTED | 
+mtp.0.h_proj.scales                             | UNEXPECTED | 
+mtp.0.attn.q_norm.weight                        | UNEXPECTED | 
+mtp.0.attn.wo_b.qweight                         | UNEXPECTED | 
+mtp.0.attn.wkv.qzeros                           | UNEXPECTED | 
+mtp.0.attn.wo_a.qweight                         | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w2.qzeros              | UNEXPECTED | 
+mtp.0.hc_ffn_base                               | UNEXPECTED | 
+mtp.0.h_proj.qweight                            | UNEXPECTED | 
+mtp.0.e_proj.qweight                            | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w2.qweight             | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w2.scales              | UNEXPECTED | 
+mtp.0.hc_ffn_scale                              | UNEXPECTED | 
+mtp.0.attn.wq_b.qzeros                          | UNEXPECTED | 
+mtp.0.hc_attn_base                              | UNEXPECTED | 
+mtp.0.hc_head_base                              | UNEXPECTED | 
+mtp.0.attn.kv_norm.weight                       | UNEXPECTED | 
+mtp.0.attn.attn_sink                            | UNEXPECTED | 
+mtp.0.hc_ffn_fn                                 | UNEXPECTED | 
+mtp.0.attn.wq_b.qweight                         | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w1.qzeros              | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w3.scales              | UNEXPECTED | 
+mtp.0.hc_head_scale                             | UNEXPECTED | 
+mtp.0.attn.wq_b.scales                          | UNEXPECTED | 
+mtp.0.hc_attn_scale                             | UNEXPECTED | 
+mtp.0.e_proj.qzeros                             | UNEXPECTED | 
+mtp.0.ffn_norm.weight                           | UNEXPECTED | 
+mtp.0.enorm.weight                              | UNEXPECTED | 
+mtp.0.attn.wkv.scales                           | UNEXPECTED | 
+mtp.0.attn.wo_a.qzeros                          | UNEXPECTED | 
+mtp.0.attn.wo_b.scales                          | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w1.scales              | UNEXPECTED | 
+mtp.0.attn.wo_a.scales                          | UNEXPECTED | 
+mtp.0.ffn.gate.bias                             | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w3.qweight             | UNEXPECTED | 
+mtp.0.attn_norm.weight                          | UNEXPECTED | 
+mtp.0.attn.wq_a.qweight                         | UNEXPECTED | 
+mtp.0.h_proj.qzeros                             | UNEXPECTED | 
+mtp.0.hnorm.weight                              | UNEXPECTED | 
+mtp.0.hc_head_fn                                | UNEXPECTED | 
+mtp.0.attn.wq_a.scales                          | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w1.qweight             | UNEXPECTED | 
+mtp.0.norm.weight                               | UNEXPECTED | 
+lm_head.scales                                  | UNEXPECTED | 
+lm_head.qzeros                                  | UNEXPECTED | 
+mtp.0.ffn.gate.weight                           | UNEXPECTED | 
+mtp.0.hc_attn_fn                                | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w3.qzeros              | UNEXPECTED | 
+mtp.0.attn.wq_a.qzeros                          | UNEXPECTED | 
+mtp.0.attn.wkv.qweight                          | UNEXPECTED | 
+lm_head.qweight                                 | UNEXPECTED | 
+model.layers.{0...42}.self_attn.o_a_proj.weight | MISSING    | 
+lm_head.weight                                  | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/_lm_eval_with_deepseek_v4_fix.py", line 53, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/root/_work/1/s/auto_quant/phases/_lm_eval_with_deepseek_v4_fix.py", line 48, in main
+    cli_evaluate()
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/__main__.py", line 10, in cli_evaluate
+    parser.execute(args)
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/_cli/harness.py", line 60, in execute
+    args.func(args)
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/_cli/run.py", line 391, in _execute
+    results = simple_evaluate(
+              ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/utils.py", line 575, in _wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/evaluator.py", line 242, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_obj(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/api/model.py", line 169, in create_from_arg_obj
+    return cls(**arg_dict, **additional_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/models/huggingface.py", line 365, in __init__
+    self._create_model(
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/models/huggingface.py", line 814, in _create_model
+    self._model = self.AUTO_MODEL_CLASS.from_pretrained(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4457, in from_pretrained
+    loading_info = cls._finalize_model_loading(model, load_config, loading_info)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4617, in _finalize_model_loading
+    model._move_missing_keys_from_meta_to_device(
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4867, in _move_missing_keys_from_meta_to_device
+    value = torch.empty_like(param, device=param_device)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/_prims_common/wrappers.py", line 314, in _fn
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/_refs/__init__.py", line 5286, in empty_like
+    return torch.empty_permuted(
+           ^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB. GPU 0 has a total capacity of 139.81 GiB of which 21.88 MiB is free. Process 16653 has 612.00 MiB memory in use. Including non-PyTorch memory, this process has 139.18 GiB memory in use. Of the allocated memory 138.67 GiB is allocated by PyTorch, and 3.97 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)

@@ -1,0 +1,100 @@
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+Config was last written by a newer OpenClaw (2026.6.8); current version is 2026.3.24.
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] read tool called without path: toolCallId=call_019fc873e53d77b1a9ed6d51 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_019fc87474f371329483c576 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_019fc87484397451a9b90451 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_019fc8754a037d40b76d8d3b argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_019fc8755782728397b81aaa argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_019fc8758d037c4096b2f513 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_019fc87647fc7c129533a0ad argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_019fc87737db7ac08f1b14a5 argsType=object
+[agent/embedded] read tool called without path: toolCallId=call_019fc87b9b897550b659155f argsType=object
+[agent/embedded] embedded run timeout: runId=fix_evaluate_368_1785772820 sessionId=fix_evaluate_368_1785772820 timeoutMs=600000
+[agent/embedded] Profile minimax:cn timed out. Trying next account...
+[agent/embedded] embedded run failover decision: runId=fix_evaluate_368_1785772820 stage=assistant decision=surface_error reason=timeout provider=minimax/MiniMax-M3 profile=sha256:c38c74a5066a
+[agent] run fix_evaluate_368_1785772820 ended with stopReason=toolUse
+Let me check the actual checkpoint contents for these specific keys:
+Let me investigate the model's actual `o_a_proj` and `lm_head` structure:
+Let me check how transformers handles tied weights during missing-key materialization:
+Let me check the full unexpected/missing list to understand what happened to the attention `o_a_proj.q*`:
+Let me check how lm_eval's hf backend passes `device_map` and `max_memory`:
+Now I understand the path forward. Let me state the analysis and apply a different fix:
+
+```
+COMPONENT: model_code
+ERROR_CLASS: key_mapping_mismatch
+ROOT_CAUSE_HYPOTHESIS: Two non-tied missing keys remain after the previous bootstrap:
+  - `lm_head.weight` is *tied* to `embed_tokens.weight` per the model's
+    `_tied_weights_keys`; the bootstrap made `head.q*` → `lm_head.q*` (UNEXPECTED,
+    because lm_head is unquantized Linear), but `lm_head.weight` itself is
+    auto-tied from `embed_tokens.weight` so it is skipped at materialization.
+  - `self_attn.o_a_proj.weight` × 43 layers (~64 MiB each, ~2.75 GiB total) IS
+    non-tied AND missing: the checkpoint stores quantized `attn.wo_a.qweight/
+    qzeros/scales` but the model defines `o_a_proj` as an unquantized
+    `DeepseekV4GroupedLinear(nn.Linear)`. The renamed `o_a_proj.qweight/qzeros/
+    scales` show up as UNEXPECTED; `o_a_proj.weight` stays MISSING.
+  After the routed-expert bootstrap, the model is 138.67 GiB allocated on a
+  139.81 GiB H200 with only 21.88 MiB free — the very first `o_a_proj.weight`
+  init (64 MiB) OOMs. The root cause is not the OOM mechanism itself but the
+  fact that we have no headroom on a fully-loaded single GPU.
+EVIDENCE_CMD: ls /root/_work/1/s/auto_quant/output/runs/DeepSeek-V4-Flash-AutoRound-W4A16-RTN/lm_eval_results/eval.log && grep -E "MISSING|UNEXPECTED" /root/_work/1/s/auto_quant/output/runs/DeepSeek-V4-Flash-AutoRound-W4A16-RTN/lm_eval_results/eval.log | head -5
+EVIDENCE_RESULT: MISSING list shrunk from 99,072 → 2: only
+  `model.layers.{0..42}.self_attn.o_a_proj.weight` (43 layers) and
+  `lm_head.weight` (tied, skipped at materialization). The OOM is now from
+  `o_a_proj.weight` × 43.
+VERDICT: FIXABLE
+FIX_TIER: config
+FIX_PLAN:
+  1. Enable lm_eval's accelerate-style device offload via MODEL_ARGS so a
+     small slice of decoder layers (whose `o_a_proj.weight` materialization
+     happens at finalize time) goes to CPU RAM (1.8 TiB available) instead
+     of OOMing on the 139.81 GiB H200. Concretely: pass
+     `device_map=auto,max_memory_per_gpu=135GiB,max_cpu_memory=500GiB` via
+     `MODEL_ARGS`. This forces ~3 GiB to CPU, which is more than enough for
+     the 2.75 GiB of `o_a_proj.weight` materializations while keeping ~135
+     GiB of weights resident on GPU. lm_eval's `_get_accelerate_args` already
+     routes these to `from_pretrained(..., device_map=..., max_memory=...)`.
+  2. Make the offload opt-in via env vars `EVAL_DEVICE_MAP`,
+     `EVAL_MAX_MEMORY_PER_GPU`, `EVAL_MAX_CPU_MEMORY` so other models can
+     still run with the default behaviour. evaluate.sh's existing
+     `NUM_GPUS>1 → parallelize=True` path is preserved.
+SMOKE_TEST: python3 -c "
+import os
+os.environ['EVAL_MAX_MEMORY_PER_GPU']='135GiB'
+# Simulate the arg parsing lm_eval does
+from accelerate.utils import get_max_memory
+mm = get_max_memory()
+print('accelerate max_memory:', mm)
+" 2>&1 | head -5
+```
+
+Let me apply the fix:
+Now I need to set the env vars for THIS run. Let me check how the pipeline invokes `evaluate.sh` and add the env vars:
+Let me add sensible defaults to `evaluate.sh` for this large model, controlled via env vars:
+Now let me verify the changes and run a smoke test:
+Now let me run a comprehensive smoke test simulating the full evaluate.sh invocation:
+Let me verify the final state of `evaluate.sh`:
+Let me run one more comprehensive smoke test to make sure everything is properly wired:
+I notice the smoke test shows `batch_size=auto` — my defaults aren't taking effect. Let me investigate:
+Let me verify the offload setup will work properly with accelerate and the model structure:
+Let me verify all my changes are in place by viewing the complete updated `evaluate.sh`:
+Let me do a final comprehensive smoke test:
+[TIMEOUT] Agent exceeded 600s
+bash: -c: line 1: unexpected EOF while looking for matching `"'

@@ -1,0 +1,100 @@
+mtp.0.attn.q_norm.weight                        | UNEXPECTED | 
+mtp.0.attn.wo_b.qweight                         | UNEXPECTED | 
+mtp.0.attn.wkv.qzeros                           | UNEXPECTED | 
+mtp.0.attn.wo_a.qweight                         | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w2.qzeros              | UNEXPECTED | 
+mtp.0.hc_ffn_base                               | UNEXPECTED | 
+mtp.0.h_proj.qweight                            | UNEXPECTED | 
+mtp.0.e_proj.qweight                            | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w2.qweight             | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w2.scales              | UNEXPECTED | 
+mtp.0.hc_ffn_scale                              | UNEXPECTED | 
+mtp.0.attn.wq_b.qzeros                          | UNEXPECTED | 
+mtp.0.hc_attn_base                              | UNEXPECTED | 
+mtp.0.hc_head_base                              | UNEXPECTED | 
+mtp.0.attn.kv_norm.weight                       | UNEXPECTED | 
+mtp.0.attn.attn_sink                            | UNEXPECTED | 
+mtp.0.hc_ffn_fn                                 | UNEXPECTED | 
+mtp.0.attn.wq_b.qweight                         | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w1.qzeros              | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w3.scales              | UNEXPECTED | 
+mtp.0.hc_head_scale                             | UNEXPECTED | 
+mtp.0.attn.wq_b.scales                          | UNEXPECTED | 
+mtp.0.hc_attn_scale                             | UNEXPECTED | 
+mtp.0.e_proj.qzeros                             | UNEXPECTED | 
+mtp.0.ffn_norm.weight                           | UNEXPECTED | 
+mtp.0.enorm.weight                              | UNEXPECTED | 
+mtp.0.attn.wkv.scales                           | UNEXPECTED | 
+mtp.0.attn.wo_a.qzeros                          | UNEXPECTED | 
+mtp.0.attn.wo_b.scales                          | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w1.scales              | UNEXPECTED | 
+mtp.0.attn.wo_a.scales                          | UNEXPECTED | 
+mtp.0.ffn.gate.bias                             | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w3.qweight             | UNEXPECTED | 
+mtp.0.attn_norm.weight                          | UNEXPECTED | 
+mtp.0.attn.wq_a.qweight                         | UNEXPECTED | 
+mtp.0.h_proj.qzeros                             | UNEXPECTED | 
+mtp.0.hnorm.weight                              | UNEXPECTED | 
+mtp.0.hc_head_fn                                | UNEXPECTED | 
+mtp.0.attn.wq_a.scales                          | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w1.qweight             | UNEXPECTED | 
+mtp.0.norm.weight                               | UNEXPECTED | 
+lm_head.scales                                  | UNEXPECTED | 
+lm_head.qzeros                                  | UNEXPECTED | 
+mtp.0.ffn.gate.weight                           | UNEXPECTED | 
+mtp.0.hc_attn_fn                                | UNEXPECTED | 
+mtp.0.ffn.shared_experts.w3.qzeros              | UNEXPECTED | 
+mtp.0.attn.wq_a.qzeros                          | UNEXPECTED | 
+mtp.0.attn.wkv.qweight                          | UNEXPECTED | 
+lm_head.qweight                                 | UNEXPECTED | 
+model.layers.{0...42}.self_attn.o_a_proj.weight | MISSING    | 
+lm_head.weight                                  | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/_lm_eval_with_deepseek_v4_fix.py", line 53, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/root/_work/1/s/auto_quant/phases/_lm_eval_with_deepseek_v4_fix.py", line 48, in main
+    cli_evaluate()
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/__main__.py", line 10, in cli_evaluate
+    parser.execute(args)
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/_cli/harness.py", line 60, in execute
+    args.func(args)
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/_cli/run.py", line 391, in _execute
+    results = simple_evaluate(
+              ^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/utils.py", line 575, in _wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/evaluator.py", line 242, in simple_evaluate
+    lm = lm_eval.api.registry.get_model(model).create_from_arg_obj(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/api/model.py", line 169, in create_from_arg_obj
+    return cls(**arg_dict, **additional_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/models/huggingface.py", line 365, in __init__
+    self._create_model(
+  File "/root/.venv/lib/python3.12/site-packages/lm_eval/models/huggingface.py", line 814, in _create_model
+    self._model = self.AUTO_MODEL_CLASS.from_pretrained(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4457, in from_pretrained
+    loading_info = cls._finalize_model_loading(model, load_config, loading_info)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4617, in _finalize_model_loading
+    model._move_missing_keys_from_meta_to_device(
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4867, in _move_missing_keys_from_meta_to_device
+    value = torch.empty_like(param, device=param_device)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/_prims_common/wrappers.py", line 314, in _fn
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/torch/_refs/__init__.py", line 5286, in empty_like
+    return torch.empty_permuted(
+           ^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB. GPU 0 has a total capacity of 139.81 GiB of which 21.88 MiB is free. Process 16653 has 612.00 MiB memory in use. Including non-PyTorch memory, this process has 139.18 GiB memory in use. Of the allocated memory 138.67 GiB is allocated by PyTorch, and 3.97 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
