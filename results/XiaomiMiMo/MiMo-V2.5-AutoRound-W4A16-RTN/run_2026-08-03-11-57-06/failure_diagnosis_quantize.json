@@ -1,0 +1,33 @@
+{
+  "category": "disk_space_exhaustion",
+  "phase": "quantize",
+  "key_error": "RuntimeError: Task error: File reconstruction error: IO Error: No space left on device (os error 28)",
+  "root_cause": "The Hugging Face model download exhausted the filesystem while reconstructing a sharded safetensors file through the Xet download backend. This is an infrastructure storage-capacity failure, not an AutoRound, Transformers, model-code, or PyTorch defect; the log explicitly reports only 14.19 GB free for a 34.37 GB shard.",
+  "traceback_analysis": "auto_quant/phases/quantize.py calls AutoModelForCausalLM.from_pretrained, which enters Transformers checkpoint resolution and then huggingface_hub.snapshot_download. A worker calls hf_hub_download -> _download_to_tmp_and_move -> xet_get, where file reconstruction fails with OS error 28 because the Hugging Face cache filesystem is full.",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "huggingface_hub.file_download",
+    "specific_function": "xet_get",
+    "fault_type": "resource_limit",
+    "responsible_party": "infra_team"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "Provision sufficient disk space or relocate the Hugging Face cache to a larger volume before retrying. Remove only confirmed stale caches/artifacts, then set a large-volume cache such as `mkdir -p /mnt/large/hf-cache && export HF_HOME=/mnt/large/hf-cache`; allow space for the complete sharded checkpoint, temporary Xet reconstruction, and quantized output—not merely the largest 34.37 GB shard.",
+  "fix_verification": "df -h /mnt/large/hf-cache && HF_HOME=/mnt/large/hf-cache python -c \"from huggingface_hub import snapshot_download; print(snapshot_download('XiaomiMiMo/MiMo-V2.5', revision='63651580ca774f8504f676040460aed3e1244ac1'))\"",
+  "workaround": "Pre-download the pinned model revision onto a sufficiently large shared/model volume, then pass that local snapshot path to the quantization pipeline so `/root/.cache/huggingface` is not used.",
+  "affected_component": "infrastructure",
+  "severity": "high",
+  "confidence": 0.99,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "Quantization never began because loading MiMo-V2.5 filled the Hugging Face cache filesystem during Xet reconstruction of the sharded checkpoint. Free or add substantial storage, or move `HF_HOME` to a larger volume, pre-download the pinned revision, and retry.",
+  "analyzed_at": "2026-08-03T11:59:16.001541+00:00",
+  "model": "XiaomiMiMo/MiMo-V2.5",
+  "run_id": "MiMo-V2.5-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "unknown"
+}
