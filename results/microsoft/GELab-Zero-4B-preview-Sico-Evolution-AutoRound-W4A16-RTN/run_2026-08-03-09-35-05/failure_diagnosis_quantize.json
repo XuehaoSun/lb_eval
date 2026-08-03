@@ -1,0 +1,33 @@
+{
+  "category": "model_unavailable",
+  "phase": "quantize",
+  "key_error": "OSError: You are trying to access a gated repo. Make sure to have access to it at https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution.",
+  "root_cause": "The HuggingFace model microsoft/GELab-Zero-4B-preview-Sico-Evolution is gated and the requesting account/token is not on the authorized access list, causing a 403 GatedRepoError when AutoTokenizer attempts to fetch config.json.",
+  "traceback_analysis": "auto_quant/phases/quantize.py:quantize() calls AutoTokenizer.from_pretrained(), which delegates to transformers PreTrainedConfig.from_pretrained() → get_config_dict() → cached_file() → huggingface_hub cached_files(), which performs an HTTP GET for config.json. The fault is at the huggingface_hub/network layer returning 403, not in auto_round or transformers code — the code paths are correct, they are correctly reporting that the request was denied by the remote.",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "huggingface_hub.file_download._get_metadata_or_catch_error",
+    "specific_function": "get_hf_file_metadata",
+    "fault_type": "network",
+    "responsible_party": "model_author"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "1) Have the requester log in to HuggingFace, visit https://huggingface.co/microsoft/GELab-Zero-4B-preview-Sico-Evolution, click 'Agree and access' / request gating approval, and wait for the model author to grant access. 2) Once approved, authenticate in the CI environment with `huggingface-cli login` (or set HF_TOKEN) so the gated access token is used for downloads. 3) Alternatively, if an internal mirror or local snapshot of the model exists, set HF_HUB_OFFLINE=1 and point --model to the local path.",
+  "fix_verification": "huggingface-cli whoami  # shows logged-in user; then: huggingface-cli download microsoft/GELab-Zero-4B-preview-Sico-Evolution config.json --token $HF_TOKEN  # should return 200 instead of 403",
+  "workaround": "Use a local copy of the model (snapshot_download or git clone of the repo into ./models/) and pass the local path to the quantize phase via --model, or temporarily set HF_HUB_OFFLINE=1 after pre-staging the snapshot. If a non-gated mirror (e.g., an internal hub) exists, set HF_ENDPOINT to it.",
+  "affected_component": "model",
+  "severity": "high",
+  "confidence": 0.97,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown (4.x — uses PreTrainedConfig.from_pretrained / cached_file API)",
+    "torch": "unknown"
+  },
+  "community_summary": "The run failed before quantization actually started because microsoft/GELab-Zero-4B-preview-Sico-Evolution is a gated HuggingFace model and the CI token is not authorized (HTTP 403 GatedRepoError when fetching config.json). Ask the model author for access, log in with `huggingface-cli login`, or run the pipeline against a local snapshot of the model.",
+  "analyzed_at": "2026-08-03T09:35:35.718950+00:00",
+  "model": "microsoft/GELab-Zero-4B-preview-Sico-Evolution",
+  "run_id": "GELab-Zero-4B-preview-Sico-Evolution-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "model_unavailable"
+}
