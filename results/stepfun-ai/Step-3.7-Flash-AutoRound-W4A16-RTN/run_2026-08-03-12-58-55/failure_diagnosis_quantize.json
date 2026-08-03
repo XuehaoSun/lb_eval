@@ -1,0 +1,33 @@
+{
+  "category": "infrastructure_resource_limit",
+  "phase": "quantize",
+  "key_error": "RuntimeError: Task error: File reconstruction error: Internal Writer Error: Background writer channel closed",
+  "root_cause": "Insufficient disk space on the HuggingFace cache volume. The model weights require ~18.6 GB but only ~4.77 GB is free at /root/.cache/huggingface/hub/, causing the xet-based file reconstruction to abort with a background writer channel closed error.",
+  "traceback_analysis": "auto_quant/phases/quantize.py -> AutoModelForCausalLM.from_pretrained -> model custom from_pretrained -> transformers modeling_utils._get_resolved_checkpoint_files -> get_checkpoint_shard_files -> cached_files -> snapshot_download -> hf_hub_download -> xet_get opens a new file_download_group; the writer dies because writes to disk exceed available space, so the channel closes, raising RuntimeError before the snapshot completes.",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "huggingface_hub.file_download._download_to_tmp_and_move (xet_get path)",
+    "specific_function": "xet_get",
+    "fault_type": "resource_limit",
+    "responsible_party": "infra_team"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "Free ~20+ GB on the volume that backs /root/.cache/huggingface (e.g., `rm -rf /root/.cache/huggingface/hub/models--stepfun-ai--Step-3.7-Flash/blobs/*` and other unused HF caches, or expand the disk), then re-run the quantization job. Optionally set HF_HOME=/path/with/more/space before the run.",
+  "fix_verification": "df -h /root/.cache/huggingface && huggingface-cli download stepfun-ai/Step-3.7-Flash model.safetensors.index.json --dry-run  (should complete with no UserWarning about free disk space)",
+  "workaround": "Pre-download the model to an alternate cache directory on a larger volume (`export HF_HOME=/mnt/bigdisk/hf && huggingface-cli download stepfun-ai/Step-3.7-Flash`), then point the quantize step at it via HF_HOME. Alternatively reduce precision/sequence coverage to keep working set smaller, but the model download itself still needs disk room.",
+  "affected_component": "infrastructure",
+  "severity": "critical",
+  "confidence": 0.95,
+  "versions_involved": {
+    "auto_round": "unknown",
+    "transformers": "unknown",
+    "torch": "unknown"
+  },
+  "community_summary": "The W4A16 RTN quantization of stepfun-ai/Step-3.7-Flash failed during model weight download because /root/.cache/huggingface had only ~4.8 GB free while the model needs ~18.6 GB. The xet downloader's writer channel was closed as a direct consequence of the disk-full condition. The pipeline is otherwise sound — free up ~20 GB on the cache volume (or move HF_HOME to a larger disk) and rerun.",
+  "analyzed_at": "2026-08-03T12:59:14.328022+00:00",
+  "model": "stepfun-ai/Step-3.7-Flash",
+  "run_id": "Step-3.7-Flash-AutoRound-W4A16-RTN",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "unknown"
+}
