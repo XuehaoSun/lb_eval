@@ -1,0 +1,55 @@
+=== Phase 2: Quantization ===
+  model=MuXodious/Nanbeige4.2-3B-ARA-heresy
+  scheme=MXFP8
+  iters=200
+  export_format=auto_round
+  model_free=false
+  ignore_layers=<default>
+  layer_config=<none>
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Nanbeige4.2-3B-ARA-heresy-AutoRound-MXFP8-Tuning/quantized_model
+10:06:08 [INFO] Quantization compute device: cuda:0 (device_map=0)
+10:06:08 [INFO] GPU0 free VRAM: 23.1GB / 23.5GB (min required: 2.0GB)
+10:06:08 [INFO] Model: MuXodious/Nanbeige4.2-3B-ARA-heresy
+10:06:08 [INFO] Scheme: MXFP8 → AutoRound scheme='MXFP8'
+10:06:08 [INFO] Iters: 200 (TUNING)
+10:06:08 [INFO] Export format: auto_round
+10:06:08 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Nanbeige4.2-3B-ARA-heresy-AutoRound-MXFP8-Tuning/quantized_model
+10:06:08 [INFO] Device map: auto → effective: 0
+10:06:08 [INFO] Loading tokenizer...
+10:06:08 [INFO] HTTP Request: GET https://huggingface.co/api/models/MuXodious/Nanbeige4.2-3B-ARA-heresy "HTTP/1.1 200 OK"
+10:06:08 [INFO] HTTP Request: GET https://huggingface.co/api/models/MuXodious/Nanbeige4.2-3B-ARA-heresy/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:06:08 [INFO] HTTP Request: GET https://huggingface.co/api/models/MuXodious/Nanbeige4.2-3B-ARA-heresy/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:06:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/MuXodious/Nanbeige4.2-3B-ARA-heresy "HTTP/1.1 200 OK"
+10:06:09 [INFO] Loading model...
+10:06:09 [INFO] HTTP Request: GET https://huggingface.co/api/models/MuXodious/Nanbeige4.2-3B-ARA-heresy "HTTP/1.1 200 OK"
+10:06:09 [ERROR] Quantization failed: 'type'
+Traceback (most recent call last):
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 479, in <module>
+    quantize(args)
+  File "/root/_work/1/s/auto_quant/phases/quantize.py", line 293, in quantize
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/auto_round/utils/common.py", line 205, in patched
+    return underlying_func(klass, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 394, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4291, in from_pretrained
+    model = cls(config, *model_args, **model_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.cache/huggingface/modules/transformers_modules/MuXodious/Nanbeige4_dot_2_hyphen_3B_hyphen_ARA_hyphen_heresy/3655f8c710d17a72e0282da5c31446f73798fc70/modeling_nanbeige.py", line 2421, in __init__
+    self.model = NanbeigeModel(config)
+                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.cache/huggingface/modules/transformers_modules/MuXodious/Nanbeige4_dot_2_hyphen_3B_hyphen_ARA_hyphen_heresy/3655f8c710d17a72e0282da5c31446f73798fc70/modeling_nanbeige.py", line 1994, in __init__
+    [NanbeigeDecoderLayer(config, layer_idx) for layer_idx in range(config.num_hidden_layers)]
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.cache/huggingface/modules/transformers_modules/MuXodious/Nanbeige4_dot_2_hyphen_3B_hyphen_ARA_hyphen_heresy/3655f8c710d17a72e0282da5c31446f73798fc70/modeling_nanbeige.py", line 1642, in __init__
+    self.self_attn = NANBEIGE_ATTENTION_CLASSES[config._attn_implementation](config=config, layer_idx=layer_idx)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.cache/huggingface/modules/transformers_modules/MuXodious/Nanbeige4_dot_2_hyphen_3B_hyphen_ARA_hyphen_heresy/3655f8c710d17a72e0282da5c31446f73798fc70/modeling_nanbeige.py", line 1067, in __init__
+    self._init_rope()
+  File "/root/.cache/huggingface/modules/transformers_modules/MuXodious/Nanbeige4_dot_2_hyphen_3B_hyphen_ARA_hyphen_heresy/3655f8c710d17a72e0282da5c31446f73798fc70/modeling_nanbeige.py", line 1077, in _init_rope
+    scaling_type = self.config.rope_scaling["type"]
+                   ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'type'
