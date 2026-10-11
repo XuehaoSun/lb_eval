@@ -1,0 +1,122 @@
+=== Phase 2: Quantization ===
+  model=Qwen/Qwen3-8B
+  scheme=MXFP4
+  iters=0
+  export_format=auto_round
+  model_free=false
+  ignore_layers=<default>
+  layer_config=<none>
+  output_dir=/root/_work/1/s/auto_quant/output/runs/Qwen3-8B-AutoRound-MXFP4-RTN/quantized_model
+10:46:00 [INFO] Quantization compute device: cuda:0 (device_map=0)
+10:46:00 [INFO] GPU0 free VRAM: 23.1GB / 23.5GB (min required: 2.0GB)
+10:46:00 [INFO] Model: Qwen/Qwen3-8B
+10:46:00 [INFO] Scheme: MXFP4 → AutoRound scheme='MXFP4_RCEIL'
+10:46:00 [INFO] Iters: 0 (RTN)
+10:46:00 [INFO] Export format: auto_round
+10:46:00 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/Qwen3-8B-AutoRound-MXFP4-RTN/quantized_model
+10:46:00 [INFO] Device map: auto → effective: 0
+10:46:00 [INFO] Loading tokenizer...
+10:46:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:00 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+10:46:00 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/tokenizer_config.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Ftokenizer_config.json=&etag=%22417d038a63fa3de29cfde265caedae14d1a58d92%22 "HTTP/1.1 200 OK"
+10:46:00 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/tokenizer_config.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Ftokenizer_config.json=&etag=%22417d038a63fa3de29cfde265caedae14d1a58d92%22 "HTTP/1.1 200 OK"
+10:46:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:46:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:46:00 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/vocab.json "HTTP/1.1 307 Temporary Redirect"
+10:46:00 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/vocab.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Fvocab.json=&etag=%224783fe10ac3adce15ac8f358ef5462739852c569%22 "HTTP/1.1 200 OK"
+10:46:00 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/vocab.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Fvocab.json=&etag=%224783fe10ac3adce15ac8f358ef5462739852c569%22 "HTTP/1.1 200 OK"
+10:46:01 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/merges.txt "HTTP/1.1 307 Temporary Redirect"
+10:46:01 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/merges.txt?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Fmerges.txt=&etag=%2231349551d90c7606f325fe0f11bbb8bd5fa0d7c7%22 "HTTP/1.1 200 OK"
+10:46:01 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/merges.txt?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Fmerges.txt=&etag=%2231349551d90c7606f325fe0f11bbb8bd5fa0d7c7%22 "HTTP/1.1 200 OK"
+10:46:01 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/tokenizer.json "HTTP/1.1 302 Found"
+10:46:01 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/xet-read-token/b968826d9c46dd6066d109eabc6255188de91218 "HTTP/1.1 200 OK"
+10:46:01 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/added_tokens.json "HTTP/1.1 404 Not Found"
+10:46:01 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/special_tokens_map.json "HTTP/1.1 404 Not Found"
+10:46:01 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/chat_template.jinja "HTTP/1.1 404 Not Found"
+10:46:02 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:02 [INFO] Loading model...
+10:46:02 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:02 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/model.safetensors "HTTP/1.1 404 Not Found"
+10:46:02 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+10:46:02 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/model.safetensors.index.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Fmodel.safetensors.index.json=&etag=%222b85c00f1b118961cd7a477e2bba0fe197a4ce1a%22 "HTTP/1.1 200 OK"
+10:46:02 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/model.safetensors.index.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Fmodel.safetensors.index.json=&etag=%222b85c00f1b118961cd7a477e2bba0fe197a4ce1a%22 "HTTP/1.1 200 OK"
+10:46:02 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/b968826d9c46dd6066d109eabc6255188de91218?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:46:20 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/b968826d9c46dd6066d109eabc6255188de91218/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+10:46:20 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/generation_config.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Fgeneration_config.json=&etag=%2220a8a9156fc8c3f25295ca067f61fdf120d517c5%22 "HTTP/1.1 200 OK"
+10:46:20 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/generation_config.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fb968826d9c46dd6066d109eabc6255188de91218%2Fgeneration_config.json=&etag=%2220a8a9156fc8c3f25295ca067f61fdf120d517c5%22 "HTTP/1.1 200 OK"
+10:46:20 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+10:46:20 [INFO] Architecture: Qwen3ForCausalLM (model_type=qwen3, moe=False)
+10:46:20 [INFO] Ignore layers (default): lm_head,self_attn
+10:46:20 [INFO] Configuring AutoRound...
+[38;20m2026-10-11 10:46:20 INFO config.py L74: `enable_opt_rtn` is turned on, set `--disable_opt_rtn` for higher speed at the cost of accuracy.[0m
+10:46:20 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:20 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+10:46:20 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/modular_model_index.json "HTTP/1.1 404 Not Found"
+10:46:20 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:20 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:20 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+10:46:20 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/modular_model_index.json "HTTP/1.1 404 Not Found"
+10:46:20 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:21 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/revision/main "HTTP/1.1 200 OK"
+10:46:21 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:21 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:21 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:21 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:46:21 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:46:22 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:22 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+10:46:22 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+[33;1m2026-10-11 10:46:22 WARNING logging.py L340: reset enable_torch_compile to `False` as RTN/OPT-RTN quantizes each layer in a single pass, so compilation cost would outweigh its benefit[0m
+10:46:22 [INFO] Starting quantization...
+[38;20m2026-10-11 10:46:22 INFO layer_config_resolver.py L402: Ignored layers: lm_head, lm_head, model.layers.[0-35].self_attn.k_proj, model.layers.[0-35].self_attn.o_proj, model.layers.[0-35].self_attn.q_proj, model.layers.[0-35].self_attn.v_proj, self_attn[0m
+[38;20m2026-10-11 10:46:22 INFO layer_config_resolver.py L402: Ignored layers: lm_head, lm_head, model.layers.[0-35].self_attn.k_proj, model.layers.[0-35].self_attn.o_proj, model.layers.[0-35].self_attn.q_proj, model.layers.[0-35].self_attn.v_proj, self_attn[0m
+[38;20m2026-10-11 10:46:22 INFO base.py L1372: `torch.compile` is disabled, as RTN/OPT-RTN quantizes each layer in a single pass[0m
+[38;20m2026-10-11 10:46:23 INFO orchestrator.py L425: Zero-shot mode (no calibration data needed): using blockwise quantization.[0m
+  0%|          | 0/36 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/36 [00:00<?, ?it/s][38;20m2026-10-11 10:46:23 INFO offload.py L866: OffloadManager (compressor): tempdir = /root/_work/1/s/auto_quant/ar_work_space/offload/compressor_zxxs1ysn[0m
+[38;20m2026-10-11 10:46:24 INFO device.py L1560: 'peak_ram': 1.93GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.1:   3%|▎         | 1/36 [00:01<00:40,  1.15s/it][38;20m2026-10-11 10:46:24 INFO device.py L1560: 'peak_ram': 1.94GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.2:   6%|▌         | 2/36 [00:01<00:33,  1.01it/s][38;20m2026-10-11 10:46:25 INFO device.py L1560: 'peak_ram': 1.95GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.3:   8%|▊         | 3/36 [00:02<00:30,  1.07it/s][38;20m2026-10-11 10:46:26 INFO device.py L1560: 'peak_ram': 1.96GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.4:  11%|█         | 4/36 [00:03<00:28,  1.10it/s][38;20m2026-10-11 10:46:27 INFO device.py L1560: 'peak_ram': 1.97GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.5:  14%|█▍        | 5/36 [00:04<00:27,  1.12it/s][38;20m2026-10-11 10:46:28 INFO device.py L1560: 'peak_ram': 1.97GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.6:  17%|█▋        | 6/36 [00:05<00:26,  1.13it/s][38;20m2026-10-11 10:46:29 INFO device.py L1560: 'peak_ram': 1.98GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.7:  19%|█▉        | 7/36 [00:06<00:25,  1.14it/s][38;20m2026-10-11 10:46:29 INFO device.py L1560: 'peak_ram': 1.99GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.8:  22%|██▏       | 8/36 [00:06<00:24,  1.15it/s][38;20m2026-10-11 10:46:30 INFO device.py L1560: 'peak_ram': 2.0GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.9:  25%|██▌       | 9/36 [00:07<00:23,  1.15it/s][38;20m2026-10-11 10:46:31 INFO device.py L1560: 'peak_ram': 2.01GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.10:  28%|██▊       | 10/36 [00:08<00:22,  1.16it/s][38;20m2026-10-11 10:46:32 INFO device.py L1560: 'peak_ram': 2.02GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.11:  31%|███       | 11/36 [00:09<00:21,  1.16it/s][38;20m2026-10-11 10:46:33 INFO device.py L1560: 'peak_ram': 2.03GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.12:  33%|███▎      | 12/36 [00:10<00:20,  1.17it/s][38;20m2026-10-11 10:46:34 INFO device.py L1560: 'peak_ram': 2.04GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.13:  36%|███▌      | 13/36 [00:11<00:19,  1.17it/s][38;20m2026-10-11 10:46:34 INFO device.py L1560: 'peak_ram': 2.04GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.14:  39%|███▉      | 14/36 [00:11<00:18,  1.17it/s][38;20m2026-10-11 10:46:35 INFO device.py L1560: 'peak_ram': 2.05GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.15:  42%|████▏     | 15/36 [00:12<00:17,  1.17it/s][38;20m2026-10-11 10:46:36 INFO device.py L1560: 'peak_ram': 2.06GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.16:  44%|████▍     | 16/36 [00:13<00:16,  1.18it/s][38;20m2026-10-11 10:46:37 INFO device.py L1560: 'peak_ram': 2.07GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.17:  47%|████▋     | 17/36 [00:14<00:16,  1.18it/s][38;20m2026-10-11 10:46:38 INFO device.py L1560: 'peak_ram': 2.08GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.18:  50%|█████     | 18/36 [00:15<00:15,  1.18it/s][38;20m2026-10-11 10:46:39 INFO device.py L1560: 'peak_ram': 2.08GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.19:  53%|█████▎    | 19/36 [00:16<00:14,  1.18it/s][38;20m2026-10-11 10:46:39 INFO device.py L1560: 'peak_ram': 2.09GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.20:  56%|█████▌    | 20/36 [00:16<00:13,  1.19it/s][38;20m2026-10-11 10:46:40 INFO device.py L1560: 'peak_ram': 2.1GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.21:  58%|█████▊    | 21/36 [00:17<00:12,  1.19it/s][38;20m2026-10-11 10:46:41 INFO device.py L1560: 'peak_ram': 2.11GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.22:  61%|██████    | 22/36 [00:18<00:11,  1.19it/s][38;20m2026-10-11 10:46:42 INFO device.py L1560: 'peak_ram': 2.12GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.23:  64%|██████▍   | 23/36 [00:19<00:10,  1.19it/s][38;20m2026-10-11 10:46:43 INFO device.py L1560: 'peak_ram': 2.13GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.24:  67%|██████▋   | 24/36 [00:20<00:10,  1.19it/s][38;20m2026-10-11 10:46:43 INFO device.py L1560: 'peak_ram': 2.14GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.25:  69%|██████▉   | 25/36 [00:20<00:09,  1.20it/s][38;20m2026-10-11 10:46:44 INFO device.py L1560: 'peak_ram': 2.15GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.26:  72%|███████▏  | 26/36 [00:21<00:08,  1.20it/s][38;20m2026-10-11 10:46:45 INFO device.py L1560: 'peak_ram': 2.15GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.27:  75%|███████▌  | 27/36 [00:22<00:07,  1.20it/s][38;20m2026-10-11 10:46:46 INFO device.py L1560: 'peak_ram': 2.16GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.28:  78%|███████▊  | 28/36 [00:23<00:06,  1.20it/s][38;20m2026-10-11 10:46:47 INFO device.py L1560: 'peak_ram': 2.17GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.29:  81%|████████  | 29/36 [00:24<00:05,  1.20it/s][38;20m2026-10-11 10:46:47 INFO device.py L1560: 'peak_ram': 2.18GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.30:  83%|████████▎ | 30/36 [00:24<00:04,  1.20it/s][38;20m2026-10-11 10:46:48 INFO device.py L1560: 'peak_ram': 2.19GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.31:  86%|████████▌ | 31/36 [00:25<00:04,  1.20it/s][38;20m2026-10-11 10:46:49 INFO device.py L1560: 'peak_ram': 2.19GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.32:  89%|████████▉ | 32/36 [00:26<00:03,  1.20it/s][38;20m2026-10-11 10:46:50 INFO device.py L1560: 'peak_ram': 2.2GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.33:  92%|█████████▏| 33/36 [00:27<00:02,  1.21it/s][38;20m2026-10-11 10:46:51 INFO device.py L1560: 'peak_ram': 2.21GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.34:  94%|█████████▍| 34/36 [00:28<00:01,  1.21it/s][38;20m2026-10-11 10:46:52 INFO device.py L1560: 'peak_ram': 2.22GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.35:  97%|█████████▋| 35/36 [00:28<00:00,  1.21it/s][38;20m2026-10-11 10:46:52 INFO device.py L1560: 'peak_ram': 2.23GB, 'peak_vram': 15.26GB[0m
+Quantizing model.layers.35: 100%|██████████| 36/36 [00:29<00:00,  1.21it/s]
+10:46:52 [INFO] Saving quantized model (auto_round format)...
+packing:   0%|          | 0/253 [00:00<?, ?it/s]packing: 100%|██████████| 253/253 [00:05<00:00, 45.70it/s]
+[33;1m2026-10-11 10:46:58 WARNING export_to_nvfp_mx.py L272: /root/_work/1/s/auto_quant/output/runs/Qwen3-8B-AutoRound-MXFP4-RTN/quantized_model already exists, this may cause model conflict[0m
+10:46:59 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:46:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fmain%2Fconfig.json=&etag=%22d46195ac87f837ad233d02b2f80f148bf7c005e0%22 "HTTP/1.1 200 OK"
+10:46:59 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+10:46:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json?%2FQwen%2FQwen3-8B%2Fresolve%2Fmain%2Fconfig.json=&etag=%22d46195ac87f837ad233d02b2f80f148bf7c005e0%22 "HTTP/1.1 200 OK"
+10:46:59 [INFO] Quantization completed in 37.5s
+10:46:59 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/Qwen3-8B-AutoRound-MXFP4-RTN/quant_summary.json
+10:46:59 [INFO] === Phase 2: DONE ===
