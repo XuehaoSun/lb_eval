@@ -1,0 +1,29 @@
+{
+  "category": "out_of_memory",
+  "phase": "quantize",
+  "key_error": "torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 170.00 MiB. GPU 0 has a total capacity of 31.36 GiB of which 59.88 MiB is free. Including non-PyTorch memory, this process has 31.29 GiB m",
+  "root_cause": "GPU VRAM or system RAM exhausted",
+  "traceback_analysis": "",
+  "fault_attribution": {
+    "component": "infrastructure",
+    "specific_module": "N/A (quick classification only)",
+    "specific_function": "N/A (quick classification only)",
+    "fault_type": "resource_limit",
+    "responsible_party": "infra_team"
+  },
+  "retryable": true,
+  "fix_available": true,
+  "suggested_fix": "Add --low_gpu_mem_usage to auto-round; Reduce nsamples (e.g., 64 or 32)",
+  "fix_verification": "",
+  "workaround": "Add --low_gpu_mem_usage to auto-round",
+  "affected_component": "infrastructure",
+  "severity": "medium",
+  "confidence": 0.6,
+  "versions_involved": {},
+  "community_summary": "GPU VRAM or system RAM exhausted in quantize phase for model Qwen/Qwen3.8-27B.",
+  "analyzed_at": "2026-10-11T10:38:54.880744+00:00",
+  "model": "Qwen/Qwen3.8-27B",
+  "run_id": "Qwen3.8-27B-AutoRound-W4A16-Tuning",
+  "quant_scheme": "INT4 (W4A16)",
+  "pattern_category": "out_of_memory"
+}
