@@ -1,0 +1,199 @@
+=== Phase 2: Quantization ===
+  model=ai9stars/G9v3-39A5B
+  scheme=W4A16
+  iters=200
+  export_format=auto_round
+  model_free=false
+  ignore_layers=<default>
+  layer_config=<none>
+  output_dir=/root/_work/1/s/auto_quant/output/runs/G9v3-39A5B-AutoRound-W4A16-Tuning/quantized_model
+10:24:57 [INFO] Quantization compute device: cuda:0 (device_map=0)
+10:24:57 [INFO] GPU0 free VRAM: 94.4GB / 95.0GB (min required: 2.0GB)
+10:24:57 [INFO] Model: ai9stars/G9v3-39A5B
+10:24:57 [INFO] Scheme: W4A16 → AutoRound scheme='W4A16'
+10:24:57 [INFO] Iters: 200 (TUNING)
+10:24:57 [INFO] Export format: auto_round
+10:24:57 [INFO] Output: /root/_work/1/s/auto_quant/output/runs/G9v3-39A5B-AutoRound-W4A16-Tuning/quantized_model
+10:24:57 [INFO] Device map: auto → effective: 0
+10:24:57 [INFO] Loading tokenizer...
+10:24:57 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:24:57 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+10:24:57 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/tokenizer_config.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Ftokenizer_config.json=&etag=%222a7bb43f24b04fc8e733b3af8c4ce73eaa974e9a%22 "HTTP/1.1 200 OK"
+10:24:58 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/tokenizer_config.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Ftokenizer_config.json=&etag=%222a7bb43f24b04fc8e733b3af8c4ce73eaa974e9a%22 "HTTP/1.1 200 OK"
+10:24:58 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:24:58 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:24:58 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+10:24:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/tokenizer.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Ftokenizer.json=&etag=%22ec0bf9a34dc884738494ed1f74d0c5327b06d690%22 "HTTP/1.1 200 OK"
+10:24:58 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/tokenizer.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Ftokenizer.json=&etag=%22ec0bf9a34dc884738494ed1f74d0c5327b06d690%22 "HTTP/1.1 200 OK"
+10:24:58 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/tokenizer.model "HTTP/1.1 404 Not Found"
+10:24:58 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/added_tokens.json "HTTP/1.1 404 Not Found"
+10:24:58 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+10:24:58 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/special_tokens_map.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fspecial_tokens_map.json=&etag=%22492d4b2966a1763442d426d880dbc29f94906e4c%22 "HTTP/1.1 200 OK"
+10:24:59 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/special_tokens_map.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fspecial_tokens_map.json=&etag=%22492d4b2966a1763442d426d880dbc29f94906e4c%22 "HTTP/1.1 200 OK"
+10:24:59 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+10:24:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/chat_template.jinja?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fchat_template.jinja=&etag=%22be166eec32c67d62c71d6e0dfaf2c0f194b00923%22 "HTTP/1.1 200 OK"
+10:24:59 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/chat_template.jinja?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fchat_template.jinja=&etag=%22be166eec32c67d62c71d6e0dfaf2c0f194b00923%22 "HTTP/1.1 200 OK"
+10:24:59 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:24:59 [INFO] Loading model...
+10:24:59 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:24:59 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/modeling_g9v3.py "HTTP/1.1 307 Temporary Redirect"
+10:24:59 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/modeling_g9v3.py?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fmodeling_g9v3.py=&etag=%22833fe7827b731c52d925abf17260319ea5d89009%22 "HTTP/1.1 200 OK"
+10:25:00 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/modeling_g9v3.py?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fmodeling_g9v3.py=&etag=%22833fe7827b731c52d925abf17260319ea5d89009%22 "HTTP/1.1 200 OK"
+[transformers] A new version of the following files was downloaded from https://huggingface.co/ai9stars/G9v3-39A5B:
+- modeling_g9v3.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[ERROR] `cache_position` is part of G9v3Model.forward's signature, but not documented. Make sure to add it to the docstring of the function in /root/.cache/huggingface/modules/transformers_modules/ai9stars/G9v3_hyphen_39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/modeling_g9v3.py.
+[transformers] The `check_model_inputs` decorator is deprecated in favor of `merge_with_config_defaults`.
+[ERROR] `cache_position` is part of G9v3ForCausalLM.forward's signature, but not documented. Make sure to add it to the docstring of the function in /root/.cache/huggingface/modules/transformers_modules/ai9stars/G9v3_hyphen_39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/modeling_g9v3.py.
+10:25:00 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/model.safetensors "HTTP/1.1 404 Not Found"
+10:25:00 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+10:25:00 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/model.safetensors.index.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fmodel.safetensors.index.json=&etag=%229d5152fa7371e8b5e4f4ea08f246078581778235%22 "HTTP/1.1 200 OK"
+10:25:00 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/model.safetensors.index.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fmodel.safetensors.index.json=&etag=%229d5152fa7371e8b5e4f4ea08f246078581778235%22 "HTTP/1.1 200 OK"
+10:25:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B/tree/70213b14ea559298507e46e36e53d9c4c76144fc?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:25:00 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B/xet-read-token/70213b14ea559298507e46e36e53d9c4c76144fc "HTTP/1.1 200 OK"
+10:29:40 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/70213b14ea559298507e46e36e53d9c4c76144fc/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+10:29:40 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/generation_config.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fgeneration_config.json=&etag=%2273dc79c289226ae520cef51a057667aa3d958094%22 "HTTP/1.1 200 OK"
+10:29:40 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/generation_config.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2F70213b14ea559298507e46e36e53d9c4c76144fc%2Fgeneration_config.json=&etag=%2273dc79c289226ae520cef51a057667aa3d958094%22 "HTTP/1.1 200 OK"
+10:29:40 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+10:29:40 [INFO] Architecture: G9v3ForCausalLM (model_type=g9v3, moe=True)
+10:29:40 [INFO] Ignore layers (default): lm_head
+10:29:40 [INFO] Configuring AutoRound...
+[33;1m2026-10-11 10:29:40 WARNING autoround.py L489: Passing 'iters' directly to AutoRound is supported, but the recommended usage is 'alg_configs=SignRoundConfig(...)'.[0m
+10:29:40 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:40 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+10:29:40 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/main/modular_model_index.json "HTTP/1.1 404 Not Found"
+10:29:40 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:40 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:40 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/main/model_index.json "HTTP/1.1 404 Not Found"
+10:29:41 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/main/modular_model_index.json "HTTP/1.1 404 Not Found"
+10:29:41 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:41 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B/revision/main "HTTP/1.1 200 OK"
+10:29:42 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:42 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:42 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:42 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+10:29:42 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:29:42 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:43 [INFO] HTTP Request: GET https://huggingface.co/api/models/ai9stars/G9v3-39A5B "HTTP/1.1 200 OK"
+10:29:54 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+[38;20m2026-10-11 10:29:56 INFO base.py L522: Using default calibration dataset NeelNanda/pile-10k.[0m
+10:29:56 [INFO] Starting quantization...
+[38;20m2026-10-11 10:29:56 INFO base.py L1013: Using predefined ignore_layers: model.layers.[1-37].mlp.gate[0m
+[38;20m2026-10-11 10:29:56 INFO layer_config_resolver.py L402: Ignored layers: lm_head, lm_head, model.layers.[1-37].mlp.gate[0m
+[38;20m2026-10-11 10:29:57 INFO layer_config_resolver.py L402: Ignored layers: lm_head, lm_head, model.layers.[1-37].mlp.gate[0m
+[38;20m2026-10-11 10:30:00 INFO base.py L1365: `torch.compile` is enabled[0m
+[38;20m2026-10-11 10:30:06 INFO orchestrator.py L594: start to cache block inputs[0m
+[38;20m2026-10-11 10:30:06 INFO calib_dataset.py L1229: Preprocessing calibration dataset in a subprocess to avoid memory leaks...[0m
+10:30:06 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+10:30:06 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md?%2Fdatasets%2FNeelNanda%2Fpile-10k%2Fresolve%2Fmain%2FREADME.md=&etag=%22dd43b44200df267377169ac61319fb4ae9185ea5%22 "HTTP/1.1 200 OK"
+10:30:06 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/README.md?%2Fdatasets%2FNeelNanda%2Fpile-10k%2Fresolve%2Fmain%2FREADME.md=&etag=%22dd43b44200df267377169ac61319fb4ae9185ea5%22 "HTTP/1.1 200 OK"
+10:30:06 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/pile-10k.py "HTTP/1.1 404 Not Found"
+10:30:06 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/NeelNanda/pile-10k/NeelNanda/pile-10k.py "HTTP/1.1 404 Not Found"
+10:30:07 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/revision/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+10:30:07 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/.huggingface.yaml "HTTP/1.1 404 Not Found"
+10:30:07 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=NeelNanda/pile-10k "HTTP/1.1 200 OK"
+10:30:07 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+10:30:07 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/tree/127bfedcd5047750df5ccf3a12979a47bfa0bafa?recursive=false&expand=false "HTTP/1.1 200 OK"
+10:30:07 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+10:30:07 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json?%2Fdatasets%2FNeelNanda%2Fpile-10k%2Fresolve%2F127bfedcd5047750df5ccf3a12979a47bfa0bafa%2Fdataset_infos.json=&etag=%226ee3cb9f694462afe30683832d727503fe0c84d5%22 "HTTP/1.1 200 OK"
+10:30:07 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/NeelNanda/pile-10k/127bfedcd5047750df5ccf3a12979a47bfa0bafa/dataset_infos.json?%2Fdatasets%2FNeelNanda%2Fpile-10k%2Fresolve%2F127bfedcd5047750df5ccf3a12979a47bfa0bafa%2Fdataset_infos.json=&etag=%226ee3cb9f694462afe30683832d727503fe0c84d5%22 "HTTP/1.1 200 OK"
+10:30:07 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/NeelNanda/pile-10k/resolve/127bfedcd5047750df5ccf3a12979a47bfa0bafa/data/train-00000-of-00001-4746b8785c874cc7.parquet "HTTP/1.1 302 Found"
+10:30:07 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/xet-read-token/127bfedcd5047750df5ccf3a12979a47bfa0bafa "HTTP/1.1 200 OK"
+Generating train split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10000/10000 [00:01<00:00, 5651.81 examples/s]
+Map:   0%|          | 0/10000 [00:00<?, ? examples/s]Map: 100%|██████████| 10000/10000 [00:08<00:00, 1188.55 examples/s]
+Casting the dataset:   0%|          | 0/10000 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 10000/10000 [00:00<00:00, 135007.03 examples/s]
+Filter:   0%|          | 0/10000 [00:00<?, ? examples/s]Filter: 100%|██████████| 10000/10000 [00:00<00:00, 13202.16 examples/s]
+Saving the dataset (0/1 shards):   0%|          | 0/128 [00:00<?, ? examples/s]Saving the dataset (1/1 shards): 100%|██████████| 128/128 [00:00<00:00, 22429.43 examples/s]Saving the dataset (1/1 shards): 100%|██████████| 128/128 [00:00<00:00, 20840.45 examples/s]
+[38;20m2026-10-11 10:30:21 INFO device.py L1560: 'peak_ram': 5.23GB, 'peak_vram': 72.66GB[0m
+[38;20m2026-10-11 10:30:21 INFO orchestrator.py L626: caching done[0m
+  0%|          | 0/38 [00:00<?, ?it/s]Quantizing model.layers.0:   0%|          | 0/38 [00:02<?, ?it/s][38;20mquantized 7/7 layers in the block, loss iter 0: 9.882e-10 -> iter 178: 1.364e-10[0m
+[38;20m2026-10-11 10:31:07 INFO device.py L1560: 'peak_ram': 23.13GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.1:   3%|▎         | 1/38 [00:45<28:10, 45.70s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.563e-08 -> iter 197: 1.662e-09[0m
+[38;20m2026-10-11 10:32:48 INFO device.py L1560: 'peak_ram': 35.18GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.1:   5%|▌         | 2/38 [02:27<44:07, 73.55s/it]Quantizing model.layers.2:   5%|▌         | 2/38 [02:27<44:07, 73.55s/it]Quantizing model.layers.2:   5%|▌         | 2/38 [02:38<44:07, 73.55s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 4.309e-08 -> iter 163: 7.753e-09[0m
+[38;20m2026-10-11 10:34:12 INFO device.py L1560: 'peak_ram': 35.18GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.3:   8%|▊         | 3/38 [03:50<42:54, 73.55s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 6.129e-08 -> iter 111: 1.722e-08[0m
+[38;20m2026-10-11 10:35:38 INFO device.py L1560: 'peak_ram': 35.18GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.3:  11%|█         | 4/38 [05:17<45:33, 80.40s/it]Quantizing model.layers.4:  11%|█         | 4/38 [05:17<45:33, 80.40s/it]Quantizing model.layers.4:  11%|█         | 4/38 [05:30<45:33, 80.40s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.064e-07 -> iter 128: 3.275e-08[0m
+[38;20m2026-10-11 10:37:00 INFO device.py L1560: 'peak_ram': 35.18GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.5:  13%|█▎        | 5/38 [06:39<44:13, 80.40s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.902e-07 -> iter 150: 6.936e-08[0m
+[38;20m2026-10-11 10:38:19 INFO device.py L1560: 'peak_ram': 35.18GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.5:  16%|█▌        | 6/38 [07:57<42:49, 80.29s/it]Quantizing model.layers.6:  16%|█▌        | 6/38 [07:57<42:49, 80.29s/it]Quantizing model.layers.6:  16%|█▌        | 6/38 [08:11<42:49, 80.29s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.200e-07 -> iter 174: 1.341e-07[0m
+[38;20m2026-10-11 10:39:42 INFO device.py L1560: 'peak_ram': 37.63GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.7:  18%|█▊        | 7/38 [09:21<41:29, 80.29s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 3.441e-07 -> iter 180: 2.141e-07[0m
+[38;20m2026-10-11 10:41:21 INFO device.py L1560: 'peak_ram': 41.41GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.7:  21%|██        | 8/38 [11:00<42:16, 84.56s/it]Quantizing model.layers.8:  21%|██        | 8/38 [11:00<42:16, 84.56s/it]Quantizing model.layers.8:  21%|██        | 8/38 [11:11<42:16, 84.56s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 5.960e-07 -> iter 167: 3.073e-07[0m
+[38;20m2026-10-11 10:42:59 INFO device.py L1560: 'peak_ram': 45.07GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.9:  24%|██▎       | 9/38 [12:38<40:52, 84.56s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 6.871e-07 -> iter 30: 3.790e-07[0m
+[38;20m2026-10-11 10:44:21 INFO device.py L1560: 'peak_ram': 48.86GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.9:  26%|██▋       | 10/38 [14:00<40:22, 86.53s/it]Quantizing model.layers.10:  26%|██▋       | 10/38 [14:00<40:22, 86.53s/it]Quantizing model.layers.10:  26%|██▋       | 10/38 [14:11<40:22, 86.53s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.028e-06 -> iter 193: 6.088e-07[0m
+[38;20m2026-10-11 10:46:00 INFO device.py L1560: 'peak_ram': 52.58GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.11:  29%|██▉       | 11/38 [15:38<38:56, 86.53s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.296e-06 -> iter 165: 7.655e-07[0m
+[38;20m2026-10-11 10:47:36 INFO device.py L1560: 'peak_ram': 56.53GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.11:  32%|███▏      | 12/38 [17:15<39:08, 90.31s/it]Quantizing model.layers.12:  32%|███▏      | 12/38 [17:15<39:08, 90.31s/it]Quantizing model.layers.12:  32%|███▏      | 12/38 [17:26<39:08, 90.31s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.734e-06 -> iter 189: 9.600e-07[0m
+[38;20m2026-10-11 10:49:14 INFO device.py L1560: 'peak_ram': 60.28GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.13:  34%|███▍      | 13/38 [18:53<37:37, 90.31s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.777e-06 -> iter 197: 1.141e-06[0m
+[38;20m2026-10-11 10:50:53 INFO device.py L1560: 'peak_ram': 64.26GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.13:  37%|███▋      | 14/38 [20:32<37:11, 92.99s/it]Quantizing model.layers.14:  37%|███▋      | 14/38 [20:32<37:11, 92.99s/it]Quantizing model.layers.14:  37%|███▋      | 14/38 [20:42<37:11, 92.99s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.848e-06 -> iter 197: 1.375e-06[0m
+[38;20m2026-10-11 10:52:34 INFO device.py L1560: 'peak_ram': 67.91GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.15:  39%|███▉      | 15/38 [22:13<35:38, 92.99s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.417e-06 -> iter 171: 1.588e-06[0m
+[38;20m2026-10-11 10:54:15 INFO device.py L1560: 'peak_ram': 71.89GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.15:  42%|████▏     | 16/38 [23:53<34:59, 95.43s/it]Quantizing model.layers.16:  42%|████▏     | 16/38 [23:53<34:59, 95.43s/it]Quantizing model.layers.16:  42%|████▏     | 16/38 [24:07<34:59, 95.43s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.412e-06 -> iter 162: 1.757e-06[0m
+[38;20m2026-10-11 10:55:55 INFO device.py L1560: 'peak_ram': 75.6GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.17:  45%|████▍     | 17/38 [25:34<33:23, 95.43s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.398e-06 -> iter 174: 2.038e-06[0m
+[38;20m2026-10-11 10:57:35 INFO device.py L1560: 'peak_ram': 79.62GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.17:  47%|████▋     | 18/38 [27:13<32:17, 96.87s/it]Quantizing model.layers.18:  47%|████▋     | 18/38 [27:13<32:17, 96.87s/it]Quantizing model.layers.18:  47%|████▋     | 18/38 [27:24<32:17, 96.87s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.534e-06 -> iter 192: 1.957e-06[0m
+[38;20m2026-10-11 10:59:16 INFO device.py L1560: 'peak_ram': 83.32GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.19:  50%|█████     | 19/38 [28:55<30:40, 96.87s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.835e-06 -> iter 82: 1.745e-06[0m
+[38;20m2026-10-11 11:00:55 INFO device.py L1560: 'peak_ram': 87.35GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.19:  53%|█████▎    | 20/38 [30:34<29:23, 97.96s/it]Quantizing model.layers.20:  53%|█████▎    | 20/38 [30:34<29:23, 97.96s/it]Quantizing model.layers.20:  53%|█████▎    | 20/38 [30:45<29:23, 97.96s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.726e-06 -> iter 182: 1.897e-06[0m
+[38;20m2026-10-11 11:02:34 INFO device.py L1560: 'peak_ram': 90.96GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.21:  55%|█████▌    | 21/38 [32:13<27:45, 97.96s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.999e-06 -> iter 164: 1.949e-06[0m
+[38;20m2026-10-11 11:04:14 INFO device.py L1560: 'peak_ram': 95.06GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.21:  58%|█████▊    | 22/38 [33:53<26:13, 98.36s/it]Quantizing model.layers.22:  58%|█████▊    | 22/38 [33:53<26:13, 98.36s/it]Quantizing model.layers.22:  58%|█████▊    | 22/38 [34:03<26:13, 98.36s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 3.306e-06 -> iter 167: 2.089e-06[0m
+[38;20m2026-10-11 11:05:52 INFO device.py L1560: 'peak_ram': 98.66GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.23:  61%|██████    | 23/38 [35:30<24:35, 98.36s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 4.208e-06 -> iter 172: 2.620e-06[0m
+[38;20m2026-10-11 11:07:28 INFO device.py L1560: 'peak_ram': 98.66GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.23:  63%|██████▎   | 24/38 [37:07<22:51, 97.93s/it]Quantizing model.layers.24:  63%|██████▎   | 24/38 [37:07<22:51, 97.93s/it]Quantizing model.layers.24:  63%|██████▎   | 24/38 [37:17<22:51, 97.93s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 4.227e-06 -> iter 105: 2.843e-06[0m
+[38;20m2026-10-11 11:09:06 INFO device.py L1560: 'peak_ram': 101.5GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.25:  66%|██████▌   | 25/38 [38:45<21:13, 97.93s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 5.731e-06 -> iter 195: 3.109e-06[0m
+[38;20m2026-10-11 11:10:39 INFO device.py L1560: 'peak_ram': 105.9GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.25:  68%|██████▊   | 26/38 [40:18<19:26, 97.24s/it]Quantizing model.layers.26:  68%|██████▊   | 26/38 [40:18<19:26, 97.24s/it]Quantizing model.layers.26:  68%|██████▊   | 26/38 [40:35<19:26, 97.24s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 5.202e-06 -> iter 95: 3.777e-06[0m
+[38;20m2026-10-11 11:11:56 INFO device.py L1560: 'peak_ram': 105.9GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.27:  71%|███████   | 27/38 [41:34<17:49, 97.24s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 7.625e-06 -> iter 193: 4.419e-06[0m
+[38;20m2026-10-11 11:13:36 INFO device.py L1560: 'peak_ram': 108.74GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.27:  74%|███████▎  | 28/38 [43:15<15:46, 94.63s/it]Quantizing model.layers.28:  74%|███████▎  | 28/38 [43:15<15:46, 94.63s/it]Quantizing model.layers.28:  74%|███████▎  | 28/38 [43:26<15:46, 94.63s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 7.964e-06 -> iter 118: 4.842e-06[0m
+[38;20m2026-10-11 11:15:13 INFO device.py L1560: 'peak_ram': 112.12GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.29:  76%|███████▋  | 29/38 [44:52<14:11, 94.63s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 8.287e-06 -> iter 106: 5.391e-06[0m
+[38;20m2026-10-11 11:16:49 INFO device.py L1560: 'peak_ram': 112.12GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.29:  79%|███████▉  | 30/38 [46:28<12:41, 95.15s/it]Quantizing model.layers.30:  79%|███████▉  | 30/38 [46:28<12:41, 95.15s/it]Quantizing model.layers.30:  79%|███████▉  | 30/38 [46:39<12:41, 95.15s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.097e-05 -> iter 156: 6.928e-06[0m
+[38;20m2026-10-11 11:18:29 INFO device.py L1560: 'peak_ram': 112.12GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.31:  82%|████████▏ | 31/38 [48:07<11:06, 95.15s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.657e-05 -> iter 133: 8.881e-06[0m
+[38;20m2026-10-11 11:20:06 INFO device.py L1560: 'peak_ram': 114.58GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.31:  84%|████████▍ | 32/38 [49:45<09:37, 96.21s/it]Quantizing model.layers.32:  84%|████████▍ | 32/38 [49:45<09:37, 96.21s/it]Quantizing model.layers.32:  84%|████████▍ | 32/38 [49:59<09:37, 96.21s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 1.764e-05 -> iter 73: 1.104e-05[0m
+[38;20m2026-10-11 11:21:46 INFO device.py L1560: 'peak_ram': 114.58GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.33:  87%|████████▋ | 33/38 [51:24<08:01, 96.21s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.145e-05 -> iter 192: 1.315e-05[0m
+[38;20m2026-10-11 11:23:23 INFO device.py L1560: 'peak_ram': 117.55GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.33:  89%|████████▉ | 34/38 [53:02<06:27, 96.83s/it]Quantizing model.layers.34:  89%|████████▉ | 34/38 [53:02<06:27, 96.83s/it]Quantizing model.layers.34:  89%|████████▉ | 34/38 [53:12<06:27, 96.83s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 3.476e-05 -> iter 148: 1.710e-05[0m
+[38;20m2026-10-11 11:25:01 INFO device.py L1560: 'peak_ram': 121.19GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.35:  92%|█████████▏| 35/38 [54:40<04:50, 96.83s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 4.774e-05 -> iter 126: 2.137e-05[0m
+[38;20m2026-10-11 11:26:39 INFO device.py L1560: 'peak_ram': 121.19GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.35:  95%|█████████▍| 36/38 [56:18<03:14, 97.23s/it]Quantizing model.layers.36:  95%|█████████▍| 36/38 [56:18<03:14, 97.23s/it]Quantizing model.layers.36:  95%|█████████▍| 36/38 [56:32<03:14, 97.23s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 5.324e-05 -> iter 168: 2.887e-05[0m
+[38;20m2026-10-11 11:28:20 INFO device.py L1560: 'peak_ram': 124.28GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.37:  97%|█████████▋| 37/38 [57:58<01:37, 97.23s/it][38;20mquantized 967/967 layers in the block, loss iter 0: 2.050e-04 -> iter 173: 5.732e-05[0m
+[38;20m2026-10-11 11:29:59 INFO device.py L1560: 'peak_ram': 124.28GB, 'peak_vram': 72.66GB[0m
+Quantizing model.layers.37: 100%|██████████| 38/38 [59:37<00:00, 97.96s/it]Quantizing done: 100%|██████████| 38/38 [59:38<00:00, 97.96s/it]           Quantizing done: 100%|██████████| 38/38 [59:38<00:00, 94.18s/it]
+[38;20m2026-10-11 11:30:00 INFO device.py L1560: 'peak_ram': 124.28GB, 'peak_vram': 72.66GB[0m
+[38;20m2026-10-11 11:30:00 INFO orchestrator.py L819: quantization tuning time 3578.844854593277[0m
+[38;20m2026-10-11 11:30:00 INFO orchestrator.py L838: Summary: quantized 35786/35787 in the model, unquantized layers: lm_head[0m
+11:30:00 [INFO] Saving quantized model (auto_round format)...
+packing:   0%|          | 0/35787 [00:00<?, ?it/s]packing:  69%|██████▉   | 24723/35787 [02:00<00:53, 206.02it/s]packing:  69%|██████▉   | 24723/35787 [02:12<00:53, 206.02it/s]packing: 100%|██████████| 35787/35787 [02:42<00:00, 220.07it/s]
+[33;1m2026-10-11 11:32:46 WARNING export.py L357: /root/_work/1/s/auto_quant/output/runs/G9v3-39A5B-AutoRound-W4A16-Tuning/quantized_model already exists, this may cause model conflict[0m
+[38;20m2026-10-11 11:33:08 INFO missing_tensors.py L126: Restored 37 tensor(s) from FP16/BF16 to their original FP32 values: model.layers.[1-37].mlp.gate.e_score_correction_bias.[0m
+11:33:10 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+11:33:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/config.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2Fmain%2Fconfig.json=&etag=%22c92fe1c7b4efe45fcffe11c0e69dc4f97c252a2a%22 "HTTP/1.1 200 OK"
+11:33:10 [INFO] HTTP Request: HEAD https://huggingface.co/ai9stars/G9v3-39A5B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+11:33:10 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ai9stars/G9v3-39A5B/70213b14ea559298507e46e36e53d9c4c76144fc/config.json?%2Fai9stars%2FG9v3-39A5B%2Fresolve%2Fmain%2Fconfig.json=&etag=%22c92fe1c7b4efe45fcffe11c0e69dc4f97c252a2a%22 "HTTP/1.1 200 OK"
+11:33:10 [INFO] Quantization completed in 3794.3s
+11:33:10 [INFO] Summary written to /root/_work/1/s/auto_quant/output/runs/G9v3-39A5B-AutoRound-W4A16-Tuning/quant_summary.json
+11:33:10 [INFO] === Phase 2: DONE ===
